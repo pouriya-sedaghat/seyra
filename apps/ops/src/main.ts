@@ -109,9 +109,14 @@ async function main(argv: string[]): Promise<number> {
     case 'rollback':
       await rollback(log);
       return 0;
-    case 'start':
-      await composeRuntime(layout(), ['up', '-d']);
+    case 'start': {
+      // Image references are tags; refuse to start anything that no longer resolves to the lock.
+      const l = layout();
+      const bad = (await verifyImages(lockedImages(l.install))).filter((r) => !r.ok);
+      if (bad.length) throw new Error(`refusing to start: ${bad.map((b) => `${b.role} is ${b.observed ?? 'missing'}, locked ${b.expected ?? 'unknown'}`).join('; ')}`);
+      await composeRuntime(l, ['up', '-d']);
       return 0;
+    }
     case 'stop':
       await composeRuntime(layout(), ['stop', '-t', '40']);
       return 0;

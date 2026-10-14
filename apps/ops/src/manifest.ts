@@ -6,7 +6,7 @@ import { Value } from 'typebox/value';
 import { writeAtomic } from './layout.js';
 
 export const MANIFEST_SCHEMA = 'seyra.release-manifest/1';
-export const PIPELINE_VERSION = 'seyra-pipeline-1.0.0';
+export const PIPELINE_VERSION = 'seyra-pipeline-1.0.1';
 
 const Nullable = <T extends ReturnType<typeof Type.String>>(t: T) => Type.Union([t, Type.Null()]);
 

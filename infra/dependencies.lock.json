@@ -1,6 +1,6 @@
 {
   "schema": "seyra.dependencies-lock/1",
-  "generated_at": "2026-10-14T12:41:43.314Z",
+  "generated_at": "2026-10-14T13:14:56.713Z",
   "generated_by": "infra/prepare/write-lock.mjs",
   "status": "LOCKED (preparation build verified); runtime/acceptance evidence is in docs/TEST_RESULTS.md",
   "preparation_environment": {
@@ -127,12 +127,12 @@
     "overpass": {
       "role": "OVERPASS",
       "ref": "seyra/overpass:0.7.62.4-seyra1",
-      "image_id": "sha256:6b81967f94e12f3ae25b915bb3534914cf40751ca34bfca71829a32a6e05d3f1",
+      "image_id": "sha256:e0c93b85d690a7337fbb02440da1a2959c467c225c300b04656c2f90620363a3",
       "repo_digests": [
-        "seyra/overpass@sha256:6b81967f94e12f3ae25b915bb3534914cf40751ca34bfca71829a32a6e05d3f1"
+        "seyra/overpass@sha256:e0c93b85d690a7337fbb02440da1a2959c467c225c300b04656c2f90620363a3"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T12:35:08.504953211Z",
+      "created": "2026-10-14T12:50:24.252668982Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/overpass/Dockerfile",
       "dockerfile_sha256": "12850fad45a798cb92fe4f8bbbb10f80f1a8031a95f33d3e56ece295bc06c971",
@@ -183,15 +183,15 @@
     "proxy": {
       "role": "PROXY",
       "ref": "seyra/proxy:1.0.0-seyra1",
-      "image_id": "sha256:1a79eecce69e2fa9daa6ae7fc36d205b24ed9dcbd705530cf995a04828897cf5",
+      "image_id": "sha256:b93dffc0c2cdc03b329dbd609f37b0c9aace6c1d48993fbc0241fb5147886be1",
       "repo_digests": [
-        "seyra/proxy@sha256:1a79eecce69e2fa9daa6ae7fc36d205b24ed9dcbd705530cf995a04828897cf5"
+        "seyra/proxy@sha256:b93dffc0c2cdc03b329dbd609f37b0c9aace6c1d48993fbc0241fb5147886be1"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T12:41:13.846765117Z",
+      "created": "2026-10-14T12:57:00.742393521Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/proxy/Dockerfile",
-      "dockerfile_sha256": "4feb60b83132a4311e7547ce730c7a506c21aca9d2f5d79ab1941f040356e25e",
+      "dockerfile_sha256": "51242be8cb174bc964564e2b6df6c9789589c1826e20b8036631599a057b25a7",
       "base_images": [
         "node:24-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20",
         "nginx:1.28-alpine@sha256:a8b39bd9cf0f83869a2162827a0caf6137ddf759d50a171451b335cecc87d236"
@@ -268,12 +268,12 @@
     "ops": {
       "role": "OPS",
       "ref": "seyra/ops:1.0.0-seyra1",
-      "image_id": "sha256:09dd618783bd72ce95cd8367642ca994f28c505b0d0aa2593de416d211ade412",
+      "image_id": "sha256:17bcbfb769bca386f1222bb064956a1e1cb9e1bef809116a9623cd0393b3f49b",
       "repo_digests": [
-        "seyra/ops@sha256:09dd618783bd72ce95cd8367642ca994f28c505b0d0aa2593de416d211ade412"
+        "seyra/ops@sha256:17bcbfb769bca386f1222bb064956a1e1cb9e1bef809116a9623cd0393b3f49b"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T12:41:31.052526105Z",
+      "created": "2026-10-14T13:14:45.822194333Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/ops/Dockerfile",
       "dockerfile_sha256": "3337da8a4d1d8bd2af7215d88e0c06cd51f1cf501c85b2aeb944d5b53734b4f5",

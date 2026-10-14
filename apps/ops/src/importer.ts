@@ -1,10 +1,13 @@
-import { chownSync, closeSync, copyFileSync, existsSync, mkdirSync, openSync, readFileSync, rmSync, statSync, statfsSync, writeFileSync, chmodSync, unlinkSync } from 'node:fs';
+import { chownSync, copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, statfsSync, writeFileSync, chmodSync, unlinkSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { CATALOG_VERSION, SEARCH_NORMALIZATION_VERSION } from '@seyra/contracts';
 import { STYLE_VERSION, buildStyle, buildTileJson } from '@seyra/map-assets';
 import { composeJobs, jobsInvocation } from './compose.js';
 import { psql, recordEvent, renderDbName } from './db.js';
 import { PHOTON_EXTRA_TAGS, preprocessDump } from './geocoder-preprocess.js';
+import { readPointers } from './activate.js';
+import { acquireImportLock } from './import-lock.js';
+import { writePhotonNodeConfig } from './photon-config.js';
 import { layout, managedChild, readSettings, type Layout, type Settings } from './layout.js';
 import { imageEnv, lockedImages, verifyImages, type LockedImage } from './lock.js';
 import {
@@ -12,6 +15,7 @@ import {
   PIPELINE_VERSION,
   dataComponents,
   deriveDatasetId,
+  readManifest,
   duBytes,
   sha256File,
   sha256Text,
@@ -105,15 +109,8 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
   if (!st.isFile() || !input.endsWith('.osm.pbf')) throw new Error('input must be a local .osm.pbf file');
   if (input.startsWith(l.releases)) throw new Error('input must not be inside the managed releases directory');
 
-  // Exclusive import lock (one build at a time).
-  let lockFd: number;
-  try {
-    lockFd = openSync(l.importLock, 'wx', 0o600);
-  } catch {
-    throw new Error(`another import is running (lock ${l.importLock}); remove it only if no import process exists`);
-  }
-  writeFileSync(lockFd, `${process.pid}\n`);
-  closeSync(lockFd);
+  // Exclusive import lock (one build at a time); an abandoned lock is recovered.
+  await acquireImportLock(l, opts.log);
 
   const steps: Manifest['measurements']['steps'] = [];
   let minFree = freeBytes(l.home);
@@ -151,7 +148,17 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
     const components = dataComponents(Object.fromEntries(imageCheck.map((c) => [c.role, c.observed!])));
     const datasetId = deriveDatasetId(snapshot, { source_sha256: sourceSha, pipeline_fingerprint: pipeline.sha256, components, assets_sha256: assets });
     releaseDir = managedChild(l.releases, datasetId);
-    if (existsSync(releaseDir)) throw new Error(`release ${datasetId} already exists for these exact inputs (see seyra-maps status)`);
+    if (existsSync(releaseDir)) {
+      // A failed build of the same inputs is replaced; anything else is never overwritten.
+      const p = readPointers(l);
+      const previous = existsSync(join(releaseDir, 'manifest.json')) ? readManifest(releaseDir) : null;
+      if (previous?.status !== 'failed' || p.active === datasetId || p.previous === datasetId) {
+        throw new Error(`release ${datasetId} already exists for these exact inputs (see seyra-maps status)`);
+      }
+      opts.log(`[import] replacing failed build of ${datasetId} (failed at ${previous.failure?.step ?? 'unknown'})`);
+      await psql(l, 'postgres', `DROP DATABASE IF EXISTS ${renderDbName(datasetId)} WITH (FORCE);`);
+      rmSync(releaseDir, { recursive: true, force: true });
+    }
 
     const needed = Math.max(s.minFreeBytes, s.minFreeFactor * st.size);
     if (freeBefore < needed) {
@@ -288,6 +295,7 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
         const stats = await preprocessDump(raw, importFile, synonyms, `seyra-release-${datasetId}`);
         mkdirSync(photonDir, { recursive: true });
         chownTree(photonDir, UID.photon);
+        writePhotonNodeConfig(photonDir);
         await composeJobs(
           l,
           { ...jobBase, SEYRA_JOB_IMPORT: join(releaseDir, 'geocoder'), SEYRA_JOB_OUT: photonDir, SEYRA_PHOTON_EXTRA_TAGS: PHOTON_EXTRA_TAGS },

@@ -4,6 +4,7 @@ import { composeRuntime, runtimeEnv, writeRuntimeEnv, NO_RELEASE } from './compo
 import { psql, recordEvent, renderDbName } from './db.js';
 import { layout, managedChild, readSettings, writeAtomic, type Layout } from './layout.js';
 import { lockedImages, verifyImages } from './lock.js';
+import { PHOTON_OPENSEARCH_SETTINGS } from './photon-config.js';
 import { DATA_COMPONENT_ROLES, readManifest, sha256File, sha256Text, treeDigest, type Manifest } from './manifest.js';
 
 export interface Pointers {
@@ -47,6 +48,11 @@ export async function verifyRelease(l: Layout, datasetId: string): Promise<{ man
   const importFile = join(dir, 'geocoder', 'photon-import.jsonl');
   if (!existsSync(importFile) || (await sha256File(importFile)) !== art.geocoder?.import_sha256) problems.push('geocoder import checksum mismatch');
   if (!existsSync(join(dir, 'photon', 'photon_data'))) problems.push('photon index missing');
+  const photonConf = join(dir, 'photon', 'photon_data', 'node_1', 'config', 'opensearch.yml');
+  const conf = existsSync(photonConf) ? readFileSync(photonConf, 'utf8') : '';
+  if (!PHOTON_OPENSEARCH_SETTINGS.every((line) => conf.includes(line))) {
+    problems.push('photon index lacks the absolute disk watermarks (built by an older pipeline); re-import required');
+  }
   const tegola = readFileSync(join(dir, 'tegola', 'tegola.toml'), 'utf8');
   if (sha256Text(tegola) !== art.render?.tegola_config_sha256) problems.push('tegola configuration checksum mismatch');
   if ((await sha256File(m.source.managed_copy)) !== m.source.sha256) problems.push('managed source copy checksum mismatch');

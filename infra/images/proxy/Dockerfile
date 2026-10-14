@@ -27,7 +27,7 @@ RUN rm -rf /etc/nginx/conf.d /docker-entrypoint.d /docker-entrypoint.sh /usr/sha
     && mkdir -p /var/cache/seyra/tiles /tmp/nginx && chown -R nginx:nginx /var/cache/seyra /tmp/nginx
 COPY --from=build /out/assets /usr/share/seyra/assets
 COPY --from=build /out/web /usr/share/seyra/web
-COPY infra/images/proxy/nginx.conf.template /etc/seyra/nginx.conf.template
+COPY infra/images/proxy/nginx.conf.template infra/images/proxy/security-headers.conf /etc/seyra/
 COPY infra/images/proxy/entrypoint.sh /usr/local/bin/seyra-proxy-entrypoint
 RUN chmod 0755 /usr/local/bin/seyra-proxy-entrypoint
 USER nginx

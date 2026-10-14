@@ -101,7 +101,6 @@ services:
     environment:
       OVERPASS_SPACE_BYTES: "${SEYRA_OVERPASS_SPACE_BYTES:-1073741824}"
       OVERPASS_TIME_UNITS: "${SEYRA_OVERPASS_TIME_UNITS:-262144}"
-      OVERPASS_RATE_LIMIT: "${SEYRA_OVERPASS_RATE_LIMIT:-4}"
     tmpfs: ["/tmp", "/run/overpass:uid=10004,gid=10004"]
     volumes:
       - "${SEYRA_RELEASE_DIR:?}/overpass/db:/data/overpass/db:ro"

@@ -22,13 +22,15 @@ case "$cmd" in
     test -f "$db_dir/osm_base_version" || { echo "missing Overpass base database in $db_dir" >&2; exit 3; }
     mkdir -p "$sock_dir"
     # --space (bytes) / --time (seconds) bound the total resources the dispatcher grants to
-    # concurrently running queries; --rate-limit bounds parallel queries per client address.
-    # Duplicate blocking is off: the gateway is the only client (one address for every user) and
-    # bounds concurrency itself; with blocking on, the dispatcher rejects any identical query for
-    # its whole timeout window even after it finished (e.g. two users asking for the same preset).
+    # concurrently running queries; every query also carries its own [timeout] and [maxsize].
+    # The gateway is the only client, so every user shares one client address. Per-address
+    # controls are therefore off: --rate-limit=0 (the dispatcher otherwise keeps a finished
+    # query's slot occupied for a cool-down and blocks the next one up to 15 s) and duplicate
+    # blocking off (it rejects any identical query for its whole timeout window, e.g. two users
+    # asking for the same preset). The gateway bounds concurrency and queue length itself.
     dispatcher --osm-base --db-dir="$db_dir/" --socket-dir="$sock_dir/" \
       --space="${OVERPASS_SPACE_BYTES:-1073741824}" --time="${OVERPASS_TIME_UNITS:-262144}" \
-      --rate-limit="${OVERPASS_RATE_LIMIT:-4}" --allow-duplicate-queries=yes &
+      --rate-limit="${OVERPASS_RATE_LIMIT:-0}" --allow-duplicate-queries=yes &
     disp=$!
     for _ in $(seq 1 50); do [ -S "$sock_dir/osm3s_osm_base" ] && break; sleep 0.2; done
     [ -S "$sock_dir/osm3s_osm_base" ] || { echo "dispatcher did not start" >&2; exit 4; }
