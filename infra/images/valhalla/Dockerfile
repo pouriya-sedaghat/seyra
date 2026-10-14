@@ -34,7 +34,7 @@ ENV DEBIAN_FRONTEND=noninteractive
 RUN apt-get update && apt-get install -y --no-install-recommends \
       libczmq4 libzmq5 libluajit-5.1-2 libprotobuf-lite32t64 libprotobuf32t64 libsqlite3-0 \
       libsqlite3-mod-spatialite libspatialite8t64 libgeos-c1t64 liblz4-1 zlib1g libexpat1 \
-      libboost-program-options1.83.0 libssl3t64 \
+      libboost-program-options1.83.0 libssl3t64 libcurl4t64 \
     && rm -rf /var/lib/apt/lists/* \
     && groupadd --system --gid 10001 valhalla \
     && useradd --system --uid 10001 --gid valhalla --home-dir /nonexistent --shell /usr/sbin/nologin valhalla
@@ -42,7 +42,11 @@ COPY --from=builder /usr/local/bin/ /usr/local/bin/
 COPY --from=builder /usr/local/lib/ /usr/local/lib/
 COPY --from=valhalla_src /LICENSE.md /usr/share/doc/seyra/valhalla-LICENSE.md
 COPY --from=prime_server_src /COPYING /usr/share/doc/seyra/prime_server-COPYING
-RUN ldconfig && for b in valhalla_service valhalla_build_tiles valhalla_build_admins valhalla_build_extract; do \
+# libcurl is linked by prime_server; Valhalla's own remote tile fetching is compiled out
+# (ENABLE_HTTP=OFF) and no curl/wget CLI is installed. Upstream helper scripts that download (or, like valhalla_build_extract --region, can download)
+# timezone/elevation data or need Python are removed from the runtime image.
+RUN rm -f /usr/local/bin/valhalla_build_timezones /usr/local/bin/valhalla_build_elevation /usr/local/bin/valhalla_build_config /usr/local/bin/valhalla_build_extract
+RUN ldconfig && for b in valhalla_service valhalla_build_tiles valhalla_build_admins; do \
       command -v "$b" >/dev/null || { echo "missing $b"; exit 1; }; done
 USER valhalla
 # No ENTRYPOINT: runtime compose and build jobs pass explicit commands.

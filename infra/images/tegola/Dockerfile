@@ -22,6 +22,7 @@ RUN groupadd --system --gid 10003 tegola \
     && useradd --system --uid 10003 --gid tegola --home-dir /nonexistent --shell /usr/sbin/nologin tegola
 COPY --from=builder /out/tegola /usr/local/bin/tegola
 COPY --from=tegola_src /LICENSE.md /usr/share/doc/seyra/tegola-LICENSE.md
+COPY serve.sh /usr/local/bin/seyra-tegola-serve
+RUN chmod 0755 /usr/local/bin/seyra-tegola-serve
 USER tegola
-ENTRYPOINT ["/usr/local/bin/tegola"]
-CMD ["version"]
+ENTRYPOINT ["/usr/local/bin/seyra-tegola-serve"]

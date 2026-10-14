@@ -15,3 +15,4 @@ coverage/
 !infra/**/*.example.pem
 .env
 .env.*
+/infra/assets/dist/

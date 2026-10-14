@@ -7,6 +7,8 @@ export const MARKER_CATEGORY = 'seyra.release_marker';
 
 /** Keys written into each document's `extra` by the index build to preserve original names. */
 export const EXTRA_NAME_KEYS = { default: 'seyra_name', fa: 'seyra_name_fa', en: 'seyra_name_en' } as const;
+/** Original (display) house number; the indexed value is search-normalized. */
+export const EXTRA_HOUSENUMBER_KEY = 'seyra_housenumber';
 
 interface PhotonFeature {
   geometry?: { type: string; coordinates: [number, number] };
@@ -102,7 +104,7 @@ function convertFeature(f: PhotonFeature, lang: Language): GeocodeResult | null 
   if (extra[EXTRA_NAME_KEYS.en]) names.en = extra[EXTRA_NAME_KEYS.en];
   const address: Record<string, string> = {};
   for (const key of ADDRESS_KEYS) {
-    const v = p[key];
+    const v = key === 'housenumber' ? (extra[EXTRA_HOUSENUMBER_KEY] ?? p[key]) : p[key];
     if (typeof v === 'string' && v.length > 0) address[key] = v;
   }
   const result: GeocodeResult = {

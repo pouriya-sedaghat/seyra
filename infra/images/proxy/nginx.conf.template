@@ -1,0 +1,122 @@
+# Seyra internal TLS entry point (rendered at container start by seyra-proxy-entrypoint).
+# Fixed allowlisted routes only; clients never choose provider URLs.
+worker_processes auto;
+pid /tmp/nginx/nginx.pid;
+error_log /dev/stderr warn;
+events { worker_connections 1024; }
+
+http {
+  include /etc/nginx/mime.types;
+  types { application/x-protobuf pbf; font/woff2 woff2; }
+  default_type application/octet-stream;
+  server_tokens off;
+  sendfile on;
+  client_body_temp_path /tmp/nginx/body;
+  proxy_temp_path /tmp/nginx/proxy;
+  fastcgi_temp_path /tmp/nginx/fastcgi;
+  uwsgi_temp_path /tmp/nginx/uwsgi;
+  scgi_temp_path /tmp/nginx/scgi;
+
+  # Redacted access log: no query strings (search text, coordinates) and no client addresses.
+  log_format seyra '$time_iso8601 $request_method $uri $status $body_bytes_sent $request_time';
+  access_log /dev/stdout seyra;
+
+  # Bounded, dataset-scoped tile cache (keys include /maps/<dataset_id>/).
+  proxy_cache_path /var/cache/seyra/tiles levels=1:2 keys_zone=seyra_tiles:16m max_size=${SEYRA_TILE_CACHE_MAX} inactive=7d use_temp_path=off;
+
+  map $ds $ds_active { "${SEYRA_DATASET_ID}" 1; default 0; }
+
+  upstream seyra_api { server api:3000; keepalive 16; }
+  upstream seyra_tegola { server tegola:8080; keepalive 16; }
+
+  ssl_protocols TLSv1.2 TLSv1.3;
+  ssl_prefer_server_ciphers off;
+  ssl_session_cache shared:seyra_tls:4m;
+  ssl_session_tickets off;
+
+  # Unknown Host names are refused (prevents Host-header injection into absolute style URLs).
+  server {
+    listen 8443 ssl default_server;
+    ssl_certificate /run/secrets/tls_cert;
+    ssl_certificate_key /run/secrets/tls_key;
+    return 421;
+  }
+
+  server {
+    listen 8443 ssl;
+    server_name ${SEYRA_SERVER_NAMES};
+    ssl_certificate /run/secrets/tls_cert;
+    ssl_certificate_key /run/secrets/tls_key;
+
+${SEYRA_ACCESS_RULES}
+
+    client_max_body_size 64k;
+    client_body_buffer_size 64k;
+    large_client_header_buffers 4 8k;
+
+    add_header Strict-Transport-Security "max-age=31536000" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header X-Frame-Options "DENY" always;
+    add_header Referrer-Policy "no-referrer" always;
+    add_header Permissions-Policy "geolocation=(), camera=(), microphone=()" always;
+    add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; child-src blob:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'" always;
+
+    location /api/ {
+      proxy_pass http://seyra_api;
+      proxy_http_version 1.1;
+      proxy_set_header Connection "";
+      proxy_set_header Host $host;
+      proxy_read_timeout 130s;
+      proxy_buffering on;
+    }
+    location /health/ {
+      proxy_pass http://seyra_api;
+      proxy_http_version 1.1;
+      proxy_set_header Connection "";
+    }
+
+    location ~ "^/maps/(?<ds>[a-z0-9][a-z0-9-]{2,79})/tiles/(?<z>[0-9]|1[0-6])/(?<x>[0-9]{1,5})/(?<y>[0-9]{1,5})\.pbf$" {
+      if ($ds_active = 0) { return 404 '{"error":{"code":"DATASET_MISMATCH","message":"dataset is not the active release"}}'; }
+      proxy_pass http://seyra_tegola/maps/${SEYRA_TEGOLA_MAP}/$z/$x/$y.pbf;
+      proxy_http_version 1.1;
+      proxy_set_header Connection "";
+      proxy_cache seyra_tiles;
+      proxy_cache_key $uri;
+      proxy_cache_valid 200 7d;
+      proxy_cache_lock on;
+      proxy_ignore_headers Cache-Control Expires Set-Cookie;
+      proxy_hide_header Cache-Control;
+      add_header Cache-Control "public, max-age=86400" always;
+      add_header X-Content-Type-Options "nosniff" always;
+      add_header X-Seyra-Dataset $ds always;
+    }
+    location ~ "^/maps/(?<ds>[a-z0-9][a-z0-9-]{2,79})/(?<file>tiles\.json|styles/(light|dark)-(fa|en)\.json)$" {
+      if ($ds_active = 0) { return 404 '{"error":{"code":"DATASET_MISMATCH","message":"dataset is not the active release"}}'; }
+      alias /srv/seyra/release/maps/$file;
+      default_type application/json;
+      sub_filter_types application/json;
+      sub_filter_once off;
+      sub_filter '__SEYRA_BASE__' '$scheme://$http_host';
+      add_header Cache-Control "no-cache" always;
+      add_header X-Content-Type-Options "nosniff" always;
+    }
+    location ~ "^/maps/(?<ds>[a-z0-9][a-z0-9-]{2,79})/fonts/(?<file>(Vazirmatn Regular|Vazirmatn Bold)/[0-9]{1,5}-[0-9]{1,5}\.pbf|files/Vazirmatn-(Regular|Bold)\.woff2)$" {
+      if ($ds_active = 0) { return 404 '{"error":{"code":"DATASET_MISMATCH","message":"dataset is not the active release"}}'; }
+      alias /usr/share/seyra/assets/fonts/$file;
+      add_header Cache-Control "public, max-age=604800, immutable" always;
+      add_header X-Content-Type-Options "nosniff" always;
+    }
+    location ~ "^/maps/(?<ds>[a-z0-9][a-z0-9-]{2,79})/sprites/(?<file>(light|dark)(@2x)?\.(png|json))$" {
+      if ($ds_active = 0) { return 404 '{"error":{"code":"DATASET_MISMATCH","message":"dataset is not the active release"}}'; }
+      alias /usr/share/seyra/assets/sprites/$file;
+      add_header Cache-Control "public, max-age=604800" always;
+      add_header X-Content-Type-Options "nosniff" always;
+    }
+    location /maps/ { return 404 '{"error":{"code":"NOT_FOUND","message":"unknown map resource"}}'; }
+    location = /licenses/vazirmatn-ofl.txt { alias /usr/share/seyra/assets/licenses/Vazirmatn-OFL.txt; default_type text/plain; }
+
+    root /usr/share/seyra/web;
+    location /assets/ { try_files $uri =404; add_header Cache-Control "public, max-age=604800, immutable" always; add_header X-Content-Type-Options "nosniff" always; }
+    location / { try_files $uri /index.html; add_header Cache-Control "no-cache" always; add_header X-Content-Type-Options "nosniff" always; add_header X-Frame-Options "DENY" always; add_header Referrer-Policy "no-referrer" always; add_header Content-Security-Policy "default-src 'self'; script-src 'self'; style-src 'self' 'unsafe-inline'; img-src 'self' data: blob:; font-src 'self'; connect-src 'self'; worker-src 'self' blob:; child-src blob:; object-src 'none'; base-uri 'none'; frame-ancestors 'none'; form-action 'none'" always; }
+  }
+}
