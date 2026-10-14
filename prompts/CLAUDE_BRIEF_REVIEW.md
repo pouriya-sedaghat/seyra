@@ -1,3 +1,5 @@
+> Historical v0.2 review prompt. The review is complete. For current development use prompts/CLAUDE_MAP_SERVICES_IMPLEMENTATION.md and the v1.0 documents. Do not execute this historical prompt against the current baseline.
+
 # Claude Code prompt — review Seyra brief v0.2 and Map Services proposal
 
 Use this prompt from the root of a local clone of https://github.com/pouriya-sedaghat/seyra containing the latest main documentation. Do not discard, reset, or overwrite local work to update the checkout.
