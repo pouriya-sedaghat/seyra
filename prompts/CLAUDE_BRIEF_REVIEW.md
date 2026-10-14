@@ -1,47 +1,57 @@
-# Claude Code prompt — review the Seyra brief
+# Claude Code prompt — review Seyra brief v0.2 and Map Services proposal
 
-Run this prompt in Claude Code from the root of a local clone of `https://github.com/pouriya-sedaghat/seyra` containing the current documentation commit. Do not reset, discard, or overwrite local changes to obtain it.
+Use this prompt from the root of a local clone of https://github.com/pouriya-sedaghat/seyra containing the latest main documentation. Do not discard, reset, or overwrite local work to update the checkout.
 
 ---
 
-You are the technical reviewer for Seyra, a platform for navigation, location monitoring, relation-based location sharing, and operator-managed SOS dispatch.
+You are the technical reviewer for Seyra. Perform a critical requirements, feasibility, and architecture review. This task is REVIEW ONLY; the brief is not finalized.
 
-This task is REQUIREMENTS AND BRIEF REVIEW ONLY. The brief is not finalized. Do not implement application code, initialize a project scaffold, select a final architecture, install packages, pull Docker images, commit changes, create branches, or modify repository files.
+First inspect the repository status, current branch, and commit. Read any applicable repository instructions, including AGENTS.md files that actually exist. Then read, in order:
 
-First inspect the repository status and read applicable repository instructions, including any AGENTS.md files that actually exist. Then read:
+1. docs/PROJECT_BRIEF.md
+2. docs/MAP_SERVICES_REQUIREMENTS.md
+3. docs/MAP_SERVICES_ARCHITECTURE.md
+4. prompts/CLAUDE_BRIEF_REVIEW.md
 
-1. `docs/PROJECT_BRIEF.md`
-2. `docs/MAP_SERVICES_REQUIREMENTS.md`
-3. This prompt.
+If the current checkout does not contain brief version 0.2 and its architecture document, report that mismatch and stop; do not review stale documents. Do not implement code, initialize scaffolding, install packages, pull/run containers, create branches, commit, push, or modify repository files. Do not read unrelated files, credentials, secrets, or private operational datasets. No delegation to additional agents is requested.
 
-Do not access unrelated files outside this checkout. Do not read or print secrets, credentials, private user data, or operational location datasets.
+Confirmed constraints:
 
-Confirmed requirements:
+- Node.js and TypeScript application backend; PostgreSQL/PostGIS application database.
+- Required Docker-deployed capabilities: vector tile server, routing engine, geocoder and Overpass. None of these map services may be disabled. Broader configurability does not override this requirement.
+- Iran-wide raw OSM input is acquired by the owner and imported locally. Rendering uses vector tiles with light/dark styles and comprehensive source feature/POI coverage.
+- Routing requires car, pedestrian and motorcycle profiles, time/distance preferences, alternatives and multiple destinations. Required combinations and optimality semantics remain open.
+- Both web and mobile consume shared services. Assigned implementation deliverables are the backend and web test client; mobile implementation is not yet assigned.
+- Operations, installation, imports and updates must not depend on Internet or outside-network access. Development/review tooling may operate outside that isolated operational environment and must not become a deployment dependency.
+- Exact hardware/concurrency are unknown. No production capacity claim is allowed.
+- Necessary service-specific storage outside PostgreSQL may be considered, not assumed approved.
+- Authentication, Relation System and SOS require separate future requirements intake. Operators choose SOS responders manually; do not implement those workflows in Map Services.
 
-- Node.js and TypeScript for the application backend.
-- PostgreSQL with PostGIS for the application database.
-- Docker-image-based deployment for Map Services.
-- Required map capabilities: tile server, routing engine, geocoder, and Overpass.
-- No Internet or external-network dependencies during operations, installation, or updates.
-- The web client must provide an agreed subset of capabilities when disconnected from the server; that subset has not yet been specified.
-- Features should be independently configurable where feasible without contradicting the required delivered scope.
-- Map Services is the first implementation module. Authentication, Relation System, and SOS require separate requirements intake before implementation.
-- Operators manually choose a nearby user for SOS dispatch; automatic dispatch is not confirmed.
-- Relations control live-location visibility and can grant history access; the exact privacy model is unresolved.
-- Claude Code prompts must be in English. Development happens on a separate feature branch only after the brief is finalized.
+Working interpretations requiring owner confirmation are explicitly labeled in the documents: all geocoder features and Persian/English search; three selectable proximity metrics; and removing guaranteed server-disconnected client functionality from the first phase based on the latest response. Do not turn these into confirmed requirements.
 
-Review the actual documents critically. Identify ambiguities, contradictions, missing requirements, infeasible assumptions, hidden Internet dependencies, unsafe defaults, and cross-module constraints. Distinguish application database requirements from possible storage requirements of candidate map engines. Pay special attention to the difference between an isolated internal network and a browser disconnected from the server, including data provisioning, stale-location display, queued operations, acknowledgement, and privacy revocation.
+Evaluate the proposed Tegola/PostGIS import, Valhalla routing, Nominatim/Photon geocoding, private Overpass, shared Node.js gateway, and local MapLibre assets. These are candidate components, not final decisions. Cross-check the proposal's official references. If you cannot verify a statement, mark it unverified instead of guessing. Web research during this review is allowed if your environment supports it, but use primary sources and never confuse that with Internet dependence in the shipped platform.
 
-Do not invent requirements or treat example products as selected components. Do not recommend technology as a final decision before the intake is complete. If you discuss candidates, label them as hypotheses requiring research, and distinguish remembered facts from facts verified in official documentation. The review may identify topics needing research without accessing the Internet.
+Focus on:
 
-Return your review in English with these sections:
+- Complete source-data coverage versus an explicit import/layer/POI/style catalog; avoid impossible promises of all real-world detail.
+- Required routing combinations, mathematical optimality, motorcycle behavior/restrictions, ordered versus optimized waypoints, matrix direction and objective semantics, and unsupported combinations.
+- The geocoder interpretation, Persian search/text shaping and web/mobile asset compatibility; the necessity and overhead of both Nominatim and Photon.
+- Every proposed non-PostgreSQL store and its necessity, scope, versions, backup/update behavior and resource implications.
+- Keeping all four required map capabilities running while bounding Overpass access and preventing arbitrary end-user queries.
+- External downloads hidden in image entrypoints, datasets, styles, fonts, glyphs, sprites, SDKs, import/update scripts, registries, telemetry, host prerequisites and internal HTTPS provisioning.
+- Staged consistent dataset releases and honest limits of cross-service activation/rollback; no destructive import into active data.
+- Private provider networks, scoped roles, input/resource limits and a viable test-access boundary before Authentication is implemented.
+- What can be specified now versus what requires owner input, pinned-release verification, a real dataset, benchmark hardware, or later module intake.
 
-1. Brief understanding: concise restatement of confirmed scope.
-2. Blocking questions: only missing answers that affect the first Map Services architecture or feasibility; reference intake IDs M01–M07 and avoid duplicating already answered questions.
-3. Contradictions and risks: include the affected requirement, practical impact, and a proposed clarification.
-4. Suggested brief amendments: precise suggested wording, clearly labeled as proposals.
-5. Architecture research agenda: what must be compared, verified, and measured after the intake is complete; do not select a final stack.
-6. Acceptance gaps: missing measurable offline, security, functional, and capacity checks.
-7. Readiness verdict: whether the brief is ready for implementation, with reasons and blockers.
+Return feedback in English using:
 
-Provide review feedback only, then stop. The project owner will return your review and answer the intake questions. A separate implementation prompt tied to a finalized brief and verified base commit will follow.
+1. Reviewed checkout: branch, commit, document versions, and any mismatch.
+2. Confirmed requirements and proposal/assumption corrections.
+3. Blocking questions: reference M01–M08 and Q1–Q6; group and prioritize genuinely architecture-changing decisions rather than repeating answered questions.
+4. Capability matrix: requirement, candidate support, unsupported combinations, evidence URL, release/pin status, and validation needed.
+5. Architecture critique: keep/change recommendation with reasons; distinguish facts from inference and unexecuted tests.
+6. Security/offline/data consistency findings: affected behavior, practical impact, concrete amendment.
+7. Suggested document amendments and measurable acceptance criteria.
+8. Readiness verdict: ready or not ready for implementation, with exact blockers; list production-only measurement gaps separately.
+
+Give review feedback only, then stop. The owner will return the review and resolve outstanding requirements. After stabilization, a separate English implementation prompt will name a verified base commit and a new feature branch; never start feature development on main from this review prompt.
