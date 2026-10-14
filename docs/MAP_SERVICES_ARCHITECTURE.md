@@ -1,93 +1,96 @@
-# Seyra — Map Services Research and Proposed Architecture
+# Seyra — Map Services Architecture
 
+Version: 1.0
 Date: 2026-10-14
-Status: PROPOSAL FOR CLAUDE CODE AND USER REVIEW — not an implementation specification.
+Status: PHASE-1 ENGINEERING BASELINE; implementation and validation pending.
 
-This is a documentation-based feasibility study. No selected image, full-Iran import, performance test, Persian search benchmark, or web/mobile interoperability test has been executed. The references below are official project documentation, repositories, and the OSM Foundation. Exact releases/image digests must be checked and recorded when the design is finalized; documentation on moving branches does not pin a release.
+## 1. Components and selection
 
-## 1. Candidate stack and reasoning
+| Component | Selected role | Decision rationale / condition |
+| --- | --- | --- |
+| Nginx | Single local TLS entry point; proxy binary tiles/assets; /api to application | Explicit ingress and access boundary; no cloud certificates/ACME |
+| Node 24 LTS, TypeScript, Fastify 5 | Shared versioned API, provider adapters, validation, bounded execution | Required application stack, modular implementation; exact patches locked in preflight |
+| PostgreSQL/PostGIS | Separate application/control and rendering DBs/roles; geography distance | Application constraint does not force a live-tile model |
+| osm2pgsql flex + Tegola | Versioned OSM rendering schema and MVT layer SQL | Selected explicit SQL/tag catalog and small initial topology; Martin/archives are valid alternatives, not ruled out by PostgreSQL |
+| Valhalla base image | Explicit local graph build; dedicated serving command | Avoid scripted defaults/rebuild-on-start; provider behavior must be tested |
+| Nominatim + Photon | Nominatim is a temporary build DB; export to Photon runtime index | Removes an unnecessary always-running address DB; free-text/reverse/autocomplete scope, not structured category phrases |
+| Overpass + Osmium | Local PBF→XML import and private bounded POI service | Mandatory Overpass capability; no remote cloning/replication |
+| MapLibre GL JS | Locally bundled web map, light/dark, Persian/English | Use an exact verified release with native RTL support; no RTL plugin or CDN |
+| Local tools/assets | Font/glyph/sprite generation, TLS helpers, packaged host prerequisites | Every operational dependency inventoried; no public DNS/NTP/asset fetch |
 
-| Responsibility | Proposed component | Evidence / reason | Open validation |
+Use npm workspaces for apps/api, apps/web and packages/contracts. Web uses TypeScript with a small Vite/React interface; exact compatible releases pinned, no server-rendering/cloud framework requirement. Use node-postgres with parameterized SQL and versioned migrations. Runtime rendering roles are read-only; import jobs use scoped write roles. Future user tables/Authentication/Relation/SOS are not created now.
+
+Reference environment: Ubuntu 24.04 LTS linux/amd64, Docker Engine and Compose v2; actual supported versions recorded by preflight. Separate preparation, transfer and operational zones. Dependency/image acquisition can use Internet in preparation, but the operational bundle, imports, startup and updates cannot. File archives are the initial transfer mechanism; internal registries are not required.
+
+## 2. Contracts and ingress
+
+Versioned APIs: /api/v1/map/capabilities, /api/v1/map/search, /reverse, /autocomplete, /route, /proximity and /pois. Deliver OpenAPI schemas and shared TypeScript types; all coordinates/units/errors explicit. GeoJSON is WGS84 longitude/latitude arrays; latitude/longitude objects have named fields. JSON geometry limits and typed errors prevent unbounded responses.
+
+Versioned /maps/<dataset_id>/ paths serve TileJSON, MVT, light/dark style JSON, fonts/glyphs and sprites. Proxy performs fixed allowlisted routing, never accepts a client-provided provider URL. Expensive API requests have deadlines, cancellation, per-provider concurrency and bounded queues. No arbitrary provider actions, raw QL, SQL or URLs. Body/query size limits, safe text display, security headers and log redaction are required.
+
+Metadata includes dataset_id, profile, objective and capability limits. Private providers do not need invented upstream dataset APIs: provision their revision markers and wrap real health probes. /health/live is process liveness; /health/ready fails if any of the four required map providers or their revision markers disagree. Healthy operations may still return per-provider responses during an outage, but platform readiness never pretends completeness. Reject unknown/mixed dataset requests. Mobile integration docs cover internal base URLs, TLS trust, coordinates, style/asset versions and test fixtures; mobile execution is pending its SDK owner.
+
+Default access: loopback TLS proxy. Explicit LAN test mode requires an allowlist plus trusted internal certificates. Providers and DBs have no client-subnet host ports. Internal networking is not user authentication; no sensitive tracking/management data is exposed. No ACME, public telemetry, external NTP/DNS or unrequested network deployment. Document customer provisioning of internal CA/time/DNS; do not build an unsolicited PKI/NTP platform.
+
+## 3. Routing and ordering
+
+Use Valhalla for two-point and ordered routes with documented profile/objective adapters. Multipoint alternatives and date_time are explicitly unsupported. Never advertise global shortest/fastest road guarantees or reuse unverified matrix shortest semantics. Required support/limits are defined in the requirements document.
+
+Implement bounded fixed-endpoint Held–Karp ordering in the application over independently routed directed pair costs, covering all three profiles and both objectives uniformly. This avoids pretending the native optimized endpoint supports all required combinations. Exactness is limited to the finite additive pair-cost table. Keep actual returned multi-stop route totals separate; stopping/snapping/turn-state choices can affect them. At most 10 points, deterministic tie breaking, explicit unreachable/provider-error distinction, full visit permutation and cancellation. Test against independent brute-force permutations on small directed fixtures. No road-optimality exact flag.
+
+Proximity is stateless ranking of a supplied set. Direction is an explicit parameter, not a baked-in SOS rule. Straight-line geography distance is separate from direction-sensitive road route/time values. No automatic dispatcher, user eligibility, location retention or spatial shortlist approximation.
+
+## 4. Imports, stores and assets
+
+Input: validated local Iran .osm.pbf, checksum and snapshot metadata. Owner data is never downloaded, overwritten or deleted by development tooling. For tests, create a distinctly labeled synthetic small OSM fixture; do not present fictional fixture objects as real Iranian roads/addresses.
+
+Every build writes a new staging release. Rendering import preserves source identities/tags and uses catalog v1, indexes and zoom generalization. Valhalla runs explicit build commands; serving never watches PBFs or runs its build entrypoint. Package local speed/admin inputs and any timezone/elevation data actually required by the pinned build; rejecting date_time does not by itself prove every auxiliary file is unnecessary. No remote timezone/speed/wikipedia/phrase fetch. Optional unneeded elevation/traffic/transit data is omitted.
+
+Nominatim uses locally provisioned software and a temporary dedicated DB; evaluate --reverse-only and --no-updates for snapshot export against the pinned Photon compatibility. Export local JSON; apply reproducible Persian normalization while retaining original display names; import into a fresh Photon directory with fa/en explicitly selected. Normalization changes require a new index. Do not assume a master-only pgpass feature exists in the chosen release. Secret credentials must not be logged or passed visibly on command lines. No Nominatim runtime server or Photon update endpoint in v1.
+
+Overpass consumes a locally converted XML stream in a new data directory; no public clone URL, periodic fetcher, attic/contributor import or area dispatcher in v1. Bbox POI presets suffice. Serving data is immutable to import tooling, but provider scratch/lock/OpenSearch working state may need writes: mount only necessary local writable paths. Do not force read-only filesystem flags that break an actual provider, and do not describe Photon/Overpass mounts as wholly read-only without testing.
+
+### Full storage inventory
+
+| Store/artifact | Owner | Rebuildable? | Retention / recovery |
 | --- | --- | --- | --- |
-| Application gateway | Node.js + TypeScript; a modular application with provider adapters | User-required stack; proposal for shared contracts and bounded provider access. | Framework choice, API schemas and later authentication boundary. |
-| Vector tiles | Tegola with its PostGIS MVT provider | Official configuration supports PostGIS-backed MVT layers. Fits the required database stack. | Layer SQL/schema, cache behavior, image provenance, nationwide performance. |
-| OSM rendering import | Containerized osm2pgsql flex pipeline into a dedicated PostGIS map database | Official flex interface defines tables and data mapping. | Layer/tag coverage, complete geometries, indexes and reproducible import. |
-| Web map | Locally bundled MapLibre GL JS; local light/dark styles and assets | Official browser renderer supports vector tiles. | RTL/Persian rendering and the agreed mobile SDK's style compatibility. |
-| Routing | Valhalla, provisionally | Documented vehicle costing and routing/matrix APIs match much of the requested scope. | Capability caveats in section 2; motorcycle behavior on Iran fixtures. |
-| Geocoding | Nominatim for address/place search and reverse; Photon for autocomplete | Photon documents typeahead and multilingual search; Nominatim exposes search/reverse interfaces. | Need for both runtimes, Persian quality, index size and pinned import compatibility. |
-| OSM feature queries | Private Overpass instance with bounded gateway POI presets | Official self-hosting instructions describe local data import and independent storage. | Approved queries, import/area handling and resource limits. |
-| Deployment | Docker images plus Compose as a proposed initial deployment target | A simple reference topology, not a customer OS/hardware requirement. | Target host/CPU, image inventory, offline installer and resource settings. |
+| Original PBF + source manifest | Operator | Only from supplied source | Preserve owner original; managed copies checksummed |
+| Rendering DB + catalog/indexes | Import pipeline | Yes from source + pipeline | Active + one prior compatible release; DB export/runbook |
+| Application/control DB | Seyra API | Control metadata only now; future user data differs | Real backup/restore, never treat as disposable map data |
+| Temporary Nominatim DB / flatnodes | Build job | Yes | Scoped job workspace; clean only owned temporary output after verified export |
+| Photon export JSON + index | Geocoder build | Yes | Active + prior compatible index; versioned JSON as needed for rebuild |
+| Valhalla graph / tar / admin SQLite / required timezone or speed assets | Routing build | Yes with complete inputs | Active + prior; checked local auxiliary sources |
+| Overpass base data / dispatcher scratch | OSM feature build/service | Base yes; scratch transient | Active + prior base; runtime write/lock requirements documented |
+| Tegola file cache | Tile service | Yes | Dataset-versioned, bounded; no cloud cache; discard only managed cache |
+| Styles / fonts / glyphs / sprites / web bundle | Asset build | Yes if sources/licenses retained | Versioned immutable assets; source/licence/checksum inventory |
+| Docker image archives / OCI metadata | Preparation pipeline | Yes with locked dependencies | Checksummed offline bundle; verify loaded image identity/platform |
+| TLS/CA public material, server keys and local trust config | Operator | Keys are not map rebuild outputs | Keys outside Git/bundle defaults, restricted permissions and recovery procedure |
+| Release manifests, locks, test evidence | Release tooling | Preserve audit trail | Versioned, checksummed; no private keys or user datasets in Git |
+| Overpass area data / pre-generated tile archives | Not selected in v1 | N/A | Any later addition updates this inventory and architecture |
 
-Tegola is proposed because it aligns with the supplied PostGIS constraint and allows explicit layer queries; its name being mentioned by the user alone was not a selection. Its configuration does not automatically provide a complete nationwide basemap. A versioned import schema, layer catalog, style rules, POI mapping and local assets are separate deliverables. See [Tegola configuration](https://tegola.io/documentation/configuration/) and [osm2pgsql manual](https://osm2pgsql.org/doc/manual.html).
+Retain active plus one previous compatible release, with separate staging space. This is not a claim that exactly twice the input size suffices. Measure every store and temporary peak; refuse an import on missing prerequisites/space according to configurable checks. Never delete unrelated paths, original inputs or application data.
 
-Proposal: start with dedicated databases/roles for Seyra application data, rendering data and Nominatim. They may share a reviewed PostgreSQL installation, but import/write-heavy map work must not receive application-data privileges. Separate instances remain an option after measurements; this is not yet a production sizing decision.
+## 5. Activation and offline packaging
 
-## 2. Routing evidence, caveats, and alternatives
+Manifest schema: dataset_id, source_sha256, source snapshot timestamp/provenance, catalog/pipeline versions, component source releases/commits, image platform/identity, asset/artifact checksums and validation result paths. Unknown snapshot timestamp is explicit, not synthesized from import time. dataset_id identifies the source plus derived pipeline/catalog/assets version; do not key releases on PBF checksum alone.
 
-[Valhalla route documentation](https://valhalla.github.io/valhalla/api/route/api-reference/) documents auto, pedestrian and motorcycle costing, ordered waypoints, and alternatives; motorcycle costing is labeled beta. Alternatives do not support more than two locations or time-dependent routes and may return fewer results than requested. Its distance-oriented option does not alone guarantee global shortest paths because of hierarchy pruning; changing pruning trades performance for stronger optimality within documented limits. Default time-oriented costing also includes preferences/penalties. These limitations require a clarified contract, not misleading shortest/fastest labels.
+Chosen initial cutover: documented maintenance window. CLI verifies all staged checks, enters maintenance, drains/cancels admitted work, stops serving providers, changes the complete release configuration, starts/probes all providers and enables traffic only after same-revision readiness. Mixed/stale /maps URLs fail explicitly instead of being served from a new dataset. Retain the previous complete configuration for rollback. No cross-provider atomicity claim; test restart failure and reversal. A failed build leaves active data unchanged. Future blue/green is not required while RAM is unknown.
 
-[Valhalla matrices](https://valhalla.github.io/valhalla/api/matrix/) return travel times/distances between locations. Verify profile, objective, direction, limits, and whether matrix distance measures the desired route objective in the pinned release. Do not call a distance measured along a time-oriented route the globally shortest road distance.
+Package prebuilt application and all provider/tool images, local SDK/assets/fonts, host prerequisites for the reference OS if needed, manifests, checksums, licence inventory, install/import/update/rollback/backup tools and runbooks. Runtime Compose has no build sections, uses pull_policy: never and all four providers unconditionally. Separate build-job definitions do not make runtime providers optional. A missing image/artifact fails before operation; no npm/apt/pip/wget fallback. Validate Docker save/load identity resolution rather than inventing RepoDigests: registry digests where verifiable; custom image IDs and immutable local tags plus archive SHA-256 where appropriate.
 
-Comparison: [OSRM's API](https://project-osrm.org/docs/v5.24.0/api/) offers routes, alternatives and tables, but its table distances describe fastest routes, not independently shortest-distance routes. This reference is versioned documentation, not a claim that v5.24.0 is the current release. [GraphHopper's upstream project](https://github.com/graphhopper/graphhopper) offers a self-hostable engine, but hosted Directions API features must not be assumed to exist in the self-hosted edition. Neither alternative has been validated against the requested combinations; Valhalla remains provisional.
+## 6. Evidence and verification boundaries
 
-Proposed public profiles: car, pedestrian, motorcycle. Objectives: time and distance, with documented semantics and supported-combination metadata. Road distance/time must be directional (candidate-to-incident for an eventual assistance scenario). Off-graph/unreachable results are explicit, not silently replaced by straight-line estimates. A spatial shortlist can improve efficiency but is an approximation unless completeness of the ranking is demonstrated; exact top-K claims require examining all eligible candidates or a valid bound. Eligibility and real-user data remain future SOS/Relation requirements.
+Official sources reviewed 2026-10-14; moving manuals are capability evidence, not image locks:
 
-Multi-destination ordered routing and visit-order optimization are different features. Do not promise the latter based on support for the former. Do not manufacture complete alternative routes by merely combining per-leg alternatives without a reviewed algorithm and acceptance tests.
+- [Tegola](https://tegola.io/documentation/configuration/): PostGIS/MVT provider configuration; schema/style is a separate deliverable.
+- [osm2pgsql](https://osm2pgsql.org/doc/manual.html): flex table/tag mapping and incomplete-extract handling.
+- [Valhalla route API](https://valhalla.github.io/valhalla/api/route/api-reference/): costing, waypoints and alternate constraints. Motorcycle is beta; exact-road claims are not adopted.
+- [Valhalla optimized API](https://valhalla.github.io/valhalla/api/optimized/): documented profiles differ from our full profile/objective contract, so it is not our sole order solver.
+- [Valhalla Docker](https://github.com/valhalla/valhalla/blob/master/docker/README.md): base versus scripted deployment and default timezone/speed inputs; audit exact scripts at the locked commit.
+- [Nominatim import](https://nominatim.org/release-docs/latest/admin/Import/) and [local phrases](https://nominatim.org/release-docs/latest/customize/Special-Phrases/): local export setup and auxiliary-download pitfalls.
+- [Photon usage](https://github.com/komoot/photon/blob/master/docs/usage.md): Nominatim export/import, private search storage and destructive same-directory import; [README](https://github.com/komoot/photon) identifies the Java requirement.
+- [MapLibre 6.9.0](https://github.com/maplibre/maplibre-gl-js/releases/tag/v6.9.0): native Arabic/Hebrew shaping; [style spec](https://maplibre.org/maplibre-style-spec/root/): resources and SDK-specific support. Persian fixtures remain necessary.
+- [Overpass setup](https://dev.overpass-api.de/overpass-doc/en/more_info/setup.html), [Osmium](https://osmcode.org/osmium-tool/manual.html), [PostGIS distance](https://postgis.net/docs/ST_Distance.html).
+- [Docker Compose](https://docs.docker.com/reference/compose-file/services/), [Ubuntu install](https://docs.docker.com/engine/install/ubuntu/), [Node releases](https://nodejs.org/en/about/previous-releases), [Fastify LTS](https://fastify.dev/docs/latest/Reference/LTS/).
 
-## 3. Geocoding and Persian handling
-
-[Photon upstream](https://github.com/komoot/photon) documents search-as-you-type, multilingual search, typo tolerance, spatial filters and reverse geocoding. [Its usage guide](https://github.com/komoot/photon/blob/master/docs/usage.md) describes importing from Nominatim, language selection, and embedded or external OpenSearch storage. Imports replace an existing Photon index; build into staging, not the active data directory. Keep Nominatim updates stopped during Photon import. Persian/English translations depend on the input names and import configuration; multilingual capability is not proof of Iran search quality.
-
-[Nominatim import documentation](https://nominatim.org/release-docs/latest/admin/Import/) permits regional imports and identifies auxiliary importance data; source-extract completeness can affect administrative areas. Proposed approach: import the local Iran file into a dedicated Nominatim database, then build a staged Photon index with fa/en coverage. Evaluate the need for optional auxiliary data; any accepted auxiliary source is supplied locally. [The public Nominatim service policy](https://operations.osmfoundation.org/policies/nominatim/) says autocomplete is unsupported there and explicitly distinguishes the public service from self-hosted instances; its public rate policy is not Seyra's self-hosted capacity specification.
-
-Proposal: preserve original display strings; use consistent Persian/Arabic character and digit normalization for search indexing and query handling, agreed through fixtures. Test partial names, addresses, POIs, mixed scripts and missing translations. Do not transliterate or silently rewrite authoritative display names.
-
-Storage outside PostgreSQL is proposed for the Photon index, Valhalla graph and Overpass database. Photon can use an embedded search backend, avoiding a separate exposed search cluster initially. Necessity, resource use, licenses, backup/update strategy and access controls must be reviewed before accepting this exception.
-
-## 4. Overpass scope
-
-Keep Overpass deployed because it is in the contractual scope and map services must not be disableable. Proposal: gateway-owned POI presets for categories such as hospitals or pharmacies, with bounded geographic filters. End-user raw query execution is not proposed. Categories are suggestions, not agreed product functionality.
-
-[Official Overpass setup](https://dev.overpass-api.de/overpass-doc/en/more_info/setup.html) describes an independent data directory and local XML import, with separate area-processing configuration. The supplied PBF may require local format conversion using a packaged tool; [Osmium](https://osmcode.org/osmium-tool/manual.html) supports reading/writing OSM formats. Propose current geographic data without contributor metadata or historical attic data, since neither is requested. If polygon/area queries are accepted, include their required build processes and fixtures.
-
-No public clone URL, periodic Internet replication fetcher, or unbounded interpreter access belongs in the operational configuration. Apply private networking, query time/memory/result limits, bounded request sizes and gateway input validation. Overpass is for base-map OSM objects; do not store live user locations in it.
-
-## 5. Shared web/mobile interface and assets
-
-Proposal: a single internal HTTPS entry point for versioned application APIs and local map assets. Web uses same-origin endpoints. Mobile uses documented absolute internal URLs, certificate trust/provisioning and the agreed SDK's supported style features. Internal DNS/PKI/time must also work without outside access; specific provisioning choices remain open.
-
-Separate routing/geocoding/POI adapters from transport details. Specify units, coordinates, languages, dataset revision, request limits, pagination/geometry size and typed errors. Propose GeoJSON/WGS84 for geometry with explicit longitude/latitude array order; provider latitude/longitude objects are adapted consistently. Binary tile delivery should not depend on rebuilding application JSON handlers for every tile.
-
-[MapLibre GL JS](https://maplibre.org/maplibre-gl-js/docs/) is a browser renderer; MapLibre Native is its related mobile renderer. [The style specification](https://maplibre.org/maplibre-style-spec/root/) defines sources, sprites, glyphs and fonts, with SDK-specific support. Self-host all resources, including font/glyph ranges and any text-shaping resources required by the pinned SDK. Do not copy documentation examples containing CDN/demo tile or font URLs into Seyra. Validate light/dark styles on actual agreed SDKs; shared vector tiles alone do not prove cross-platform text compatibility.
-
-Latest working scope: clients need a connection to the internal server for map services; no guaranteed server-disconnected local search/routing/map pack is proposed for the first phase. This still fully excludes Internet dependencies. Confirm this change before finalizing the brief.
-
-## 6. Offline import, packaging, updates and rollback
-
-Proposal for the pipeline:
-
-1. Receive the user-supplied Iran dataset and a version/checksum manifest in a local input directory. Validate the file and retain the original artifact.
-2. Build service-specific rendering data, routing graph, Nominatim database, Photon index and Overpass database from that same source revision. Supply any approved auxiliary data locally.
-3. Build in isolated staging resources; collect feature/coverage validation and import RAM/time/storage measurements.
-4. Make a coordinated dataset release available after all required service checks pass. Version map styles/schema/cache with the data; report component revisions during health checks.
-5. Activate according to an agreed maintenance-window/cutover procedure. Retain a compatible previous release and test rollback; do not promise atomic cross-service switching until demonstrated.
-
-The deployment bundle should contain pinned loadable Docker images, packaged application/web artifacts, local fonts/styles/sprites, necessary tools and auxiliary data, a manifest with checksums/provenance/license information, configuration templates without secrets, and offline install/import/update/restore instructions. If Docker itself is not preinstalled, host prerequisites/installers must also be provided for the agreed OS. No deployment-time npm/apt/pip fetches, cloud registries, external telemetry, public DNS checks, or Internet license checks.
-
-[Valhalla's upstream Docker guide](https://github.com/valhalla/valhalla/blob/master/docker/README.md) provides base/scripted images and local volume input. Its scripted configuration also includes remote inputs, such as a default speed-configuration URL, and optional downloading elevation. Audit the pinned entrypoint and prefer a controlled local build/run flow rather than relying on default startup behavior. Upstream/community/self-built image provenance must be recorded for every component. Custom Docker images are acceptable candidates, subject to pinned sources and repeatable builds; no specific image vendor is mandated.
-
-Map updates initially propose local snapshot rebuilds; cadence, downtime, free staging/rollback space and later diff support are unresolved. Do not enable online replication by default.
-
-## 7. Security and validation proposals
-
-Expose only the internal entry point; provider services/databases are on private service networks. Use read-only serving roles, separate privileged import roles, secret-file injection, bounded queries and timeouts, cancellation, restricted CORS, and logs that avoid location/query/credential disclosure. Apply least privilege supported by each actual container; do not assert every upstream image already supports non-root/read-only execution. Map health needs all four required capabilities, with clear per-provider errors. The authentication module is deferred; do not replace it with insecure ad hoc authentication or a public management deployment.
-
-Maintain [OSM attribution and license information](https://www.openstreetmap.org/copyright) and a separate inventory for software, styles, fonts and assets. Exact distribution obligations and license compatibility must be checked for selected artifacts.
-
-Meaningful later checks: real small OSM fixtures covering profile/restriction differences; MVT layer decode; known address/POI and Persian text cases; bounded Overpass queries; import error handling; all assets requested inside the network; install/restart/update/rollback with external egress denied; measurement of full-Iran import and service workloads. Small fixtures do not prove nationwide completeness. Hardware/concurrency are unknown, so no production minimum/SLA is claimed and all unexecuted checks remain recorded.
-
-## 8. Review blockers and next action
-
-Resolve the geocoder interpretation, disconnected-client scope, routing objective/alternative/multipoint combinations, and proximity metric interpretation. Review non-PostgreSQL storage needs, explicit map-detail catalog, and reference environment before issuing an implementation prompt. Unknown production capacity can be measured later, but must prevent production-readiness claims.
-
-Claude Code should critique this proposal with the updated review prompt. It must not implement until the brief and architecture are stabilized with the owner.
+No real Iran import, binary image audit, benchmark or mobile run has been completed here. Tagged/raw source retrieval was blocked for several requests; Claude's release observations are labeled separately in DEPENDENCY_BASELINE.md. Register exact validation evidence during development and retain failed/unexecuted checks honestly.
