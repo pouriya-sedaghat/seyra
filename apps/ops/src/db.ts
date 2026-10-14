@@ -10,7 +10,7 @@ import { composeRuntime } from './compose.js';
 export async function psql(l: Layout, database: string, sql: string, vars: Record<string, string> = {}): Promise<string> {
   const args = ['exec', '-T', 'db', 'psql', '-X', '-q', '-At', '-U', 'seyra_admin', '-d', database, '-v', 'ON_ERROR_STOP=1'];
   for (const [k, v] of Object.entries(vars)) {
-    if (!/^[a-z_]+$/.test(k) || /[\n\r]/.test(v)) throw new Error('invalid psql variable');
+    if (!/^[a-z_][a-z0-9_]*$/.test(k) || /[\n\r]/.test(v)) throw new Error('invalid psql variable');
     args.push('-v', `${k}=${v}`);
   }
   const r = await composeRuntime(l, args, { input: sql });
@@ -37,7 +37,9 @@ function sqlIdentName(v: string): string {
 export async function waitForDb(l: Layout, timeoutS = 120): Promise<void> {
   const deadline = Date.now() + timeoutS * 1000;
   for (;;) {
-    const r = await composeRuntime(l, ['exec', '-T', 'db', 'pg_isready', '-U', 'seyra_admin', '-d', 'seyra_app'], { allowFailure: true });
+    // TCP readiness: the image's first-start initialisation server listens on the socket only and
+    // shuts down again, so a socket check alone can succeed too early.
+    const r = await composeRuntime(l, ['exec', '-T', 'db', 'pg_isready', '-h', '127.0.0.1', '-U', 'seyra_admin', '-d', 'seyra_app'], { allowFailure: true });
     if (r.code === 0) return;
     if (Date.now() > deadline) throw new Error('database did not become ready');
     await new Promise((res) => setTimeout(res, 2000));

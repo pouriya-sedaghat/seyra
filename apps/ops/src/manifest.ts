@@ -128,8 +128,20 @@ export function duBytes(dir: string): number {
 }
 
 /**
+ * Images whose identity shapes or reads the built map stores (render DB, routing graph, geocoder
+ * index, Overpass base, MVT encoding). A release is only servable by these exact identities.
+ * The API, proxy and ops images do not change stored data; the proxy's map assets are covered by
+ * the separate asset digest. All component identities are still recorded in the manifest.
+ */
+export const DATA_COMPONENT_ROLES = ['DB', 'OSMTOOLS', 'VALHALLA', 'GEOCODER_BUILD', 'PHOTON', 'OVERPASS', 'TEGOLA'] as const;
+
+export function dataComponents(all: Record<string, string>): Record<string, string> {
+  return Object.fromEntries(DATA_COMPONENT_ROLES.map((r) => [r, all[r] ?? 'missing']));
+}
+
+/**
  * dataset_id = ds-<snapshot date | nots>-<12 hex>. The hash covers the source checksum, pipeline
- * files, component image identities and the asset digest — not the PBF alone.
+ * files, data-component image identities and the asset digest — not the PBF alone.
  */
 export function deriveDatasetId(snapshot: string | null, parts: { source_sha256: string; pipeline_fingerprint: string; components: Record<string, string>; assets_sha256: string }): string {
   const date = snapshot && /^\d{4}-\d{2}-\d{2}/.test(snapshot) ? snapshot.slice(0, 10).replace(/-/g, '') : 'nots';

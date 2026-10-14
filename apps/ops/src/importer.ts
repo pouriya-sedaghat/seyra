@@ -2,7 +2,7 @@ import { chownSync, closeSync, copyFileSync, existsSync, mkdirSync, openSync, re
 import { basename, join, resolve } from 'node:path';
 import { CATALOG_VERSION, SEARCH_NORMALIZATION_VERSION } from '@seyra/contracts';
 import { STYLE_VERSION, buildStyle, buildTileJson } from '@seyra/map-assets';
-import { composeJobs } from './compose.js';
+import { composeJobs, jobsInvocation } from './compose.js';
 import { psql, recordEvent, renderDbName } from './db.js';
 import { PHOTON_EXTRA_TAGS, preprocessDump } from './geocoder-preprocess.js';
 import { layout, managedChild, readSettings, type Layout, type Settings } from './layout.js';
@@ -10,6 +10,7 @@ import { imageEnv, lockedImages, verifyImages, type LockedImage } from './lock.j
 import {
   MANIFEST_SCHEMA,
   PIPELINE_VERSION,
+  dataComponents,
   deriveDatasetId,
   duBytes,
   sha256File,
@@ -86,6 +87,11 @@ function centerAndZoom(bbox: [number, number, number, number] | null): { center:
   return { center: [(w + e) / 2, (s + n) / 2], zoom };
 }
 
+/** Tegola decodes bounds/center as float arrays; TOML integers (e.g. a 0 longitude) are rejected. */
+export function tomlFloats(values: readonly number[]): string {
+  return `[${values.map((v) => (Number.isInteger(v) ? v.toFixed(1) : String(v))).join(', ')}]`;
+}
+
 export async function importDataset(opts: ImportOptions): Promise<string> {
   const l = layout();
   const s: Settings = readSettings(l);
@@ -142,7 +148,7 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
 
     const pipeline = await pipelineFingerprint(l);
     const assets = await assetsDigest(images);
-    const components = Object.fromEntries(imageCheck.map((c) => [c.role, c.observed!]));
+    const components = dataComponents(Object.fromEntries(imageCheck.map((c) => [c.role, c.observed!])));
     const datasetId = deriveDatasetId(snapshot, { source_sha256: sourceSha, pipeline_fingerprint: pipeline.sha256, components, assets_sha256: assets });
     releaseDir = managedChild(l.releases, datasetId);
     if (existsSync(releaseDir)) throw new Error(`release ${datasetId} already exists for these exact inputs (see seyra-maps status)`);
@@ -232,8 +238,8 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
         .replaceAll('{{DB_HOST}}', 'db')
         .replaceAll('{{RENDER_DB}}', renderDb)
         .replaceAll('{{MAP_NAME}}', `seyra_${datasetId.replace(/-/g, '_')}`)
-        .replaceAll('{{BOUNDS}}', JSON.stringify(bbox ?? [-180, -85, 180, 85]))
-        .replaceAll('{{CENTER}}', JSON.stringify([center[0], center[1], zoom]));
+        .replaceAll('{{BOUNDS}}', tomlFloats(bbox ?? [-180, -85, 180, 85]))
+        .replaceAll('{{CENTER}}', tomlFloats([center[0], center[1], zoom]));
       mkdirSync(join(releaseDir, 'tegola'), { recursive: true });
       writeFileSync(join(releaseDir, 'tegola', 'tegola.toml'), tegolaToml, { mode: 0o444 });
       manifest!.artifacts.render = {
@@ -317,9 +323,9 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
         mkdirSync(overpassDir, { recursive: true });
         chownTree(overpassDir, UID.overpass);
         const label = `seyra:${datasetId}`;
-        const env = { ...jobBase, SEYRA_JOB_OUT: overpassDir, SEYRA_JOB_OVERPASS_LABEL: label, SEYRA_HOME: l.home };
-        const composeArgs = (svc: string) => ['compose', '-p', 'seyra-jobs', '-f', join(l.install, 'infra/compose/jobs.yml'), 'run', '--rm', '--no-deps', '-T', svc];
-        await pipe({ cmd: 'docker', args: composeArgs('overpass-xml'), env }, { cmd: 'docker', args: composeArgs('overpass-import'), env }, log('overpass-build'));
+        const env = { ...jobBase, SEYRA_JOB_OUT: overpassDir, SEYRA_JOB_OVERPASS_LABEL: label };
+        const job = (svc: string) => jobsInvocation(l, env, ['run', '--rm', '--no-deps', '-T', svc]);
+        await pipe(job('overpass-xml'), job('overpass-import'), log('overpass-build'));
         const tree = await treeDigest(join(overpassDir, 'db'));
         manifest!.artifacts.overpass = { dir: 'overpass/db', version_label: label, ...tree, meta: false, attic: false, areas: false };
       },

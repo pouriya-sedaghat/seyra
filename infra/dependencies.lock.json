@@ -1,6 +1,6 @@
 {
   "schema": "seyra.dependencies-lock/1",
-  "generated_at": "2026-10-14T10:16:44.626Z",
+  "generated_at": "2026-10-14T12:41:43.314Z",
   "generated_by": "infra/prepare/write-lock.mjs",
   "status": "LOCKED (preparation build verified); runtime/acceptance evidence is in docs/TEST_RESULTS.md",
   "preparation_environment": {
@@ -127,12 +127,12 @@
     "overpass": {
       "role": "OVERPASS",
       "ref": "seyra/overpass:0.7.62.4-seyra1",
-      "image_id": "sha256:846a48b6c15e44ab762cb06abbeffba8d6d6bb015216977cb25c090226c921e7",
+      "image_id": "sha256:6b81967f94e12f3ae25b915bb3534914cf40751ca34bfca71829a32a6e05d3f1",
       "repo_digests": [
-        "seyra/overpass@sha256:846a48b6c15e44ab762cb06abbeffba8d6d6bb015216977cb25c090226c921e7"
+        "seyra/overpass@sha256:6b81967f94e12f3ae25b915bb3534914cf40751ca34bfca71829a32a6e05d3f1"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T09:21:59.090840473Z",
+      "created": "2026-10-14T12:35:08.504953211Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/overpass/Dockerfile",
       "dockerfile_sha256": "12850fad45a798cb92fe4f8bbbb10f80f1a8031a95f33d3e56ece295bc06c971",
@@ -156,12 +156,12 @@
     "api": {
       "role": "API",
       "ref": "seyra/api:1.0.0-seyra1",
-      "image_id": "sha256:2f015125078bbfcaec09c22852511615d3430423203dc371df74bde7da3627bd",
+      "image_id": "sha256:4767b7b908361e7d34740a555307360b091543a3cfe8e154f5ffcf65ad0678c2",
       "repo_digests": [
-        "seyra/api@sha256:2f015125078bbfcaec09c22852511615d3430423203dc371df74bde7da3627bd"
+        "seyra/api@sha256:4767b7b908361e7d34740a555307360b091543a3cfe8e154f5ffcf65ad0678c2"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T10:01:15.553882047Z",
+      "created": "2026-10-14T12:35:26.139823722Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/api/Dockerfile",
       "dockerfile_sha256": "9bd23045fdbd035d909920dbf0bbd83984798c1a0dcd6c572d6747c69d0063d6",
@@ -183,12 +183,12 @@
     "proxy": {
       "role": "PROXY",
       "ref": "seyra/proxy:1.0.0-seyra1",
-      "image_id": "sha256:0096656adf505d8433ecc38f593933f21411faa79c79f089be670cb9d38351cd",
+      "image_id": "sha256:1a79eecce69e2fa9daa6ae7fc36d205b24ed9dcbd705530cf995a04828897cf5",
       "repo_digests": [
-        "seyra/proxy@sha256:0096656adf505d8433ecc38f593933f21411faa79c79f089be670cb9d38351cd"
+        "seyra/proxy@sha256:1a79eecce69e2fa9daa6ae7fc36d205b24ed9dcbd705530cf995a04828897cf5"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T10:01:43.285635042Z",
+      "created": "2026-10-14T12:41:13.846765117Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/proxy/Dockerfile",
       "dockerfile_sha256": "4feb60b83132a4311e7547ce730c7a506c21aca9d2f5d79ab1941f040356e25e",
@@ -199,7 +199,7 @@
       "sources": [],
       "reported_versions": {
         "nginx": "nginx version: nginx/1.28.3",
-        "assets_sha256": "7da04f24ce522b408a5fda17ed108c92c34bee2b1c4d77fc18c8007e046c90b6"
+        "assets_sha256": "8f7bcaf8f8dfe98cd89f12d1a2db440aa246e52d3434a93ca8de98091ec5fb31"
       },
       "os_packages": null,
       "license": "BSD-2-Clause (nginx), OFL-1.1 (Vazirmatn), BSD-3-Clause (MapLibre GL JS)",
@@ -268,12 +268,12 @@
     "ops": {
       "role": "OPS",
       "ref": "seyra/ops:1.0.0-seyra1",
-      "image_id": "sha256:0efc8a864f1e66aaab667500a973426679861ca1b14775382c3b6eba96a6daec",
+      "image_id": "sha256:09dd618783bd72ce95cd8367642ca994f28c505b0d0aa2593de416d211ade412",
       "repo_digests": [
-        "seyra/ops@sha256:0efc8a864f1e66aaab667500a973426679861ca1b14775382c3b6eba96a6daec"
+        "seyra/ops@sha256:09dd618783bd72ce95cd8367642ca994f28c505b0d0aa2593de416d211ade412"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T10:13:08.527384044Z",
+      "created": "2026-10-14T12:41:31.052526105Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/ops/Dockerfile",
       "dockerfile_sha256": "3337da8a4d1d8bd2af7215d88e0c06cd51f1cf501c85b2aeb944d5b53734b4f5",
@@ -401,7 +401,7 @@
     }
   },
   "npm": {
-    "package_lock_sha256": "7c680fadfdee23b3e32debbd2175e45ee5b36463e4a1961d57c8455c693a75fd",
+    "package_lock_sha256": "5465154a44ab7374c4d8b97d6d76ab5a56425c3bfb8f7310c3c6dec03b69142d",
     "lockfile_version": 3,
     "packages": {
       "fastify": {
@@ -479,6 +479,6 @@
   "assets": {
     "fonts": "Vazirmatn 33.0.3 (OFL-1.1) from npm",
     "glyph_generator": "packages/map-assets (opentype.js 2.0.0 + TinySDF-port)",
-    "digest": "7da04f24ce522b408a5fda17ed108c92c34bee2b1c4d77fc18c8007e046c90b6"
+    "digest": "8f7bcaf8f8dfe98cd89f12d1a2db440aa246e52d3434a93ca8de98091ec5fb31"
   }
 }

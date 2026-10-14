@@ -8,7 +8,7 @@
 export const BASE_TOKEN = '__SEYRA_BASE__';
 export const FONT_REGULAR = 'Vazirmatn Regular';
 export const FONT_BOLD = 'Vazirmatn Bold';
-export const STYLE_VERSION = 'seyra-style-1.0.0';
+export const STYLE_VERSION = 'seyra-style-1.0.1';
 
 export type Theme = 'light' | 'dark';
 export type Lang = 'fa' | 'en';
@@ -78,7 +78,28 @@ export const POI_ICON_VALUES = [
   'supermarket', 'bakery', 'convenience', 'mall',
 ] as const;
 
-const roadWidth = (base: number, z14: number, z18: number): Expr => ['interpolate', ['exponential', 1.5], ['zoom'], 6, base, 14, z14, 18, z18];
+// MapLibre allows a zoom interpolation only at the top level of an expression, so the per-class
+// widths are `match` expressions inside each zoom stop (not the other way round).
+const ROAD_WIDTH_CLASSES: Array<[string[] | null, [number, number, number]]> = [
+  [['motorway', 'trunk'], [1, 6, 24]],
+  [['primary', 'secondary'], [0.8, 5, 20]],
+  [['tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link'], [0.6, 4, 16]],
+  [['residential', 'unclassified', 'living_street', 'road', 'busway'], [0.4, 3, 12]],
+  [null, [0.3, 1.5, 6]],
+];
+function roadWidth(extra = 0): Expr {
+  const at = (stop: 0 | 1 | 2): Expr => {
+    const m: Expr = ['match', ['get', 'type']];
+    let fallback = 0;
+    for (const [types, w] of ROAD_WIDTH_CLASSES) {
+      if (types) m.push(types, w[stop] + extra);
+      else fallback = w[stop] + extra;
+    }
+    m.push(fallback);
+    return m;
+  };
+  return ['interpolate', ['exponential', 1.5], ['zoom'], 6, at(0), 14, at(1), 18, at(2)];
+}
 
 function roadLayers(p: Palette): Layer[] {
   const color: Expr = [
@@ -89,14 +110,7 @@ function roadLayers(p: Palette): Layer[] {
     ['secondary', 'secondary_link'], p.secondary,
     p.minor,
   ];
-  const width: Expr = [
-    'match', ['get', 'type'],
-    ['motorway', 'trunk'], roadWidth(1, 6, 24),
-    ['primary', 'secondary'], roadWidth(0.8, 5, 20),
-    ['tertiary', 'motorway_link', 'trunk_link', 'primary_link', 'secondary_link'], roadWidth(0.6, 4, 16),
-    ['residential', 'unclassified', 'living_street', 'road', 'busway'], roadWidth(0.4, 3, 12),
-    roadWidth(0.3, 1.5, 6),
-  ];
+  const width = roadWidth();
   const isRoad: Expr = ['all', ['==', ['get', 'class'], 'highway'], ['!', ['in', ['get', 'type'], ['literal', ['footway', 'path', 'cycleway', 'steps', 'bridleway', 'pedestrian', 'track']]]]];
   return [
     {
@@ -104,7 +118,7 @@ function roadLayers(p: Palette): Layer[] {
       layout: { 'line-cap': 'round', 'line-join': 'round', 'line-sort-key': ['get', 'z_order'] },
       paint: {
         'line-color': ['match', ['get', 'type'], ['motorway', 'motorway_link'], p.motorwayCasing, p.roadCasing],
-        'line-width': ['+', width, 1.5],
+        'line-width': roadWidth(1.5),
         'line-opacity': ['case', ['==', ['get', 'tunnel'], true], 0.5, 1],
       },
     },
@@ -166,7 +180,12 @@ export function buildStyle(o: StyleOptions): Record<string, unknown> {
       id: 'waterway', type: 'line', source: 'seyra', 'source-layer': 'waterways',
       paint: {
         'line-color': p.waterway,
-        'line-width': ['match', ['get', 'waterway'], ['river', 'canal'], ['interpolate', ['linear'], ['zoom'], 8, 1, 16, 6], ['interpolate', ['linear'], ['zoom'], 12, 0.5, 16, 2]],
+        'line-width': [
+          'interpolate', ['linear'], ['zoom'],
+          8, ['match', ['get', 'waterway'], ['river', 'canal'], 1, 0.5],
+          12, ['match', ['get', 'waterway'], ['river', 'canal'], 3.5, 0.5],
+          16, ['match', ['get', 'waterway'], ['river', 'canal'], 6, 2],
+        ],
       },
     },
     {

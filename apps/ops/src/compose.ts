@@ -49,9 +49,33 @@ export function composeRuntime(l: Layout, args: string[], opts: RunOptions = {})
   return run('docker', ['compose', '-p', RUNTIME_PROJECT, '-f', composeFile(l, 'runtime.yml'), '--env-file', l.runtimeEnv, ...args], opts);
 }
 
-/** docker compose for offline build jobs; per-run mounts are passed as environment variables. */
+/** Per-run job variables. Compose interpolates every service in jobs.yml, not only the one being run. */
+export const JOB_VARS = [
+  'SEYRA_JOB_INPUT',
+  'SEYRA_JOB_OUT',
+  'SEYRA_JOB_WORK',
+  'SEYRA_JOB_IMPORT',
+  'SEYRA_JOB_RELEASE',
+  'SEYRA_JOB_RENDER_DB',
+  'SEYRA_JOB_PGPASS',
+  'SEYRA_JOB_OVERPASS_LABEL',
+  'SEYRA_PHOTON_EXTRA_TAGS',
+] as const;
+
+/**
+ * docker compose for offline build jobs; per-run mounts are passed as environment variables.
+ * Variables of the services that are NOT being run get an inert managed placeholder so compose
+ * can interpolate the whole file; the caller supplies every variable its own service needs.
+ */
+export function jobsInvocation(l: Layout, env: Record<string, string>, args: string[]): { cmd: string; args: string[]; env: Record<string, string> } {
+  const placeholder = join(l.work, '.job-var-unset');
+  const filler = Object.fromEntries(JOB_VARS.filter((k) => env[k] === undefined).map((k) => [k, placeholder]));
+  return { cmd: 'docker', args: ['compose', '-p', JOBS_PROJECT, '-f', composeFile(l, 'jobs.yml'), ...args], env: { SEYRA_HOME: l.home, ...filler, ...env } };
+}
+
 export function composeJobs(l: Layout, env: Record<string, string>, args: string[], opts: RunOptions = {}): Promise<RunResult> {
-  return run('docker', ['compose', '-p', JOBS_PROJECT, '-f', composeFile(l, 'jobs.yml'), ...args], { ...opts, env: { SEYRA_HOME: l.home, ...env, ...opts.env } });
+  const inv = jobsInvocation(l, env, args);
+  return run(inv.cmd, inv.args, { ...opts, env: { ...inv.env, ...opts.env } });
 }
 
 export async function ensureNetworks(): Promise<void> {

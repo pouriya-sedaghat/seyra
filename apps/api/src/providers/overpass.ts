@@ -71,6 +71,8 @@ export class OverpassClient {
     if (res.status === 429) throw new MapServiceError('OVERLOADED', 'overpass rate limit reached; retry later', { provider: 'overpass' });
     if (res.status === 504) throw new MapServiceError('PROVIDER_TIMEOUT', 'overpass has no free query capacity or timed out', { provider: 'overpass' });
     if (res.status !== 200) throw new MapServiceError('PROVIDER_ERROR', `overpass returned HTTP ${res.status}`, { provider: 'overpass' });
+    const rejected = dispatcherRejection(res.body);
+    if (rejected) throw rejected;
     const body = parseJson<OverpassResponse>('overpass', res.body);
     if (body.remark && /runtime (error|remark)/i.test(body.remark)) {
       if (/timed out|timeout/i.test(body.remark)) throw new MapServiceError('PROVIDER_TIMEOUT', 'overpass query exceeded its time limit', { provider: 'overpass' });
@@ -91,7 +93,28 @@ export class OverpassClient {
       maxBytes: 64 * 1024,
     });
     if (res.status !== 200) throw new MapServiceError('PROVIDER_UNAVAILABLE', `overpass probe returned HTTP ${res.status}`, { provider: 'overpass' });
+    const rejected = dispatcherRejection(res.body);
+    if (rejected) throw new MapServiceError('PROVIDER_UNAVAILABLE', `overpass probe rejected: ${rejected.message}`, { provider: 'overpass' });
     const body = parseJson<OverpassResponse>('overpass', res.body);
     return { identity: body.osm3s?.timestamp_osm_base ?? null };
   }
+}
+
+/**
+ * The dispatcher rejects queries before output formatting, so the interpreter answers with an
+ * HTML error page (HTTP 200) even for [out:json]. Classify it without echoing provider text.
+ */
+export function dispatcherRejection(body: string): MapServiceError | null {
+  const text = body.slice(0, 8192);
+  if (/^\s*[{[]/.test(text)) return null;
+  const m = /Dispatcher_Client::request_read_and_idx::([a-z_]+)/.exec(text);
+  if (m) {
+    const reason = m[1]!;
+    if (reason === 'rate_limited' || reason === 'timeout' || reason === 'duplicate_query') {
+      return new MapServiceError('OVERLOADED', `overpass has no free query capacity (${reason}); retry later`, { provider: 'overpass' });
+    }
+    return new MapServiceError('PROVIDER_ERROR', `overpass dispatcher error (${reason})`, { provider: 'overpass' });
+  }
+  if (/runtime error/i.test(text)) return new MapServiceError('PROVIDER_ERROR', 'overpass reported a runtime error', { provider: 'overpass' });
+  return null;
 }

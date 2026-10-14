@@ -4,7 +4,7 @@ import { composeRuntime, runtimeEnv, writeRuntimeEnv, NO_RELEASE } from './compo
 import { psql, recordEvent, renderDbName } from './db.js';
 import { layout, managedChild, readSettings, writeAtomic, type Layout } from './layout.js';
 import { lockedImages, verifyImages } from './lock.js';
-import { readManifest, sha256File, sha256Text, treeDigest, type Manifest } from './manifest.js';
+import { DATA_COMPONENT_ROLES, readManifest, sha256File, sha256Text, treeDigest, type Manifest } from './manifest.js';
 
 export interface Pointers {
   active: string | null;
@@ -31,6 +31,12 @@ export async function verifyRelease(l: Layout, datasetId: string): Promise<{ man
   const problems: string[] = [];
   if (m.status !== 'validated') problems.push(`release status is ${m.status}`);
   if (!m.identities) problems.push('release has no recorded provider identities');
+  // The stores are only servable by the exact data-component images that built them.
+  const locked = new Map(lockedImages(l.install).map((i) => [i.role, i.image_id]));
+  for (const role of DATA_COMPONENT_ROLES) {
+    const built = m.components[role]?.image_id;
+    if (!built || built !== locked.get(role)) problems.push(`release was built with ${role} ${built ?? 'unknown'}, locked image is ${locked.get(role) ?? 'unknown'}; re-import required`);
+  }
   const art = m.artifacts as Record<string, Record<string, unknown>>;
   const routing = await treeDigest(join(dir, 'valhalla'));
   if (routing.sha256 !== art.routing?.sha256) problems.push('routing graph checksum mismatch');

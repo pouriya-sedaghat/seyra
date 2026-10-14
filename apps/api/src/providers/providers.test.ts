@@ -1,6 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { MapServiceError } from '@seyra/contracts';
-import { buildPoiQuery } from './overpass.js';
+import { buildPoiQuery, dispatcherRejection } from './overpass.js';
 import { decodePolyline6, mapValhallaError } from './valhalla.js';
 import { displayName } from './photon.js';
 
@@ -60,5 +60,22 @@ describe('label/name fallback', () => {
     expect(displayName({ fa: 'فارسی', default: 'نام' }, 'en')).toBe('نام');
     expect(displayName({ fa: 'فارسی' }, 'en')).toBe('فارسی');
     expect(displayName({}, 'en')).toBeNull();
+  });
+});
+
+describe('overpass dispatcher rejections', () => {
+  // Shape observed from the pinned Overpass 0.7.62.4 interpreter (HTML even for [out:json]).
+  const page = (reason: string) =>
+    `<?xml version="1.0" encoding="UTF-8"?>\n<html><body>\n<p><strong style="color:#FF0000">Error</strong>: runtime error: open64: 0 Success /osm3s_osm_base Dispatcher_Client::request_read_and_idx::${reason} </p>\n</body></html>`;
+
+  it.each(['rate_limited', 'timeout', 'duplicate_query'])('maps %s to a typed OVERLOADED error without provider text', (reason) => {
+    const err = dispatcherRejection(page(reason));
+    expect(err?.code).toBe('OVERLOADED');
+    expect(err?.message).not.toContain('open64');
+  });
+
+  it('maps other dispatcher failures to PROVIDER_ERROR and leaves JSON bodies alone', () => {
+    expect(dispatcherRejection(page('protocol_error'))?.code).toBe('PROVIDER_ERROR');
+    expect(dispatcherRejection('{"version":0.6,"elements":[]}')).toBeNull();
   });
 });

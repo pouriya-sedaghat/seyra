@@ -7,7 +7,10 @@
   "main": "./dist/index.js",
   "types": "./dist/index.d.ts",
   "exports": {
-    ".": { "types": "./dist/index.d.ts", "default": "./dist/index.js" }
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    }
   },
   "scripts": {
     "build": "tsc -p tsconfig.json",
@@ -19,6 +22,7 @@
     "@seyra/contracts": "1.0.0"
   },
   "devDependencies": {
+    "@maplibre/maplibre-gl-style-spec": "26.4.4",
     "@types/node": "24.19.2",
     "opentype.js": "2.0.0",
     "typescript": "6.0.3",

@@ -101,60 +101,83 @@ export async function stageValidate(l: Layout, images: LockedImage[], releaseDir
       .map((r) => r.split('|').map(Number));
     const sampleName = (await psql(l, renderDb, `SELECT coalesce(name_en, name) FROM render.places WHERE coalesce(name_en, name) IS NOT NULL ORDER BY population DESC NULLS LAST LIMIT 1;`)).trim() ||
       (await psql(l, renderDb, `SELECT coalesce(name_en, name) FROM render.pois WHERE coalesce(name_en, name) IS NOT NULL LIMIT 1;`)).trim();
-    const center = (await psql(l, renderDb, `SELECT ST_X(c), ST_Y(c) FROM (SELECT ST_Transform(ST_Centroid(ST_Extent(geom)::geometry), 4326) c FROM render.transport) s;`)).trim().split('|').map(Number);
+    // ST_Extent returns a box2d without SRID; render geometries are EPSG:3857 (seyra-flex.lua).
+    const center = (await psql(l, renderDb, `SELECT ST_X(c), ST_Y(c) FROM (SELECT ST_Transform(ST_SetSRID(ST_Centroid(ST_Extent(geom)::geometry), 3857), 4326) c FROM render.transport) s;`)).trim().split('|').map(Number);
+
+    // Each provider check records its own failure so one unavailable provider does not hide
+    // the results of the others.
+    const guarded = async (name: string, fn: () => Promise<void>) => {
+      try {
+        await fn();
+      } catch (err) {
+        check(name, false, { error: err instanceof Error ? err.message : String(err) });
+      }
+    };
 
     // tiles
     const tegolaMap = `seyra_${datasetId.replace(/-/g, '_')}`;
-    const caps = await http(`${base.tegola}/capabilities`);
-    const capsOk = caps.status === 200 && caps.body.includes(`"${tegolaMap}"`);
-    let tileOk = false;
-    let tileDetail: unknown = null;
-    if (capsOk && center.length === 2 && center.every(Number.isFinite)) {
-      const [x, y] = lonLatTile(center[0]!, center[1]!, 14);
-      const tile = await http(`${base.tegola}/maps/${tegolaMap}/14/${x}/${y}.pbf`);
-      tileOk = tile.status === 200 && tile.bytes > 0;
-      tileDetail = { z: 14, x, y, status: tile.status, bytes: tile.bytes };
-    }
-    check('tiles', capsOk && tileOk, { map: tegolaMap, capabilities: caps.status, tile: tileDetail });
+    await guarded('tiles', async () => {
+      const caps = await http(`${base.tegola}/capabilities`);
+      const capsOk = caps.status === 200 && caps.body.includes(`"${tegolaMap}"`);
+      let tileOk = false;
+      let tileDetail: unknown = null;
+      if (capsOk && center.length === 2 && center.every(Number.isFinite)) {
+        const [x, y] = lonLatTile(center[0]!, center[1]!, 14);
+        const tile = await http(`${base.tegola}/maps/${tegolaMap}/14/${x}/${y}.pbf`);
+        tileOk = tile.status === 200 && tile.bytes > 0;
+        tileDetail = { z: 14, x, y, status: tile.status, bytes: tile.bytes };
+      }
+      check('tiles', capsOk && tileOk, { map: tegolaMap, capabilities: caps.status, tile: tileDetail });
+    });
 
     // routing
-    const status = await http(`${base.valhalla}/status`);
-    const vstatus = JSON.parse(status.body) as { tileset_last_modified?: number; version?: string };
-    let routed = 0;
-    for (const [a, b, c, d] of roads) {
-      const r = await http(`${base.valhalla}/route`, {
-        method: 'POST',
-        headers: { 'content-type': 'application/json' },
-        body: JSON.stringify({ locations: [{ lon: a, lat: b }, { lon: c, lat: d }], costing: 'pedestrian', directions_type: 'none' }),
-      });
-      if (r.status === 200) routed++;
-    }
-    check('routing', typeof vstatus.tileset_last_modified === 'number' && routed > 0, { version: vstatus.version, tileset_last_modified: vstatus.tileset_last_modified, sampled_routes: roads.length, routed });
+    let routingIdentity: number | null = null;
+    await guarded('routing', async () => {
+      const status = await http(`${base.valhalla}/status`);
+      const vstatus = JSON.parse(status.body) as { tileset_last_modified?: number; version?: string };
+      let routed = 0;
+      for (const [a, b, c, d] of roads) {
+        const r = await http(`${base.valhalla}/route`, {
+          method: 'POST',
+          headers: { 'content-type': 'application/json' },
+          body: JSON.stringify({ locations: [{ lon: a, lat: b }, { lon: c, lat: d }], costing: 'pedestrian', directions_type: 'none' }),
+        });
+        if (r.status === 200) routed++;
+      }
+      const ok = typeof vstatus.tileset_last_modified === 'number' && routed > 0;
+      if (ok) routingIdentity = vstatus.tileset_last_modified!;
+      check('routing', ok, { version: vstatus.version, tileset_last_modified: vstatus.tileset_last_modified, sampled_routes: roads.length, routed });
+    });
 
     // geocoder
     const marker = `seyra-release-${datasetId}`;
-    const mres = await http(`${base.photon}/api?q=${encodeURIComponent(marker)}&include=seyra.release_marker&limit=1`);
-    const markerFound = mres.status === 200 && (JSON.parse(mres.body) as { features?: { properties?: { name?: string } }[] }).features?.[0]?.properties?.name === marker;
-    let searchHits = 0;
-    if (sampleName) {
-      const sres = await http(`${base.photon}/api?q=${encodeURIComponent(sampleName)}&limit=3&exclude=seyra.release_marker`);
-      searchHits = sres.status === 200 ? ((JSON.parse(sres.body) as { features?: unknown[] }).features?.length ?? 0) : 0;
-    }
-    check('geocoder', markerFound && (sampleName === '' || searchHits > 0), { marker_found: markerFound, sample_query_present: sampleName !== '', sample_hits: searchHits });
+    await guarded('geocoder', async () => {
+      const mres = await http(`${base.photon}/api?q=${encodeURIComponent(marker)}&include=seyra.release_marker&limit=1`);
+      const markerFound = mres.status === 200 && (JSON.parse(mres.body) as { features?: { properties?: { name?: string } }[] }).features?.[0]?.properties?.name === marker;
+      let searchHits = 0;
+      if (sampleName) {
+        const sres = await http(`${base.photon}/api?q=${encodeURIComponent(sampleName)}&limit=3&exclude=seyra.release_marker`);
+        searchHits = sres.status === 200 ? ((JSON.parse(sres.body) as { features?: unknown[] }).features?.length ?? 0) : 0;
+      }
+      check('geocoder', markerFound && (sampleName === '' || searchHits > 0), { marker_found: markerFound, sample_query_present: sampleName !== '', sample_hits: searchHits });
+    });
 
     // overpass
-    const probe = '[out:json][timeout:5][bbox:0,0,0.0000001,0.0000001];node;out ids 1;';
-    const ores = await http(`${base.overpass}/api/interpreter`, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ data: probe }).toString() });
-    const oIdentity = ores.status === 200 ? ((JSON.parse(ores.body) as { osm3s?: { timestamp_osm_base?: string } }).osm3s?.timestamp_osm_base ?? null) : null;
-    check('overpass', oIdentity === `seyra:${datasetId}`, { identity: oIdentity, status: ores.status });
+    let oIdentity: string | null = null;
+    await guarded('overpass', async () => {
+      const probe = '[out:json][timeout:5][bbox:0,0,0.0000001,0.0000001];node;out ids 1;';
+      const ores = await http(`${base.overpass}/api/interpreter`, { method: 'POST', headers: { 'content-type': 'application/x-www-form-urlencoded' }, body: new URLSearchParams({ data: probe }).toString() });
+      oIdentity = ores.status === 200 ? ((JSON.parse(ores.body) as { osm3s?: { timestamp_osm_base?: string } }).osm3s?.timestamp_osm_base ?? null) : null;
+      check('overpass', oIdentity === `seyra:${datasetId}`, { identity: oIdentity, status: ores.status });
+    });
 
     const ok = checks.every((c) => c.ok);
     return {
       ok,
       checks,
       identities:
-        ok && typeof vstatus.tileset_last_modified === 'number' && oIdentity
-          ? { tiles: tegolaMap, routing: String(vstatus.tileset_last_modified), geocoder: marker, overpass: oIdentity }
+        ok && routingIdentity !== null && oIdentity !== null
+          ? { tiles: tegolaMap, routing: String(routingIdentity), geocoder: marker, overpass: oIdentity }
           : null,
     };
   } catch (err) {
