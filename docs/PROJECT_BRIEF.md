@@ -1,99 +1,53 @@
 # Seyra — Project Brief
 
-Version: 0.2 (requirements and architecture review draft)
+Version: 1.0
 Date: 2026-10-14
+Status: MAP SERVICES PHASE-1 IMPLEMENTATION BASELINE
 Repository: https://github.com/pouriya-sedaghat/seyra
-Status: NOT FINALIZED — review and requirements clarification; no implementation yet.
 
-## 1. Product and ownership
+This baseline incorporates the owner's answers and the Claude Code review of commit 411d6add56f99166b70f9e5941aacdc3c1878770. Product scope is stabilized for phase 1. Dependency locking and provider validation are the first development tasks, not claims that validation has already passed. This document does not declare production readiness.
 
-Seyra is a navigation, location monitoring, and management platform. Operators see users on a map, manage SOS requests, and manually select and dispatch a nearby user to assist a requesting user. Users establish relations and share live locations under relation-specific privacy permissions, including optional access to location history.
+## Product and responsibilities
 
-There are two consuming client types: web and mobile. This project's implementation responsibilities are the backend and a web client for observing and testing features. APIs and map assets must be usable by both client types. Building the mobile application itself is not currently assigned to this work; mobile platforms and SDK versions are unresolved.
+Seyra supports navigation, location monitoring, relations with privacy permissions, and operator-managed SOS. Operators will view users, manage SOS requests, and manually select/dispatch a nearby user. Relations can grant live tracking and location-history access. Authentication, Relation System and SOS require separate intake before their implementations.
 
-## 2. Confirmed constraints
+Deliver now: Map Services backend/infrastructure and a web test client. Web and mobile consume shared APIs/assets. Building a mobile application is unassigned; deliver its integration contract and fixtures, without claiming unknown mobile SDKs were tested. Claude Code performs development in the connected repository environment, whether local or cloud. The earlier local-computer-only wording is superseded by the observed cloud review session.
 
-- Application backend: Node.js and TypeScript.
-- Application database: PostgreSQL with PostGIS.
-- Server and clients operate inside an internal network with no Internet or access outside it.
-- Operations, installation, and updates must work without external-network access.
-- No external runtime dependency: maps, styles, glyphs/fonts, sprites, scripts, authentication, CAPTCHA, recovery, notifications, telemetry, and supporting infrastructure must be local.
-- Map Services must use Docker images; no specific image/vendor is mandated. Tegola was an example, not a selected product.
-- Tile serving, routing, geocoding, and Overpass are required deployed capabilities. The user explicitly ruled out disabling individual map services. This overrides the earlier general preference for optional modules in this scope.
-- Service-specific storage beyond the application PostgreSQL/PostGIS database may be considered only if necessary, documented, and reviewed.
-- Security, clean code, maintainability, configurable behavior, and broad feature coverage remain priorities. Configurable behavior does not permit omitting required services.
-- Use the existing GitHub repository. Claude Code on the user's computer performs brief review and development. All prompts sent to it must be English.
-- Development occurs on a separate feature branch after the brief is stabilized. GitHub and Claude Code must not become operational deployment dependencies.
+## Hard constraints
 
-## 3. Map Services — first module
+- Node.js and TypeScript application backend; PostgreSQL/PostGIS application database.
+- Iran-wide source coverage; owner acquires and supplies raw OSM input for local import. No platform download of the Iran dataset.
+- Vector tiles, comprehensive source feature/POI coverage, light/dark styles.
+- Required runtime capabilities: tile server, routing, geocoder, Overpass. None may be disabled through feature flags or deployment profiles.
+- Operations, installation, imports and updates work without Internet or access outside the internal network. Development dependency acquisition may occur in a separate preparation environment.
+- Docker images for map infrastructure. Specific vendors/images are not mandated.
+- Necessary service-specific files/indexes are permitted for this engineering baseline under the full storage inventory in the architecture; this is a documented technical decision, not an owner requirement that every service use PostgreSQL.
+- Security, clean code, configurable behavior and broad feature coverage. Configuration must not remove a required runtime capability.
+- GitHub stores the project. All Claude Code prompts are English. Feature development occurs on a separate branch; no main-branch development or automatic merge.
 
-### Confirmed
+## Phase-1 scope decisions
 
-- Coverage: Iran nationwide.
-- Input: raw OSM data acquired and supplied by the user, then imported locally. The platform must not download it from public endpoints during installation, import, startup, or updates.
-- Rendering: vector tiles, with light and dark styles. The map should provide comprehensive feature and POI coverage from the supplied data.
-- Routing profiles: car, pedestrian, motorcycle.
-- Routing capabilities: faster/time-oriented routes, shorter/distance-oriented routes, alternatives, and multiple destinations/waypoints.
-- Required delivered/deployed services: tile server, routing engine, geocoder, Overpass.
-- Clients: web and mobile use shared backend contracts and map assets.
-- No specific Docker image is required. Hardware and capacity targets are not yet known.
+- All geocoding capabilities confirmed: free-text address/place search, reverse, autocomplete, Persian and English. Structured field-based address search and natural-language category phrases are not required for this phase; controlled category queries belong to the POI API.
+- Three proximity metrics confirmed: straight-line distance, distance-oriented road route, estimated road travel time. Metric and direction are explicit; rank only the supplied candidate set, with no silent fallback.
+- Clients require the internal server. No guaranteed on-device map/search/routing or queued user operations during server disconnection. The owner allowed these to be omitted. Internet independence remains mandatory.
+- Car, pedestrian and motorcycle profiles; time/distance-oriented routing. Prefer predictable documented costing over unqualified global-optimality promises. There is no live traffic feed or date/time-dependent request support in phase 1; temporal restrictions must not be claimed evaluated.
+- Two-point alternatives supported. Multipoint alternatives excluded under the owner's explicit complexity exception. Return a typed unsupported-combination error rather than silently ignoring them.
+- Both supplied and optimized waypoint order supported. Fixed start/end, visit intermediate stops once, bounded exact order optimization against explicitly modeled pair costs; this does not guarantee globally shortest/fastest road paths. Initial optimized limit: 10 total points. See requirements for limits/semantics.
+- Overpass retained, with bounded POI presets and bbox queries. No arbitrary client QL, contributor metadata, attic history or admin-area processing in phase 1.
+- OSM-only import in phase 1. Future proprietary additions require intake; do not invent extra source data.
 
-### Working interpretations requiring confirmation
+## Selected engineering design
 
-- Geocoding: the answer repeated the list without explicitly selecting items. Treat forward address/place search, reverse geocoding, autocomplete, and Persian/English search as a working interpretation, not a finalized requirement.
-- Proximity: the answer repeated all three metrics. Propose explicit selectable metrics: straight-line distance, road-route distance, estimated travel time. No default metric or implicit fallback is selected.
-- Disconnected clients: the latest answer says this probably is not needed, changing the earlier affirmative answer. Propose no guaranteed local map/search/routing capability during server disconnection in the first phase, while preserving fully Internet-independent operation inside the internal network. Await confirmation.
-- Overpass: its application use cases are delegated for study. Propose controlled POI queries through the backend rather than unrestricted end-user query execution. The contractual requirement to deploy Overpass remains in place.
+Node.js 24 LTS, strict TypeScript and Fastify 5 gateway; Tegola plus a versioned osm2pgsql-flex/PostGIS basemap catalog; Valhalla base image with explicit offline build jobs; Photon runtime built from a temporary Nominatim database; private Overpass plus local Osmium conversion; Nginx TLS proxy; locally bundled MapLibre GL JS. Exact compatible patch versions, source commits, assets and image identities are locked by Claude in the preflight milestone.
 
-### Decisions still open
+Tegola is selected for explicit inspectable layer SQL and a modest initial serving topology. PostgreSQL/PostGIS is not a mandate to generate tiles dynamically. Martin and pre-generated archives remain valid future alternatives if measurements justify switching; a switch must be documented and checked against this baseline.
 
-- Measurable meaning of comprehensive detail, layer/POI catalog, zoom range, and Persian label requirements.
-- Whether alternatives must also work on routes containing more than two points.
-- Whether multi-destination routing means ordered waypoints, optimized visit order, or both.
-- Whether shorter/faster means a useful distance/time-oriented result or a strict mathematical optimality guarantee, and which performance tradeoffs are acceptable.
-- Update cadence, allowed downtime, offline package transfer, target OS/CPU, capacity, and mobile platforms.
-- Exact image versions, provenance, licenses, digests, and service-specific storage acceptance.
+Reference development target: Ubuntu 24.04 LTS, linux/amd64, Docker Engine plus Compose v2, file-based offline transfer. This is an engineering reference, not confirmed customer hardware. Record actual tested versions; customer OS/architecture, capacity, latency and SLA are pending. Default test access is localhost; explicit LAN mode requires a CIDR allowlist and internally trusted TLS. No user-data/management/authentication features are implemented in the map test client.
 
-See docs/MAP_SERVICES_REQUIREMENTS.md for the decision register and docs/MAP_SERVICES_ARCHITECTURE.md for the research-backed proposal. The proposal is not finalized.
+## Delivery and readiness
 
-## 4. Later modules — separate intake required
+Deliver real provider adapters, import/update/rollback tooling, local assets, shared OpenAPI/TypeScript contracts, web test client, dependency/image locks, meaningful fixtures/tests and offline packaging/runbooks. Mocks are only for unit/contract tests; serving endpoints must fail honestly if providers/data are unavailable.
 
-### Authentication
+Before finalizing this engineering delivery, execute the acceptance register where the environment permits and record every unavailable check. Iran data quality/coverage, full-country performance, production infrastructure, mobile SDK execution and distribution-specific licensing checks remain release validation tasks. A small fixture cannot establish Iran-wide readiness.
 
-Confirmed: sign-in, sign-up, password recovery, and locally generated text CAPTCHA. User provisioning, credentials, roles, sessions, recovery channels, additional workflows, and abuse controls require intake before implementation.
-
-### Relation System
-
-Confirmed: user relations govern live-location visibility and may grant history access. Directionality, consent, invitation/acceptance, revocation, permission granularity, operator access, retention, and disconnected behavior remain unresolved.
-
-### SOS
-
-Confirmed: operators manage requests and manually select/dispatch nearby users. Automatic dispatch is not required. Eligibility, delivery, acknowledgement, escalation, cancellation, lifecycle, and audit requirements remain unresolved. Map-distance capabilities must not implement the SOS workflow prematurely.
-
-## 5. Acceptance categories
-
-- Demonstrate installation, startup, restart, imports, agreed operations, updates, and rollback with outside-network access denied and only the supplied local bundle available. Record untested cases honestly.
-- Validate all asset references and auxiliary datasets for hidden external fetches. Internally served assets must work for web and the agreed mobile SDKs.
-- Define comprehensive map coverage using the input dataset, an explicit layer/tag catalog, and fixtures for urban, rural, border, and intercity cases. Data absent from OSM cannot be promised.
-- Required service failures must be visible; expose health/readiness and typed errors without pretending complete functionality.
-- Define routing support combinations, proximity direction/metric, unreachable cases, accuracy meaning, and no silent straight-line substitution for a road/time request.
-- Define geocoding quality fixtures, languages and normalization, units, coordinates, bounded responses, and no-results behavior.
-- Protect map infrastructure with private service networks, scoped credentials, validated input, and resource limits. General network presence and CORS are not authorization.
-- Do not implement placeholder authentication or publish an unauthenticated management application while Authentication requirements are still pending. The initial test client has controlled local/internal access; detailed policy needs agreement.
-- Keep location freshness visible. If queueing is later required, an SOS/dispatch is not delivered until acknowledged.
-- Supply reproducible artifacts, configuration, data-import and rollback procedures, license/attribution inventory, backup/restore, observability, and appropriate tests.
-- Production capacity and full-Iran performance claims require measurement on specified hardware. No numbers have been agreed.
-- Keep secrets and private operational data out of source control.
-
-## 6. Required workflow
-
-1. Collect requirements before each module.
-2. Study candidate implementations using official sources; distinguish verified capabilities, inference, and untested assumptions.
-3. Record proposed architecture, limitations, questions, and acceptance criteria.
-4. Claude Code reads the brief and provides critical feedback using an English review prompt.
-5. Resolve feedback and stabilize requirements/architecture with the user.
-6. Prepare a separate English implementation prompt tied to a finalized brief and a verified base commit.
-7. Claude Code develops on a separate feature branch, preserving unrelated work.
-8. Review and execute agreed checks; prepare changes for review without merging by default.
-
-Current stage: documented research proposal and Claude Code review. The user has connected Claude Code to Seyra on main. prompts/CLAUDE_BRIEF_REVIEW.md is review-only. No application code, final implementation prompt, or development branch has been created in this collaboration.
+Normative supporting documents: MAP_SERVICES_REQUIREMENTS.md, MAP_SERVICES_ARCHITECTURE.md and MAP_SERVICES_ACCEPTANCE.md. CLAUDE_REVIEW_RESOLUTION.md records review dispositions. DEPENDENCY_BASELINE.md separates observed releases from actual locks. The current development instruction is prompts/CLAUDE_MAP_SERVICES_IMPLEMENTATION.md; the old v0.2 review prompt is historical.
