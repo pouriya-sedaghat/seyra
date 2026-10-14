@@ -1,0 +1,17 @@
+node_modules/
+dist/
+coverage/
+*.tsbuildinfo
+# Operational/runtime state: datasets, releases, secrets, keys and image archives never go to Git.
+/var/
+/secrets/
+/bundle/
+*.osm.pbf
+!fixtures/osm/*.osm
+*.tar
+*.tar.gz
+*.key
+*.pem
+!infra/**/*.example.pem
+.env
+.env.*
