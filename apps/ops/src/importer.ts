@@ -282,6 +282,8 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
         const work = managedChild(l.work, datasetId);
         const workGeo = join(work, 'geocoder');
         const exportDir = join(releaseDir, 'geocoder', 'export');
+        // Scratch for this dataset id left by an earlier failed/interrupted build of the same inputs.
+        rmSync(work, { recursive: true, force: true });
         mkdirSync(workGeo, { recursive: true });
         mkdirSync(exportDir, { recursive: true });
         const pgUid = Number((await run('docker', ['run', '--rm', '--network', 'none', '--entrypoint', 'id', images.find((i) => i.role === 'GEOCODER_BUILD')!.ref, '-u', 'postgres'])).stdout.trim());
@@ -370,6 +372,8 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
     if (manifest && releaseDir) {
+      // Free the temporary geocoder database of the failed build; logs stay in the release.
+      rmSync(managedChild(l.work, manifest.dataset_id), { recursive: true, force: true });
       manifest.status = 'failed';
       manifest.failure = { step: current, message };
       manifest.measurements = { steps, free_bytes_before: freeBefore, free_bytes_min_observed: minFree };

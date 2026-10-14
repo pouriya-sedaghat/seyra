@@ -58,6 +58,7 @@ async function recoverInterrupted(l: Layout, log: (m: string) => void): Promise<
     m.status = 'failed';
     m.failure = { step: 'interrupted', message: 'the import process ended before the release was complete' };
     writeManifest(dir, m);
+    rmSync(managedChild(l.work, name), { recursive: true, force: true });
     await recordEvent(l, m.dataset_id, 'import_failed', { step: 'interrupted' }).catch(() => undefined);
     log(`[import] marked interrupted release ${name} as failed (remove it with: seyra-maps prune)`);
   }

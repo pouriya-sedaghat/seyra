@@ -1,6 +1,6 @@
 {
   "schema": "seyra.dependencies-lock/1",
-  "generated_at": "2026-10-14T13:14:56.713Z",
+  "generated_at": "2026-10-14T13:30:51.801Z",
   "generated_by": "infra/prepare/write-lock.mjs",
   "status": "LOCKED (preparation build verified); runtime/acceptance evidence is in docs/TEST_RESULTS.md",
   "preparation_environment": {
@@ -183,12 +183,12 @@
     "proxy": {
       "role": "PROXY",
       "ref": "seyra/proxy:1.0.0-seyra1",
-      "image_id": "sha256:b93dffc0c2cdc03b329dbd609f37b0c9aace6c1d48993fbc0241fb5147886be1",
+      "image_id": "sha256:a354b8f6773791146a729a070a257586abf2d5a57ae22bc000c1e04f2a3ae89d",
       "repo_digests": [
-        "seyra/proxy@sha256:b93dffc0c2cdc03b329dbd609f37b0c9aace6c1d48993fbc0241fb5147886be1"
+        "seyra/proxy@sha256:a354b8f6773791146a729a070a257586abf2d5a57ae22bc000c1e04f2a3ae89d"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T12:57:00.742393521Z",
+      "created": "2026-10-14T13:30:40.850138081Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/proxy/Dockerfile",
       "dockerfile_sha256": "51242be8cb174bc964564e2b6df6c9789589c1826e20b8036631599a057b25a7",
@@ -268,12 +268,12 @@
     "ops": {
       "role": "OPS",
       "ref": "seyra/ops:1.0.0-seyra1",
-      "image_id": "sha256:17bcbfb769bca386f1222bb064956a1e1cb9e1bef809116a9623cd0393b3f49b",
+      "image_id": "sha256:34a78c9ac761c57130c54ddbca84e69ccb5574af05fd8d9612f8bed46e907daa",
       "repo_digests": [
-        "seyra/ops@sha256:17bcbfb769bca386f1222bb064956a1e1cb9e1bef809116a9623cd0393b3f49b"
+        "seyra/ops@sha256:34a78c9ac761c57130c54ddbca84e69ccb5574af05fd8d9612f8bed46e907daa"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T13:14:45.822194333Z",
+      "created": "2026-10-14T13:20:41.087634907Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/ops/Dockerfile",
       "dockerfile_sha256": "3337da8a4d1d8bd2af7215d88e0c06cd51f1cf501c85b2aeb944d5b53734b4f5",

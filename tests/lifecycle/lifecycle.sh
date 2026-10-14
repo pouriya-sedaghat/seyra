@@ -84,6 +84,11 @@ if [ -n "$ops" ] && [ "$mid_ready" = "$A" ] && [ $rc -eq 0 ] && grep -q 'no long
 else
   result FAIL L2 "ops=$ops mid_ready=$mid_ready rc=$rc B=$B"
 fi
+if [ -z "$B" ] || [ ! -f "$SEYRA_HOME/releases/$B/manifest.json" ] || [ "$(jq -r .status "$SEYRA_HOME/releases/$B/manifest.json")" != validated ]; then
+  for s in L3 L4 L5 L6; do result BLOCKED "$s" "needs a validated release B from L2"; done
+  printf '%s\n' "${summary[@]}" > "$ev/summary.txt"
+  exit 1
+fi
 FP_B="$(fingerprint "$B")"
 
 # ------------------------------------------------------------------ L3 provider-start failure during activation
