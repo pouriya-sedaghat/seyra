@@ -1,111 +1,99 @@
 # Seyra — Project Brief
 
-Version: 0.1 (requirements draft)
+Version: 0.2 (requirements and architecture review draft)
 Date: 2026-10-14
 Repository: https://github.com/pouriya-sedaghat/seyra
-Status: NOT FINALIZED — requirements intake and Claude Code review only.
+Status: NOT FINALIZED — review and requirements clarification; no implementation yet.
 
-## 1. Product and responsibilities
+## 1. Product and ownership
 
-Seyra is a navigation, location monitoring, and management platform. The work covers the backend, a web client for observing and exercising backend features, requirements analysis, technical research, and architecture design.
+Seyra is a navigation, location monitoring, and management platform. Operators see users on a map, manage SOS requests, and manually select and dispatch a nearby user to assist a requesting user. Users establish relations and share live locations under relation-specific privacy permissions, including optional access to location history.
 
-Operators must be able to see users on a map, manage their SOS requests, and manually select and dispatch a nearby user to assist the requesting user. Users can establish relations with other users and track their locations according to relation-specific privacy permissions. Access to location history is one example of a permission that a relation may grant.
+There are two consuming client types: web and mobile. This project's implementation responsibilities are the backend and a web client for observing and testing features. APIs and map assets must be usable by both client types. Building the mobile application itself is not currently assigned to this work; mobile platforms and SDK versions are unresolved.
 
-This draft records confirmed requirements and explicitly unresolved decisions. It is not authorization to choose a final architecture or implement a module.
-
-## 2. Confirmed platform constraints
+## 2. Confirmed constraints
 
 - Application backend: Node.js and TypeScript.
 - Application database: PostgreSQL with PostGIS.
-- The operational environment has no Internet or access outside the internal network. Server and clients communicate inside that network.
-- The web client must retain useful functionality when disconnected from the server. The exact offline feature set and provisioned data extent are unresolved; do not equate cached assets with full offline functionality.
-- Installation and updates must also be possible without Internet access.
-- No operational dependency may require external services: this includes map resources, authentication, password recovery, CAPTCHA, notifications, assets, telemetry, and supporting infrastructure.
-- Map services must run from Docker images. The user cited Tegola as an example, not as a selected implementation.
-- Security, clean code, maintainability, configurable features, and broad feature coverage are priorities.
-- Features/modules should be independently configurable where feasible. The exact toggle boundaries and dependencies must be defined rather than assumed.
-- Use the existing GitHub repository for project work.
-- Development and brief review must be performed using Claude Code, with English prompts. Claude Code runs on the user's computer.
-- GitHub and Claude Code belong to the development workflow; they must not become product runtime, installation, or update dependencies inside the isolated operational network.
+- Server and clients operate inside an internal network with no Internet or access outside it.
+- Operations, installation, and updates must work without external-network access.
+- No external runtime dependency: maps, styles, glyphs/fonts, sprites, scripts, authentication, CAPTCHA, recovery, notifications, telemetry, and supporting infrastructure must be local.
+- Map Services must use Docker images; no specific image/vendor is mandated. Tegola was an example, not a selected product.
+- Tile serving, routing, geocoding, and Overpass are required deployed capabilities. The user explicitly ruled out disabling individual map services. This overrides the earlier general preference for optional modules in this scope.
+- Service-specific storage beyond the application PostgreSQL/PostGIS database may be considered only if necessary, documented, and reviewed.
+- Security, clean code, maintainability, configurable behavior, and broad feature coverage remain priorities. Configurable behavior does not permit omitting required services.
+- Use the existing GitHub repository. Claude Code on the user's computer performs brief review and development. All prompts sent to it must be English.
+- Development occurs on a separate feature branch after the brief is stabilized. GitHub and Claude Code must not become operational deployment dependencies.
 
-## 3. Module scope
+## 3. Map Services — first module
 
-### 3.1 Map Services — first module
+### Confirmed
 
-The contractual capabilities are:
+- Coverage: Iran nationwide.
+- Input: raw OSM data acquired and supplied by the user, then imported locally. The platform must not download it from public endpoints during installation, import, startup, or updates.
+- Rendering: vector tiles, with light and dark styles. The map should provide comprehensive feature and POI coverage from the supplied data.
+- Routing profiles: car, pedestrian, motorcycle.
+- Routing capabilities: faster/time-oriented routes, shorter/distance-oriented routes, alternatives, and multiple destinations/waypoints.
+- Required delivered/deployed services: tile server, routing engine, geocoder, Overpass.
+- Clients: web and mobile use shared backend contracts and map assets.
+- No specific Docker image is required. Hardware and capacity targets are not yet known.
 
-1. Tile server.
-2. Routing engine (the user's wording was "route machine").
-3. Geocoder.
-4. Overpass service.
+### Working interpretations requiring confirmation
 
-All four capabilities must be supported by the delivered map-services scope. No implementation product, image version, deployment topology, client map library, or import pipeline has been selected. How optional deployment relates to these contractual capabilities must be clarified.
+- Geocoding: the answer repeated the list without explicitly selecting items. Treat forward address/place search, reverse geocoding, autocomplete, and Persian/English search as a working interpretation, not a finalized requirement.
+- Proximity: the answer repeated all three metrics. Propose explicit selectable metrics: straight-line distance, road-route distance, estimated travel time. No default metric or implicit fallback is selected.
+- Disconnected clients: the latest answer says this probably is not needed, changing the earlier affirmative answer. Propose no guaranteed local map/search/routing capability during server disconnection in the first phase, while preserving fully Internet-independent operation inside the internal network. Await confirmation.
+- Overpass: its application use cases are delegated for study. Propose controlled POI queries through the backend rather than unrestricted end-user query execution. The contractual requirement to deploy Overpass remains in place.
 
-Detailed intake questions are in `docs/MAP_SERVICES_REQUIREMENTS.md`. Research and architecture selection follow the answers.
+### Decisions still open
 
-### 3.2 Authentication — later intake
+- Measurable meaning of comprehensive detail, layer/POI catalog, zoom range, and Persian label requirements.
+- Whether alternatives must also work on routes containing more than two points.
+- Whether multi-destination routing means ordered waypoints, optimized visit order, or both.
+- Whether shorter/faster means a useful distance/time-oriented result or a strict mathematical optimality guarantee, and which performance tradeoffs are acceptable.
+- Update cadence, allowed downtime, offline package transfer, target OS/CPU, capacity, and mobile platforms.
+- Exact image versions, provenance, licenses, digests, and service-specific storage acceptance.
 
-Confirmed capabilities include sign-in, sign-up, password recovery, and a locally generated text CAPTCHA. Additional authentication workflows, user provisioning rules, roles, credentials, recovery channels, session policy, and abuse controls require separate intake before this module starts.
+See docs/MAP_SERVICES_REQUIREMENTS.md for the decision register and docs/MAP_SERVICES_ARCHITECTURE.md for the research-backed proposal. The proposal is not finalized.
 
-### 3.3 Relation System — later intake
+## 4. Later modules — separate intake required
 
-Users can create relations that allow live location tracking subject to specific privacy permissions. Location-history access can be granted through a relation.
+### Authentication
 
-Relation directionality, consent, invitation/acceptance, revocation, permission granularity, operator access, retention, and offline behavior remain unresolved.
+Confirmed: sign-in, sign-up, password recovery, and locally generated text CAPTCHA. User provisioning, credentials, roles, sessions, recovery channels, additional workflows, and abuse controls require intake before implementation.
 
-### 3.4 SOS — later intake
+### Relation System
 
-Operators manage users' SOS requests and manually choose a nearby user to dispatch. Automatic dispatch is not a confirmed requirement.
+Confirmed: user relations govern live-location visibility and may grant history access. Directionality, consent, invitation/acceptance, revocation, permission granularity, operator access, retention, and disconnected behavior remain unresolved.
 
-The meaning of "nearest", eligibility, dispatch delivery, acknowledgement, incident lifecycle, escalation, cancellation, disconnected-client behavior, and audit requirements remain unresolved.
+### SOS
 
-## 4. Architecture decision status
+Confirmed: operators manage requests and manually select/dispatch nearby users. Automatic dispatch is not required. Eligibility, delivery, acknowledgement, escalation, cancellation, lifecycle, and audit requirements remain unresolved. Map-distance capabilities must not implement the SOS workflow prematurely.
 
-No final architecture has been selected. The following must be established from requirements and evidence:
+## 5. Acceptance categories
 
-- Geographic coverage, map data availability and licensing, map rendering format, and update strategy.
-- Routing profiles, restrictions, alternatives, route-distance/time calculations, and service coverage.
-- Forward/reverse geocoding, languages, autocomplete, and search quality targets.
-- The required Overpass API/query surface and access boundaries.
-- Server versus client responsibilities during network loss.
-- Hardware, operating system, CPU architecture, storage, concurrency, and measurable performance targets.
-- Docker image acquisition, pinned versions/digests, offline transport, installation, updates, and rollback.
-- Service-specific storage requirements and their compatibility with the confirmed PostgreSQL/PostGIS application database constraint.
-- Security boundaries, authorization, location privacy, resource limits, logs, backup/recovery, and module dependencies.
+- Demonstrate installation, startup, restart, imports, agreed operations, updates, and rollback with outside-network access denied and only the supplied local bundle available. Record untested cases honestly.
+- Validate all asset references and auxiliary datasets for hidden external fetches. Internally served assets must work for web and the agreed mobile SDKs.
+- Define comprehensive map coverage using the input dataset, an explicit layer/tag catalog, and fixtures for urban, rural, border, and intercity cases. Data absent from OSM cannot be promised.
+- Required service failures must be visible; expose health/readiness and typed errors without pretending complete functionality.
+- Define routing support combinations, proximity direction/metric, unreachable cases, accuracy meaning, and no silent straight-line substitution for a road/time request.
+- Define geocoding quality fixtures, languages and normalization, units, coordinates, bounded responses, and no-results behavior.
+- Protect map infrastructure with private service networks, scoped credentials, validated input, and resource limits. General network presence and CORS are not authorization.
+- Do not implement placeholder authentication or publish an unauthenticated management application while Authentication requirements are still pending. The initial test client has controlled local/internal access; detailed policy needs agreement.
+- Keep location freshness visible. If queueing is later required, an SOS/dispatch is not delivered until acknowledged.
+- Supply reproducible artifacts, configuration, data-import and rollback procedures, license/attribution inventory, backup/restore, observability, and appropriate tests.
+- Production capacity and full-Iran performance claims require measurement on specified hardware. No numbers have been agreed.
+- Keep secrets and private operational data out of source control.
 
-Any candidate technology is a proposal until reviewed against the completed requirements. Do not silently turn a proposal or an unknown into a confirmed requirement.
+## 6. Required workflow
 
-## 5. Acceptance expectations to make measurable
+1. Collect requirements before each module.
+2. Study candidate implementations using official sources; distinguish verified capabilities, inference, and untested assumptions.
+3. Record proposed architecture, limitations, questions, and acceptance criteria.
+4. Claude Code reads the brief and provides critical feedback using an English review prompt.
+5. Resolve feedback and stabilize requirements/architecture with the user.
+6. Prepare a separate English implementation prompt tied to a finalized brief and a verified base commit.
+7. Claude Code develops on a separate feature branch, preserving unrelated work.
+8. Review and execute agreed checks; prepare changes for review without merging by default.
 
-These are platform-level acceptance categories, not finalized module specifications:
-
-- Validate installation, restart, supported operation, updates, and rollback in the agreed network-isolated environment using a locally supplied artifact bundle.
-- Verify that product behavior does not rely on Internet access or hidden external fetches, including frontend assets and map styles/resources.
-- Define and exercise the selected client behavior when its server connection is lost and restored. Show last-known data and its freshness; do not label cached locations as live.
-- Do not show a queued SOS or dispatch as delivered until the server has acknowledged the relevant operation. Detailed synchronization and conflict rules will be agreed during module intake.
-- Enforce privacy and authorization at the backend; a frontend-only control is insufficient. Clarify cache behavior after permission revocation and the limits of revocation while a device is disconnected.
-- Supply documented configuration, reproducible builds, deployment and data-import procedures, health checks, backup/restore instructions, and meaningful tests appropriate to the agreed scope.
-- Define enabled/disabled behavior and dependencies for optional capabilities. Mandatory delivered capabilities must not silently disappear because a configuration option is off.
-- Keep credentials and private operational location/user data out of source control.
-
-## 6. Required development workflow
-
-For each module:
-
-1. Collect the user's requirements before starting that module.
-2. Review them and research candidate implementations against official documentation and licensing.
-3. Record the proposed architecture, tradeoffs, unresolved questions, and acceptance criteria in this brief and supporting documents.
-4. Ask Claude Code to read the brief and give critical feedback using an English review prompt.
-5. Resolve feedback and stabilize the brief with the user. User clarification is required for unresolved product requirements.
-6. Prepare an English implementation prompt tied to the finalized brief and a verified base commit.
-7. Ask Claude Code to develop on a separate feature branch, preserving unrelated work and existing repository instructions.
-8. Review code and perform the agreed functional, security, and offline checks. Prepare changes for review; do not merge by default.
-
-Current stage: steps 1 and 4 for the draft only. `prompts/CLAUDE_BRIEF_REVIEW.md` is a review prompt, not an implementation prompt. A final implementation prompt and feature branch will be prepared after requirements and architecture are stabilized.
-
-## 7. Ownership and handoff
-
-- Requirements, technical analysis, architecture proposal, prompt preparation, and review: this collaboration with the user.
-- Brief review and implementation execution: Claude Code on the user's computer.
-- Pending external input: Map Services intake answers and actual Claude Code review output.
-- No Claude Code review or implementation has been executed from this environment.
+Current stage: documented research proposal and Claude Code review. The user has connected Claude Code to Seyra on main. prompts/CLAUDE_BRIEF_REVIEW.md is review-only. No application code, final implementation prompt, or development branch has been created in this collaboration.
