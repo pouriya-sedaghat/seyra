@@ -25,9 +25,12 @@ There are no switches to turn any of them off.
 
 ## 2. Install from the offline bundle
 
+**Authenticity.** `SHA256SUMS` and the bundle manifest protect against corruption and partial edits, but someone who rewrites an archive, the manifest and `SHA256SUMS` together can pass them. Transfer the digest of `SHA256SUMS` (printed at export: `sha256sum SHA256SUMS`) through a separate trusted channel, such as a signed change ticket or a phone readback, and compare it before installing. Even then, `bundle load` refuses any image whose real ID differs from the manifest (evidence T4).
+
 ```bash
 # copy the bundle directory to the host (removable media / internal transfer), then:
 cd /path/to/bundle
+sha256sum SHA256SUMS                       # compare with the digest received out of band
 sha256sum --quiet -c SHA256SUMS            # integrity of every archive and install file
 sudo cp -r install /opt/seyra              # install tree: wrapper, compose files, catalog, lock, docs
 /opt/seyra/bin/seyra-maps bootstrap-load /path/to/bundle

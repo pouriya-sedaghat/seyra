@@ -43,6 +43,10 @@ for ((i = 0; i < ${#args[@]}; i++)); do
       d="$(cd "${args[$((i + 1))]}" && pwd)"; args[$((i + 1))]="$d"; mounts+=(-v "$d:$d") ;;
   esac
 done
+# `bundle verify|load DIR`: the bundle directory is mounted read-only at its own path.
+if [ "${args[0]:-}" = bundle ] && { [ "${args[1]:-}" = verify ] || [ "${args[1]:-}" = load ]; } && [ -n "${args[2]:-}" ]; then
+  d="$(cd "${args[2]}" && pwd)"; args[2]="$d"; mounts+=(-v "$d:$d:ro")
+fi
 # The ops container joins the internal build network (no outside route) when it exists.
 net=none
 docker network inspect seyra_build >/dev/null 2>&1 && net=seyra_build

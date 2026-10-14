@@ -29,6 +29,7 @@ D() { DOCKER_HOST="unix://$sock_dir/docker.sock" docker "$@"; }
 cli() { DOCKER_HOST="unix://$sock_dir/docker.sock" "$inst/bin/seyra-maps" "$@"; }
 in_host() { docker exec "$name" "$@"; }
 egress_count() { in_host sh -c "iptables -L SEYRA_EGRESS -v -n -x | awk '/COUNT/ {print \$1}'"; }
+igmp_count() { in_host sh -c "iptables -L SEYRA_EGRESS -v -n -x | awk '/IGMP/ {print \$1}'"; }
 # Readiness through the TLS ingress from inside the offline host, trusting the generated CA.
 ready_ds() {
   D run --rm --network host --pull never -v "$SEYRA_HOME/secrets/tls/ca.crt:/ca.crt:ro" -e NODE_EXTRA_CA_CERTS=/ca.crt --entrypoint node \
@@ -38,6 +39,8 @@ ready_ds() {
 
 # ------------------------------------------------------------------ offline host
 docker rm -f "$name" >/dev/null 2>&1
+docker volume rm seyra-offline-docker >/dev/null 2>&1   # a fresh, empty offline daemon every run
+rm -rf "${LAB:?}/home" "${LAB:?}/install" "${LAB:?}/run"
 docker network inspect "$net" >/dev/null 2>&1 || docker network create --internal "$net" >/dev/null
 mkdir -p "$sock_dir" "$SEYRA_HOME"
 # Same absolute paths inside and outside, so the wrapper's bind mounts resolve on the offline host.
@@ -47,7 +50,10 @@ docker run -d --privileged --name "$name" --network "$net" --pull never \
   "$DIND_IMAGE" dockerd -H unix:///var/run/docker.sock -H "unix://$sock_dir/docker.sock" --tls=false >/dev/null
 for _ in $(seq 1 60); do D info >/dev/null 2>&1 && break; sleep 1; done
 gw="$(docker inspect "$net" -f '{{(index .IPAM.Config 0).Subnet}}' | sed -E 's#\.[0-9]+/[0-9]+$#.250#')"
+# IGMP membership reports to 224.0.0.0/4 are emitted by the kernel whenever a bridge/veth comes
+# up; they are link-local and counted separately (IGMP), never as an outbound attempt.
 in_host sh -c "ip route add default via $gw 2>/dev/null; iptables -N SEYRA_EGRESS; \
+  iptables -A SEYRA_EGRESS -p igmp -d 224.0.0.0/4 -m comment --comment IGMP -j RETURN; \
   iptables -A SEYRA_EGRESS -d 127.0.0.0/8 -j RETURN; iptables -A SEYRA_EGRESS -d 172.16.0.0/12 -j RETURN; \
   iptables -A SEYRA_EGRESS -d 192.168.0.0/16 -j RETURN; iptables -A SEYRA_EGRESS -d 10.0.0.0/8 -j RETURN; \
   iptables -A SEYRA_EGRESS -m comment --comment COUNT -j DROP; \
@@ -57,6 +63,7 @@ in_host sh -c "ip route add default via $gw 2>/dev/null; iptables -N SEYRA_EGRES
   echo "network: $net (internal); sink route via $gw; egress counter chain SEYRA_EGRESS on OUTPUT + DOCKER-USER"
   echo "registry mirrors: $(D info --format '{{.RegistryConfig.Mirrors}}')  proxies: $(D info --format '{{.HTTPProxy}}{{.HTTPSProxy}}')"
   echo "images before install: $(D images -q | wc -l)"
+  echo "external DNS from the offline host: $(in_host nslookup -timeout=3 example.com 2>&1 | tail -2 | tr '\n' ' ')"
   in_host ip route
 } > "$ev/host.txt" 2>&1
 if [ "$(D images -q | wc -l)" = 0 ] && ! in_host wget -q -T 3 -O /dev/null http://example.com/ 2>/dev/null; then
@@ -109,7 +116,7 @@ fi
 after="$(egress_count)"
 in_host sh -c 'iptables -L SEYRA_EGRESS -v -n -x; iptables -L OUTPUT -v -n -x | head -4; iptables -L DOCKER-USER -v -n -x 2>/dev/null | head -4' > "$ev/O5-egress-counters.txt" 2>&1
 if [ "${after:-x}" = "${base0:-y}" ]; then
-  result PASS O5 "zero packets to non-local destinations from the offline host or any container during install/import/start/update/rollback (counter $base0 -> $after)"
+  result PASS O5 "zero packets to non-local destinations from the offline host or any container during install/import/start/update/rollback (counter $base0 -> $after; $(igmp_count) link-local IGMP reports from interface creation counted separately)"
 else
   result FAIL O5 "outbound attempts counted: $base0 -> $after (see O5-egress-counters.txt)"
 fi
