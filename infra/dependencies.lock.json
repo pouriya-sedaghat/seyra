@@ -1,6 +1,6 @@
 {
   "schema": "seyra.dependencies-lock/1",
-  "generated_at": "2026-10-17T08:08:17.883Z",
+  "generated_at": "2026-10-17T10:02:04.631Z",
   "generated_by": "infra/prepare/write-lock.mjs",
   "status": "LOCKED (preparation build verified); runtime/acceptance evidence is in docs/TEST_RESULTS.md",
   "preparation_environment": {
@@ -268,15 +268,15 @@
     "ops": {
       "role": "OPS",
       "ref": "seyra/ops:1.0.0-seyra1",
-      "image_id": "sha256:18ea8ed0724a62ae2a6bea45f76a028644eb83091eafee8a934d88404a37704f",
+      "image_id": "sha256:6da5438553a1ae1df54ab42609c283ee1154d2c80f459af64d2048b02e7e5daf",
       "repo_digests": [
-        "seyra/ops@sha256:18ea8ed0724a62ae2a6bea45f76a028644eb83091eafee8a934d88404a37704f"
+        "seyra/ops@sha256:6da5438553a1ae1df54ab42609c283ee1154d2c80f459af64d2048b02e7e5daf"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-17T08:08:05.134010627Z",
+      "created": "2026-10-17T10:01:47.675528388Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/ops/Dockerfile",
-      "dockerfile_sha256": "3337da8a4d1d8bd2af7215d88e0c06cd51f1cf501c85b2aeb944d5b53734b4f5",
+      "dockerfile_sha256": "3b965a09c948207f495657ff5b017c3262b0677ec918c7b0c20e5cc143b3c331",
       "base_images": [
         "node:24-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20",
         "docker:29.8.2-cli@sha256:35cfcf893c20f2931f4909151b5407aaaeab711277de7ce8b8f521f095d54c32",
