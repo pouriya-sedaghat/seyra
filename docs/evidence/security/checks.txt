@@ -1,8 +1,8 @@
 # Seyra security checks (AC16/AC17)
-# recorded_at: 2026-10-17T08:10:08Z  dataset: ds-20261001-681455d56afb  proxy image: seyra/proxy:1.0.0-seyra1
+# recorded_at: 2026-10-17T10:15:06Z  dataset: ds-20261001-681455d56afb  proxy image: seyra/proxy:1.0.0-seyra1
 PASS AC16.1 only the proxy publishes a host port, bound to 127.0.0.1:8443 — seyra-proxy-1 127.0.0.1:8443->8443/tcp
 PASS AC16.2 provider/database ports are not reachable on the host loopback — loopback ports 80 3000 5432 8002 2322 8080 9200 9300 closed
-PASS AC16.3 providers/DB/API are not reachable from another network (simulated LAN client) — a client on another network cannot reach: 172.18.0.6:5432 172.18.0.4:8002 172.18.0.3:2322 172.18.0.2:8080 172.18.0.5:8080 172.18.0.7:3000
+PASS AC16.3 providers/DB/API are not reachable from another network (simulated LAN client) — a client on another network cannot reach: 172.18.0.8:5432 172.18.0.4:8002 172.18.0.3:2322 172.18.0.2:8080 172.18.0.5:8080 172.18.0.6:3000
 NOTE AC16.3b processes on the Docker host itself can connect to container bridge addresses ( seyra-db-1 seyra-valhalla-1 seyra-photon-1); Docker does not filter host-local traffic, so host shell access is part of the trust boundary (RUNBOOK)
 PASS AC16.4 unknown Host name is refused (421) — HTTP 421
 PASS AC16.5 plain HTTP on the TLS port is rejected — HTTP 400
@@ -18,7 +18,7 @@ PASS AC16.10 LAN allowlist denies clients outside the configured CIDRs — clien
 PASS AC16.13 configured LAN access admits clients inside the allowlist — client 172.20.0.1 inside allowlist 172.20.0.1/32 received HTTP 200
 PASS AC16.14 init refuses loopback mode with a 0.0.0.0 bind and leaves settings untouched (review R1) — rejected; settings.json unchanged (2028203f5cc64c0e)
 PASS AC16.15 start refuses a hand-edited runtime.env with loopback mode + 0.0.0.0 (review R1) — start refused before compose; running proxy untouched; runtime.env restored
-PASS AC17.1 API role reads control data — ok: 70
+PASS AC17.1 API role reads control data — ok: 116
 PASS AC17.2 API role cannot write control data — ERROR:  permission denied for table release_events
 PASS AC17.3 API role cannot create objects — ERROR:  permission denied for schema seyra_control
 PASS AC17.4 API role cannot connect to the map render database — psql: error: connection to server at "127.0.0.1", port 5432 failed: FATAL:  permission denied for database "render_ds_20
@@ -28,5 +28,5 @@ PASS AC17.7 tile reader cannot create objects in the render schema — ERROR:  p
 PASS AC17.8 import role cannot connect to a frozen render database — psql: error: connection to server at "127.0.0.1", port 5432 failed: FATAL:  permission denied for database "render_ds_20
 PASS AC17.9 secret files are owner-read-only — all secret files 0400, owned by their consumer uid; TLS key 0400
 PASS AC17.10 no secret value appears in container configuration — no password value in any container configuration/environment
-PASS AC17.11 default API/proxy logs contain no query text, coordinates or secrets — 3966 log lines checked: no query text, coordinates, bboxes or secrets
+PASS AC17.11 default API/proxy logs contain no query text, coordinates or secrets — 6991 log lines checked: no query text, coordinates, bboxes or secrets
 # failures: 0
