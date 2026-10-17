@@ -1,9 +1,9 @@
-# Seyra offline host scenarios (AC03/AC18) — 2026-10-14T13:57:58Z
-# bundle=/home/user/seyra-work/bundle-2026-10-14 A=ds-20261001-681455d56afb B=ds-20261002-681455d56afb
+# Seyra offline host scenarios (AC03/AC18) — 2026-10-17T08:33:17Z
+# bundle=/home/user/seyra-work/bundle-2026-10-17 A=ds-20261001-681455d56afb B=ds-20261002-681455d56afb
 PASS O0 offline host has no images and no outside route (probe to example.com failed)
 PASS O1 bootstrap-load verified checksums and loaded 10 images; every reference resolves to its locked image ID
 PASS O2 init, TLS, fixture import (staging validated) and activation of ds-20261001-681455d56afb offline; ready through https://127.0.0.1:8443
 PASS O3 stop/start: all four providers ready again on ds-20261001-681455d56afb
 PASS O4 update to ds-20261002-681455d56afb and rollback to ds-20261001-681455d56afb, each verified ready through the ingress
-PASS O5 zero packets to non-local destinations from the offline host or any container during install/import/start/update/rollback (counter 0 -> 0; 7 link-local IGMP reports from interface creation counted separately)
+PASS O5 zero packets to non-local destinations from the offline host or any container during install/import/start/update/rollback (counter 0 -> 0; 6 link-local IGMP reports from interface creation counted separately)
 # failures: 0
