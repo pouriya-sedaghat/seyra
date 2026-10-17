@@ -1,0 +1,57 @@
+active:   ds-20261001-681455d56afb
+previous: ds-20261006-681455d56afb
+maintenance flag: PRESENT
+UNFINISHED activate: ds-20261001-681455d56afb -> ds-20261006-681455d56afb (phase switched, started 2026-10-17T08:18:09.309Z); run: seyra-maps recover
+releases:
+  ds-20261001-681455d56afb  validated  source=synthetic-v1.osm.pbf sha256=e90c33a29619…
+  ds-20261006-681455d56afb  validated  source=synthetic-v1.osm.pbf sha256=e90c33a29619…
+live readiness: {
+ "status": "maintenance",
+ "dataset_id": "ds-20261001-681455d56afb",
+ "providers": [
+  {
+   "provider": "tiles",
+   "implementation": "tegola",
+   "expected_identity": "seyra_ds_20261001_681455d56afb",
+   "status": "ok",
+   "observed_identity": "seyra_ds_20261001_681455d56afb",
+   "latency_ms": 239,
+   "checked_at": "2026-10-17T08:18:47.473Z"
+  },
+  {
+   "provider": "routing",
+   "implementation": "valhalla",
+   "expected_identity": "1791983703",
+   "status": "ok",
+   "observed_identity": "1791983703",
+   "latency_ms": 156,
+   "checked_at": "2026-10-17T08:18:47.427Z"
+  },
+  {
+   "provider": "geocoder",
+   "implementation": "photon",
+   "expected_identity": "seyra-release-ds-20261001-681455d56afb",
+   "status": "unavailable",
+   "observed_identity": null,
+   "latency_ms": null,
+   "checked_at": "2026-10-17T08:18:47.404Z",
+   "error": "photon is unreachable"
+  },
+  {
+   "provider": "overpass",
+   "implementation": "overpass",
+   "expected_identity": "seyra:ds-20261001-681455d56afb",
+   "status": "ok",
+   "observed_identity": "seyra:ds-20261001-681455d56afb",
+   "latency_ms": 184,
+   "checked_at": "2026-10-17T08:18:47.459Z"
+  }
+ ],
+ "dependencies": [
+  {
+   "name": "control_db",
+   "status": "ok"
+  }
+ ],
+ "checked_at": "2026-10-17T08:18:47.519Z"
+}

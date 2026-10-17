@@ -1,10 +1,10 @@
-[import] the import started 2026-10-14T13:21:13.750Z is no longer running; recovering
+[import] the import started 2026-10-17T08:11:10.407Z is no longer running; recovering
 [import] stopping 1 orphaned job container(s) of the interrupted import
-[import] marked interrupted release ds-20261002-681455d56afb as failed (remove it with: seyra-maps prune)
+[import] marked interrupted release ds-20261006-681455d56afb as failed (remove it with: seyra-maps prune)
 [import] source-checksum …
 [import] source-validate …
-[import] replacing failed build of ds-20261002-681455d56afb (failed at interrupted)
-[import] dataset_id ds-20261002-681455d56afb
+[import] replacing failed build of ds-20261006-681455d56afb (failed at interrupted)
+[import] dataset_id ds-20261006-681455d56afb
 [import] source-copy …
 [import] render-import …
 [import] routing-build …
@@ -17,4 +17,4 @@
 [stage] PASS routing
 [stage] PASS geocoder
 [stage] PASS overpass
-[import] release ds-20261002-681455d56afb built and validated in staging; activate with: seyra-maps activate ds-20261002-681455d56afb
+[import] release ds-20261006-681455d56afb built and validated in staging; activate with: seyra-maps activate ds-20261006-681455d56afb
