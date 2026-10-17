@@ -14,17 +14,17 @@ live readiness: {
    "expected_identity": "seyra_ds_20261002_681455d56afb",
    "status": "ok",
    "observed_identity": "seyra_ds_20261002_681455d56afb",
-   "latency_ms": 13,
-   "checked_at": "2026-10-17T08:53:57.574Z"
+   "latency_ms": 12,
+   "checked_at": "2026-10-17T10:36:01.033Z"
   },
   {
    "provider": "routing",
    "implementation": "valhalla",
-   "expected_identity": "1792227098",
+   "expected_identity": "1792233229",
    "status": "ok",
-   "observed_identity": "1792227098",
-   "latency_ms": 7,
-   "checked_at": "2026-10-17T08:53:57.569Z"
+   "observed_identity": "1792233229",
+   "latency_ms": 8,
+   "checked_at": "2026-10-17T10:36:01.030Z"
   },
   {
    "provider": "geocoder",
@@ -32,8 +32,8 @@ live readiness: {
    "expected_identity": "seyra-release-ds-20261002-681455d56afb",
    "status": "ok",
    "observed_identity": "seyra-release-ds-20261002-681455d56afb",
-   "latency_ms": 934,
-   "checked_at": "2026-10-17T08:53:58.497Z"
+   "latency_ms": 872,
+   "checked_at": "2026-10-17T10:36:01.895Z"
   },
   {
    "provider": "overpass",
@@ -41,8 +41,8 @@ live readiness: {
    "expected_identity": "seyra:ds-20261002-681455d56afb",
    "status": "ok",
    "observed_identity": "seyra:ds-20261002-681455d56afb",
-   "latency_ms": 121,
-   "checked_at": "2026-10-17T08:53:57.684Z"
+   "latency_ms": 79,
+   "checked_at": "2026-10-17T10:36:01.102Z"
   }
  ],
  "dependencies": [
@@ -51,5 +51,5 @@ live readiness: {
    "status": "ok"
   }
  ],
- "checked_at": "2026-10-17T08:53:58.499Z"
+ "checked_at": "2026-10-17T10:36:01.899Z"
 }
