@@ -4,6 +4,8 @@ This intake is for validating the implemented Map Services with real owner data.
 
 Owner update, 2026-10-17: a VM on a Windows host has been prepared with **4 CPU cores and 8 GB RAM**. Docker is installed, Claude Desktop is connected to the VM, and the Iran PBF is in `/home/user`. These are owner-reported facts. Guest OS/architecture, actual shell access, Docker daemon resources/context, disk capacity/filesystem, exact PBF filename and local Seyra image/bundle availability still require inspection. The directory path does not by itself establish the guest OS or Docker bind-mount visibility.
 
+Owner clarification, 2026-10-17: **the VM has Internet access and may be used for setup, testing and image acquisition.** It may host an online preparation phase followed by an isolated offline product-validation phase. Online acquisition of pinned software/images is authorized during preparation; it does not relax the zero-external-dependency requirement for Seyra's operational installation from the prepared bundle, imports, startup, assets, updates and restore. Do not disconnect the whole VM or the Claude session just to isolate the product.
+
 ## Required to start the data import
 
 | Input | Supplied value |
@@ -13,7 +15,7 @@ Owner update, 2026-10-17: a VM on a Windows host has been prepared with **4 CPU 
 | Snapshot timestamp, if the file header does not supply it; do not invent a timestamp | Pending |
 | Dedicated Docker host/daemon for this validation, with no existing Seyra deployment | Test VM prepared and Docker installed; daemon/context/isolation and absence of another Seyra deployment not yet verified. |
 | Absolute SEYRA_HOME on a local Linux filesystem; original PBF stored outside managed release directories | Pending |
-| Local install/bundle location and its trusted SHA256SUMS digest | Pending |
+| Local install/bundle location and its trusted SHA256SUMS digest | Pending inventory; the online VM may acquire pinned images or use the project's preparation workflow, then produce/load a verified offline bundle. |
 
 Claude Code should collect OS, CPU architecture/cores, RAM, available disk, filesystem type, Docker/Compose versions and existing Seyra containers/networks itself from the named machine. Do not substitute the earlier cloud container's specifications for this host.
 
