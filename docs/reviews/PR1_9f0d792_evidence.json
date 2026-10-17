@@ -1,0 +1,103 @@
+{
+  "reviewed_commit": "9f0d7925eef0d43fc157cdd64b557b962df457a6",
+  "node": "v24.19.0",
+  "checks": [
+    {
+      "id": "R3-before-unlink",
+      "result": "PASS",
+      "detail": "One real process holds the kernel lock; the contender is refused and cannot remove the holder record."
+    },
+    {
+      "id": "R3-after-stale-read",
+      "result": "PASS",
+      "detail": "One real process holds the kernel lock; the contender is refused and cannot remove the holder record."
+    },
+    {
+      "id": "R3-crash-release",
+      "result": "PASS",
+      "detail": "SIGKILL automatically releases the real flock; the next process enters."
+    },
+    {
+      "id": "R3-transition",
+      "result": "PASS",
+      "detail": "A stale owner record plus an unfinished transition refuses prune and admits recover."
+    },
+    {
+      "id": "R3-nested",
+      "result": "PASS",
+      "detail": "Nested calls retain the original owner in one async chain."
+    },
+    {
+      "id": "R5-generation-selection",
+      "result": "PASS",
+      "detail": "Two real generated sets plus an interrupted attempt: newest complete set restores matching SQL/settings; partial output ignored."
+    },
+    {
+      "id": "R5-explicit-generation",
+      "result": "PASS",
+      "detail": "An explicitly selected older generation restores its own SQL and settings."
+    },
+    {
+      "id": "R5-missing-sql",
+      "result": "PASS",
+      "detail": "Rejected before any Docker/SQL call; destination settings unchanged."
+    },
+    {
+      "id": "R5-corrupt-sql",
+      "result": "PASS",
+      "detail": "Rejected before any Docker/SQL call; destination settings unchanged."
+    },
+    {
+      "id": "R5-missing-state",
+      "result": "PASS",
+      "detail": "Rejected before any Docker/SQL call; destination settings unchanged."
+    },
+    {
+      "id": "R5-corrupt-manifests",
+      "result": "PASS",
+      "detail": "Rejected before any Docker/SQL call; destination settings unchanged."
+    },
+    {
+      "id": "R5-missing-source",
+      "result": "PASS",
+      "detail": "Rejected before any Docker/SQL call; destination settings unchanged."
+    },
+    {
+      "id": "R5-corrupt-source",
+      "result": "PASS",
+      "detail": "Rejected before any Docker/SQL call; destination settings unchanged."
+    },
+    {
+      "id": "R5-missing-completion",
+      "result": "PASS",
+      "detail": "Rejected before any Docker/SQL call; destination settings unchanged."
+    },
+    {
+      "id": "R5-unlisted-file",
+      "result": "PASS",
+      "detail": "Rejected before any Docker/SQL call; destination settings unchanged."
+    },
+    {
+      "id": "R5-incomplete-dump-with-matching-hash",
+      "result": "PASS",
+      "detail": "Rejected before any Docker/SQL call; destination settings unchanged."
+    },
+    {
+      "id": "R5-legacy-mix",
+      "result": "PASS",
+      "detail": "The previously reproduced mixed flat layout is refused before any Docker/SQL call."
+    },
+    {
+      "id": "R5-published-set",
+      "result": "PASS",
+      "detail": "Actual backup output includes checksummed SQL, state, manifests, source and source metadata in one published directory."
+    }
+  ],
+  "source_sha256": {
+    "apps/ops/src/lifecycle-lock.ts": "5711e24e27274bc55dccab418125730fb75a859f8e029f96243958ca90247b20",
+    "apps/ops/src/backup.ts": "4cca5d43ba16eac2f994a2a9f1d6bde7db1d13101ace5da3ff4a76959a0ac78c",
+    "apps/ops/src/main.ts": "cb545f0c525468bcff9a7870c95012bcf7bd94c08afefc39e9a1e5b20f58f6be",
+    "infra/dependencies.lock.json": "8b6b678aa225d3060e66e9c04dea9a6cffcad1a2bbb37c600c92ca8583050c17"
+  },
+  "limitations": "Targeted reviewer checks only. Full workspace and Docker/provider/browser/offline suites not repeated by reviewer."
+}
