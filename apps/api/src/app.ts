@@ -247,7 +247,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     { schema: { tags: ['geocoding'], querystring: SearchQuerySchema, response: { 200: GeocodeResponseSchema, ...errorResponses } } },
     async (req, reply) => {
       checkDataset(req.query.dataset_id);
-      gate('geocoder');
+      await gate('geocoder');
       return geocode.search(req.query, 'search', datasetId, requestSignal(reply, deps.limits.searchDeadlineMs));
     },
   );
@@ -257,7 +257,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     { schema: { tags: ['geocoding'], querystring: SearchQuerySchema, response: { 200: GeocodeResponseSchema, ...errorResponses } } },
     async (req, reply) => {
       checkDataset(req.query.dataset_id);
-      gate('geocoder');
+      await gate('geocoder');
       return geocode.search(req.query, 'autocomplete', datasetId, requestSignal(reply, deps.limits.searchDeadlineMs));
     },
   );
@@ -267,7 +267,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     { schema: { tags: ['geocoding'], querystring: ReverseQuerySchema, response: { 200: GeocodeResponseSchema, ...errorResponses } } },
     async (req, reply) => {
       checkDataset(req.query.dataset_id);
-      gate('geocoder');
+      await gate('geocoder');
       return geocode.reverse(req.query, datasetId, requestSignal(reply, deps.limits.searchDeadlineMs));
     },
   );
@@ -278,7 +278,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     async (req, reply) => {
       checkDataset(req.body.dataset_id);
       const v = validateRouteRequest(req.body, deps.limits);
-      gate('routing');
+      await gate('routing');
       const deadline = v.order === 'optimized' ? deps.limits.optimizeDeadlineMs : deps.limits.routeDeadlineMs;
       return routing.route(v, datasetId, requestSignal(reply, deadline));
     },
@@ -290,7 +290,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     async (req, reply) => {
       checkDataset(req.body.dataset_id);
       proximity.validate(req.body);
-      if (req.body.metric !== 'straight_line') gate('routing');
+      if (req.body.metric !== 'straight_line') await gate('routing');
       else if (deps.health.inMaintenance()) throw new MapServiceError('MAINTENANCE', 'map services are in a maintenance window; retry later');
       return proximity.rank(req.body, datasetId, requestSignal(reply, deps.limits.optimizeDeadlineMs));
     },
@@ -301,7 +301,7 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
     { schema: { tags: ['pois'], querystring: PoiQuerySchema, response: { 200: PoiResponseSchema, ...errorResponses } } },
     async (req, reply) => {
       checkDataset(req.query.dataset_id);
-      gate('overpass');
+      await gate('overpass');
       return poi.query(req.query, datasetId, requestSignal(reply, deps.limits.poiDeadlineMs));
     },
   );
