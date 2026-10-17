@@ -6,6 +6,13 @@
 # L1 corrupt inputs fail without touching A          L4 activation A -> B succeeds
 # L2 interrupted import is recovered, A untouched    L5 rollback B -> A
 # L3 provider-start failure during A -> B restores A L6 prune keeps active + previous
+# L7 real `compose up` failure after the switch restores A (review R2)
+# L8 recovery failure: maintenance + journal kept, mutators refuse, `recover` restores A (R2)
+# L9 prune during a live import / L10 prune during activation / L11 competing rollback and
+#    activate (review R3, real concurrent processes) / L12 prune after the transitions
+#
+# Requires: NODE_BIN (Node for the port squatter), SNAPSHOT_TS (B) and SNAPSHOT_TS_L9 (C) not
+# already imported.
 #
 # Release B is the same fixture with an operator snapshot timestamp (a different dataset_id).
 # Fault injection is limited to Seyra-managed paths under $SEYRA_HOME and is always undone.

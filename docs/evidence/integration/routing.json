@@ -1,5 +1,5 @@
 {
-  "recorded_at": "2026-10-14T13:27:37.792Z",
+  "recorded_at": "2026-10-17T08:08:57.077Z",
   "base": "https://127.0.0.1:8443",
   "dataset_id": "ds-20261001-681455d56afb",
   "cells": [
@@ -434,7 +434,7 @@
     "optimized": {
       "code": "NO_ROUTE",
       "message": "no visit order with a finite modeled cost exists; no stop is omitted",
-      "request_id": "0dc336bc-b46e-45bd-a29e-71a6b18bfccc",
+      "request_id": "49460a9f-b83d-4fcc-95c7-e839cbcd0e34",
       "provider": "valhalla",
       "details": {
         "unreachable_pairs": 4,
