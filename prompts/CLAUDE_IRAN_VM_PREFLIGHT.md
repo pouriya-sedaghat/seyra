@@ -13,6 +13,14 @@ Execute through Claude Code on the **owner's VM**, not the previous cloud prepar
 
 The guest OS, architecture, exact filename, free disk, Docker context/server resources and locally available Seyra images/bundle are not yet known. Do not infer Linux/amd64, terminal access or file visibility from the directory name or Desktop connection. Do not claim 8 GB is sufficient or insufficient for the complete Iran import without inspecting the actual pipeline and observing resources.
 
+## Bootstrap the repository when this is a fresh VM
+
+Canonical repository URL: `https://github.com/pouriya-sedaghat/seyra.git`. It is public. The intended checkout is `/home/user/seyra`. The VM may contain only the PBF initially; `git fetch origin` requires a checkout first. Do not search the signed-in `gh` account's repository list or ask for the clone URL again.
+
+Verify the VM shell's host/user and whether that path is a Git checkout. If the path does not exist, run `git clone https://github.com/pouriya-sedaghat/seyra.git /home/user/seyra` yourself using the VM shell, then inspect its actual exit code/output. If the path exists without a valid checkout, report its contents and do not overwrite or delete it. If it is an existing checkout, inspect its working tree and origin URL; preserve unrelated changes and stop on a different repository rather than changing its remote silently.
+
+After a valid checkout exists, use `git -C /home/user/seyra fetch origin` and read the prompt from the remote-tracking review ref. Inspect `feat/map-services-v1` and preserve local work before selecting the implementation branch for validation. If clone/fetch fails, report the actual command, exit code and sanitized stderr; classify DNS, TLS, network, authentication or refspec errors from evidence. Do not change global credentials, disable TLS verification or claim a clone succeeded based only on a chat message.
+
 Read `CLAUDE.md` and, using `git show` from `origin/review/map-services-pr1-9f0d792`, read:
 
 - `docs/validation/IRAN_VALIDATION_INPUTS.md`
