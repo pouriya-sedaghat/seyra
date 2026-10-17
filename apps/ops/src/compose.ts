@@ -1,6 +1,7 @@
+import { existsSync, readFileSync } from 'node:fs';
 import { join } from 'node:path';
 import type { Layout, Settings } from './layout.js';
-import { writeAtomic } from './layout.js';
+import { validateRuntimeAccess, validateSettings, writeAtomic } from './layout.js';
 import { imageEnv, type LockedImage } from './lock.js';
 import { run, type RunOptions, type RunResult } from './proc.js';
 
@@ -15,6 +16,7 @@ export function composeFile(l: Layout, name: 'runtime.yml' | 'jobs.yml'): string
 export const NO_RELEASE = 'none';
 
 export function runtimeEnv(l: Layout, s: Settings, images: LockedImage[], datasetId: string): Record<string, string> {
+  validateSettings(s); // never generate a runtime configuration from unsafe settings
   return {
     SEYRA_HOME: l.home,
     SEYRA_DATASET_ID: datasetId,
@@ -42,6 +44,26 @@ export function serializeEnv(env: Record<string, string>): string {
 
 export function writeRuntimeEnv(l: Layout, env: Record<string, string>): void {
   writeAtomic(l.runtimeEnv, serializeEnv(env), 0o640);
+}
+
+/** Parse a runtime.env written by serializeEnv (plain or JSON-quoted values). */
+export function parseEnv(text: string): Record<string, string> {
+  const env: Record<string, string> = {};
+  for (const line of text.split('\n')) {
+    const m = /^([A-Z0-9_]+)=(.*)$/.exec(line);
+    if (!m) continue;
+    env[m[1]!] = m[2]!.startsWith('"') ? (JSON.parse(m[2]!) as string) : m[2]!;
+  }
+  return env;
+}
+
+/**
+ * Runtime boundary: the access configuration that compose is about to publish must satisfy the
+ * same rules as the settings (also catches a hand-edited runtime.env). Throws before `up`.
+ */
+export function assertRuntimeEnvSafe(l: Layout): void {
+  if (!existsSync(l.runtimeEnv)) throw new Error(`missing ${l.runtimeEnv}; run seyra-maps init`);
+  validateRuntimeAccess(parseEnv(readFileSync(l.runtimeEnv, 'utf8')));
 }
 
 /** docker compose for the operational stack, always using the generated runtime.env. */

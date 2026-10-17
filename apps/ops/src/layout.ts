@@ -1,5 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync, renameSync, chmodSync } from 'node:fs';
 import { join, resolve, sep } from 'node:path';
+import { isLoopbackIPv4, parseIPv4, parseLanCidrs } from './net.js';
 
 /** On-disk layout under SEYRA_HOME (identical path inside the ops container and on the host). */
 export interface Layout {
@@ -21,6 +22,12 @@ export interface Layout {
   historyFile: string;
   pointersFile: string;
   importLock: string;
+  /** Global lock for short mutating lifecycle commands (review R3). */
+  lifecycleLock: string;
+  /** Journal of an activation/rollback transition in progress (review R2). */
+  transitionFile: string;
+  /** Configuration backed up at the start of a transition, for recovery. */
+  transitionDir: string;
   /** Read-only install files (compose, catalog, lock, migrations) mounted from the bundle. */
   install: string;
 }
@@ -48,6 +55,9 @@ export function layout(home = process.env.SEYRA_HOME): Layout {
     historyFile: join(state, 'history.jsonl'),
     pointersFile: join(state, 'pointers.json'),
     importLock: join(state, 'import.lock'),
+    lifecycleLock: join(state, 'lifecycle.lock'),
+    transitionFile: join(state, 'transition.json'),
+    transitionDir: join(state, 'transition'),
     install: process.env.SEYRA_INSTALL_DIR ?? '/opt/seyra-install',
   };
 }
@@ -117,16 +127,58 @@ export function readSettings(l: Layout): Settings {
   return { ...DEFAULT_SETTINGS, ...(JSON.parse(readFileSync(l.settingsFile, 'utf8')) as Partial<Settings>) };
 }
 
-export function validateSettings(s: Settings): void {
-  if (s.accessMode === 'lan') {
-    if (!s.lanCidrs.trim()) throw new Error('LAN access mode requires an explicit CIDR allowlist (fail closed)');
-    for (const c of s.lanCidrs.split(',')) {
-      if (!/^(\d{1,3}\.){3}\d{1,3}\/(\d|[12]\d|3[0-2])$/.test(c.trim())) throw new Error(`invalid CIDR ${c}`);
-    }
-    if (s.bindAddr === '127.0.0.1') throw new Error('LAN access mode needs a non-loopback --bind address');
+const ACCESS_MODES = ['loopback', 'lan'] as const;
+const HOST_RE = /^(?=.{1,253}$)[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?)*$/;
+
+/**
+ * Access rules (fail closed, checked before anything is persisted or started):
+ *  - loopback: the published bind address must be in 127.0.0.0/8 and no allowlist is configured;
+ *  - lan: any non-loopback exposure needs explicit, valid CIDRs (nginx adds `deny all` after them).
+ * A non-loopback bind is therefore impossible without an allowlist.
+ */
+export function validateAccess(a: { accessMode: unknown; bindAddr: unknown; lanCidrs: unknown; httpsPort: unknown; serverNames: unknown }): void {
+  if (!ACCESS_MODES.includes(a.accessMode as never)) throw new Error(`access mode must be one of ${ACCESS_MODES.join(', ')} (got ${JSON.stringify(a.accessMode)})`);
+  if (typeof a.bindAddr !== 'string' || parseIPv4(a.bindAddr) === null) throw new Error(`bind address ${JSON.stringify(a.bindAddr)} is not a valid IPv4 address`);
+  if (typeof a.lanCidrs !== 'string') throw new Error('LAN CIDRs must be a comma-separated string');
+  if (!Number.isInteger(a.httpsPort) || (a.httpsPort as number) < 1 || (a.httpsPort as number) > 65535) throw new Error(`invalid HTTPS port ${JSON.stringify(a.httpsPort)}`);
+  if (typeof a.serverNames !== 'string' || !a.serverNames.trim() || !a.serverNames.trim().split(/\s+/).every((n) => HOST_RE.test(n) || parseIPv4(n) !== null)) {
+    throw new Error(`invalid server names ${JSON.stringify(a.serverNames)}`);
   }
-  if (!/^[A-Za-z0-9. -]+$/.test(s.serverNames)) throw new Error('invalid server names');
-  if (!/^(\d{1,3}\.){3}\d{1,3}$/.test(s.bindAddr)) throw new Error('bind address must be an IPv4 address');
+  if (a.accessMode === 'loopback') {
+    if (!isLoopbackIPv4(a.bindAddr)) {
+      throw new Error(`loopback access mode requires a loopback bind address (127.0.0.0/8), got ${a.bindAddr}; non-loopback exposure needs --access lan with --lan-cidrs`);
+    }
+    if (a.lanCidrs.trim()) throw new Error('a LAN CIDR allowlist is only valid with --access lan');
+  } else {
+    if (!a.lanCidrs.trim()) throw new Error('LAN access mode requires an explicit CIDR allowlist (fail closed)');
+    parseLanCidrs(a.lanCidrs);
+    if (isLoopbackIPv4(a.bindAddr)) throw new Error('LAN access mode needs a non-loopback --bind address');
+  }
+}
+
+export function validateSettings(s: Settings): void {
+  validateAccess(s);
+  const intIn = (name: string, v: unknown, min: number, max: number) => {
+    if (!Number.isInteger(v) || (v as number) < min || (v as number) > max) throw new Error(`${name} must be an integer in ${min}..${max}`);
+  };
+  intIn('valhallaThreads', s.valhallaThreads, 1, 256);
+  intIn('buildThreads', s.buildThreads, 1, 256);
+  intIn('readinessTimeoutS', s.readinessTimeoutS, 10, 3600);
+  if (typeof s.minFreeFactor !== 'number' || !(s.minFreeFactor > 0)) throw new Error('minFreeFactor must be a positive number');
+  intIn('minFreeBytes', s.minFreeBytes, 0, Number.MAX_SAFE_INTEGER);
+  if (typeof s.tileCacheMax !== 'string' || !/^[1-9][0-9]*[kmg]$/.test(s.tileCacheMax)) throw new Error('tileCacheMax must look like 512m or 2g');
+  if (typeof s.photonJavaOpts !== 'string' || !/^[-A-Za-z0-9=:+._ ]+$/.test(s.photonJavaOpts)) throw new Error('photonJavaOpts contains unsupported characters');
+}
+
+/** The same access rules applied to a generated runtime.env (runtime boundary before start). */
+export function validateRuntimeAccess(env: Record<string, string>): void {
+  validateAccess({
+    accessMode: env.SEYRA_ACCESS_MODE,
+    bindAddr: env.SEYRA_BIND_ADDR,
+    lanCidrs: env.SEYRA_LAN_ALLOW_CIDRS ?? '',
+    httpsPort: Number(env.SEYRA_HTTPS_PORT),
+    serverNames: env.SEYRA_SERVER_NAMES,
+  });
 }
 
 /** Atomic write (temp file + rename). */

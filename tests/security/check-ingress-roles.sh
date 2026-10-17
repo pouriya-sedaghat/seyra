@@ -96,30 +96,77 @@ check AC16.8 "security headers on the web client" headers
 
 proxy_ref="$(grep '^SEYRA_IMAGE_PROXY=' "$SEYRA_HOME/state/runtime.env" | cut -d= -f2-)"
 ds="$(grep '^SEYRA_DATASET_ID=' "$SEYRA_HOME/state/runtime.env" | cut -d= -f2-)"
-lan_fail_closed() {
-  local msg rc
-  msg="$(docker run --rm --network none -e SEYRA_DATASET_ID="$ds" -e SEYRA_ACCESS_MODE=lan \
-    -v "$SEYRA_HOME/secrets/tls/server.crt:/run/secrets/tls_cert:ro" -v "$SEYRA_HOME/secrets/tls/server.key:/run/secrets/tls_key:ro" \
-    -v "$SEYRA_HOME/releases/$ds/maps:/srv/seyra/release/maps:ro" "$proxy_ref" 2>&1)"; rc=$?
-  [ "$rc" -ne 0 ] && echo "$msg" | grep -q 'requires SEYRA_LAN_ALLOW_CIDRS' && echo "exit $rc: $(echo "$msg" | tail -1)"
-}
-check AC16.9 "LAN mode without an allowlist refuses to start" lan_fail_closed
-
-lan_allowlist_enforced() {
-  local name="seyra-sec-lan-$$" c=000
+# Run a throw-away copy of the real proxy image with a given access configuration, published on
+# 127.0.0.1:18443 only (the test never exposes a non-loopback port). SEYRA_BIND_ADDR is what compose
+# would publish on; the entrypoint must judge the configuration by it.
+# Prints "<http-code> <container-exit|running> <last log line>".
+try_proxy() { # mode bind cidrs
+  local name="seyra-sec-proxy-$$-$RANDOM" c=000 state
   docker create --name "$name" --read-only --tmpfs /tmp:uid=101,gid=101 --tmpfs /var/cache/seyra:uid=101,gid=101 --network seyra_frontend -p 127.0.0.1:18443:8443 \
-    -e SEYRA_DATASET_ID="$ds" -e SEYRA_ACCESS_MODE=lan -e SEYRA_LAN_ALLOW_CIDRS=10.99.0.0/16 \
+    -e SEYRA_DATASET_ID="$ds" -e SEYRA_ACCESS_MODE="$1" -e SEYRA_BIND_ADDR="$2" -e SEYRA_LAN_ALLOW_CIDRS="$3" \
     -v "$SEYRA_HOME/secrets/tls/server.crt:/run/secrets/tls_cert:ro" -v "$SEYRA_HOME/secrets/tls/server.key:/run/secrets/tls_key:ro" \
-    -v "$SEYRA_HOME/releases/$ds/maps:/srv/seyra/release/maps:ro" "$proxy_ref" >/dev/null 2>&1 || { echo "could not create test proxy"; return 1; }
+    -v "$SEYRA_HOME/releases/$ds/maps:/srv/seyra/release/maps:ro" "$proxy_ref" >/dev/null 2>&1 || { echo "000 create-failed"; return; }
   # Upstream names resolve on the backend network, which must be attached before nginx starts.
-  docker network connect --alias seyra-sec-lan seyra_backend "$name" >/dev/null 2>&1
+  docker network connect --alias seyra-sec-proxy seyra_backend "$name" >/dev/null 2>&1
   docker start "$name" >/dev/null 2>&1
-  for _ in $(seq 1 30); do c="$(curl -s -o /dev/null -w '%{http_code}' --cacert "$CA" https://localhost:18443/health/live 2>/dev/null)"; [ "$c" != 000 ] && break; sleep 0.5; done
-  local logs; logs="$(docker logs "$name" 2>&1 | tail -2)"
+  for _ in $(seq 1 20); do
+    c="$(curl -s -o /dev/null -w '%{http_code}' --max-time 2 --cacert "$CA" https://localhost:18443/health/live 2>/dev/null)"
+    [ "$c" != 000 ] && break
+    [ "$(docker inspect -f '{{.State.Running}}' "$name" 2>/dev/null)" = true ] || break
+    sleep 0.5
+  done
+  if [ "$(docker inspect -f '{{.State.Running}}' "$name" 2>/dev/null)" = true ]; then state=running; else state="exit=$(docker inspect -f '{{.State.ExitCode}}' "$name" 2>/dev/null)"; fi
+  echo "$c $state $(docker logs "$name" 2>&1 | tail -1)"
   docker rm -f "$name" >/dev/null 2>&1
-  [ "$c" = 403 ] && echo "client outside 10.99.0.0/16 received HTTP $c" || { echo "HTTP $c ${logs}"; return 1; }
 }
-check AC16.10 "LAN allowlist denies clients outside the configured CIDRs" lan_allowlist_enforced
+expect_refused() { # mode bind cidrs message-regex
+  local r; r="$(try_proxy "$1" "$2" "$3")"
+  case "$r" in "000 exit=2 "*) echo "$r" | grep -Eq "$4" && { echo "proxy exited 2, nothing listening: ${r#000 exit=2 }"; return 0; } ;; esac
+  echo "$r"; return 1
+}
+check AC16.9 "LAN mode without an allowlist refuses to start" expect_refused lan 10.20.0.15 "" 'requires SEYRA_LAN_ALLOW_CIDRS'
+check AC16.11 "loopback mode with a non-loopback (0.0.0.0) publication refuses to start (review R1)" expect_refused loopback 0.0.0.0 "" 'loopback access mode with non-loopback bind'
+check AC16.12a "LAN allowlist broader than /8 (0.0.0.0/0) is refused" expect_refused lan 0.0.0.0 0.0.0.0/0 'invalid CIDR'
+check AC16.12b "LAN allowlist with an out-of-range octet is refused" expect_refused lan 0.0.0.0 300.1.1.0/24 'invalid CIDR'
+check AC16.12c "LAN allowlist with a non-canonical network is refused" expect_refused lan 0.0.0.0 10.20.0.5/24 'invalid CIDR'
+
+lan_denies_outsiders() {
+  local r; r="$(try_proxy lan 0.0.0.0 10.99.0.0/16)"
+  [ "${r%% *}" = 403 ] && echo "client outside 10.99.0.0/16 received HTTP 403" || { echo "$r"; return 1; }
+}
+check AC16.10 "LAN allowlist denies clients outside the configured CIDRs" lan_denies_outsiders
+
+lan_admits_listed_client() {
+  # Loopback-originated connections reach the container from the frontend network gateway.
+  local gw r; gw="$(docker network inspect seyra_frontend -f '{{(index .IPAM.Config 0).Gateway}}')"
+  r="$(try_proxy lan 0.0.0.0 "$gw/32")"
+  [ "${r%% *}" = 200 ] && echo "client $gw inside allowlist $gw/32 received HTTP 200" || { echo "$r"; return 1; }
+}
+check AC16.13 "configured LAN access admits clients inside the allowlist" lan_admits_listed_client
+
+cli="$repo/bin/seyra-maps"
+init_refuses_unsafe() {
+  local before after o rc
+  before="$(sha256sum "$SEYRA_HOME/state/settings.json" | cut -c1-16)"
+  o="$("$cli" init --bind 0.0.0.0 2>&1)"; rc=$?
+  after="$(sha256sum "$SEYRA_HOME/state/settings.json" | cut -c1-16)"
+  [ $rc -ne 0 ] && [ "$before" = "$after" ] && echo "$o" | grep -q 'loopback access mode requires a loopback bind' \
+    && echo "rejected; settings.json unchanged ($before)" || { echo "rc=$rc before=$before after=$after: $o"; return 1; }
+}
+check AC16.14 "init refuses loopback mode with a 0.0.0.0 bind and leaves settings untouched (review R1)" init_refuses_unsafe
+
+start_refuses_unsafe_runtime_env() {
+  local env="$SEYRA_HOME/state/runtime.env" bak o rc proxy_before proxy_after
+  bak="$(mktemp)"; cp -p "$env" "$bak"
+  proxy_before="$(docker inspect -f '{{.Id}} {{.State.StartedAt}}' seyra-proxy-1)"
+  sed -i 's/^SEYRA_BIND_ADDR=.*/SEYRA_BIND_ADDR=0.0.0.0/' "$env"
+  o="$("$cli" start 2>&1)"; rc=$?
+  cp -p "$bak" "$env"; rm -f "$bak"
+  proxy_after="$(docker inspect -f '{{.Id}} {{.State.StartedAt}}' seyra-proxy-1)"
+  [ $rc -ne 0 ] && [ "$proxy_before" = "$proxy_after" ] && echo "$o" | grep -q 'loopback access mode requires a loopback bind' \
+    && echo "start refused before compose; running proxy untouched; runtime.env restored" || { echo "rc=$rc: $o"; return 1; }
+}
+check AC16.15 "start refuses a hand-edited runtime.env with loopback mode + 0.0.0.0 (review R1)" start_refuses_unsafe_runtime_env
 
 # ---------------------------------------------------------------- AC17 roles, secrets, logs
 render_db="render_$(echo "$ds" | tr '-' '_')"

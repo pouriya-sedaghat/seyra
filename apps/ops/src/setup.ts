@@ -19,9 +19,10 @@ const SECRETS: { name: string; owner: number }[] = [
 
 export async function init(opts: Partial<Settings>, log: (m: string) => void): Promise<void> {
   const l = layout();
-  ensureDirs(l);
+  // Validate the merged settings before creating, persisting or starting anything.
   const settings: Settings = { ...DEFAULT_SETTINGS, ...readSettings(l), ...opts };
   validateSettings(settings);
+  ensureDirs(l);
   writeAtomic(l.settingsFile, `${JSON.stringify(settings, null, 2)}\n`);
   for (const s of SECRETS) {
     const p = join(l.secrets, s.name);

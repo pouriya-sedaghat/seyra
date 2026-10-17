@@ -140,6 +140,9 @@ services:
     environment:
       SEYRA_DATASET_ID: "${SEYRA_DATASET_ID:?}"
       SEYRA_ACCESS_MODE: "${SEYRA_ACCESS_MODE:-loopback}"
+      # Same variable as the published port binding below; the entrypoint refuses loopback mode
+      # unless this is a loopback address.
+      SEYRA_BIND_ADDR: "${SEYRA_BIND_ADDR:-127.0.0.1}"
       SEYRA_LAN_ALLOW_CIDRS: "${SEYRA_LAN_ALLOW_CIDRS:-}"
       SEYRA_SERVER_NAMES: "${SEYRA_SERVER_NAMES:-localhost 127.0.0.1}"
       SEYRA_TILE_CACHE_MAX: "${SEYRA_TILE_CACHE_MAX:-2g}"

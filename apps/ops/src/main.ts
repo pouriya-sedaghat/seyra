@@ -1,9 +1,10 @@
 #!/usr/bin/env node
 import { createWriteStream, existsSync, mkdirSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { activate, apiHealth, prune, readPointers, rollback, verifyRelease } from './activate.js';
+import { activate, apiHealth, prune, readPointers, readTransition, recover, rollback, verifyRelease } from './activate.js';
+import { readOwner, withLifecycleLock } from './lifecycle-lock.js';
 import { bundleExport, bundleLoad, bundleVerify } from './bundle.js';
-import { composeRuntime } from './compose.js';
+import { assertRuntimeEnvSafe, composeRuntime } from './compose.js';
 import { importDataset } from './importer.js';
 import { layout, managedChild } from './layout.js';
 import { lockedImages, verifyImages } from './lock.js';
@@ -19,6 +20,7 @@ const USAGE = `seyra-maps — offline Map Services release tool (runs inside the
   import --pbf /abs/path/iran.osm.pbf [--snapshot-timestamp ISO8601]
   activate DATASET_ID               maintenance cutover to a validated release
   rollback                          cut back to the previous release
+  recover                           finish an interrupted/failed activation or rollback (journalled)
   start | stop                      start/stop the complete runtime stack (all four providers)
   status                            pointers, releases and live provider readiness
   verify-release DATASET_ID         re-check staged artifacts and render DB marker
@@ -39,6 +41,12 @@ async function status(): Promise<void> {
   const p = readPointers(l);
   console.log(`active:   ${p.active ?? '(none)'}\nprevious: ${p.previous ?? '(none)'}`);
   console.log(`maintenance flag: ${existsSync(join(l.flags, 'maintenance')) ? 'PRESENT' : 'absent'}`);
+  const t = readTransition(l);
+  if (t) console.log(`UNFINISHED ${t.op}: ${t.from ?? '(none)'} -> ${t.to} (phase ${t.phase}, started ${t.started_at}); run: seyra-maps recover`);
+  for (const [name, path] of [['lifecycle lock', l.lifecycleLock], ['import lease', l.importLock]] as const) {
+    const o = existsSync(path) ? readOwner(path) : null;
+    if (o) console.log(`${name}: ${o.op}${o.target ? ` ${o.target}` : ''} since ${o.started_at} (host ${o.host}, pid ${o.pid})`);
+  }
   console.log('releases:');
   for (const name of existsSync(l.releases) ? readdirSync(l.releases).sort() : []) {
     if (!existsSync(join(l.releases, name, 'manifest.json'))) continue;
@@ -73,7 +81,7 @@ async function main(argv: string[]): Promise<number> {
   const [cmd, ...rest] = argv;
   switch (cmd) {
     case 'init':
-      await init(
+      await withLifecycleLock(layout(), 'init', null, () => init(
         {
           ...(arg(rest, '--bind') ? { bindAddr: arg(rest, '--bind')! } : {}),
           ...(arg(rest, '--port') ? { httpsPort: Number(arg(rest, '--port')) } : {}),
@@ -82,7 +90,7 @@ async function main(argv: string[]): Promise<number> {
           ...(arg(rest, '--server-names') ? { serverNames: arg(rest, '--server-names')! } : {}),
         },
         log,
-      );
+      ));
       return 0;
     case 'tls':
       if (rest[0] === 'init') await tlsInit((arg(rest, '--names') ?? 'localhost,127.0.0.1').split(','), log);
@@ -109,17 +117,26 @@ async function main(argv: string[]): Promise<number> {
     case 'rollback':
       await rollback(log);
       return 0;
+    case 'recover':
+      await recover({ log });
+      return 0;
     case 'start': {
-      // Image references are tags; refuse to start anything that no longer resolves to the lock.
       const l = layout();
-      const bad = (await verifyImages(lockedImages(l.install))).filter((r) => !r.ok);
-      if (bad.length) throw new Error(`refusing to start: ${bad.map((b) => `${b.role} is ${b.observed ?? 'missing'}, locked ${b.expected ?? 'unknown'}`).join('; ')}`);
-      await composeRuntime(l, ['up', '-d']);
+      await withLifecycleLock(l, 'start', null, async () => {
+        if (readTransition(l)) throw new Error('an activation/rollback did not finish; run: seyra-maps recover');
+        // Image references are tags; refuse to start anything that no longer resolves to the lock.
+        const bad = (await verifyImages(lockedImages(l.install))).filter((r) => !r.ok);
+        if (bad.length) throw new Error(`refusing to start: ${bad.map((b) => `${b.role} is ${b.observed ?? 'missing'}, locked ${b.expected ?? 'unknown'}`).join('; ')}`);
+        assertRuntimeEnvSafe(l);
+        await composeRuntime(l, ['up', '-d']);
+      });
       return 0;
     }
-    case 'stop':
-      await composeRuntime(layout(), ['stop', '-t', '40']);
+    case 'stop': {
+      const l = layout();
+      await withLifecycleLock(l, 'stop', null, () => composeRuntime(l, ['stop', '-t', '40']));
       return 0;
+    }
     case 'status':
       await status();
       return 0;
@@ -132,7 +149,8 @@ async function main(argv: string[]): Promise<number> {
       log(`[prune] removed: ${(await prune(log)).join(', ') || 'nothing'}`);
       return 0;
     case 'backup':
-      await backup(arg(rest, '--out') ?? join(layout().backups, 'latest'));
+      // Under the lifecycle lock so the state/manifests are not captured mid-transition.
+      await withLifecycleLock(layout(), 'backup', null, () => backup(arg(rest, '--out') ?? join(layout().backups, 'latest')));
       return 0;
     case 'bundle': {
       const sub = rest[0];

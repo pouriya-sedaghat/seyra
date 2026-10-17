@@ -1,40 +1,20 @@
-import { closeSync, existsSync, openSync, readFileSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
-import { hostname } from 'node:os';
+import { existsSync, readdirSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { JOBS_PROJECT } from './compose.js';
 import { recordEvent } from './db.js';
 import { managedChild, type Layout } from './layout.js';
+import { newOwner, ownerAlive, readOwner, releaseOwned, tryCreate, withLifecycleLock, type LockOwner } from './lifecycle-lock.js';
 import { readManifest, writeManifest } from './manifest.js';
 import { run } from './proc.js';
 
-interface LockOwner {
-  pid: number;
-  /** Host name of the process; inside the ops container this is the container id. */
-  host: string;
-  started_at: string;
-}
+export type ImportLease = { state: 'none' } | { state: 'live' | 'stale'; owner: LockOwner };
 
-function readOwner(path: string): LockOwner | null {
-  try {
-    const o = JSON.parse(readFileSync(path, 'utf8')) as Partial<LockOwner>;
-    return typeof o.pid === 'number' && typeof o.host === 'string' && typeof o.started_at === 'string' ? (o as LockOwner) : null;
-  } catch {
-    return null;
-  }
-}
-
-async function ownerAlive(o: LockOwner): Promise<boolean> {
-  if (o.host === hostname()) {
-    try {
-      process.kill(o.pid, 0);
-      return true;
-    } catch (err) {
-      return (err as NodeJS.ErrnoException).code === 'EPERM';
-    }
-  }
-  // Another (wrapper-started) ops container: alive only while that container is running.
-  const r = await run('docker', ['inspect', '-f', '{{.State.Running}}', o.host], { allowFailure: true });
-  return r.code === 0 && r.stdout.trim() === 'true';
+/** State of the import lease; throws when it cannot be judged (callers must then not touch builds). */
+export async function importLeaseState(l: Layout): Promise<ImportLease> {
+  if (!existsSync(l.importLock)) return { state: 'none' };
+  const owner = readOwner(l.importLock);
+  if (!owner) throw new Error(`import lease ${l.importLock} is unreadable; remove it only if no import process exists`);
+  return { state: (await ownerAlive(owner)) ? 'live' : 'stale', owner };
 }
 
 /**
@@ -42,7 +22,7 @@ async function ownerAlive(o: LockOwner): Promise<boolean> {
  * stop its still-running build/staging job containers and mark its release failed. The active
  * release is never touched; the failed release is removed later by `prune`.
  */
-async function recoverInterrupted(l: Layout, log: (m: string) => void): Promise<void> {
+export async function recoverInterrupted(l: Layout, log: (m: string) => void): Promise<void> {
   const jobs = await run('docker', ['ps', '-q', '--filter', `label=com.docker.compose.project=${JOBS_PROJECT}`]);
   const ids = jobs.stdout.split('\n').filter(Boolean);
   if (ids.length) {
@@ -64,23 +44,41 @@ async function recoverInterrupted(l: Layout, log: (m: string) => void): Promise<
   }
 }
 
-/** Exclusive import lock; a lock left behind by a process that no longer exists is recovered. */
-export async function acquireImportLock(l: Layout, log: (m: string) => void): Promise<void> {
+/**
+ * Exclusive import lease. A lease whose owner is positively gone is recovered under the lifecycle
+ * lock (so a concurrent prune/activation never sees a half-recovered state); a live owner is never
+ * recovered. Returns the owner record to pass to setImportTarget/releaseImportLock.
+ */
+export async function acquireImportLock(l: Layout, log: (m: string) => void): Promise<LockOwner> {
+  const owner = newOwner('import', null);
   for (let attempt = 0; attempt < 2; attempt++) {
-    try {
-      const fd = openSync(l.importLock, 'wx', 0o600);
-      writeFileSync(fd, `${JSON.stringify({ pid: process.pid, host: hostname(), started_at: new Date().toISOString() } satisfies LockOwner)}\n`);
-      closeSync(fd);
-      return;
-    } catch (err) {
-      if ((err as NodeJS.ErrnoException).code !== 'EEXIST') throw err;
+    if (tryCreate(l.importLock, owner)) return owner;
+    const lease = await importLeaseState(l);
+    if (lease.state === 'live') throw new Error(`another import is running (started ${lease.owner.started_at}${lease.owner.target ? `, building ${lease.owner.target}` : ''})`);
+    if (lease.state === 'stale') {
+      log(`[import] the import started ${lease.owner.started_at} is no longer running; recovering`);
+      await withLifecycleLock(
+        l,
+        'import-recovery',
+        lease.owner.target,
+        async () => {
+          if (readOwner(l.importLock)?.token !== lease.owner.token) return; // someone else recovered it
+          await recoverInterrupted(l, log);
+          rmSync(l.importLock, { force: true });
+        },
+        { waitMs: 15 * 60_000 },
+      );
     }
-    const owner = readOwner(l.importLock);
-    if (!owner) throw new Error(`import lock ${l.importLock} is unreadable; remove it only if no import process exists`);
-    if (await ownerAlive(owner)) throw new Error(`another import is running (started ${owner.started_at})`);
-    log(`[import] the import started ${owner.started_at} is no longer running; recovering`);
-    await recoverInterrupted(l, log);
-    rmSync(l.importLock, { force: true });
   }
   throw new Error('could not acquire the import lock');
+}
+
+/** Record the dataset an import is building, so prune can protect it by name. */
+export function setImportTarget(l: Layout, owner: LockOwner, datasetId: string): void {
+  owner.target = datasetId;
+  if (readOwner(l.importLock)?.token === owner.token) writeFileSync(l.importLock, `${JSON.stringify(owner)}\n`, { mode: 0o600 });
+}
+
+export function releaseImportLock(l: Layout, owner: LockOwner): void {
+  releaseOwned(l.importLock, owner);
 }

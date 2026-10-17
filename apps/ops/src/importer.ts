@@ -6,7 +6,8 @@ import { composeJobs, jobsInvocation } from './compose.js';
 import { psql, recordEvent, renderDbName } from './db.js';
 import { PHOTON_EXTRA_TAGS, preprocessDump } from './geocoder-preprocess.js';
 import { readPointers } from './activate.js';
-import { acquireImportLock } from './import-lock.js';
+import { acquireImportLock, releaseImportLock, setImportTarget } from './import-lock.js';
+import { withLifecycleLock } from './lifecycle-lock.js';
 import { writePhotonNodeConfig } from './photon-config.js';
 import { layout, managedChild, readSettings, type Layout, type Settings } from './layout.js';
 import { imageEnv, lockedImages, verifyImages, type LockedImage } from './lock.js';
@@ -109,8 +110,8 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
   if (!st.isFile() || !input.endsWith('.osm.pbf')) throw new Error('input must be a local .osm.pbf file');
   if (input.startsWith(l.releases)) throw new Error('input must not be inside the managed releases directory');
 
-  // Exclusive import lock (one build at a time); an abandoned lock is recovered.
-  await acquireImportLock(l, opts.log);
+  // Exclusive import lease (one build at a time); an abandoned lease is recovered (review R3).
+  const lease = await acquireImportLock(l, opts.log);
 
   const steps: Manifest['measurements']['steps'] = [];
   let minFree = freeBytes(l.home);
@@ -148,30 +149,10 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
     const components = dataComponents(Object.fromEntries(imageCheck.map((c) => [c.role, c.observed!])));
     const datasetId = deriveDatasetId(snapshot, { source_sha256: sourceSha, pipeline_fingerprint: pipeline.sha256, components, assets_sha256: assets });
     releaseDir = managedChild(l.releases, datasetId);
-    if (existsSync(releaseDir)) {
-      // A failed build of the same inputs is replaced; anything else is never overwritten.
-      const p = readPointers(l);
-      const previous = existsSync(join(releaseDir, 'manifest.json')) ? readManifest(releaseDir) : null;
-      if (previous?.status !== 'failed' || p.active === datasetId || p.previous === datasetId) {
-        throw new Error(`release ${datasetId} already exists for these exact inputs (see seyra-maps status)`);
-      }
-      opts.log(`[import] replacing failed build of ${datasetId} (failed at ${previous.failure?.step ?? 'unknown'})`);
-      await psql(l, 'postgres', `DROP DATABASE IF EXISTS ${renderDbName(datasetId)} WITH (FORCE);`);
-      rmSync(releaseDir, { recursive: true, force: true });
-    }
-
-    const needed = Math.max(s.minFreeBytes, s.minFreeFactor * st.size);
-    if (freeBefore < needed) {
-      throw new Error(`insufficient free space: ${freeBefore} bytes available, ${needed} required by the configured check (minFreeFactor=${s.minFreeFactor}); measure and adjust, never delete unrelated data`);
-    }
-
-    mkdirSync(join(releaseDir, 'source'), { recursive: true });
-    for (const d of ['logs', 'validation', 'maps/styles', 'geocoder', '.work']) mkdirSync(join(releaseDir, d), { recursive: true });
-    chmodSync(join(releaseDir, '.work'), 0o700);
     const managedCopy = join(releaseDir, 'source', 'input.osm.pbf');
     const log = (n: string) => join(releaseDir, 'logs', `${n}.log`);
     const now = new Date().toISOString();
-    manifest = {
+    const initial: Manifest = {
       schema: MANIFEST_SCHEMA,
       dataset_id: datasetId,
       status: 'building',
@@ -204,7 +185,41 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
       validation: { status: 'pending', checks: [] },
       failure: null,
     };
-    writeManifest(releaseDir, manifest);
+    // Set-up mutates shared release state (replacing a failed build, creating the building
+    // release); it runs under the lifecycle lock so prune/activation never see it half-done, and the
+    // lease names its target from here on.
+    const setupDir = releaseDir;
+    await withLifecycleLock(
+      l,
+      'import-setup',
+      datasetId,
+      async () => {
+        setImportTarget(l, lease, datasetId);
+        if (existsSync(setupDir)) {
+          // A failed build of the same inputs is replaced; anything else is never overwritten.
+          const p = readPointers(l);
+          const previous = existsSync(join(setupDir, 'manifest.json')) ? readManifest(setupDir) : null;
+          if (previous?.status !== 'failed' || p.active === datasetId || p.previous === datasetId) {
+            throw new Error(`release ${datasetId} already exists for these exact inputs (see seyra-maps status)`);
+          }
+          opts.log(`[import] replacing failed build of ${datasetId} (failed at ${previous.failure?.step ?? 'unknown'})`);
+          await psql(l, 'postgres', `DROP DATABASE IF EXISTS ${renderDbName(datasetId)} WITH (FORCE);`);
+          rmSync(setupDir, { recursive: true, force: true });
+        }
+
+        const needed = Math.max(s.minFreeBytes, s.minFreeFactor * st.size);
+        if (freeBefore < needed) {
+          throw new Error(`insufficient free space: ${freeBefore} bytes available, ${needed} required by the configured check (minFreeFactor=${s.minFreeFactor}); measure and adjust, never delete unrelated data`);
+        }
+
+        mkdirSync(join(setupDir, 'source'), { recursive: true });
+        for (const d of ['logs', 'validation', 'maps/styles', 'geocoder', '.work']) mkdirSync(join(setupDir, d), { recursive: true });
+        chmodSync(join(setupDir, '.work'), 0o700);
+        writeManifest(setupDir, initial);
+      },
+      { waitMs: 15 * 60_000 },
+    );
+    manifest = initial;
     opts.log(`[import] dataset_id ${datasetId}`);
 
     // The owner's original is only read (checksum + copy); every job uses the managed copy.
@@ -386,6 +401,6 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
     }
     throw new Error(`import failed at ${current}: ${message}`);
   } finally {
-    rmSync(l.importLock, { force: true });
+    releaseImportLock(l, lease);
   }
 }
