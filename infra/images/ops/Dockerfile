@@ -47,5 +47,6 @@ COPY --from=build /src/apps/ops/dist ./apps/ops/dist
 # they are mounted read-only from the verified bundle at /opt/seyra-install (avoids a circular
 # identity between this image and the lock that records it).
 ENV SEYRA_INSTALL_DIR=/opt/seyra-install
-RUN docker --version && docker compose version
+# flock (util-linux, part of the pinned Ubuntu base) provides the lifecycle lock (kernel flock(2)).
+RUN docker --version && docker compose version && flock --version
 ENTRYPOINT ["node", "/opt/seyra/apps/ops/dist/main.js"]

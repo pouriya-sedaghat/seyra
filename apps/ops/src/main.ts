@@ -2,7 +2,7 @@
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { activate, apiHealth, prune, readPointers, readTransition, recover, rollback, startStack, verifyRelease } from './activate.js';
-import { readOwner, withLifecycleLock } from './lifecycle-lock.js';
+import { lifecycleLockState, readOwner, withLifecycleLock, type LockOwner } from './lifecycle-lock.js';
 import { backup, restore } from './backup.js';
 import { bundleExport, bundleLoad, bundleVerify } from './bundle.js';
 import { composeRuntime } from './compose.js';
@@ -44,10 +44,12 @@ async function status(): Promise<void> {
   console.log(`maintenance flag: ${existsSync(join(l.flags, 'maintenance')) ? 'PRESENT' : 'absent'}`);
   const t = readTransition(l);
   if (t) console.log(`UNFINISHED ${t.op}: ${t.from ?? '(none)'} -> ${t.to} (phase ${t.phase}, started ${t.started_at}); run: seyra-maps recover`);
-  for (const [name, path] of [['lifecycle lock', l.lifecycleLock], ['import lease', l.importLock]] as const) {
-    const o = existsSync(path) ? readOwner(path) : null;
-    if (o) console.log(`${name}: ${o.op}${o.target ? ` ${o.target}` : ''} since ${o.started_at} (host ${o.host}, pid ${o.pid})`);
-  }
+  const lock = lifecycleLockState(l.lifecycleLock);
+  const describe = (o: LockOwner) => `${o.op}${o.target ? ` ${o.target}` : ''} since ${o.started_at} (host ${o.host}, pid ${o.pid})`;
+  if (lock.held) console.log(`lifecycle lock: held${lock.owner ? ` by ${describe(lock.owner)}` : ''}`);
+  else if (lock.owner) console.log(`lifecycle lock: free (record of ${describe(lock.owner)}, which ended without releasing it)`);
+  const lease = existsSync(l.importLock) ? readOwner(l.importLock) : null;
+  if (lease) console.log(`import lease: ${describe(lease)}`);
   console.log('releases:');
   for (const name of existsSync(l.releases) ? readdirSync(l.releases).sort() : []) {
     if (!existsSync(join(l.releases, name, 'manifest.json'))) continue;

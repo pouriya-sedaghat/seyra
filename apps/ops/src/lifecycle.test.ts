@@ -3,7 +3,7 @@
 // real temporary SEYRA_HOME with genuine release fixtures (checksums made by the production helpers,
 // so the real verifyRelease runs). Only the Docker/SQL boundary is replaced by a small simulated
 // stack; cross-process cases use a real second OS process as the lock owner.
-import { spawn, type ChildProcess } from 'node:child_process';
+import { spawn, spawnSync, type ChildProcess } from 'node:child_process';
 import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { hostname, tmpdir } from 'node:os';
 import { join } from 'node:path';
@@ -21,8 +21,10 @@ interface Sim {
   /** The proxy runs without its published port (Docker after a failed bind, observed in lifecycle L8). */
   proxyUnpublished: boolean;
   proxyRecreates: number;
+  /** Simulated duration of `compose up` (ms). */
+  upDelayMs: number;
 }
-const sim: Sim = { running: null, failUp: 0, unhealthy: new Set(), upCalls: 0, drops: [], markers: new Map(), portHeld: false, proxyUnpublished: false, proxyRecreates: 0 };
+const sim: Sim = { running: null, failUp: 0, unhealthy: new Set(), upCalls: 0, drops: [], markers: new Map(), portHeld: false, proxyUnpublished: false, proxyRecreates: 0, upDelayMs: 0 };
 
 vi.mock('./compose.js', async (importOriginal) => {
   const orig = await importOriginal<typeof import('./compose.js')>();
@@ -32,6 +34,7 @@ vi.mock('./compose.js', async (importOriginal) => {
     composeRuntime: vi.fn(async (l: { runtimeEnv: string }, args: string[]) => {
       if (args[0] === 'up') {
         sim.upCalls++;
+        if (sim.upDelayMs) await new Promise((r) => setTimeout(r, sim.upDelayMs));
         if (sim.failUp > 0) {
           sim.failUp--;
           throw new Error('injected: docker compose up failed (container create error)');
@@ -158,7 +161,7 @@ function expectRestoredToA(before: ReturnType<typeof snapshot>): void {
   expect(readTransition(l)).toBeNull();
   expect(existsSync(l.transitionDir)).toBe(false);
   expect(sim.running).toBe('ds-a');
-  expect(existsSync(l.lifecycleLock)).toBe(false);
+  expect(lockReleased()).toBe(true);
 }
 
 /** A real, live foreign process to own a lock (cross-process liveness, not a fake flag). */
@@ -169,6 +172,22 @@ function liveForeignProcess(): ChildProcess {
 }
 function writeLock(path: string, pid: number, op: string, target: string | null): void {
   writeFileSync(path, `${JSON.stringify({ pid, host: hostname(), op, target, started_at: new Date().toISOString(), token: `foreign-${pid}` })}\n`);
+}
+/** Is the kernel lock on `path` held by any process right now? */
+function lockHeld(path: string): boolean {
+  return spawnSync('flock', ['-n', '-E', '75', path, 'true']).status === 75;
+}
+/** Released: kernel lock free and no owner record left behind. */
+function lockReleased(): boolean {
+  return !lockHeld(l.lifecycleLock) && readOwner(l.lifecycleLock) === null;
+}
+/** A real, live foreign process holding the lifecycle lock (as another ops container would). */
+async function liveForeignLockHolder(op: string, target: string | null): Promise<ChildProcess> {
+  const c = spawn('flock', ['-o', l.lifecycleLock, 'sleep', '120'], { stdio: 'ignore' });
+  children.push(c);
+  while (!lockHeld(l.lifecycleLock)) await new Promise((r) => setTimeout(r, 10));
+  writeLock(l.lifecycleLock, c.pid!, op, target);
+  return c;
 }
 async function kill(c: ChildProcess): Promise<void> {
   if (c.exitCode !== null || c.signalCode !== null) return;
@@ -184,7 +203,7 @@ beforeEach(() => {
   process.env.SEYRA_INSTALL_DIR = join(home, 'install');
   l = layout();
   ensureDirs(l);
-  Object.assign(sim, { running: null, failUp: 0, unhealthy: new Set(), upCalls: 0, drops: [], markers: new Map(), portHeld: false, proxyUnpublished: false, proxyRecreates: 0 });
+  Object.assign(sim, { running: null, failUp: 0, unhealthy: new Set(), upCalls: 0, drops: [], markers: new Map(), portHeld: false, proxyUnpublished: false, proxyRecreates: 0, upDelayMs: 0 });
 });
 afterEach(async () => {
   for (const c of children.splice(0)) await kill(c);
@@ -346,8 +365,7 @@ describe('lifecycle exclusion (review R3)', () => {
   it('prune and activation refuse while another live process holds the lifecycle lock', async () => {
     await activeA();
     const before = snapshot();
-    const other = liveForeignProcess();
-    writeLock(l.lifecycleLock, other.pid!, 'activate', 'ds-b');
+    const other = await liveForeignLockHolder('activate', 'ds-b');
     await expect(prune(() => undefined)).rejects.toBeInstanceOf(LifecycleBusyError);
     await expect(activate('ds-b', fast)).rejects.toThrow(/another lifecycle operation is running: activate ds-b/);
     expect(sim.drops).toEqual([]);
@@ -355,7 +373,7 @@ describe('lifecycle exclusion (review R3)', () => {
     expect(snapshot()).toEqual(before);
     expect(maintenanceOn()).toBe(false);
     expect(readTransition(l)).toBeNull();
-    // Once that owner is positively gone, its stale lock no longer blocks.
+    // Once that owner is gone (the kernel released its lock), its leftover record no longer blocks.
     await kill(other);
     await activate('ds-b', fast);
     expect(readPointers(l).active).toBe('ds-b');
@@ -364,6 +382,7 @@ describe('lifecycle exclusion (review R3)', () => {
   it('competing activations: exactly one runs, the other is refused without side effects', async () => {
     await activeA();
     await makeRelease('ds-c');
+    sim.upDelayMs = 600; // the winner is still inside after the loser's short fail-fast grace
     const results = await Promise.allSettled([activate('ds-b', fast), activate('ds-c', fast)]);
     expect(results.filter((r) => r.status === 'fulfilled')).toHaveLength(1);
     const rejected = results.find((r): r is PromiseRejectedResult => r.status === 'rejected');
@@ -371,7 +390,7 @@ describe('lifecycle exclusion (review R3)', () => {
     const winner = results[0]!.status === 'fulfilled' ? 'ds-b' : 'ds-c';
     expect(readPointers(l)).toEqual({ active: winner, previous: 'ds-a' });
     expect(sim.running).toBe(winner);
-    expect(existsSync(l.lifecycleLock)).toBe(false);
+    expect(lockReleased()).toBe(true);
   });
 
   it('a stale lifecycle lock with an unfinished transition only admits recover', async () => {
@@ -394,6 +413,7 @@ describe('lifecycle exclusion (review R3)', () => {
     const lf = layout();
     expect(existsSync(lf.state)).toBe(false);
     expect(await withLifecycleLock(lf, 'init', null, async () => readOwner(lf.lifecycleLock)?.op)).toBe('init');
-    expect(existsSync(lf.lifecycleLock)).toBe(false);
+    expect(readOwner(lf.lifecycleLock)).toBeNull(); // released: the file stays, its owner record is cleared
+    expect(lockHeld(lf.lifecycleLock)).toBe(false);
   });
 });
