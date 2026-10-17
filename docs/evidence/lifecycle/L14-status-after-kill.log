@@ -1,0 +1,56 @@
+active:   ds-20261001-681455d56afb
+previous: ds-20261008-681455d56afb
+maintenance flag: absent
+lifecycle lock: free (record of stop since 2026-10-17T10:14:01.181Z (host 3f2efb010c78, pid 1), which ended without releasing it)
+releases:
+  ds-20261001-681455d56afb  validated  source=synthetic-v1.osm.pbf sha256=e90c33a29619…
+  ds-20261008-681455d56afb  validated  source=synthetic-v1.osm.pbf sha256=e90c33a29619…
+live readiness: {
+ "status": "ready",
+ "dataset_id": "ds-20261001-681455d56afb",
+ "providers": [
+  {
+   "provider": "tiles",
+   "implementation": "tegola",
+   "expected_identity": "seyra_ds_20261001_681455d56afb",
+   "status": "ok",
+   "observed_identity": "seyra_ds_20261001_681455d56afb",
+   "latency_ms": 147,
+   "checked_at": "2026-10-17T10:13:57.306Z"
+  },
+  {
+   "provider": "routing",
+   "implementation": "valhalla",
+   "expected_identity": "1791983703",
+   "status": "ok",
+   "observed_identity": "1791983703",
+   "latency_ms": 100,
+   "checked_at": "2026-10-17T10:13:57.295Z"
+  },
+  {
+   "provider": "geocoder",
+   "implementation": "photon",
+   "expected_identity": "seyra-release-ds-20261001-681455d56afb",
+   "status": "ok",
+   "observed_identity": "seyra-release-ds-20261001-681455d56afb",
+   "latency_ms": 199,
+   "checked_at": "2026-10-17T10:13:57.395Z"
+  },
+  {
+   "provider": "overpass",
+   "implementation": "overpass",
+   "expected_identity": "seyra:ds-20261001-681455d56afb",
+   "status": "ok",
+   "observed_identity": "seyra:ds-20261001-681455d56afb",
+   "latency_ms": 137,
+   "checked_at": "2026-10-17T10:13:57.334Z"
+  }
+ ],
+ "dependencies": [
+  {
+   "name": "control_db",
+   "status": "ok"
+  }
+ ],
+ "checked_at": "2026-10-17T10:13:57.416Z"
+}

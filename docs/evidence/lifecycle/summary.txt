@@ -1,16 +1,18 @@
-# Seyra lifecycle scenarios (AC06/AC07) — 2026-10-17T08:21:45Z
-# A=ds-20261001-681455d56afb B=ds-20261006-681455d56afb C=ds-20261007-681455d56afb fixture=e90c33a29619db99
+# Seyra lifecycle scenarios (AC06/AC07) — 2026-10-17T10:14:08Z
+# A=ds-20261001-681455d56afb B=ds-20261008-681455d56afb C=ds-20261009-681455d56afb fixture=e90c33a29619db99
 PASS L1/corrupt-truncated import refused (import failed at source-validate); active ds-20261001-681455d56afb unchanged and ready; artifacts identical
 PASS L1/corrupt-garbage import refused (import failed at source-validate); active ds-20261001-681455d56afb unchanged and ready; artifacts identical
-PASS L2 ops container killed during geocoder-build (1 job container(s) running); A stayed ready; next import recovered the lock, stopped orphans, replaced the failed build of ds-20261006-681455d56afb and validated it
-PASS L3 Photon start failure detected (readiness timeout 90 s); previous release ds-20261001-681455d56afb restored, all four providers ready; not-ready window 124.5 s
-PASS L4 A -> B activated; all providers report ds-20261006-681455d56afb; not-ready window 35.0 s (maintenance cutover, not zero downtime)
-PASS L5 rollback B -> A; providers report ["seyra_ds_20261001_681455d56afb","1791983703","seyra-release-ds-20261001-681455d56afb","seyra:ds-20261001-681455d56afb"]; not-ready window 35.5 s
-PASS L6 prune kept exactly active ds-20261001-681455d56afb and previous ds-20261006-681455d56afb
-PASS L7 real compose-up failure (8443 taken) after the config switch: previous release ds-20261001-681455d56afb restored, config/pointers byte-identical (e8b13846c91b176a), no journal, ready
+PASS L2 ops container killed during geocoder-build (1 job container(s) running); A stayed ready; next import recovered the lock, stopped orphans, replaced the failed build of ds-20261008-681455d56afb and validated it
+PASS L3 Photon start failure detected (readiness timeout 90 s); previous release ds-20261001-681455d56afb restored, all four providers ready; not-ready window 130.0 s
+PASS L4 A -> B activated; all providers report ds-20261008-681455d56afb; not-ready window 35.5 s (maintenance cutover, not zero downtime)
+PASS L5 rollback B -> A; providers report ["seyra_ds_20261001_681455d56afb","1791983703","seyra-release-ds-20261001-681455d56afb","seyra:ds-20261001-681455d56afb"]; not-ready window 35.0 s
+PASS L6 prune kept exactly active ds-20261001-681455d56afb and previous ds-20261008-681455d56afb
+PASS L7 real compose-up failure (8443 taken) after the config switch: previous release ds-20261001-681455d56afb restored, config/pointers byte-identical (09d53d541ecd76d0), no journal, ready
 PASS L8 recovery failure kept maintenance + journal and reported both errors; activate/prune/start refused; 'recover' restored ds-20261001-681455d56afb after the cause was removed and it answers through the ingress (proxy rebinds by recover: 1)
-PASS L9 prune during a live import skipped the building release ds-20261007-681455d56afb; the import completed and ds-20261007-681455d56afb verifies (render DB intact)
+PASS L9 prune during a live import skipped the building release ds-20261009-681455d56afb; the import completed and ds-20261009-681455d56afb verifies (render DB intact)
 PASS L10 prune during the A -> B activation was refused (lifecycle lock); activation completed; nothing removed
-PASS L11 activation competing with a running rollback was refused; rollback completed (active ds-20261001-681455d56afb, previous ds-20261006-681455d56afb)
-PASS L12 post-transition prune removed ds-20261007-681455d56afb and kept ds-20261001-681455d56afb/ds-20261006-681455d56afb
+PASS L11 activation competing with a running rollback was refused; rollback completed (active ds-20261001-681455d56afb, previous ds-20261008-681455d56afb)
+PASS L12 post-transition prune removed ds-20261009-681455d56afb and kept ds-20261001-681455d56afb/ds-20261008-681455d56afb
+PASS L13 activate's ops container eb6f7a182a70 killed while holding the lock mid-transition: the lock was free at once (status: record only, UNFINISHED activate); of recover/prune/activate started together only recover ran (prune: another lifecycle operation is running: recover; activate: another lifecycle operation is running: recover); A ready again, B kept, journal/maintenance cleared, no owner left
+PASS L14 stop's ops container 3f2efb010c78 killed while holding the lock: the next commands took it over at once (start rc=0, prune rc=1; a refusal is 'another lifecycle operation is running'); A ready after start, no owner left
 # failures: 0
