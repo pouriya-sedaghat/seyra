@@ -7,4 +7,4 @@ OK   API             seyra/api:1.0.0-seyra1  observed=sha256:55844f00176edab3d97
 OK   PROXY           seyra/proxy:1.0.0-seyra1  observed=sha256:4cc83237dfb6cec361e79ba6cd55813439c5fd191c09461c1bf4f9d52c042fc8 expected=sha256:4cc83237dfb6cec361e79ba6cd55813439c5fd191c09461c1bf4f9d52c042fc8
 OK   OSMTOOLS        seyra/osmtools:2.3.1-1.19.1-seyra1  observed=sha256:48e8fdfe6685e25008956ed238bb7d13b76046aa0ddf8e2a610ce56b16ca3e2f expected=sha256:48e8fdfe6685e25008956ed238bb7d13b76046aa0ddf8e2a610ce56b16ca3e2f
 OK   GEOCODER_BUILD  seyra/geocoder-build:5.3.2-1.3.0-seyra1  observed=sha256:7c3a11c1e76b4768610eaab7df23a7620deb01df349bcaa7776f7c302892db86 expected=sha256:7c3a11c1e76b4768610eaab7df23a7620deb01df349bcaa7776f7c302892db86
-OK   OPS             seyra/ops:1.0.0-seyra1  observed=sha256:18ea8ed0724a62ae2a6bea45f76a028644eb83091eafee8a934d88404a37704f expected=sha256:18ea8ed0724a62ae2a6bea45f76a028644eb83091eafee8a934d88404a37704f
+OK   OPS             seyra/ops:1.0.0-seyra1  observed=sha256:6da5438553a1ae1df54ab42609c283ee1154d2c80f459af64d2048b02e7e5daf expected=sha256:6da5438553a1ae1df54ab42609c283ee1154d2c80f459af64d2048b02e7e5daf
