@@ -1,0 +1,74 @@
+{
+  "schema": "seyra.backup/1",
+  "generation": "seyra-backup-20261017T103040653Z-b8c965",
+  "created_at": "2026-10-17T10:30:40.653Z",
+  "pointers": {
+    "active": "ds-20261002-681455d56afb",
+    "previous": "ds-20261001-681455d56afb"
+  },
+  "include_sources": true,
+  "releases": [
+    {
+      "role": "active",
+      "dataset_id": "ds-20261002-681455d56afb",
+      "source_filename": "synthetic-v1.osm.pbf",
+      "source_sha256": "e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323",
+      "snapshot_timestamp": "2026-10-02T00:00:00Z",
+      "snapshot_timestamp_source": "operator",
+      "source_file": "sources/ds-20261002-681455d56afb.osm.pbf"
+    },
+    {
+      "role": "previous",
+      "dataset_id": "ds-20261001-681455d56afb",
+      "source_filename": "synthetic-v1.osm.pbf",
+      "source_sha256": "e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323",
+      "snapshot_timestamp": "2026-10-01T00:00:00Z",
+      "snapshot_timestamp_source": "operator",
+      "source_file": "sources/ds-20261001-681455d56afb.osm.pbf"
+    }
+  ],
+  "files": [
+    {
+      "path": "manifests.tar.gz",
+      "role": "manifests",
+      "size": 3778,
+      "sha256": "bcd4af98b311fb640c127a5eb57ecd924083333bd6d2ca6f28fd9f00cfc52a87"
+    },
+    {
+      "path": "seyra_app.sql",
+      "role": "control-db",
+      "size": 7840,
+      "sha256": "1c64f1f1dc149e7c4a761729f05eb916f9cbc8fd0f7a55cc42f4b3dbb09e5043"
+    },
+    {
+      "path": "sources/ds-20261001-681455d56afb.json",
+      "role": "source-meta",
+      "size": 222,
+      "sha256": "b8d9a91acfbc288a235ab40c591d370743d23b3bcf91cfdb87fe769cf11271fb"
+    },
+    {
+      "path": "sources/ds-20261001-681455d56afb.osm.pbf",
+      "role": "source",
+      "size": 3167,
+      "sha256": "e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323"
+    },
+    {
+      "path": "sources/ds-20261002-681455d56afb.json",
+      "role": "source-meta",
+      "size": 222,
+      "sha256": "0285e39cf7ee129c44e375e91243451601b2a5ca285e60fb5f1b83e744c76908"
+    },
+    {
+      "path": "sources/ds-20261002-681455d56afb.osm.pbf",
+      "role": "source",
+      "size": 3167,
+      "sha256": "e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323"
+    },
+    {
+      "path": "state.tar.gz",
+      "role": "state",
+      "size": 1296,
+      "sha256": "eca765dc27bef71d294a557bd721d8a9c2fe21f747d3be4859e86bed7a8def3c"
+    }
+  ]
+}

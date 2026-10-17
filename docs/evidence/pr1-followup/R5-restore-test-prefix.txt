@@ -1,0 +1,24 @@
+# restore.test.ts (R5 regressions) against UNFIXED apps/ops/src/backup.ts (d967a00 layout) — 2026-10-17T09:54:46Z, node v24.21.0
+ × src/restore.test.ts > backup and restore of one complete generation (review R5) > restores a complete backup: control DB replaced, settings/history restored, verified sources and re-import commands
+ × src/restore.test.ts > backup and restore of one complete generation (review R5) > an interrupted second backup is never mixed with the complete one (reviewed case)
+ × src/restore.test.ts > backup and restore of one complete generation (review R5) > the reviewed flat layout (an older set plus a newer lone SQL file) is refused before any database change
+ ✓ src/restore.test.ts > backup and restore of one complete generation (review R5) > SQL dump missing: refused before DROP/CREATE/replay, nothing changed
+ × src/restore.test.ts > backup and restore of one complete generation (review R5) > SQL dump corrupted: refused before DROP/CREATE/replay, nothing changed
+ × src/restore.test.ts > backup and restore of one complete generation (review R5) > SQL dump truncated: refused before DROP/CREATE/replay, nothing changed
+ ✓ src/restore.test.ts > backup and restore of one complete generation (review R5) > state archive missing: refused before DROP/CREATE/replay, nothing changed
+ ✓ src/restore.test.ts > backup and restore of one complete generation (review R5) > state archive corrupted: refused before DROP/CREATE/replay, nothing changed
+ × src/restore.test.ts > backup and restore of one complete generation (review R5) > manifest archive missing: refused before DROP/CREATE/replay, nothing changed
+ × src/restore.test.ts > backup and restore of one complete generation (review R5) > manifest archive corrupted: refused before DROP/CREATE/replay, nothing changed
+ × src/restore.test.ts > backup and restore of one complete generation (review R5) > included source missing: refused before DROP/CREATE/replay, nothing changed
+ × src/restore.test.ts > backup and restore of one complete generation (review R5) > included source corrupted: refused before DROP/CREATE/replay, nothing changed
+ × src/restore.test.ts > backup and restore of one complete generation (review R5) > several complete generations: the newest is selected and named; --generation selects another
+ ✓ src/restore.test.ts > backup and restore of one complete generation (review R5) > refuses before touching the database when a secret was not restored
+ ✓ src/restore.test.ts > backup and restore of one complete generation (review R5) > refuses on a host that already serves a release
+ ✓ src/restore.test.ts > backup and restore of one complete generation (review R5) > rejects backed-up settings that violate the access rules before changing anything
+⎯⎯⎯⎯⎯⎯ Failed Tests 10 ⎯⎯⎯⎯⎯⎯⎯
+      Tests  10 failed | 6 passed (16)
+# failure detail of the reviewed cases:
+ FAIL  src/restore.test.ts > backup and restore of one complete generation (review R5) > an interrupted second backup is never mixed with the complete one (reviewed case)
+AssertionError: expected '--\n-- PostgreSQL database dump\n--\n…' to contain 'generation 1'
+ FAIL  src/restore.test.ts > backup and restore of one complete generation (review R5) > the reviewed flat layout (an older set plus a newer lone SQL file) is refused before any database change
+AssertionError: promise resolved "undefined" instead of rejecting

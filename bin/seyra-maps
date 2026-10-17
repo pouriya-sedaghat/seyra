@@ -1,0 +1,55 @@
+#!/usr/bin/env bash
+# Host wrapper for the Seyra release CLI. Host prerequisites: bash, coreutils (sha256sum), Docker
+# Engine and Docker Compose v2. Everything else runs inside the locally loaded seyra/ops image;
+# nothing is pulled or downloaded (--pull never).
+#
+#   SEYRA_HOME=/srv/seyra bin/seyra-maps <command> ...
+#   bin/seyra-maps bootstrap-load /path/to/bundle     # first install from an offline bundle
+set -euo pipefail
+install_dir="$(cd "$(dirname "${BASH_SOURCE[0]}")/.." && pwd)"
+lock="$install_dir/infra/dependencies.lock.json"
+[ -f "$lock" ] || { echo "missing $lock" >&2; exit 2; }
+ops_ref="$(grep -o '"ref": "seyra/ops:[^"]*"' "$lock" | head -1 | cut -d'"' -f4)"
+[ -n "$ops_ref" ] || { echo "no ops image in $lock" >&2; exit 2; }
+
+if [ "${1:-}" = "bootstrap-load" ]; then
+  bundle="$(cd "${2:?bundle directory required}" && pwd)"
+  manifest="$bundle/bundle-manifest.json"
+  archive="$(grep -A6 '"role": "OPS"' "$manifest" | grep '"archive"' | cut -d'"' -f4)"
+  expected="$(grep -A6 '"role": "OPS"' "$manifest" | grep '"archive_sha256"' | cut -d'"' -f4)"
+  actual="$(sha256sum "$bundle/$archive" | cut -d' ' -f1)"
+  [ "$actual" = "$expected" ] || { echo "ops image archive checksum mismatch: $actual != $expected" >&2; exit 3; }
+  (cd "$bundle" && sha256sum --quiet -c SHA256SUMS) || { echo "bundle checksum verification failed" >&2; exit 3; }
+  docker load -i "$bundle/$archive"
+  exec docker run --rm -i --pull never --network none \
+    -v /var/run/docker.sock:/var/run/docker.sock -v "$bundle:$bundle:ro" -v "$install_dir:/opt/seyra-install:ro" \
+    "$ops_ref" bundle load "$bundle"
+fi
+
+: "${SEYRA_HOME:?set SEYRA_HOME to an absolute directory for Seyra state}"
+case "$SEYRA_HOME" in /*) ;; *) echo "SEYRA_HOME must be absolute" >&2; exit 2;; esac
+mkdir -p "$SEYRA_HOME"
+mounts=(-v /var/run/docker.sock:/var/run/docker.sock -v "$SEYRA_HOME:$SEYRA_HOME" -v "$install_dir:/opt/seyra-install:ro")
+# Owner-supplied input files are mounted read-only at their own path.
+args=("$@")
+for ((i = 0; i < ${#args[@]}; i++)); do
+  case "${args[$i]}" in
+    --pbf|--cert|--key)
+      f="$(cd "$(dirname "${args[$((i + 1))]}")" && pwd)/$(basename "${args[$((i + 1))]}")"
+      args[$((i + 1))]="$f"
+      mounts+=(-v "$(dirname "$f"):$(dirname "$f"):ro") ;;
+    --from)
+      d="$(cd "${args[$((i + 1))]}" && pwd)"; args[$((i + 1))]="$d"; mounts+=(-v "$d:$d:ro") ;;
+    --out)
+      mkdir -p "${args[$((i + 1))]}"
+      d="$(cd "${args[$((i + 1))]}" && pwd)"; args[$((i + 1))]="$d"; mounts+=(-v "$d:$d") ;;
+  esac
+done
+# `bundle verify|load DIR`: the bundle directory is mounted read-only at its own path.
+if [ "${args[0]:-}" = bundle ] && { [ "${args[1]:-}" = verify ] || [ "${args[1]:-}" = load ]; } && [ -n "${args[2]:-}" ]; then
+  d="$(cd "${args[2]}" && pwd)"; args[2]="$d"; mounts+=(-v "$d:$d:ro")
+fi
+# The ops container joins the internal build network (no outside route) when it exists.
+net=none
+docker network inspect seyra_build >/dev/null 2>&1 && net=seyra_build
+exec docker run --rm -i --pull never --network "$net" "${mounts[@]}" -e SEYRA_HOME="$SEYRA_HOME" "$ops_ref" "${args[@]}"

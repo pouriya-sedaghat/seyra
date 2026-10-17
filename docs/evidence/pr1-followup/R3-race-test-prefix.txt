@@ -1,0 +1,9 @@
+# lock-race.test.ts against UNFIXED apps/ops/src/lifecycle-lock.ts (d967a00) — 2026-10-17T09:48:37Z, node v24.21.0
+ × src/lock-race.test.ts > lifecycle lock between real processes (review R3 follow-up) > two commands recovering from a crashed owner never both enter (reviewed interleaving) 354ms
+ ✓ src/lock-race.test.ts > lifecycle lock between real processes (review R3 follow-up) > a command paused right after seeing the crashed owner keeps exclusion when another one runs 602ms
+ ✓ src/lock-race.test.ts > lifecycle lock between real processes (review R3 follow-up) > ordinary contention: a live holder refuses others, a bounded wait enters after it leaves 774ms
+ ✓ src/lock-race.test.ts > lifecycle lock between real processes (review R3 follow-up) > a holder killed with SIGKILL releases the lock; its record does not block the next command 346ms
+ ✓ src/lock-race.test.ts > lifecycle lock between real processes (review R3 follow-up) > after a crashed owner with an unfinished transition, only recover is admitted 324ms
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+AssertionError: processes inside the critical section at once: inside-a, inside-b: expected 2 to be less than or equal to 1
+      Tests  1 failed | 4 passed (5)
