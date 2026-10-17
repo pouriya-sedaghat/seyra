@@ -1,0 +1,60 @@
+{
+  "reviewed_commit": "d967a000cf378af2f4e286fef6bd2ce28bdd2d01",
+  "node": "v24.19.0",
+  "checks": [
+    {
+      "id": "R1",
+      "result": "PASS",
+      "unsafe_loopback_bind_rejected": true,
+      "canonical_lan_accepted": true
+    },
+    {
+      "id": "R2",
+      "result": "PASS",
+      "compose_failure_restores_previous_config_and_pointers": true,
+      "journal_and_maintenance_cleared": true
+    },
+    {
+      "id": "R2-ingress",
+      "result": "PASS",
+      "unpublished_proxy_forced_recreation": true
+    },
+    {
+      "id": "R3-live-import",
+      "result": "PASS",
+      "live_build_preserved": true
+    },
+    {
+      "id": "R4",
+      "result": "PASS",
+      "unverified_and_down_provider_rejected": true,
+      "unrelated_healthy_provider_admitted": true
+    },
+    {
+      "id": "R3-stale-reclaim",
+      "result": "FAIL",
+      "both_live_critical_sections_entered": true,
+      "live_prune_lock_deleted_by_other_reclaimer": true,
+      "scheduling": "A stale-token read; B reclaims and holds; A unlinks and enters while B is still holding"
+    },
+    {
+      "id": "R5-backup-set",
+      "result": "FAIL",
+      "mixed_backup_generations_accepted": true,
+      "sql_generation": "2026-10-17 (interrupted backup)",
+      "state_generation": "2026-10-16 (older complete backup)",
+      "database_drop_issued": true
+    }
+  ],
+  "limitations": "Isolated control-flow checks only; full Docker/provider/browser suites were not repeated by the reviewer.",
+  "source_sha256": {
+    "apps/ops/src/net.ts": "08dfcc975a8a4759a66db8afeb607dd52ebe66397d8a21d9b254cf9f45d2cf55",
+    "apps/ops/src/layout.ts": "057b8559a663bf815e3b6d9a328c1820e4a81441f20e103a16d513f8f8358e94",
+    "apps/ops/src/compose.ts": "84747978c5bf9be1484ecff950154a6ad01f8e605da10771ca805a3300661ba4",
+    "apps/ops/src/lifecycle-lock.ts": "2e67840f2bfd4db088b4992ff9b41f03108fbc899b8f7a1b8a08188a48f2729a",
+    "apps/ops/src/import-lock.ts": "275ab482de80ea3b00b0e8da270f3450487b9bc2f6c36bb956f383bdb4cca53c",
+    "apps/ops/src/activate.ts": "caf1692fe7520a990c2e05d5406153ed83946daa75dbb610b24a5b1b05681844",
+    "apps/ops/src/backup.ts": "34c186d17c6009fad50dd6978b478c4f3c2e388dc933523d6c623693dc7e4ce2",
+    "apps/api/src/services/health.ts": "849c45bf06037ea0458d37cbf038de589b1c89fc39ad2ec4d5c84306ced57a74"
+  }
+}
