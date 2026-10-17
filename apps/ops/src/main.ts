@@ -25,8 +25,10 @@ const USAGE = `seyra-maps — offline Map Services release tool (runs inside the
   status                            pointers, releases and live provider readiness
   verify-release DATASET_ID         re-check staged artifacts and render DB marker
   prune                             keep active + previous releases only
-  backup --out DIR [--include-sources]   control DB dump + state/manifests (+ managed OSM inputs)
-  restore --from DIR                fresh host: restore control DB/settings/history (after secrets + init)
+  backup [--out DIR] [--include-sources]   one verified backup generation under DIR (default $SEYRA_HOME/backups):
+                                    control DB dump + state/manifests (+ managed OSM inputs)
+  restore --from DIR [--generation NAME]   fresh host (after secrets + init): restore the newest complete
+                                    generation under DIR (or DIR itself / NAME) after verifying it
   bundle export --out DIR [--include PATH ...] | bundle verify DIR | bundle load DIR
 `;
 
@@ -136,12 +138,13 @@ async function main(argv: string[]): Promise<number> {
       return 0;
     case 'backup':
       // Under the lifecycle lock so the state/manifests are not captured mid-transition.
-      await withLifecycleLock(layout(), 'backup', null, () => backup(arg(rest, '--out') ?? join(layout().backups, 'latest'), { includeSources: rest.includes('--include-sources'), log }));
+      await withLifecycleLock(layout(), 'backup', null, () => backup(arg(rest, '--out') ?? layout().backups, { includeSources: rest.includes('--include-sources'), log }));
       return 0;
     case 'restore': {
       const from = arg(rest, '--from');
       if (!from) throw new Error('--from DIR is required');
-      await withLifecycleLock(layout(), 'restore', null, () => restore(from, log));
+      const generation = arg(rest, '--generation');
+      await withLifecycleLock(layout(), 'restore', null, () => restore(from, log, generation ? { generation } : {}));
       return 0;
     }
     case 'bundle': {
