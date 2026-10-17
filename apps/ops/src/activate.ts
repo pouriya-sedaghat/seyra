@@ -1,6 +1,6 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
-import { assertRuntimeEnvSafe, composeRuntime, runtimeEnv, writeRuntimeEnv, NO_RELEASE } from './compose.js';
+import { assertRuntimeEnvSafe, composeRuntime, parseEnv, runtimeEnv, writeRuntimeEnv, NO_RELEASE } from './compose.js';
 import { importLeaseState, recoverInterrupted } from './import-lock.js';
 import { readOwner, withLifecycleLock } from './lifecycle-lock.js';
 import { psql, recordEvent, renderDbName } from './db.js';
@@ -105,10 +105,27 @@ function releaseDescriptor(m: Manifest): string {
   return `${JSON.stringify({ schema: 'seyra.active-release/1', dataset_id: m.dataset_id, activated_at: new Date().toISOString(), identities: m.identities }, null, 2)}\n`;
 }
 
-/** Bring up the complete stack from the current runtime.env (validated at the runtime boundary). */
-async function startStack(l: Layout): Promise<void> {
+/**
+ * Bring up the complete stack from the current runtime.env (validated at the runtime boundary) and
+ * confirm the ingress is really published. Docker can start a container whose host-port bind failed
+ * earlier as "running" without that port, and `compose up` then leaves it alone (lifecycle L8). Such
+ * a proxy is recreated once; an ingress that is still not published is an error, never "ready".
+ */
+export async function startStack(l: Layout, log: (m: string) => void): Promise<void> {
   assertRuntimeEnvSafe(l);
   await composeRuntime(l, ['up', '-d', '--remove-orphans']);
+  const env = parseEnv(readFileSync(l.runtimeEnv, 'utf8'));
+  const want = `${env.SEYRA_BIND_ADDR}:${env.SEYRA_HTTPS_PORT}`;
+  const published = async () => {
+    const r = await composeRuntime(l, ['port', 'proxy', '8443'], { allowFailure: true });
+    return { ok: r.code === 0 && r.stdout.trim() === want, got: (r.stdout.trim() || r.stderr.trim()) || 'nothing' };
+  };
+  const first = await published();
+  if (first.ok) return;
+  log(`[ingress] the proxy is running without ${want} published (docker reports: ${first.got}); recreating it`);
+  await composeRuntime(l, ['up', '-d', '--no-deps', '--force-recreate', 'proxy']);
+  const again = await published();
+  if (!again.ok) throw new Error(`the proxy does not publish ${want} (docker reports: ${again.got})`);
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -180,7 +197,7 @@ export interface ActivateOptions {
 async function restorePrevious(l: Layout, from: string, timeoutS: number, pollMs: number, log: (m: string) => void): Promise<void> {
   await composeRuntime(l, ['stop', '-t', '40', 'api'], { allowFailure: true });
   restoreConfig(l);
-  await startStack(l);
+  await startStack(l, log);
   await composeRuntime(l, ['restart', 'api'], { allowFailure: true });
   const restored = await waitSameRevision(l, from, timeoutS, pollMs, log);
   if (!restored.ok) throw new Error(`previous release ${from} did not become ready: ${JSON.stringify(restored.last?.providers ?? null)}`);
@@ -226,7 +243,7 @@ async function activateLocked(l: Layout, datasetId: string, opts: ActivateOption
     writeTransition(l, t);
     // Discard only the managed, dataset-keyed tile cache.
     for (const entry of readdirSync(join(l.cache, 'tiles'))) rmSync(join(l.cache, 'tiles', entry), { recursive: true, force: true });
-    await startStack(l);
+    await startStack(l, opts.log);
     const result = await waitSameRevision(l, datasetId, timeoutS, pollMs, opts.log);
     if (!result.ok) throw new Error(`providers did not report ${datasetId} within ${timeoutS} s: ${JSON.stringify(result.last?.providers ?? null)}`);
   } catch (cause) {
@@ -281,7 +298,7 @@ export async function recover(opts: ActivateOptions): Promise<void> {
     const p = readPointers(l);
     if (p.active === t.to) {
       opts.log(`[recover] ${t.op} to ${t.to} was committed; finishing it`);
-      await startStack(l);
+      await startStack(l, opts.log);
       const r = await waitSameRevision(l, t.to, timeoutS, pollMs, opts.log);
       if (!r.ok) throw new Error(`${t.to} is committed but not ready; maintenance stays on (${JSON.stringify(r.last?.providers ?? null)})`);
     } else if (t.from) {

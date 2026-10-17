@@ -178,7 +178,7 @@ kill $sq 2>/dev/null; wait $sq 2>/dev/null
 if [ $rc -ne 0 ] && grep -q "AND restoring $A failed" "$ev/L8-recovery-failure.log" && [ $journal_kept = yes ] && [ $maint_kept = yes ] \
    && grep -q "UNFINISHED activate" "$ev/L8-status.log" && [ $rc_a -ne 0 ] && [ $rc_p -ne 0 ] && [ $rc_s -ne 0 ] && grep -q "seyra-maps recover" "$ev/L8-activate-refused.log" \
    && [ $rc_r -eq 0 ] && [ "$(ready_ds)" = "$A" ] && [ "$(active)" = "$A" ] && [ ! -e "$SEYRA_HOME/state/transition.json" ] && [ ! -e "$SEYRA_HOME/state/flags/maintenance" ]; then
-  result PASS L8 "recovery failure kept maintenance + journal and reported both errors; activate/prune/start refused; 'recover' restored $A after the cause was removed"
+  result PASS L8 "recovery failure kept maintenance + journal and reported both errors; activate/prune/start refused; 'recover' restored $A after the cause was removed and it answers through the ingress (proxy rebinds by recover: $(grep -c '\[ingress\]' "$ev/L8-recover.log"))"
 else
   result FAIL L8 "rc=$rc journal=$journal_kept maint=$maint_kept refusals=$rc_a/$rc_p/$rc_s recover=$rc_r ready=$(ready_ds)"
 fi

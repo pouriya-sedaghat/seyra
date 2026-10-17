@@ -16,8 +16,13 @@ interface Sim {
   upCalls: number;
   drops: string[];
   markers: Map<string, string>;
+  /** Another process holds the ingress host port. */
+  portHeld: boolean;
+  /** The proxy runs without its published port (Docker after a failed bind, observed in lifecycle L8). */
+  proxyUnpublished: boolean;
+  proxyRecreates: number;
 }
-const sim: Sim = { running: null, failUp: 0, unhealthy: new Set(), upCalls: 0, drops: [], markers: new Map() };
+const sim: Sim = { running: null, failUp: 0, unhealthy: new Set(), upCalls: 0, drops: [], markers: new Map(), portHeld: false, proxyUnpublished: false, proxyRecreates: 0 };
 
 vi.mock('./compose.js', async (importOriginal) => {
   const orig = await importOriginal<typeof import('./compose.js')>();
@@ -32,7 +37,19 @@ vi.mock('./compose.js', async (importOriginal) => {
           throw new Error('injected: docker compose up failed (container create error)');
         }
         sim.running = orig.parseEnv(read(l.runtimeEnv, 'utf8')).SEYRA_DATASET_ID ?? null;
+        // Docker semantics reproduced in isolation: a proxy started while the port is held runs
+        // unpublished; a plain `up` leaves a running proxy alone; only a recreate binds again.
+        if (args.includes('--force-recreate')) {
+          sim.proxyRecreates++;
+          sim.proxyUnpublished = sim.portHeld;
+        } else if (sim.portHeld) sim.proxyUnpublished = true;
         return { code: 0, stdout: '', stderr: '' };
+      }
+      if (args[0] === 'port') {
+        const env = orig.parseEnv(read(l.runtimeEnv, 'utf8'));
+        return sim.running && !sim.proxyUnpublished
+          ? { code: 0, stdout: `${env.SEYRA_BIND_ADDR}:${env.SEYRA_HTTPS_PORT}\n`, stderr: '' }
+          : { code: 1, stdout: '', stderr: 'no port 8443/tcp for container seyra-proxy-1: ' };
       }
       if (args[0] === 'stop' && args.includes('proxy')) sim.running = null;
       if (args[0] === 'exec') {
@@ -167,7 +184,7 @@ beforeEach(() => {
   process.env.SEYRA_INSTALL_DIR = join(home, 'install');
   l = layout();
   ensureDirs(l);
-  Object.assign(sim, { running: null, failUp: 0, unhealthy: new Set(), upCalls: 0, drops: [], markers: new Map() });
+  Object.assign(sim, { running: null, failUp: 0, unhealthy: new Set(), upCalls: 0, drops: [], markers: new Map(), portHeld: false, proxyUnpublished: false, proxyRecreates: 0 });
 });
 afterEach(async () => {
   for (const c of children.splice(0)) await kill(c);
@@ -226,6 +243,30 @@ describe('activation recovery (review R2)', () => {
     await expect(prune(() => undefined)).rejects.toThrow(/run: seyra-maps recover/);
     sim.failUp = 0;
     await recover(fast);
+    expectRestoredToA(before);
+  });
+
+  it('a proxy Docker left running without its published port is recreated before readiness counts', async () => {
+    await activeA();
+    sim.proxyUnpublished = true; // e.g. left over from an earlier failed bind
+    await activate('ds-b', fast);
+    expect(sim.proxyRecreates).toBe(1);
+    expect(sim.proxyUnpublished).toBe(false);
+    expect(readPointers(l)).toEqual({ active: 'ds-b', previous: 'ds-a' });
+  });
+
+  it('an ingress that cannot be published is never reported ready (lifecycle L8): recovery fails closed, recover rebinds it', async () => {
+    await activeA();
+    const before = snapshot();
+    sim.portHeld = true; // another process holds 127.0.0.1:8443 throughout
+    const err = await activate('ds-b', fast).then(() => null, (e: Error) => e);
+    expect(err?.message).toMatch(/activation of ds-b failed \(the proxy does not publish 127\.0\.0\.1:8443.*AND restoring ds-a failed \(the proxy does not publish 127\.0\.0\.1:8443/);
+    expect(maintenanceOn()).toBe(true);
+    expect(readTransition(l)).toMatchObject({ from: 'ds-a', to: 'ds-b' });
+    // The port is free again but the running proxy is still unpublished: a plain `up` would not fix it.
+    sim.portHeld = false;
+    await recover(fast);
+    expect(sim.proxyUnpublished).toBe(false);
     expectRestoredToA(before);
   });
 

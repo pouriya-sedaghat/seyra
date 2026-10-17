@@ -1,11 +1,11 @@
 #!/usr/bin/env node
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { activate, apiHealth, prune, readPointers, readTransition, recover, rollback, verifyRelease } from './activate.js';
+import { activate, apiHealth, prune, readPointers, readTransition, recover, rollback, startStack, verifyRelease } from './activate.js';
 import { readOwner, withLifecycleLock } from './lifecycle-lock.js';
 import { backup, restore } from './backup.js';
 import { bundleExport, bundleLoad, bundleVerify } from './bundle.js';
-import { assertRuntimeEnvSafe, composeRuntime } from './compose.js';
+import { composeRuntime } from './compose.js';
 import { importDataset } from './importer.js';
 import { layout, managedChild } from './layout.js';
 import { lockedImages, verifyImages } from './lock.js';
@@ -112,8 +112,7 @@ async function main(argv: string[]): Promise<number> {
         // Image references are tags; refuse to start anything that no longer resolves to the lock.
         const bad = (await verifyImages(lockedImages(l.install))).filter((r) => !r.ok);
         if (bad.length) throw new Error(`refusing to start: ${bad.map((b) => `${b.role} is ${b.observed ?? 'missing'}, locked ${b.expected ?? 'unknown'}`).join('; ')}`);
-        assertRuntimeEnvSafe(l);
-        await composeRuntime(l, ['up', '-d']);
+        await startStack(l, log);
       });
       return 0;
     }
