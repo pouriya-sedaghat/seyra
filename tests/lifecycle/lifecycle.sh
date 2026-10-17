@@ -10,6 +10,8 @@
 # L8 recovery failure: maintenance + journal kept, mutators refuse, `recover` restores A (R2)
 # L9 prune during a live import / L10 prune during activation / L11 competing rollback and
 #    activate (review R3, real concurrent processes) / L12 prune after the transitions
+# L13 activation's container killed holding the lock mid-transition; recover/prune/activate race
+# L14 stop's container killed holding the lock; start/prune race (review R3 follow-up)
 #
 # Requires: NODE_BIN (Node for the port squatter), SNAPSHOT_TS (B) and SNAPSHOT_TS_L9 (C) not
 # already imported.
@@ -233,6 +235,65 @@ fi
 # Ordinary post-transition pruning still works: C (validated, not active/previous) is removed.
 "$cli" prune > "$ev/L11-final-prune.log" 2>&1
 [ ! -d "$SEYRA_HOME/releases/$C" ] && result PASS L12 "post-transition prune removed $C and kept $A/$B" || result FAIL L12 "C still present"
+
+# ------------------------------------------------------------------ review R3 follow-up: crashed lock owners
+# The lifecycle lock is a kernel flock held by the command's ops container. Kill that container while
+# it holds the lock, then start competing mutating commands at the same time, each in its own
+# container. The owner record is sampled every 0.1 s (L13/L14-owners.txt: who held it, in order).
+lock="$SEYRA_HOME/state/lifecycle.lock"
+owners_start() { ( while true; do { [ -s "$lock" ] && jq -c '{op, target, host}' "$lock"; } 2>/dev/null || echo '{"op":null}'; sleep 0.1; done ) > "$1.raw" 2>/dev/null & echo $!; }
+owners_stop() { kill "$1" 2>/dev/null; wait "$1" 2>/dev/null; uniq "$2.raw" > "$2"; rm -f "$2.raw"; }
+kill_lock_holder() { # op: kill the ops container recorded as holding the lifecycle lock for op
+  local h=""
+  for _ in $(seq 1 600); do h="$(jq -r --arg op "$1" 'select(.op == $op) | .host' "$lock" 2>/dev/null)"; [ -n "$h" ] && break; sleep 0.1; done
+  [ -n "$h" ] && docker kill "$h" > /dev/null 2>&1 && echo "$h"
+}
+refused_for_recover() { grep -qE "another lifecycle operation is running: recover|ended without finishing; run: seyra-maps recover" "$1"; }
+
+# L13: an activation's ops container killed mid-transition (journal written, lock held); then
+# recover, prune and activate start together. Only recover may run; A must serve again.
+ow="$(owners_start "$ev/L13-owners.txt")"
+"$cli" activate "$B" > "$ev/L13-killed-activate.log" 2>&1 &
+ka=$!
+wait_file "$SEYRA_HOME/state/transition.json"
+killed="$(kill_lock_holder activate)"
+wait $ka 2>/dev/null
+"$cli" status > "$ev/L13-status-after-kill.log" 2>&1
+"$cli" recover > "$ev/L13-recover.log" 2>&1 & r1=$!
+"$cli" prune > "$ev/L13-prune.log" 2>&1 & r2=$!
+"$cli" activate "$B" > "$ev/L13-activate.log" 2>&1 & r3=$!
+wait $r1; rc_r=$?; wait $r2; rc_p=$?; wait $r3; rc_a=$?
+owners_stop "$ow" "$ev/L13-owners.txt"
+if [ -n "$killed" ] && grep -q "lifecycle lock: free (record of activate $B" "$ev/L13-status-after-kill.log" && grep -q "UNFINISHED activate" "$ev/L13-status-after-kill.log" \
+   && [ $rc_r -eq 0 ] && [ $rc_p -ne 0 ] && [ $rc_a -ne 0 ] && refused_for_recover "$ev/L13-prune.log" && refused_for_recover "$ev/L13-activate.log" \
+   && [ "$(ready_ds)" = "$A" ] && [ "$(active)" = "$A" ] && [ "$(previous)" = "$B" ] && [ -d "$SEYRA_HOME/releases/$B" ] \
+   && [ ! -e "$SEYRA_HOME/state/transition.json" ] && [ ! -e "$SEYRA_HOME/state/flags/maintenance" ] && [ ! -s "$lock" ]; then
+  result PASS L13 "activate's ops container $killed killed while holding the lock mid-transition: the lock was free at once (status: record only, UNFINISHED activate); of recover/prune/activate started together only recover ran (prune: $(grep -oE 'another lifecycle operation is running: recover|ended without finishing' "$ev/L13-prune.log" | head -1); activate: $(grep -oE 'another lifecycle operation is running: recover|ended without finishing' "$ev/L13-activate.log" | head -1)); A ready again, B kept, journal/maintenance cleared, no owner left"
+else
+  result FAIL L13 "killed=$killed recover=$rc_r prune=$rc_p activate=$rc_a ready=$(ready_ds) active=$(active) journal=$([ -e "$SEYRA_HOME/state/transition.json" ] && echo yes || echo no)"
+fi
+
+# L14: a stop's ops container killed while holding the lock (no transition); start and prune then
+# race for it. Each either runs or is refused as busy (never both inside); a final start serves A.
+ow="$(owners_start "$ev/L14-owners.txt")"
+"$cli" stop > "$ev/L14-killed-stop.log" 2>&1 &
+ks=$!
+killed2="$(kill_lock_holder stop)"
+wait $ks 2>/dev/null
+"$cli" status > "$ev/L14-status-after-kill.log" 2>&1
+"$cli" start > "$ev/L14-start.log" 2>&1 & s1=$!
+"$cli" prune > "$ev/L14-prune.log" 2>&1 & s2=$!
+wait $s1; rc_s=$?; wait $s2; rc_p=$?
+"$cli" start > "$ev/L14-final-start.log" 2>&1; rc_f=$?
+wait_ready "$A" 300
+owners_stop "$ow" "$ev/L14-owners.txt"
+ok_or_busy() { [ "$1" -eq 0 ] || grep -q "another lifecycle operation is running" "$2"; }
+if [ -n "$killed2" ] && grep -q "lifecycle lock: free (record of stop" "$ev/L14-status-after-kill.log" && ok_or_busy $rc_s "$ev/L14-start.log" && ok_or_busy $rc_p "$ev/L14-prune.log" \
+   && { [ $rc_s -eq 0 ] || [ $rc_p -eq 0 ]; } && [ $rc_f -eq 0 ] && [ "$(ready_ds)" = "$A" ] && [ "$(active)" = "$A" ] && [ "$(previous)" = "$B" ] && [ ! -s "$lock" ]; then
+  result PASS L14 "stop's ops container $killed2 killed while holding the lock: the next commands took it over at once (start rc=$rc_s, prune rc=$rc_p; a refusal is 'another lifecycle operation is running'); A ready after start, no owner left"
+else
+  result FAIL L14 "killed=$killed2 start=$rc_s prune=$rc_p final_start=$rc_f ready=$(ready_ds)"
+fi
 
 cp "$ev/.settings.bak" "$settings" && rm -f "$ev/.settings.bak" "$ev/.squat-ready"
 {

@@ -135,10 +135,15 @@ Releases are never pruned automatically.
 
 **Lifecycle lock.** Each state-changing command holds `state/lifecycle.lock` while it runs: `init`, `start`, `stop`, `activate`, `rollback`, `recover`, `prune`, `backup`, `restore`, and the set-up phase of `import`. A second such command fails at once with "another lifecycle operation is running: <op> <target> (started …)". Retry it when the first command has finished.
 
+The lock is a kernel `flock(2)` held by the running command. The kernel releases it as soon as that command's process or ops container ends, however it ends, so a crash never leaves a lock that has to be cleared by hand.
+- The file itself stays in place. It only records the current owner, and `status` shows whether that owner still holds the lock.
+- A record left by a command that ended without releasing the lock is replaced by the next command. If an activation journal also exists, only `recover` may run (section 4).
+- `SEYRA_HOME` must be on a local Linux filesystem that enforces `flock` (not a network share); every command verifies this and refuses otherwise.
+
 A long `import` also holds a lease, `state/import.lock`, which names the release being built:
 - `prune` never removes that release or any release still `building` (evidence L9).
-- A lock or lease whose owner process or ops container no longer exists is treated as abandoned. The next command removes it, and an abandoned import is marked `failed` (evidence L2).
-- A lock whose owner's liveness cannot be determined is never removed automatically.
+- An import lease whose owner process or ops container no longer exists is treated as abandoned. It is removed only while holding the lifecycle lock, and the abandoned import is marked `failed` (evidence L2).
+- A lease whose owner's liveness cannot be determined is never removed automatically.
 
 ## 6. LAN access for shared testing
 
@@ -163,14 +168,17 @@ Access settings are validated by `init` before anything is saved, again before e
 ## 7. Backup and restore
 
 ```bash
-seyra-maps backup --out /backup/seyra-$(date +%F) [--include-sources]
+seyra-maps backup [--out /backup/seyra] [--include-sources]     # default root: $SEYRA_HOME/backups
 ```
 
-This writes:
-- `seyra_app-*.sql`: a `pg_dump` of the control database `seyra_app`.
-- `state-*.tar.gz`: pointers, settings, history and runtime config.
-- `manifests-*.tar.gz`: every release manifest.
-- With `--include-sources`, `sources/<dataset_id>.osm.pbf` and `.json`: the managed input copy of the active and previous releases, so a restore does not depend on finding the owner's original files. These are large.
+Each run publishes one **backup generation** under the backup root, `seyra-backup-<UTC stamp>-<id>/`, containing:
+- `seyra_app.sql`: a `pg_dump` of the control database `seyra_app`, checked for its completion trailer.
+- `state.tar.gz`: pointers, settings, history and runtime config.
+- `manifests.tar.gz`: every release manifest.
+- With `--include-sources`, `sources/<dataset_id>.osm.pbf` and `.json`: the managed input copy of the active and previous releases, checked against their release manifests. These are large. A restore then does not depend on finding the owner's original files.
+- `backup-manifest.json`, the completion record. It lists every file with its role, size and SHA-256, the backed-up pointers, and each release's source identity (file name, SHA-256, snapshot timestamp).
+
+The generation is assembled in a hidden `.seyra-backup-…partial` directory. The completion record is written last, everything is flushed to disk, and only then is the directory renamed to its final name. A published generation is therefore complete by construction. A backup that fails removes its `.partial` directory. One that is killed leaves it behind; restore reports it and never reads it, and you can delete it. Use the same root for repeated backups and remove old generations under your retention policy.
 
 **Secrets and TLS keys are never included.** Back up `$SEYRA_HOME/secrets` separately (`cp -a`, preserving owners and modes), under your key-handling policy. The database role passwords in a restored host must match the dump's host, so the secrets backup is part of every restore.
 
@@ -185,24 +193,36 @@ Map stores are not backed up. They are rebuilt from the original input and the l
 mkdir -p "$SEYRA_HOME" && cp -a /backup/secrets "$SEYRA_HOME/secrets"
 # 3. init: directories, networks, DB roles from the restored secrets, schema
 seyra-maps init
-# 4. restore: replaces the freshly initialised control DB with the dump,
-#    re-applies grants/migrations, restores settings and history,
+# 4. restore: selects and verifies ONE generation, then replaces the freshly initialised control DB
+#    with its dump, re-applies grants/migrations, restores settings and history, and
 #    prints the re-import commands for the backed-up active and previous releases
-seyra-maps restore --from /backup/seyra-YYYY-MM-DD
+seyra-maps restore --from /backup/seyra [--generation seyra-backup-…]
 # 5. run the printed imports (previous first, then active); each must report the backed-up dataset_id
-seyra-maps import --pbf /backup/seyra-YYYY-MM-DD/sources/<previous>.osm.pbf [--snapshot-timestamp …]
-seyra-maps import --pbf /backup/seyra-YYYY-MM-DD/sources/<active>.osm.pbf  [--snapshot-timestamp …]
+seyra-maps import --pbf /backup/seyra/seyra-backup-…/sources/<previous>.osm.pbf [--snapshot-timestamp …]
+seyra-maps import --pbf /backup/seyra/seyra-backup-…/sources/<active>.osm.pbf  [--snapshot-timestamp …]
 # 6. activate previous, then active (restores the active/previous pair)
 seyra-maps activate <previous> && seyra-maps activate <active>
 ```
 
-Notes on `restore`:
-- It refuses on a host that already serves a release.
-- It refuses before changing anything if a secret is missing or the backed-up settings violate the access rules (section 6).
-- It does not restore the release pointers, because the map stores do not exist until step 5.
-- Without `--include-sources`, it prints the source file name and sha256 to look for; rebuild from the owner's original input with that checksum.
+**Which generation is restored.** `--from` may name a generation directory itself, or a backup root.
+- For a root, restore uses the **newest published generation**, or the one given with `--generation`. It prints which one it chose, the other complete generations, and every `.partial` attempt it ignored.
+- Files are never combined across generations.
+- The previous flat layout (`seyra_app-*.sql`, `state-*.tar.gz` and `manifests-*.tar.gz` side by side, without a completion record) is refused. Nothing can prove those files belong to one complete backup. Take a new backup.
 
-The isolated drill `tests/offline/restore-drill.sh` follows these steps from one offline host to a second, empty one; see `docs/TEST_RESULTS.md`. Install and rollback are not restore tests.
+**What is verified before anything changes.** The whole selected generation is checked before the database is touched:
+- every listed file is present with its recorded size and SHA-256, and no unlisted files are present;
+- the SQL dump is complete;
+- the state archive's settings satisfy the access rules (section 6), and its pointers match the record;
+- the archived release manifests, and any included sources, match the recorded release identities.
+
+Any mismatch stops restore with the reason. Restore does not fall back to another generation on its own; to use an older one, name it with `--generation`.
+
+Notes on `restore`:
+- It refuses on a host that already serves a release, and before changing anything if a secret is missing.
+- It does not restore the release pointers, because the map stores do not exist until step 5.
+- Without `--include-sources`, it prints the source file name and SHA-256 to look for; rebuild from the owner's original input with that checksum.
+
+The isolated drill `tests/offline/restore-drill.sh` follows these steps from one offline host to a second, empty one. It also checks the generation selection, an interrupted attempt and a damaged generation; see `docs/TEST_RESULTS.md`. Install and rollback are not restore tests.
 
 ## 8. Updating software (new bundle)
 

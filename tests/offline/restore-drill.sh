@@ -1,6 +1,8 @@
 #!/usr/bin/env bash
 # Fresh-host restore drill (RUNBOOK §7): a backup taken on one offline host is restored onto a
 # second, newly created offline host that never saw the first one's Docker state or SEYRA_HOME.
+# Backups are generations (review R5): the source host writes two complete generations and is then
+# left with an interrupted later attempt; restore must use exactly one complete generation.
 # Install and rollback are NOT counted as restoration; the drill passes only when the second host
 # serves the backed-up active release (same dataset id), holds the backed-up control-database rows
 # and settings, and its database roles authenticate with the restored secrets.
@@ -23,7 +25,7 @@ net=seyra_offline_lab
 sock_dir="$LAB/run"
 export SEYRA_HOME="$LAB/home"
 inst="$LAB/install"
-bk="$LAB/backup"            # what `seyra-maps backup` wrote (operator's backup medium)
+bk="$LAB/backup"            # backup root: the generations `seyra-maps backup` published (operator's backup medium)
 sbk="$LAB/secrets-backup"   # the operator's separate secrets backup (never inside `backup`)
 summary=()
 fails=0
@@ -51,7 +53,7 @@ secret_leaks() {
   for f in "$SEYRA_HOME"/secrets/db_* "$SEYRA_HOME"/secrets/tile_db_password; do tr -d '\n' < "$f"; echo; done > "$needles"
   for k in "$SEYRA_HOME"/secrets/tls/*.key; do sed -n 2p "$k"; done >> "$needles"
   grep -rlFf "$needles" "$bk"
-  for t in "$bk"/*.tar.gz; do tar -xzOf "$t" | grep -qFf "$needles" && echo "$t"; done
+  find "$bk" -name '*.tar.gz' | while read -r t; do tar -xzOf "$t" | grep -qFf "$needles" && echo "$t"; done
   rm -f "$needles"
 }
 
@@ -90,7 +92,10 @@ cli import --pbf "$FIXTURE" --snapshot-timestamp 2026-10-01T00:00:00Z > "$ev/R1-
 A="$(grep -o 'release ds-[0-9a-z-]* built' "$ev/R1-src-import-a.log" | awk '{print $2}')"
 cli import --pbf "$FIXTURE" --snapshot-timestamp 2026-10-02T00:00:00Z > "$ev/R1-src-import-b.log" 2>&1; rc_b=$?
 B="$(grep -o 'release ds-[0-9a-z-]* built' "$ev/R1-src-import-b.log" | awk '{print $2}')"
-{ cli activate "$A" && cli activate "$B"; } > "$ev/R1-src-activate.log" 2>&1; rc_act=$?
+cli activate "$A" > "$ev/R1-src-activate.log" 2>&1; rc_act=$?
+# Generation 1: an earlier complete backup (only A active, sources not included).
+cli backup --out "$bk" > "$ev/R2-backup-gen1.log" 2>&1; rc_g1=$?
+cli activate "$B" >> "$ev/R1-src-activate.log" 2>&1 || rc_act=$?
 src_ready="$(ready_ds)"
 q "SELECT id, dataset_id, event, occurred_at FROM seyra_control.release_events ORDER BY id" > "$ev/R1-src-events.txt" 2>&1
 src_events="$(wc -l < "$ev/R1-src-events.txt")"
@@ -100,15 +105,26 @@ else
   result FAIL R1 "install=$rc importA=$rc_a importB=$rc_b activate=$rc_act ready=$src_ready events=$src_events"
 fi
 
+# Generation 2: the newest complete backup, with the managed inputs of both releases.
 cli backup --out "$bk" --include-sources > "$ev/R2-backup.log" 2>&1; rc=$?
+gens="$(find "$bk" -mindepth 1 -maxdepth 1 -type d -name 'seyra-backup-*' -printf '%f\n' | sort)"
+gen1="$(printf '%s\n' "$gens" | head -1)"; gen2="$(printf '%s\n' "$gens" | tail -1)"
+# An interrupted later attempt, exactly as a backup killed after its SQL dump leaves it: a real
+# pg_dump (taken after one more control-DB row was added) in a never-published staging directory.
+q "INSERT INTO seyra_control.release_events (dataset_id, event, detail) VALUES ('ds-drill-interrupted', 'pruned', '{\"drill\": true}')" > /dev/null
+partial="$bk/.seyra-backup-29991231T000000000Z-d0d0d0.partial"
+mkdir -p "$partial"
+D exec -i "$(D ps -q --filter label=com.docker.compose.project=seyra --filter label=com.docker.compose.service=db)" pg_dump -U seyra_admin -d seyra_app --no-owner > "$partial/seyra_app.sql"
 cp -a "$SEYRA_HOME/secrets" "$sbk"   # the operator's separate secret backup
 (cd "$sbk" && find . -type f ! -path './tls/*' -exec sha256sum {} + | sort -k2) > "$ev/.src-secrets.sha"
 secret_leaks > "$ev/.secret-leak" 2>/dev/null
-ls -l "$bk" "$bk/sources" > "$ev/R2-backup-contents.txt" 2>&1
-if [ $rc -eq 0 ] && [ -s "$bk/sources/$A.osm.pbf" ] && [ -s "$bk/sources/$B.osm.pbf" ] && [ ! -s "$ev/.secret-leak" ]; then
-  result PASS R2 "backup with --include-sources: control DB dump, state/manifests and both managed inputs; no secret value or private-key material inside the backup or its archives"
+ls -laR "$bk" | sed "s#$bk#BACKUP_ROOT#" > "$ev/R2-backup-contents.txt" 2>&1
+cp "$bk/$gen2/backup-manifest.json" "$ev/R2-backup-manifest.json" 2>/dev/null
+if [ $rc_g1 -eq 0 ] && [ $rc -eq 0 ] && [ "$(printf '%s\n' "$gens" | grep -c .)" = 2 ] && [ -s "$bk/$gen2/sources/$A.osm.pbf" ] && [ -s "$bk/$gen2/sources/$B.osm.pbf" ] \
+  && [ -s "$bk/$gen1/backup-manifest.json" ] && [ -s "$bk/$gen2/backup-manifest.json" ] && grep -q ds-drill-interrupted "$partial/seyra_app.sql" && [ ! -s "$ev/.secret-leak" ]; then
+  result PASS R2 "two published generations ($gen1; $gen2 with both managed inputs), each with a SHA-256 completion record, plus an interrupted attempt holding a newer real dump; no secret value or private-key material in the backup or its archives"
 else
-  result FAIL R2 "rc=$rc (see R2-backup.log; secret files matched: $(cat "$ev/.secret-leak" 2>/dev/null | tr '\n' ' '))"
+  result FAIL R2 "gen1=$rc_g1 gen2=$rc generations=[$(printf '%s ' $gens)] (secret files matched: $(cat "$ev/.secret-leak" 2>/dev/null | tr '\n' ' '))"
 fi
 e1_end="$(egress_count)"
 drop_host   # the source machine is gone
@@ -127,12 +143,27 @@ fi
 
 # RUNBOOK order: secrets back first, then init (roles get the restored passwords), then restore.
 mkdir -p "$SEYRA_HOME" && cp -a "$sbk" "$SEYRA_HOME/secrets"
-cli init > "$ev/R4-init.log" 2>&1 && cli restore --from "$bk" > "$ev/R4-restore.log" 2>&1; rc=$?
+cli init > "$ev/R4-init.log" 2>&1; rc_init=$?
+# A damaged copy of the newest generation is refused before the database is touched.
+rm -rf "$LAB/backup-damaged"; mkdir -p "$LAB/backup-damaged"; cp -a "$bk/$gen2" "$LAB/backup-damaged/"
+printf '\001' | dd of="$LAB/backup-damaged/$gen2/seyra_app.sql" bs=1 seek=200 conv=notrunc status=none
+cli restore --from "$LAB/backup-damaged" > "$ev/R4-restore-damaged.log" 2>&1; rc_dmg=$?
+dmg_rows="$(q 'SELECT count(*) FROM seyra_control.release_events' 2>&1)"
+if [ $rc_init -eq 0 ] && [ $rc_dmg -ne 0 ] && grep -q 'seyra_app.sql does not match its recorded SHA-256' "$ev/R4-restore-damaged.log" && [ "$dmg_rows" = 0 ] \
+  && ! grep -q 'seyra-drill.internal' "$SEYRA_HOME/state/settings.json"; then
+  result PASS R4a "a damaged generation (one byte of its SQL dump changed) is refused before any database change: initialised control DB still empty, settings untouched"
+else
+  result FAIL R4a "init=$rc_init restore=$rc_dmg rows=$dmg_rows"
+fi
+rm -rf "$LAB/backup-damaged"
+cli restore --from "$bk" > "$ev/R4-restore.log" 2>&1; rc=$?
 q "SELECT id, dataset_id, event, occurred_at FROM seyra_control.release_events ORDER BY id" > "$ev/R4-dst-events.txt" 2>&1
 login="$(api_login 2>&1)"
 if [ $rc -eq 0 ] && cmp -s "$ev/R1-src-events.txt" "$ev/R4-dst-events.txt" && [ "$login" = "$src_events" ] \
+  && ! grep -q ds-drill-interrupted "$ev/R4-dst-events.txt" && grep -q "selected backup generation $gen2 (newest of 2 complete generations" "$ev/R4-restore.log" \
+  && grep -q "ignoring incomplete backup attempt .seyra-backup-29991231T000000000Z-d0d0d0.partial" "$ev/R4-restore.log" \
   && grep -q 'seyra-drill.internal' "$SEYRA_HOME/state/settings.json"; then
-  result PASS R4 "restore replaced the initialised control DB: all $src_events release events identical (ids, timestamps); seyra_api authenticates with the restored secret; settings restored"
+  result PASS R4 "restore selected $gen2 (newest of 2 complete generations), ignored the interrupted attempt, and replaced the initialised control DB: all $src_events release events identical (ids, timestamps), the interrupted attempt's extra row absent; seyra_api authenticates with the restored secret; settings restored"
 else
   result FAIL R4 "rc=$rc events_equal=$(cmp -s "$ev/R1-src-events.txt" "$ev/R4-dst-events.txt" && echo yes || echo no) api_login=$login"
 fi
