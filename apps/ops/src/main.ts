@@ -1,15 +1,15 @@
 #!/usr/bin/env node
-import { createWriteStream, existsSync, mkdirSync, readdirSync } from 'node:fs';
+import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
 import { activate, apiHealth, prune, readPointers, readTransition, recover, rollback, verifyRelease } from './activate.js';
 import { readOwner, withLifecycleLock } from './lifecycle-lock.js';
+import { backup, restore } from './backup.js';
 import { bundleExport, bundleLoad, bundleVerify } from './bundle.js';
 import { assertRuntimeEnvSafe, composeRuntime } from './compose.js';
 import { importDataset } from './importer.js';
 import { layout, managedChild } from './layout.js';
 import { lockedImages, verifyImages } from './lock.js';
 import { readManifest } from './manifest.js';
-import { run } from './proc.js';
 import { init, tlsImport, tlsInit } from './setup.js';
 
 const USAGE = `seyra-maps — offline Map Services release tool (runs inside the seyra/ops image)
@@ -25,7 +25,8 @@ const USAGE = `seyra-maps — offline Map Services release tool (runs inside the
   status                            pointers, releases and live provider readiness
   verify-release DATASET_ID         re-check staged artifacts and render DB marker
   prune                             keep active + previous releases only
-  backup --out DIR                  control DB dump + state/manifests (not map stores)
+  backup --out DIR [--include-sources]   control DB dump + state/manifests (+ managed OSM inputs)
+  restore --from DIR                fresh host: restore control DB/settings/history (after secrets + init)
   bundle export --out DIR [--include PATH ...] | bundle verify DIR | bundle load DIR
 `;
 
@@ -59,22 +60,6 @@ async function status(): Promise<void> {
   }
   const h = await apiHealth(l);
   console.log(h ? `live readiness: ${JSON.stringify(h, null, 1)}` : 'live readiness: API not reachable');
-}
-
-async function backup(out: string): Promise<void> {
-  const l = layout();
-  if (!out.startsWith('/')) throw new Error('--out must be absolute');
-  mkdirSync(out, { recursive: true, mode: 0o750 });
-  const stamp = new Date().toISOString().replace(/[:.]/g, '-');
-  const dump = join(out, `seyra_app-${stamp}.sql`);
-  // Control/application database only; map stores are rebuildable from source + pipeline.
-  const r = await composeRuntime(l, ['exec', '-T', 'db', 'pg_dump', '-U', 'seyra_admin', '-d', 'seyra_app', '--no-owner'], { discardStdout: false });
-  const ws = createWriteStream(dump, { mode: 0o600 });
-  ws.end(r.stdout);
-  await run('tar', ['-C', l.home, '-czf', join(out, `state-${stamp}.tar.gz`), 'state']);
-  const manifests = readdirSync(l.releases).filter((n) => existsSync(join(l.releases, n, 'manifest.json')));
-  await run('tar', ['-C', l.releases, '-czf', join(out, `manifests-${stamp}.tar.gz`), ...manifests.map((n) => `${n}/manifest.json`)], { allowFailure: manifests.length === 0 });
-  log(`[backup] wrote ${dump} and state/manifest archives to ${out} (secrets and TLS keys are NOT included; back them up separately)`);
 }
 
 async function main(argv: string[]): Promise<number> {
@@ -150,8 +135,14 @@ async function main(argv: string[]): Promise<number> {
       return 0;
     case 'backup':
       // Under the lifecycle lock so the state/manifests are not captured mid-transition.
-      await withLifecycleLock(layout(), 'backup', null, () => backup(arg(rest, '--out') ?? join(layout().backups, 'latest')));
+      await withLifecycleLock(layout(), 'backup', null, () => backup(arg(rest, '--out') ?? join(layout().backups, 'latest'), { includeSources: rest.includes('--include-sources'), log }));
       return 0;
+    case 'restore': {
+      const from = arg(rest, '--from');
+      if (!from) throw new Error('--from DIR is required');
+      await withLifecycleLock(layout(), 'restore', null, () => restore(from, log));
+      return 0;
+    }
     case 'bundle': {
       const sub = rest[0];
       if (sub === 'export') {

@@ -67,7 +67,7 @@ vi.mock('./proc.js', async (importOriginal) => ({
 const { activate, prune, readPointers, readTransition, recover, rollback } = await import('./activate.js');
 const { runtimeEnv, writeRuntimeEnv } = await import('./compose.js');
 const { renderDbName } = await import('./db.js');
-const { LifecycleBusyError } = await import('./lifecycle-lock.js');
+const { LifecycleBusyError, readOwner, withLifecycleLock } = await import('./lifecycle-lock.js');
 const { DEFAULT_SETTINGS, ensureDirs, layout } = await import('./layout.js');
 const { lockedImages } = await import('./lock.js');
 const { DATA_COMPONENT_ROLES, MANIFEST_SCHEMA, readManifest, sha256File, sha256Text, treeDigest, writeManifest } = await import('./manifest.js');
@@ -345,5 +345,14 @@ describe('lifecycle exclusion (review R3)', () => {
     await recover(fast);
     expect(readTransition(l)).toBeNull();
     expect(sim.running).toBe('ds-a');
+  });
+
+  it('the first command on a fresh SEYRA_HOME (init, before state/ exists) can take the lock', async () => {
+    const fresh = join(home, 'fresh-home');
+    process.env.SEYRA_HOME = fresh;
+    const lf = layout();
+    expect(existsSync(lf.state)).toBe(false);
+    expect(await withLifecycleLock(lf, 'init', null, async () => readOwner(lf.lifecycleLock)?.op)).toBe('init');
+    expect(existsSync(lf.lifecycleLock)).toBe(false);
   });
 });

@@ -38,6 +38,8 @@ for ((i = 0; i < ${#args[@]}; i++)); do
       f="$(cd "$(dirname "${args[$((i + 1))]}")" && pwd)/$(basename "${args[$((i + 1))]}")"
       args[$((i + 1))]="$f"
       mounts+=(-v "$(dirname "$f"):$(dirname "$f"):ro") ;;
+    --from)
+      d="$(cd "${args[$((i + 1))]}" && pwd)"; args[$((i + 1))]="$d"; mounts+=(-v "$d:$d:ro") ;;
     --out)
       mkdir -p "${args[$((i + 1))]}"
       d="$(cd "${args[$((i + 1))]}" && pwd)"; args[$((i + 1))]="$d"; mounts+=(-v "$d:$d") ;;

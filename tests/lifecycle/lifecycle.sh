@@ -139,10 +139,98 @@ else
   result FAIL L6 "rc=$rc releases: $left"
 fi
 
-cp "$ev/.settings.bak" "$settings" && rm -f "$ev/.settings.bak"
+# ------------------------------------------------------------------ review R2: real command failures
+squatter="$repo/tests/lifecycle/port-squatter.mjs"
+node_bin="${NODE_BIN:-node}"
+wait_file() { for _ in $(seq 1 "${2:-600}"); do [ -e "$1" ] && return 0; sleep 0.2; done; return 1; }
+hist="$SEYRA_HOME/state/history.jsonl"
+
+# L7: the new proxy cannot publish 127.0.0.1:8443 (port taken right after the old proxy stops), so
+# `docker compose up` itself fails; the squatter lets go once the failure is journalled.
+before_l7="$(cat "$SEYRA_HOME/state/runtime.env" "$SEYRA_HOME/state/active/release.json" "$SEYRA_HOME/state/pointers.json" | sha256sum | cut -c1-16)"
+rm -f "$ev/.squat-ready"
+"$node_bin" "$squatter" 127.0.0.1 8443 "$ev/.squat-ready" "$hist" activation_failed > /dev/null 2>&1 &
+sq=$!
+"$cli" activate "$B" > "$ev/L7-compose-up-failure.log" 2>&1; rc=$?
+kill $sq 2>/dev/null; wait $sq 2>/dev/null
+after_l7="$(cat "$SEYRA_HOME/state/runtime.env" "$SEYRA_HOME/state/active/release.json" "$SEYRA_HOME/state/pointers.json" | sha256sum | cut -c1-16)"
+if [ $rc -ne 0 ] && grep -q "previous release $A restored and ready" "$ev/L7-compose-up-failure.log" && grep -qiE "address already in use|port is already allocated|bind" "$ev/L7-compose-up-failure.log" \
+   && [ "$(ready_ds)" = "$A" ] && [ "$(active)" = "$A" ] && [ ! -e "$SEYRA_HOME/state/transition.json" ] && [ ! -e "$SEYRA_HOME/state/flags/maintenance" ] && [ "$before_l7" = "$after_l7" ]; then
+  result PASS L7 "real compose-up failure (8443 taken) after the config switch: previous release $A restored, config/pointers byte-identical ($after_l7), no journal, ready"
+else
+  result FAIL L7 "rc=$rc ready=$(ready_ds) active=$(active) cfg $before_l7 -> $after_l7"
+fi
+
+# L8: the port stays taken, so recovery fails too: maintenance and the journal must remain, other
+# mutators must refuse, and `recover` must restore A once the cause is gone.
+rm -f "$ev/.squat-ready"
+"$node_bin" "$squatter" 127.0.0.1 8443 "$ev/.squat-ready" > /dev/null 2>&1 &
+sq=$!
+"$cli" activate "$B" > "$ev/L8-recovery-failure.log" 2>&1; rc=$?
+journal_kept=no; [ -e "$SEYRA_HOME/state/transition.json" ] && journal_kept=yes
+maint_kept=no; [ -e "$SEYRA_HOME/state/flags/maintenance" ] && maint_kept=yes
+"$cli" status > "$ev/L8-status.log" 2>&1
+"$cli" activate "$B" > "$ev/L8-activate-refused.log" 2>&1; rc_a=$?
+"$cli" prune > "$ev/L8-prune-refused.log" 2>&1; rc_p=$?
+"$cli" start > "$ev/L8-start-refused.log" 2>&1; rc_s=$?
+kill $sq 2>/dev/null; wait $sq 2>/dev/null
+"$cli" recover > "$ev/L8-recover.log" 2>&1; rc_r=$?
+if [ $rc -ne 0 ] && grep -q "AND restoring $A failed" "$ev/L8-recovery-failure.log" && [ $journal_kept = yes ] && [ $maint_kept = yes ] \
+   && grep -q "UNFINISHED activate" "$ev/L8-status.log" && [ $rc_a -ne 0 ] && [ $rc_p -ne 0 ] && [ $rc_s -ne 0 ] && grep -q "seyra-maps recover" "$ev/L8-activate-refused.log" \
+   && [ $rc_r -eq 0 ] && [ "$(ready_ds)" = "$A" ] && [ "$(active)" = "$A" ] && [ ! -e "$SEYRA_HOME/state/transition.json" ] && [ ! -e "$SEYRA_HOME/state/flags/maintenance" ]; then
+  result PASS L8 "recovery failure kept maintenance + journal and reported both errors; activate/prune/start refused; 'recover' restored $A after the cause was removed"
+else
+  result FAIL L8 "rc=$rc journal=$journal_kept maint=$maint_kept refusals=$rc_a/$rc_p/$rc_s recover=$rc_r ready=$(ready_ds)"
+fi
+
+# ------------------------------------------------------------------ review R3: real concurrent processes
+# L9: prune while an import is building: the live build must be protected and still complete.
+"$cli" import --pbf "$FIXTURE" --snapshot-timestamp "${SNAPSHOT_TS_L9:-2026-10-05T00:00:00Z}" > "$ev/L9-import.log" 2>&1 &
+imp=$!
+for _ in $(seq 1 600); do grep -q 'render-import' "$ev/L9-import.log" && break; sleep 0.5; done
+C="$(grep -o 'dataset_id ds-[0-9a-z-]*' "$ev/L9-import.log" | awk '{print $2}')"
+"$cli" prune > "$ev/L9-prune-during-import.log" 2>&1; rc_p=$?
+building_during="$(jq -r .status "$SEYRA_HOME/releases/$C/manifest.json" 2>/dev/null)"
+wait $imp; rc_i=$?
+if [ -n "$C" ] && [ $rc_p -eq 0 ] && grep -q "skipping $C: being built by the running import" "$ev/L9-prune-during-import.log" && [ "$building_during" = building ] \
+   && [ $rc_i -eq 0 ] && [ "$(jq -r .status "$SEYRA_HOME/releases/$C/manifest.json")" = validated ] && "$cli" verify-release "$C" > /dev/null 2>&1; then
+  result PASS L9 "prune during a live import skipped the building release $C; the import completed and $C verifies (render DB intact)"
+else
+  result FAIL L9 "C=$C prune=$rc_p during=$building_during import=$rc_i"
+fi
+
+# L10: prune while an activation is in flight is refused; the activation completes.
+"$cli" activate "$B" > "$ev/L10-activate.log" 2>&1 &
+act=$!
+wait_file "$SEYRA_HOME/state/flags/maintenance"
+"$cli" prune > "$ev/L10-prune-during-activation.log" 2>&1; rc_p=$?
+wait $act; rc_a=$?
+if [ $rc_p -ne 0 ] && grep -q "another lifecycle operation is running: activate $B" "$ev/L10-prune-during-activation.log" && [ $rc_a -eq 0 ] && [ "$(ready_ds)" = "$B" ] && [ -d "$SEYRA_HOME/releases/$A" ]; then
+  result PASS L10 "prune during the A -> B activation was refused (lifecycle lock); activation completed; nothing removed"
+else
+  result FAIL L10 "prune=$rc_p activate=$rc_a ready=$(ready_ds)"
+fi
+
+# L11: a second transition while one is running is refused (competing activation/rollback).
+"$cli" rollback > "$ev/L11-rollback.log" 2>&1 &
+rb=$!
+wait_file "$SEYRA_HOME/state/flags/maintenance"
+"$cli" activate "$B" > "$ev/L11-competing-activate.log" 2>&1; rc_c=$?
+wait $rb; rc_r=$?
+if [ $rc_c -ne 0 ] && grep -q "another lifecycle operation is running: rollback" "$ev/L11-competing-activate.log" && [ $rc_r -eq 0 ] && [ "$(ready_ds)" = "$A" ] && [ "$(active)" = "$A" ] && [ "$(previous)" = "$B" ]; then
+  result PASS L11 "activation competing with a running rollback was refused; rollback completed (active $A, previous $B)"
+else
+  result FAIL L11 "competing=$rc_c rollback=$rc_r ready=$(ready_ds) active=$(active) previous=$(previous)"
+fi
+
+# Ordinary post-transition pruning still works: C (validated, not active/previous) is removed.
+"$cli" prune > "$ev/L11-final-prune.log" 2>&1
+[ ! -d "$SEYRA_HOME/releases/$C" ] && result PASS L12 "post-transition prune removed $C and kept $A/$B" || result FAIL L12 "C still present"
+
+cp "$ev/.settings.bak" "$settings" && rm -f "$ev/.settings.bak" "$ev/.squat-ready"
 {
   echo "# Seyra lifecycle scenarios (AC06/AC07) — $(date -u +%FT%TZ)"
-  echo "# A=$A B=$B fixture=$(sha256sum "$FIXTURE" | cut -c1-16)"
+  echo "# A=$A B=$B C=${C:-} fixture=$(sha256sum "$FIXTURE" | cut -c1-16)"
   printf '%s\n' "${summary[@]}"
   echo "# failures: $fails"
 } > "$ev/summary.txt"

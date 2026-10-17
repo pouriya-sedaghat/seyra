@@ -1,6 +1,7 @@
 import { AsyncLocalStorage } from 'node:async_hooks';
-import { closeSync, existsSync, openSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { closeSync, existsSync, mkdirSync, openSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { hostname } from 'node:os';
+import { dirname } from 'node:path';
 import type { Layout } from './layout.js';
 import { run } from './proc.js';
 
@@ -101,6 +102,7 @@ export async function withLifecycleLock<T>(l: Layout, op: string, target: string
   if (holder.getStore()) return fn();
   const owner = newOwner(op, target);
   const deadline = Date.now() + (opts.waitMs ?? 0);
+  mkdirSync(dirname(l.lifecycleLock), { recursive: true, mode: 0o755 }); // `init` on a fresh SEYRA_HOME
   for (;;) {
     if (tryCreate(l.lifecycleLock, owner)) break;
     const current = readOwner(l.lifecycleLock);

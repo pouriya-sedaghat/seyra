@@ -104,7 +104,21 @@ seyra-maps activate <dataset_id>
    - Overpass: base version label.
 7. Clear maintenance and update the active/previous pointers.
 
-If the new release does not become ready within `readinessTimeoutS` (default 300 s), the previous configuration is restored and the command fails, reporting that the previous release is ready again (evidence L3).
+**Failure during activation.** Before step 2, `activate` saves the current `runtime.env` and `release.json` under `state/transition/` and writes a journal, `state/transition.json` (`from`, `to`, phase).
+
+If any later step fails, `activate` stops the API, restores the saved configuration, starts the stack again and waits for the previous release's identities. This covers a `docker compose up` error, a filesystem error, or the new release not reporting within `readinessTimeoutS` (default 300 s). On success it clears maintenance and fails with "previous release … restored and ready" (evidence L3, L7).
+
+If restoring the previous release also fails, the command reports both errors. The platform then **stays in maintenance**, and the journal and the saved configuration are kept (evidence L8). Fix the cause (for example a port held by another process), then run:
+
+```bash
+seyra-maps status     # shows "UNFINISHED activate <from> -> <to> … run: seyra-maps recover"
+seyra-maps recover
+```
+
+While a journal exists, `activate`, `rollback`, `prune` and `start` refuse to run. `recover` also covers a killed `activate` process:
+- If the pointers were already committed to the new release, it finishes that activation.
+- Otherwise it restores the previous release.
+- If this was a first activation with no previous release, it restores the saved configuration and leaves the platform in maintenance until a release is activated.
 
 This is **not** zero-downtime and not an atomic multi-service swap. *Fixture:* about 25 s of refused connections while the proxy restarts, then about 11 s of `503 MAINTENANCE`; about 42 s end to end.
 
@@ -119,6 +133,13 @@ seyra-maps verify-release <dataset_id>
 
 Releases are never pruned automatically.
 
+**Lifecycle lock.** Each state-changing command holds `state/lifecycle.lock` while it runs: `init`, `start`, `stop`, `activate`, `rollback`, `recover`, `prune`, `backup`, `restore`, and the set-up phase of `import`. A second such command fails at once with "another lifecycle operation is running: <op> <target> (started …)". Retry it when the first command has finished.
+
+A long `import` also holds a lease, `state/import.lock`, which names the release being built:
+- `prune` never removes that release or any release still `building` (evidence L9).
+- A lock or lease whose owner process or ops container no longer exists is treated as abandoned. The next command removes it, and an abandoned import is marked `failed` (evidence L2).
+- A lock whose owner's liveness cannot be determined is never removed automatically.
+
 ## 6. LAN access for shared testing
 
 Loopback is the default. LAN access needs an explicit allowlist and a certificate valid for the LAN name:
@@ -129,6 +150,10 @@ seyra-maps init --access lan --bind 10.20.0.15 --lan-cidrs 10.20.0.0/24 --server
 seyra-maps start
 ```
 
+Access settings are validated by `init` before anything is saved, again before every start, and independently by the proxy entrypoint:
+- **Loopback mode** requires a bind address in `127.0.0.0/8` and no CIDRs.
+- **LAN mode** requires a non-loopback bind address and at least one CIDR. Each CIDR must be a canonical IPv4 network (`10.20.0.0/24`, not `10.20.0.5/24`) with a prefix length of 8–32. Every allowlist ends in `deny all`.
+- Invalid settings are refused with the reason: `0.0.0.0` in loopback mode, `0.0.0.0/0`, malformed or out-of-range addresses. A hand-edited `runtime.env` that breaks these rules makes `start` refuse (evidence AC16.11–AC16.15).
 - LAN mode without CIDRs fails closed: the proxy refuses to start (evidence AC16.9).
 - Clients outside the CIDRs get 403 (evidence AC16.10).
 - Unknown Host names get 421.
@@ -138,25 +163,46 @@ seyra-maps start
 ## 7. Backup and restore
 
 ```bash
-seyra-maps backup --out /backup/seyra-$(date +%F)
+seyra-maps backup --out /backup/seyra-$(date +%F) [--include-sources]
 ```
 
 This writes:
-- a `pg_dump` of the control database `seyra_app`
-- `state-*.tar.gz` (pointers, settings, history, runtime config)
-- `manifests-*.tar.gz` (every release manifest)
+- `seyra_app-*.sql`: a `pg_dump` of the control database `seyra_app`.
+- `state-*.tar.gz`: pointers, settings, history and runtime config.
+- `manifests-*.tar.gz`: every release manifest.
+- With `--include-sources`, `sources/<dataset_id>.osm.pbf` and `.json`: the managed input copy of the active and previous releases, so a restore does not depend on finding the owner's original files. These are large.
 
-Secrets and TLS keys are **not** included; back up `$SEYRA_HOME/secrets` separately, under your key-handling policy. Map stores are not backed up: they are rebuilt from the managed source copy in `releases/<id>/source/` plus the locked images.
+**Secrets and TLS keys are never included.** Back up `$SEYRA_HOME/secrets` separately (`cp -a`, preserving owners and modes), under your key-handling policy. The database role passwords in a restored host must match the dump's host, so the secrets backup is part of every restore.
 
-Restore on a fresh host:
-1. Install from the bundle and run `init`.
-2. Restore `secrets/`.
-3. Restore `state/` from the archive.
-4. Restore the control database: `docker compose -p seyra exec -T db psql -U seyra_admin -d seyra_app < seyra_app-*.sql`.
-5. Re-import the active release's source with the same snapshot timestamp. The same inputs and images give the same `dataset_id`.
-6. Activate it.
+Map stores are not backed up. They are rebuilt from the original input and the locked images; identical inputs and images reproduce the same `dataset_id`.
 
-*Not yet exercised end to end; see `docs/TEST_RESULTS.md`.*
+**Restore on a fresh host** (order matters):
+
+```bash
+# 1. install from the bundle (section 2): copy install/, bootstrap-load, verify-images
+# 2. secrets first, so init creates the DB roles with the backed-up passwords
+#    (and the existing TLS CA/certificate stay valid for clients):
+mkdir -p "$SEYRA_HOME" && cp -a /backup/secrets "$SEYRA_HOME/secrets"
+# 3. init: directories, networks, DB roles from the restored secrets, schema
+seyra-maps init
+# 4. restore: replaces the freshly initialised control DB with the dump,
+#    re-applies grants/migrations, restores settings and history,
+#    prints the re-import commands for the backed-up active and previous releases
+seyra-maps restore --from /backup/seyra-YYYY-MM-DD
+# 5. run the printed imports (previous first, then active); each must report the backed-up dataset_id
+seyra-maps import --pbf /backup/seyra-YYYY-MM-DD/sources/<previous>.osm.pbf [--snapshot-timestamp …]
+seyra-maps import --pbf /backup/seyra-YYYY-MM-DD/sources/<active>.osm.pbf  [--snapshot-timestamp …]
+# 6. activate previous, then active (restores the active/previous pair)
+seyra-maps activate <previous> && seyra-maps activate <active>
+```
+
+Notes on `restore`:
+- It refuses on a host that already serves a release.
+- It refuses before changing anything if a secret is missing or the backed-up settings violate the access rules (section 6).
+- It does not restore the release pointers, because the map stores do not exist until step 5.
+- Without `--include-sources`, it prints the source file name and sha256 to look for; rebuild from the owner's original input with that checksum.
+
+The isolated drill `tests/offline/restore-drill.sh` follows these steps from one offline host to a second, empty one; see `docs/TEST_RESULTS.md`. Install and rollback are not restore tests.
 
 ## 8. Updating software (new bundle)
 
