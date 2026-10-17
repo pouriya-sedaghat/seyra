@@ -1,11 +1,11 @@
 {
   "schema": "seyra.dependencies-lock/1",
-  "generated_at": "2026-10-14T13:30:51.801Z",
+  "generated_at": "2026-10-17T08:08:17.883Z",
   "generated_by": "infra/prepare/write-lock.mjs",
   "status": "LOCKED (preparation build verified); runtime/acceptance evidence is in docs/TEST_RESULTS.md",
   "preparation_environment": {
     "host_os": "Ubuntu 24.04.5 LTS",
-    "kernel": "Linux 6.18.44-fc-v114",
+    "kernel": "Linux 6.18.44-fc-v139",
     "arch": "x86_64",
     "docker": "client 29.8.2 / server 29.8.2",
     "compose": "5.6.0",
@@ -156,12 +156,12 @@
     "api": {
       "role": "API",
       "ref": "seyra/api:1.0.0-seyra1",
-      "image_id": "sha256:4767b7b908361e7d34740a555307360b091543a3cfe8e154f5ffcf65ad0678c2",
+      "image_id": "sha256:55844f00176edab3d979a1dcb2f5991bbe798cd0644da1fe3c131dfa0e528861",
       "repo_digests": [
-        "seyra/api@sha256:4767b7b908361e7d34740a555307360b091543a3cfe8e154f5ffcf65ad0678c2"
+        "seyra/api@sha256:55844f00176edab3d979a1dcb2f5991bbe798cd0644da1fe3c131dfa0e528861"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T12:35:26.139823722Z",
+      "created": "2026-10-17T07:48:51.292460176Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/api/Dockerfile",
       "dockerfile_sha256": "9bd23045fdbd035d909920dbf0bbd83984798c1a0dcd6c572d6747c69d0063d6",
@@ -183,12 +183,12 @@
     "proxy": {
       "role": "PROXY",
       "ref": "seyra/proxy:1.0.0-seyra1",
-      "image_id": "sha256:a354b8f6773791146a729a070a257586abf2d5a57ae22bc000c1e04f2a3ae89d",
+      "image_id": "sha256:4cc83237dfb6cec361e79ba6cd55813439c5fd191c09461c1bf4f9d52c042fc8",
       "repo_digests": [
-        "seyra/proxy@sha256:a354b8f6773791146a729a070a257586abf2d5a57ae22bc000c1e04f2a3ae89d"
+        "seyra/proxy@sha256:4cc83237dfb6cec361e79ba6cd55813439c5fd191c09461c1bf4f9d52c042fc8"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T13:30:40.850138081Z",
+      "created": "2026-10-17T07:48:53.644282368Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/proxy/Dockerfile",
       "dockerfile_sha256": "51242be8cb174bc964564e2b6df6c9789589c1826e20b8036631599a057b25a7",
@@ -268,12 +268,12 @@
     "ops": {
       "role": "OPS",
       "ref": "seyra/ops:1.0.0-seyra1",
-      "image_id": "sha256:34a78c9ac761c57130c54ddbca84e69ccb5574af05fd8d9612f8bed46e907daa",
+      "image_id": "sha256:18ea8ed0724a62ae2a6bea45f76a028644eb83091eafee8a934d88404a37704f",
       "repo_digests": [
-        "seyra/ops@sha256:34a78c9ac761c57130c54ddbca84e69ccb5574af05fd8d9612f8bed46e907daa"
+        "seyra/ops@sha256:18ea8ed0724a62ae2a6bea45f76a028644eb83091eafee8a934d88404a37704f"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T13:20:41.087634907Z",
+      "created": "2026-10-17T08:08:05.134010627Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/ops/Dockerfile",
       "dockerfile_sha256": "3337da8a4d1d8bd2af7215d88e0c06cd51f1cf501c85b2aeb944d5b53734b4f5",
