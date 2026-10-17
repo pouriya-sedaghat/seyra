@@ -1,0 +1,39 @@
+{
+  "reviewed_commit": "d8d08afa7316ba33740932d8f129b8c5ae0f4e2c",
+  "checks": [
+    {
+      "id": "R1",
+      "reproduced": true,
+      "accepted_mode": "loopback",
+      "accepted_bind": "0.0.0.0",
+      "allowlist": ""
+    },
+    {
+      "id": "R2",
+      "reproduced": true,
+      "active_descriptor": "ds-b",
+      "pointer": "ds-a",
+      "maintenance": true,
+      "recovery_up_calls": 0
+    },
+    {
+      "id": "R3",
+      "reproduced": true,
+      "pruned": [
+        "ds-building"
+      ],
+      "import_lock_present": true,
+      "render_db_drop_issued": true
+    },
+    {
+      "id": "R4",
+      "reproduced": true,
+      "admitted_before_initial_probe": true,
+      "provider_status": "unavailable",
+      "admitted_after_failed_probe": true
+    }
+  ],
+  "recorded_at": "2026-10-17",
+  "node_version": "24.19.0",
+  "method": "actual checked TypeScript control flow; Docker/SQL/image/checksum effects stubbed in isolated filesystem fixtures; not a deployed-stack rerun"
+}
