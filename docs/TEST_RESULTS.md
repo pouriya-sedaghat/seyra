@@ -1,6 +1,8 @@
 # Seyra Map Services — test results (phase 1)
 
-**Current record: 2026-10-17**, for the corrections to the PR #1 review of `d8d08af` (findings R1–R4), on branch `feat/map-services-v1` (base `a3460fcb2fed0340796f216fc9081d7e1b132fe3`). Commit under test: `c5c6f3f`, i.e. code `c2b1883` plus the relocked images. The 2026-10-14 results for `d8d08af` are historical. Every suite below was re-run on the corrected commit and the image identities listed here, unless a row says otherwise.
+**Current record: 2026-10-17, second round**, for the follow-up review of `d967a00` (remaining findings: R3 stale-lock reclamation, R5 backup generations), on branch `feat/map-services-v1` (base `a3460fcb2fed0340796f216fc9081d7e1b132fe3`).
+- Commit under test: `31961e1`, i.e. code `419bccc` plus the relocked ops image.
+- The first-round record (corrections R1–R4 at `c5c6f3f`) is kept where it was not re-run, and is marked as such. The 2026-10-14 results for `d8d08af` are historical.
 
 **Environment:** a cloud preparation container.
 - Ubuntu 24.04.5 LTS, kernel 6.18.44, x86_64, 4 vCPU, 15 GiB RAM.
@@ -14,22 +16,33 @@ Status words: PASS / FAIL / NOT RUN / BLOCKED. Evidence files are under `docs/ev
 
 **Image identities used for these runs** (`infra/dependencies.lock.json`, local content-addressed IDs; no registry digest is claimed for custom images):
 
-| Role | Reference | Image ID | Changed by the corrections |
+| Role | Reference | Image ID | Last changed |
 | --- | --- | --- | --- |
-| API | `seyra/api:1.0.0-seyra1` | `sha256:55844f00176edab3d979a1dcb2f5991bbe798cd0644da1fe3c131dfa0e528861` | yes (R4); built from `327aca4` |
-| PROXY | `seyra/proxy:1.0.0-seyra1` | `sha256:4cc83237dfb6cec361e79ba6cd55813439c5fd191c09461c1bf4f9d52c042fc8` | yes (R1); built from `327aca4` |
-| OPS | `seyra/ops:1.0.0-seyra1` | `sha256:18ea8ed0724a62ae2a6bea45f76a028644eb83091eafee8a934d88404a37704f` | yes (R1–R3, restore, ingress check); built from `c2b1883` |
-| DB | `postgis/postgis:17-3.5` | `sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6` | no |
-| TEGOLA | `seyra/tegola:0.21.2-seyra1` | `sha256:28934a38499e5a1f58f54634f5a4fc340af623fee3cb9df2333902214c5f0370` | no |
-| VALHALLA | `seyra/valhalla:3.9.1-seyra1` | `sha256:58448d47eaef78b09877d651ef3c4ae24344707f6896659b71f32a44fa105204` | no |
-| PHOTON | `seyra/photon:1.3.0-seyra1` | `sha256:2f6c0e27a9410f2107bb84f40bd89ebe04f2d1a59e17b97968c2d99b85639f2c` | no |
-| OVERPASS | `seyra/overpass:0.7.62.4-seyra1` | `sha256:e0c93b85d690a7337fbb02440da1a2959c467c225c300b04656c2f90620363a3` | no |
-| OSMTOOLS | `seyra/osmtools:2.3.1-1.19.1-seyra1` | `sha256:48e8fdfe6685e25008956ed238bb7d13b76046aa0ddf8e2a610ce56b16ca3e2f` | no |
-| GEOCODER_BUILD | `seyra/geocoder-build:5.3.2-1.3.0-seyra1` | `sha256:7c3a11c1e76b4768610eaab7df23a7620deb01df349bcaa7776f7c302892db86` | no |
+| API | `seyra/api:1.0.0-seyra1` | `sha256:55844f00176edab3d979a1dcb2f5991bbe798cd0644da1fe3c131dfa0e528861` | round 1 (R4); built from `327aca4` |
+| PROXY | `seyra/proxy:1.0.0-seyra1` | `sha256:4cc83237dfb6cec361e79ba6cd55813439c5fd191c09461c1bf4f9d52c042fc8` | round 1 (R1); built from `327aca4` |
+| OPS | `seyra/ops:1.0.0-seyra1` | `sha256:6da5438553a1ae1df54ab42609c283ee1154d2c80f459af64d2048b02e7e5daf` | **round 2** (R3 kernel-flock lock, R5 backup generations); built from `419bccc`. Round 1: `sha256:18ea8ed0…704f` |
+| DB | `postgis/postgis:17-3.5` | `sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6` | unchanged |
+| TEGOLA | `seyra/tegola:0.21.2-seyra1` | `sha256:28934a38499e5a1f58f54634f5a4fc340af623fee3cb9df2333902214c5f0370` | unchanged |
+| VALHALLA | `seyra/valhalla:3.9.1-seyra1` | `sha256:58448d47eaef78b09877d651ef3c4ae24344707f6896659b71f32a44fa105204` | unchanged |
+| PHOTON | `seyra/photon:1.3.0-seyra1` | `sha256:2f6c0e27a9410f2107bb84f40bd89ebe04f2d1a59e17b97968c2d99b85639f2c` | unchanged |
+| OVERPASS | `seyra/overpass:0.7.62.4-seyra1` | `sha256:e0c93b85d690a7337fbb02440da1a2959c467c225c300b04656c2f90620363a3` | unchanged |
+| OSMTOOLS | `seyra/osmtools:2.3.1-1.19.1-seyra1` | `sha256:48e8fdfe6685e25008956ed238bb7d13b76046aa0ddf8e2a610ce56b16ca3e2f` | unchanged |
+| GEOCODER_BUILD | `seyra/geocoder-build:5.3.2-1.3.0-seyra1` | `sha256:7c3a11c1e76b4768610eaab7df23a7620deb01df349bcaa7776f7c302892db86` | unchanged |
 
 The data-component images did not change, so the existing releases and dataset IDs remain valid.
 
-## PR #1 review corrections (review of `d8d08af`, R1–R4)
+## PR #1 follow-up (review of `d967a00`): R3 stale-lock reclamation, R5 backup generations
+
+Both findings were first reproduced on `d967a00` with the reviewer's harness (`docs/reviews/verify-pr1-d967a00.mjs` on the review branch) under Node 24.21.0: `R3-stale-reclaim: FAIL` and `R5-backup-set: FAIL` (`docs/evidence/pr1-followup/reviewer-harness-prefix-d967a00.json`). Desired-behaviour regressions were then added to the project's test suites. They were run against the unfixed code, where they fail, and against the fix, where they pass. That evidence is in `docs/evidence/pr1-followup/`.
+
+| Finding | Correction | Regression: before the fix (`d967a00`) | Regression: after the fix | Real-process / real-host evidence (rebuilt image) |
+| --- | --- | --- | --- | --- |
+| **R3** (P1): two commands recovering a crashed owner's lock could interleave so that one unlinked the other's live lock and both entered | `207ef32`. `state/lifecycle.lock` is an exclusive kernel `flock(2)` on the command's own open file description. util-linux `flock` (already in the pinned Ubuntu base) locks the inherited descriptor and exits. The kernel releases the lock when the process or ops container ends, so nothing is ever reclaimed or unlinked. The file only carries the owner record; a leftover record plus an unfinished transition still admits only `recover`. Each acquisition verifies the filesystem enforces `flock`. Re-entrancy, bounded waits and fresh-home `init` are unchanged; `status` reports held vs leftover. | `lock-race.test.ts`: the reviewed interleaving (two real OS processes; one paused just before its unlink while the other recovers) **FAILS**: "processes inside the critical section at once: inside-a, inside-b". 4 property tests pass. (`R3-race-test-prefix.txt`) | **5/5 PASS, 10/10 repeats**: at most one process inside, holder's record intact; live contention fail-fast + bounded wait; SIGKILLed holder releases; crashed owner + transition admits only `recover`. `lifecycle.test.ts` (16) uses real `flock` holders. (`R3-race-test-postfix.txt`) | Lifecycle **L13**: an `activate`'s ops container killed while holding the lock mid-transition; `recover`, `prune` and `activate` started together in separate containers; only `recover` ran, the other two were refused, A served again. **L14**: a `stop`'s container killed holding the lock; `start` took over, `prune` refused as busy. Owner records sampled every 0.1 s (`lifecycle/L13-owners.txt`, `L14-owners.txt`). L9–L11 (live import, activation, rollback contention) still pass. |
+| **R5** (P2): restore picked the newest SQL, state and manifest files independently and could mix an interrupted backup's SQL with an older backup's state | `a946dc1`. Each backup is one generation, assembled in `.seyra-backup-…partial`. `backup-manifest.json` (role, size and SHA-256 of every file; pointers; release/source identities) is written last, the data is fsynced, and the generation is published by atomic rename. Restore selects exactly one published generation (the newest, `--generation`, or the directory given) and states its choice. It verifies the whole generation before any database change. The old flat layout is refused. | `restore.test.ts`: **10 of 16 FAIL**, including both reviewed cases for the reviewed reason: after an interrupted second backup, the old restore replayed **generation 2's SQL** with generation 1's state; the reviewed flat layout was accepted. Also SQL corruption/truncation, missing manifests and missing/corrupted included sources were accepted. (`R5-restore-test-prefix.txt`) | **18/18 PASS, 5/5 repeats**. Interrupted (failed and killed) backups are never mixed. The flat layout is refused. 11 damage cases are each refused with their specific reason and **zero Docker/SQL calls**. With several generations, the newest is named and `--generation` is honoured. (`R5-restore-test-postfix.txt`) | Restore drill **R2, R4a, R4** (two fresh offline hosts): two real generations plus an interrupted attempt holding a newer real dump with an extra row. A damaged copy was refused with the control DB still empty. Restore selected the newest complete generation, ignored the attempt, and its row stayed absent. R5/R6 rebuilt, served and verified as before. |
+
+The reviewer harness, run unmodified against the fix, passes its R1, R2, R2-ingress, R3-live-import and R4 checks. It then stops at its R3 pre-fix reproduction, because the paused read-then-unlink step no longer exists. That exit code is expected; see `reviewer-harness-postfix.txt`.
+
+## PR #1 review corrections, round 1 (review of `d8d08af`, R1–R4)
 
 The review's reproduction harness asserts the pre-fix defects, so it cannot pass against the corrected code. As the review instructs, each case was turned into a desired-behaviour test in the project. Each finding was first reproduced on `d8d08af` with Node 24.21.0.
 
@@ -51,13 +64,13 @@ The review's reproduction harness asserts the pre-fix defects, so it cannot pass
 
 | ID | Result | Evidence | Notes |
 | --- | --- | --- | --- |
-| AC01 | PASS | unit runs below; `npm run typecheck`, `npm run build` | 127 unit/contract tests (contracts 12, map-assets 6, api 46, ops 63), including the R1–R4 regressions. Serving code has no fixture/mock substitution; mocks exist only in unit tests. |
+| AC01 | PASS | unit runs below; `npm run typecheck`, `npm run build` | 146 unit/contract tests (contracts 12, map-assets 6, api 46, ops 82), including the R1–R5 regressions. Serving code has no fixture/mock substitution; mocks exist only in unit tests. |
 | AC02 | PASS | `infra/compose/runtime.yml`, lock, lifecycle and offline logs | All four providers start unconditionally; no profiles or toggles; `pull_policy: never`, no `build:` sections. `verify-images`, `import`, `activate` and `start` fail early on a missing or mismatched image. |
-| AC03 | PASS (simulated offline host) | `docs/evidence/offline/`, `docs/evidence/restore/` | Install, import, start/restart, update and rollback on a fresh, network-isolated Docker daemon with zero outbound packets (O0–O5, new bundle). Fresh-host backup restore drill R1–R7, also with zero outbound packets. Target-hardware repetition pending. |
+| AC03 | PASS (simulated offline host) | `docs/evidence/offline/`, `docs/evidence/restore/` | Install, import, start/restart, update and rollback on a fresh, network-isolated Docker daemon with zero outbound packets (O0–O5, new bundle). Fresh-host restore drill with backup generations (R1–R7, R4a), also with zero outbound packets. Target-hardware repetition pending. |
 | AC04 | PASS | `security/external-urls.txt`, browser `report.json`, `tiles.it.test.ts` | Static inventory of every URL in the built web client, the release styles/TileJSON, proxy and provider configs, compose files and entrypoints: 0 unclassified. The only external strings are XML namespaces, library error/doc links and MapLibre's `maplibre.invalid` parsing base. Runtime request audit: 0 external requests. Provider remote fetches are disabled at build: Valhalla without HTTP fetch or elevation/timezone downloads, Tegola without viewer or cloud caches, Overpass without clone/replication/areas, Photon/Nominatim offline import. |
 | AC05 | PASS | lifecycle L3–L5, `check-ingress-roles.sh`, unit tests | Same `dataset_id` in manifest, Tegola map name, Valhalla tileset timestamp, Photon marker and Overpass label. Mismatch or missing provider means not ready (L3). Requests with another `dataset_id` get 409, and tiles for another dataset get 404 `DATASET_MISMATCH`. |
-| AC06 | PASS | `lifecycle/summary.txt` L1, L2, L9, L12 | Corrupt and truncated inputs are refused at `source-validate`. A killed import is recovered. A live import is protected from a concurrent prune (R3). The active release's artifact fingerprint is unchanged in every case. Build jobs mount only the new release directory. |
-| AC07 | PASS | lifecycle L3–L8, L10, L11 | Provider-start failure (L3), a real `compose up` failure (L7) and a failed recovery finished by `recover` (L8) all end on the previous release, verified through the real ingress (R2). Concurrent mutators are refused (R3). Measured not-ready windows are below. Not zero-downtime, not atomic. |
+| AC06 | PASS | `lifecycle/summary.txt` L1, L2, L9, L12–L14 | Corrupt and truncated inputs are refused at `source-validate`. A killed import is recovered. A live import is protected from a concurrent prune (R3). Killed lock holders never block or break exclusion (L13/L14). The active release's artifact fingerprint is unchanged in every case. Build jobs mount only the new release directory. |
+| AC07 | PASS | lifecycle L3–L8, L10, L11, L13 | Provider-start failure (L3), a real `compose up` failure (L7), a failed recovery finished by `recover` (L8), and an activation whose container was killed holding the lock (L13) all end on the previous release, verified through the real ingress. Concurrent mutators are refused (R3). Not zero-downtime, not atomic. |
 | AC08 | PASS | `integration/tiles-catalog.json`, `tiles.it.test.ts` | Independent MVT decode (`@mapbox/vector-tile` 3.0.0) checks every family's geometry type, OSM identity, tag mappings, exclusions, generic-icon value, label fallback and zoom rules. Features are deduplicated across tiles, not summed. |
 | AC09 | PASS (visual review by the implementer) | `browser/*.jpg`, `report.json` | Chromium checks of light/dark × fa/en: Yeh/Kaf, lam-alef, Persian digits, ZWNJ and the Persian comma render with local fonts; no RTL plugin; 0 external requests; 0 console errors. |
 | AC10 | PASS | `integration/routing.json` | All 24 supported cells (3 profiles × 2 objectives × 4 shapes). 13 typed rejections. Fixture checks for motorcycle=no, one-way, footway, motor_vehicle=no and the island. |
@@ -74,26 +87,27 @@ The review's reproduction harness asserts the pre-fix defects, so it cannot pass
 
 ## Unit and contract tests (AC01)
 
-On `c5c6f3f`:
+On `31961e1`:
 
 ```
 npm run typecheck   → OK (all workspaces, TypeScript 6.0.3 strict)
 npm run build       → OK
 packages/contracts  Tests 12 passed     packages/map-assets Tests 6 passed (style-spec validation of all 4 styles)
-apps/api            Tests 46 passed     apps/ops            Tests 63 passed
+apps/api            Tests 46 passed     apps/ops            Tests 82 passed
 ```
 
-That is 127 tests in total, up from 69 at `d8d08af`. The new regressions:
+That is 146 tests in total: 127 in round 1, and 69 at `d8d08af`. Regression files:
 - `apps/api/src/gate.test.ts` (R4, 9 tests)
 - `apps/ops/src/access.test.ts` (R1, 29 tests)
-- `apps/ops/src/lifecycle.test.ts` (R2/R3, 16 tests: the real activate/recover/rollback/prune/lock code on a real temporary `SEYRA_HOME`, with only the Docker/SQL boundary simulated and real second OS processes as lock owners)
-- `apps/ops/src/restore.test.ts` (fresh-host restore, 4 tests)
+- `apps/ops/src/lifecycle.test.ts` (R2/R3, 16 tests: the real activate/recover/rollback/prune/lock code on a real temporary `SEYRA_HOME`, with only the Docker/SQL boundary simulated and real OS processes as lock holders)
+- `apps/ops/src/lock-race.test.ts` (R3 follow-up, 5 tests: two real OS processes running the real lock module, test/lock-worker.mjs)
+- `apps/ops/src/restore.test.ts` (R5, 18 tests: the real backup()/restore() with real tar on temporary hosts)
 
-The R2/R3 and R4 files were also repeated 3 and 5 times with no flaky result.
+Repeat runs were all green: R2/R3 3 times, R4 5 times, `lock-race` 10 times and `restore` 5 times.
 
 ## Real-provider integration suite
 
-`tests/integration` (vitest 5.0.4) runs against the running stack through `https://127.0.0.1:8443`, trusting the generated CA. Run on `c5c6f3f` with the images above: **5 files, 137 tests passed**:
+`tests/integration` (vitest 5.0.4) runs against the running stack through `https://127.0.0.1:8443`, trusting the generated CA. Re-run on `31961e1` with the images above: **5 files, 137 tests passed** (also 137/137 in round 1):
 
 | File | Tests |
 | --- | --- |
@@ -138,10 +152,10 @@ Below rank 1: «خیابان شمالی آزمایشی» (ZWNJ in the data, spac
 
 ## Lifecycle (AC06/AC07) — `tests/lifecycle/lifecycle.sh`
 
-Run on `c5c6f3f` with the images above, real providers and real concurrent CLI processes: **12/12 PASS**. Releases: A = `ds-20261001-681455d56afb`, B = `ds-20261006-681455d56afb`, C = `ds-20261007-681455d56afb`. Evidence: `docs/evidence/lifecycle/`.
+Run on `31961e1` with the images above, real providers and real concurrent CLI processes, each in its own ops container: **14/14 PASS**. Releases: A = `ds-20261001-681455d56afb`, B = `ds-20261008-681455d56afb`, C = `ds-20261009-681455d56afb`. Evidence: `docs/evidence/lifecycle/`.
 
 ```bash
-SEYRA_HOME=… FIXTURE=…/synthetic-v1.osm.pbf SNAPSHOT_TS=2026-10-06T00:00:00Z SNAPSHOT_TS_L9=2026-10-07T00:00:00Z \
+SEYRA_HOME=… FIXTURE=…/synthetic-v1.osm.pbf SNAPSHOT_TS=2026-10-08T00:00:00Z SNAPSHOT_TS_L9=2026-10-09T00:00:00Z \
   NODE_BIN=…/node tests/lifecycle/lifecycle.sh    # run from a copy; it must not be edited while running
 ```
 
@@ -149,22 +163,24 @@ SEYRA_HOME=… FIXTURE=…/synthetic-v1.osm.pbf SNAPSHOT_TS=2026-10-06T00:00:00Z
 | --- | --- | --- |
 | L1 truncated PBF / random bytes | PASS / PASS | Refused at `source-validate`; active release byte-identical and ready. |
 | L2 import killed during geocoder-build | PASS | The next import recovers the lease, stops 1 orphaned job, replaces the failed build and validates it; A stays ready. |
-| L3 Photon cannot open its index during A→B | PASS | Detected (readiness timeout 90 s for the test); previous release restored, all four providers ready; **124.5 s not ready**. |
-| L4 activation A→B | PASS | **35.0 s not ready** (connection refused while the proxy restarts, then maintenance 503). |
-| L5 rollback B→A | PASS | **35.5 s not ready**; providers report A's four identities. |
+| L3 Photon cannot open its index during A→B | PASS | Detected (readiness timeout 90 s for the test); previous release restored, all four providers ready; **130.0 s not ready**. |
+| L4 activation A→B | PASS | **35.5 s not ready** (connection refused while the proxy restarts, then maintenance 503). |
+| L5 rollback B→A | PASS | **35.0 s not ready**; providers report A's four identities. |
 | L6 prune | PASS | Exactly active + previous remain. |
 | L7 real `compose up` failure (R2) | PASS | `tests/lifecycle/port-squatter.mjs` binds 127.0.0.1:8443 the moment the old proxy stops, so Docker fails to publish the new proxy (`address already in use`). It releases the port once the failure is journalled. A restored; `runtime.env`, `release.json` and pointers byte-identical; no journal, no maintenance; ready. |
-| L8 recovery failure (R2) | PASS | The port stays taken, so restoring A fails too. Both errors are reported, and maintenance plus the journal stay; `status` shows `UNFINISHED activate`; `activate`, `prune` and `start` refuse. After the squatter exits, `recover` restored A. Docker had left the proxy running with its port reported as `:0`; `recover` detected and recreated it (`[ingress] … recreating it`), and A answers through the real ingress. |
-| L9 prune during a live import (R3) | PASS | Prune skipped C ("being built by the running import"); the import completed; `verify-release C` passes (render DB intact). |
-| L10 prune during an activation (R3) | PASS | Refused with "another lifecycle operation is running: activate B"; the activation completed; nothing removed. |
-| L11 activate during a rollback (R3) | PASS | Refused with "…running: rollback"; the rollback completed (active A, previous B). |
+| L8 recovery failure (R2) | PASS | The port stays taken, so restoring A fails too. Both errors are reported, and maintenance plus the journal stay; `activate`, `prune` and `start` refuse. After the squatter exits, `recover` restored A and recreated the proxy Docker had left without its port (`[ingress] … recreating it`); A answers through the real ingress. |
+| L9 prune during a live import (R3) | PASS | Prune skipped C ("being built by the running import"); the import completed; `verify-release C` passes. |
+| L10 prune during an activation (R3) | PASS | Refused ("another lifecycle operation is running: activate B"); the activation completed; nothing removed. |
+| L11 activate during a rollback (R3) | PASS | Refused ("…running: rollback"); the rollback completed (active A, previous B). |
 | L12 prune after the transitions | PASS | C removed; A and B kept. |
+| L13 lock holder killed mid-transition, then racing mutators (R3 follow-up) | PASS | The ops container of `activate B` (`eb6f7a182a70`) was killed while holding the lock, journal written. `status` then showed the lock free with only a leftover record, plus `UNFINISHED activate`. `recover`, `prune` and `activate B` were started together in separate containers. `recover` took the lock; `prune` and `activate` were both refused with "another lifecycle operation is running: recover". A served again, B was kept, journal and maintenance were cleared, no owner remained. Owner sequence: `activate` (killed) → `recover` → none. |
+| L14 lock holder killed without a transition, then racing mutators (R3 follow-up) | PASS | The ops container of `stop` (`3f2efb010c78`) was killed while holding the lock. `start` and `prune` started together: `start` took the lock, `prune` was refused as busy. A was ready after `start`, with no owner left. Owner sequence: `stop` (killed) → `start` → none → `start` (final) → none. |
 
-The first full run on the corrected code passed 11 of 12. L8 failed because of the unpublished-ingress defect described above. It was fixed in `c2b1883`, and the run above is on the fixed images.
+The real-process cases can only show the interleavings that actually occurred. In L13, `recover` happened to win. The other order, where a mutator takes the lock first and is refused with "ended without finishing; run: seyra-maps recover", is covered deterministically by `lock-race.test.ts` and `lifecycle.test.ts`.
 
 ## Security (AC16/AC17) — `tests/security/check-ingress-roles.sh`
 
-On `c5c6f3f`: **28 checks PASS, 0 FAIL**, plus one recorded NOTE (AC16.3b, host-local bridge reachability). See `docs/evidence/security/checks.txt`.
+Re-run on `31961e1` (its AC16.14/AC16.15 checks run the rebuilt ops CLI): **28 checks PASS, 0 FAIL**, plus one recorded NOTE (AC16.3b, host-local bridge reachability). See `docs/evidence/security/checks.txt`.
 
 New for R1 (real proxy image; a throw-away proxy on 127.0.0.1:18443; the real CLI):
 
@@ -182,7 +198,7 @@ New for R1 (real proxy image; a throw-away proxy on 127.0.0.1:18443; the real CL
 
 Playwright 1.56.1 with the preinstalled Chromium; `--no-proxy-server`. Certificate errors are ignored in the headless profile; the chain itself is verified in AC16.6.
 
-Re-run on `c5c6f3f`: 62 requests, all to `https://127.0.0.1:8443`. 0 external, 0 RTL-plugin, 0 failed, 0 console errors (PASS). The 2026-10-14 run made 64 requests; the count depends on how many tiles the screenshot viewports load. Persian text uses the local Vazirmatn woff2 `font-faces`; Latin uses SDF PBF range 0-255.
+**Not re-run in round 2**: the API, proxy and web-client images and sources are unchanged since `c5c6f3f`, and the browser audit exercises only those and the providers. Round-1 result on `c5c6f3f`: 62 requests, all to `https://127.0.0.1:8443`. 0 external, 0 RTL-plugin, 0 failed, 0 console errors (PASS). The 2026-10-14 run made 64 requests; the count depends on how many tiles the screenshot viewports load. Persian text uses the local Vazirmatn woff2 `font-faces`; Latin uses SDF PBF range 0-255.
 
 Screenshots:
 - `search-light-fa`: Persian search, original Arabic-letter result text, ZWNJ «یک‌طرفه», Persian digit «۳».
@@ -195,7 +211,7 @@ Observations:
 
 ## Offline host (AC03/AC18) — `tests/offline/`
 
-**Bundle (re-exported from `c5c6f3f`):** `bundle export` produced 10 image archives (1.3 GB in total) and 17 install files in 2 min 9 s. SHA256SUMS digest: `ea9c2a1090bcd2f8fb40a0f6bc51657dbcfcd2194a6b233504a1f66ab45dcfd1`. The previous bundle (digest `4241264e…`) is superseded.
+**Bundle (re-exported from `31961e1`):** `bundle export` produced 10 image archives (1.3 GB in total) and 17 install files in 1 min 7 s. SHA256SUMS digest: `5cf828a9f17a3b35a696b2b60be65ca91f80ece2b1cd48d993a4b44b85fab205`. It includes the new OPS image `6da54385…` and the updated install files. The round-1 bundle (`ea9c2a10…`) and the 2026-10-14 bundle (`4241264e…`) are superseded.
 
 Tamper checks (`tests/offline/bundle-tamper.sh`, `docs/evidence/offline/tamper.txt`):
 
@@ -219,7 +235,7 @@ Tamper checks (`tests/offline/bundle-tamper.sh`, `docs/evidence/offline/tamper.t
 | --- | --- |
 | O0 isolation | PASS: 0 images; `example.com` unreachable (DNS SERVFAIL) |
 | O1 `bootstrap-load` | PASS: checksums verified; 10 images loaded; every reference resolves to its locked image ID (`verify-images` all OK) |
-| O2 init, TLS, import, activate | PASS: `init` on a brand-new `SEYRA_HOME` (this would have failed before `1f2d3e2`); fixture imported with staging validation and activated; ready through `https://127.0.0.1:8443`. The `dataset_id` (`ds-20261001-681455d56afb`) is identical to the preparation host's: same inputs and images give the same release identity. |
+| O2 init, TLS, import, activate | PASS: `init` on a brand-new `SEYRA_HOME`, taking the new kernel lock; fixture imported with staging validation and activated; ready through `https://127.0.0.1:8443`. The `dataset_id` (`ds-20261001-681455d56afb`) is identical to the preparation host's: same inputs and images give the same release identity. |
 | O3 stop / start | PASS: all four providers ready again |
 | O4 update and rollback | PASS: update to `ds-20261002-681455d56afb` and rollback, each verified through the ingress |
 | O5 outbound attempts | PASS: **0** packets to non-local destinations across O1–O4. 6 link-local IGMP membership reports (224.0.0.0/4, emitted by the kernel when bridge/veth interfaces come up) are counted separately by a dedicated rule. |
@@ -231,28 +247,30 @@ Limits of this simulation:
 ## Fresh-host restore drill — `tests/offline/restore-drill.sh`
 
 ```bash
-BUNDLE=…/bundle-2026-10-17 FIXTURE=…/synthetic-v1.osm.pbf LAB=…/offline-lab DIND_IMAGE=docker:29.8.2-dind tests/offline/restore-drill.sh
+BUNDLE=…/bundle-2026-10-17-r2 FIXTURE=…/synthetic-v1.osm.pbf LAB=…/offline-lab DIND_IMAGE=docker:29.8.2-dind tests/offline/restore-drill.sh
 ```
 
-Two offline hosts are used one after the other, each a fresh Docker-in-Docker daemon on the internal network with the same egress counters as above. Host 1 is destroyed (container, Docker volume and `SEYRA_HOME`) before host 2 is created. Host 2 never sees host 1's Docker state or `SEYRA_HOME`, only the backup directory and the separately kept `secrets/` copy. Install and rollback are not counted as restoration. Evidence: `docs/evidence/restore/`.
+Re-run in round 2 on the new bundle with the backup-generation format. Two offline hosts are used one after the other, each a fresh Docker-in-Docker daemon on the internal network with the same egress counters as above. Host 1 is destroyed (container, Docker volume and `SEYRA_HOME`) before host 2 is created. Host 2 never sees host 1's Docker state or `SEYRA_HOME`, only the backup root and the separately kept `secrets/` copy. Install and rollback are not counted as restoration. Evidence: `docs/evidence/restore/`.
 
-Result: **R1–R7 PASS**.
+Result: **R1–R7 and R4a PASS**.
 
 | Case | Result |
 | --- | --- |
 | R1 source host | PASS: active B `ds-20261002-681455d56afb`, previous A `ds-20261001-681455d56afb`, ready through the ingress; 6 control-DB release events; non-default server names. |
-| R2 `backup --include-sources` | PASS: control-DB dump, state and manifest archives, and both managed inputs. No secret value or private-key line appears in the backup or inside its archives. |
+| R2 backup generations | PASS. Two published generations: `seyra-backup-20261017T102959379Z-430836` (only A active, taken before B was activated) and `seyra-backup-20261017T103040653Z-b8c965` (with both managed inputs), each with a SHA-256 completion record (`R2-backup-manifest.json`). Then an **interrupted attempt**: a never-published `.partial` directory holding a newer real `pg_dump`, taken after one extra marker row was added. No secret value or private-key line in the backup or its archives. |
 | R3 fresh host, out-of-order restore | PASS: images loaded from the bundle. `restore` before the secrets are back is refused and starts nothing. |
-| R4 secrets → `init` → `restore` | PASS: the dump replaced the freshly initialised control DB (no replay over an existing schema). All 6 release events are identical (ids and timestamps). Grants and migrations re-applied. `seyra_api` logs in over TCP with the restored password (secret/password alignment). Settings restored. |
-| R5 rebuild from the printed commands | PASS: `restore` printed one import command per backed-up release (backed-up input, operator snapshot timestamp). Both rebuilt with **the same dataset IDs**. |
+| R4a damaged generation | PASS: a copy of the newest generation with one SQL byte changed is refused ("seyra_app.sql does not match its recorded SHA-256") before any database change. The freshly initialised control DB still has 0 rows; settings untouched. |
+| R4 secrets → `init` → `restore` | PASS: restore **selected the newest complete generation and named it** ("newest of 2 complete generations; others: …"), reported the ignored `.partial` attempt, and verified 7 files by SHA-256. The dump then replaced the initialised control DB. All 6 release events are identical (ids and timestamps), and the interrupted attempt's extra row is **absent**. `seyra_api` logs in over TCP with the restored password. Settings restored. |
+| R5 rebuild from the printed commands | PASS: one import command per backed-up release, using the generation's verified sources and the operator snapshot timestamps. Both rebuilt with **the same dataset IDs**. |
 | R6 activate | PASS: the restored host serves B (previous A) through `https://127.0.0.1:8443`. The restored event history is kept and extended. Secret files are identical to the secrets backup. |
 | R7 outbound attempts | PASS: 0 packets to non-local destinations from either host. |
 
-The first drill run failed R5/R6 because of a harness bug: the command loop's stdin was consumed by `docker run -i`, so only one of the two printed imports ran. The `restore` output itself was correct. After the harness fix (`< /dev/null`), the full drill was re-run from scratch and passed.
+In round 1 (old flat layout), R1–R7 also passed after a harness fix. That layout is now refused, so the round-1 drill no longer describes a supported format.
 
 Limits:
 - It ran on the synthetic fixture, in a cloud container.
-- Without `--include-sources`, the owner must supply the original input that matches the recorded sha256; that path was not exercised.
+- The interrupted attempt is the leftover a killed backup produces, placed with a real dump, not an actual kill: the fixture backup finishes in well under a second. The unit tests exercise the real backup code with a failure injected right after its SQL dump.
+- Without `--include-sources`, the owner must supply the original input that matches the recorded SHA-256; that path was not exercised end to end.
 - A restore on the target hardware remains pending.
 
 ## Not run / blocked
@@ -265,4 +283,6 @@ Limits:
 | Restore from backup on the target host / without `--include-sources` | NOT RUN | The fresh-host drill passed on simulated offline hosts (above). Repeat RUNBOOK §7 on target hardware; also exercise the path where the owner supplies the original input. |
 | Docker Hub direct pulls / ghcr.io | BLOCKED (preparation only) | 429 / egress policy; used the mirror.gcr.io registry mirror and built Valhalla from source. No effect on operation. |
 | Load/soak testing | NOT RUN | No capacity targets yet; the phase-1 limits are defaults, not measurements. |
+| Browser audit in round 2 | NOT RUN (not affected) | API, proxy and web-client images and sources unchanged since `c5c6f3f`; the round-1 PASS stands. Re-run with `tests/browser/web-client.mjs` if those change. |
+| Lifecycle lock on a network filesystem (NFS/SMB) | NOT RUN (unsupported) | `SEYRA_HOME` must be on a local Linux filesystem. Every lock acquisition checks that `flock` is enforced and refuses otherwise; that refusal path was not exercised on a real network share. |
 | CI (typecheck/unit/build on push) | NOT RUN | Not set up. This is a useful follow-up, not a substitute for the real-provider, lifecycle and offline suites. |
