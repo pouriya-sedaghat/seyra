@@ -1,0 +1,13 @@
+/home/user/seyra-work/offline-lab/backup:
+total 20
+-rw-r--r-- 1 root root 3787 Oct 17 08:48 manifests-2026-10-17T08-48-37-224Z.tar.gz
+-rw------- 1 root root 7842 Oct 17 08:48 seyra_app-2026-10-17T08-48-37-224Z.sql
+drwxr-x--- 2 root root 4096 Oct 17 08:48 sources
+-rw-r--r-- 1 root root 1299 Oct 17 08:48 state-2026-10-17T08-48-37-224Z.tar.gz
+
+/home/user/seyra-work/offline-lab/backup/sources:
+total 16
+-rw-r--r-- 1 root root  222 Oct 17 08:48 ds-20261001-681455d56afb.json
+-r--r--r-- 1 root root 3167 Oct 17 08:48 ds-20261001-681455d56afb.osm.pbf
+-rw-r--r-- 1 root root  222 Oct 17 08:48 ds-20261002-681455d56afb.json
+-r--r--r-- 1 root root 3167 Oct 17 08:48 ds-20261002-681455d56afb.osm.pbf

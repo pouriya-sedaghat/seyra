@@ -144,7 +144,7 @@ while read -r line; do
   [ -n "$line" ] || continue
   n=$((n + 1))
   # shellcheck disable=SC2086
-  cli $line > "$ev/R5-import-$n.log" 2>&1 || rc=$?
+  cli $line < /dev/null > "$ev/R5-import-$n.log" 2>&1 || rc=$?   # docker run -i must not eat the command list
 done < <(printf '%s\n' "$cmds" | tac)
 rA="$(grep -ho 'release ds-[0-9a-z-]* built' "$ev"/R5-import-*.log | awk '{print $2}' | grep -x "$A")"
 rB="$(grep -ho 'release ds-[0-9a-z-]* built' "$ev"/R5-import-*.log | awk '{print $2}' | grep -x "$B")"

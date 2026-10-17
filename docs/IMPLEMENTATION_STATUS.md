@@ -37,7 +37,7 @@ Out of scope and not implemented, as instructed:
 | R3 (P1) prune could drop a release being imported or activated | **Fixed.** A global re-entrant lifecycle lock for every mutator and an import lease that names its target; prune protects the lease target and `building` releases. Liveness is decided conservatively and stale recovery is bounded to Seyra jobs and paths. | `b8ab453`, `1f2d3e2` | `lifecycle.test.ts` R3 (6, with real second processes); lifecycle L2, L9–L12 (real concurrent CLI processes) |
 | R4 (P2) the gate admitted unverified or unavailable providers | **Fixed.** Admission requires a fresh `ok` verification of the target provider; otherwise a bounded on-demand probe, then a typed 503. Unrelated outages do not block, and readiness stays honest. | `327aca4` | `gate.test.ts` (9, including HTTP level with adapter spies); integration 137 on the rebuilt API |
 
-Rebuilt and relocked images: API, PROXY and OPS (`c5c6f3f`; identities in `docs/TEST_RESULTS.md`). The data-component images are unchanged, so existing releases stay valid. Fresh-host restore: a `restore` command, a corrected RUNBOOK §7 and an isolated drill (see TEST_RESULTS).
+Rebuilt and relocked images: API, PROXY and OPS (`c5c6f3f`; identities in `docs/TEST_RESULTS.md`). The data-component images are unchanged, so existing releases stay valid. Fresh-host restore: a `restore` command, a corrected RUNBOOK §7 (secrets → `init` → `restore` → re-import → activate), and an isolated two-host drill, R1–R7 PASS (see TEST_RESULTS).
 
 ## Locked dependencies (summary; authoritative: `infra/dependencies.lock.json`)
 
@@ -75,7 +75,7 @@ Image IDs are the local content-addressed IDs (containerd image store). No regis
 ## Remaining validation (owner / target environment)
 
 - Owner-supplied Iran snapshot: import time, RAM, disk (the importer's 40× free-space default is a guard, not a measurement), tile/routing/geocoder latency under load, Overpass limits on real data, real-address search fixtures and quality targets.
-- Target host: OS/CPU, internal CA and DNS names, time sync, LAN deployment with real CIDRs, backup and restore drill.
+- Target host: OS/CPU, internal CA and DNS names, time sync, LAN deployment with real CIDRs, and a backup/restore drill on target hardware. The fresh-host drill passed on simulated offline hosts (TEST_RESULTS R1–R7); restoring from the owner's original input without `--include-sources` was not exercised.
 - Mobile: SDK integration, MapLibre Native rendering of the fa/en styles (shaping/bidi with glyph PBFs), CA trust and pinning on devices.
 - Distribution licence review (AGPL/GPL/ODbL obligations), see `docs/LICENSES.md`.
 - PostGIS base image support window (Debian 11).

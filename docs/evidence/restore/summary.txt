@@ -1,0 +1,10 @@
+# Seyra fresh-host restore drill — 2026-10-17T08:54:03Z
+# bundle=/home/user/seyra-work/bundle-2026-10-17 A=ds-20261001-681455d56afb B=ds-20261002-681455d56afb backup=/home/user/seyra-work/offline-lab/backup
+PASS R1 source host: active ds-20261002-681455d56afb, previous ds-20261001-681455d56afb, ready through the ingress; 6 control-DB release events; non-default server names
+PASS R2 backup with --include-sources: control DB dump, state/manifests and both managed inputs; no secret value or private-key material inside the backup or its archives
+PASS R3 fresh host: images loaded; restore before the secrets are restored is refused and starts nothing
+PASS R4 restore replaced the initialised control DB: all 6 release events identical (ids, timestamps); seyra_api authenticates with the restored secret; settings restored
+PASS R5 both backed-up releases rebuilt from the backed-up inputs with the printed commands; dataset ids reproduced (ds-20261001-681455d56afb, ds-20261002-681455d56afb)
+PASS R6 restored host serves ds-20261002-681455d56afb (previous ds-20261001-681455d56afb) through the ingress; restored history kept and extended; secret files identical to the secrets backup
+PASS R7 zero packets to non-local destinations from either host during install, backup, restore, rebuild and activation
+# failures: 0
