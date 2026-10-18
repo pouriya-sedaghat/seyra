@@ -1,16 +1,16 @@
 {
   "schema": "seyra.dependencies-lock/1",
-  "generated_at": "2026-10-17T10:02:04.631Z",
+  "generated_at": "2026-10-18T09:10:56.334Z",
   "generated_by": "infra/prepare/write-lock.mjs",
   "status": "LOCKED (preparation build verified); runtime/acceptance evidence is in docs/TEST_RESULTS.md",
   "preparation_environment": {
-    "host_os": "Ubuntu 24.04.5 LTS",
-    "kernel": "Linux 6.18.44-fc-v139",
+    "host_os": "Ubuntu 26.04 LTS",
+    "kernel": "Linux 7.0.0-38-generic",
     "arch": "x86_64",
-    "docker": "client 29.8.2 / server 29.8.2",
+    "docker": "client 29.9.1 / server 29.9.1",
     "compose": "5.6.0",
     "node": "v24.21.0",
-    "note": "Cloud preparation environment (Claude Code remote session), not customer hardware. Docker Hub pulls went through mirror.gcr.io (Docker Hub returned 429); ghcr.io blob downloads were blocked by egress policy, so Valhalla is built from source."
+    "note": "Owner's replacement VM 'seyra' (VMware guest on the owner's host; Ubuntu 26.04 LTS, 4 vCPU, 7.2 GiB RAM), used as the authorized online preparation environment on 2026-10-18 before isolated offline validation. Not production hardware. Docker Hub base images pulled directly by pinned digest (no mirror); Valhalla built from source as before; apt packages are not snapshot-pinned, so custom image IDs differ from the 2026-10-17 cloud lock."
   },
   "images": {
     "db": {
@@ -22,7 +22,7 @@
       ],
       "platform": "linux/amd64",
       "created": "2026-08-31T11:34:38.705037667Z",
-      "origin": "upstream docker.io/postgis/postgis (pulled through the mirror.gcr.io registry mirror in preparation)",
+      "origin": "upstream docker.io/postgis/postgis pulled directly by the locked digest sha256:01a6a70e… on the replacement VM",
       "dockerfile": null,
       "dockerfile_sha256": null,
       "base_images": [],
@@ -37,12 +37,12 @@
     "tegola": {
       "role": "TEGOLA",
       "ref": "seyra/tegola:0.21.2-seyra1",
-      "image_id": "sha256:28934a38499e5a1f58f54634f5a4fc340af623fee3cb9df2333902214c5f0370",
+      "image_id": "sha256:4379ed15b436599a68b7908c8b35767c586801273eeca725ca144926e5e0757f",
       "repo_digests": [
-        "seyra/tegola@sha256:28934a38499e5a1f58f54634f5a4fc340af623fee3cb9df2333902214c5f0370"
+        "seyra/tegola@sha256:4379ed15b436599a68b7908c8b35767c586801273eeca725ca144926e5e0757f"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T09:36:19.387907132Z",
+      "created": "2026-10-18T09:05:32.137001344Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/tegola/Dockerfile",
       "dockerfile_sha256": "2d874050d55d9bf9bc67651cbaa3be8b17066f59caddccd29d339700f45f16ab",
@@ -67,12 +67,12 @@
     "valhalla": {
       "role": "VALHALLA",
       "ref": "seyra/valhalla:3.9.1-seyra1",
-      "image_id": "sha256:58448d47eaef78b09877d651ef3c4ae24344707f6896659b71f32a44fa105204",
+      "image_id": "sha256:df4afb12dd7e4d5a110178d3a931facc206239470dc043c38dd117af331defc3",
       "repo_digests": [
-        "seyra/valhalla@sha256:58448d47eaef78b09877d651ef3c4ae24344707f6896659b71f32a44fa105204"
+        "seyra/valhalla@sha256:df4afb12dd7e4d5a110178d3a931facc206239470dc043c38dd117af331defc3"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T09:37:32.488163797Z",
+      "created": "2026-10-18T08:59:14.151002863Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/valhalla/Dockerfile",
       "dockerfile_sha256": "ff1edeefb0d821e4ea5edfa773bc680043f7b45195dd3c4862cbf439a4a720c7",
@@ -89,7 +89,7 @@
       "os_packages": {
         "manager": "dpkg",
         "packages": 139,
-        "sha256": "14fdc2ea835dbdb9a0bc91b8356072a0ecc4b530fcd35b811652414a5a17e316"
+        "sha256": "34612a45838d74c7c02c2125ec0822fb865e428b86c91e994b50273106ca34b1"
       },
       "license": "MIT (Valhalla), BSD-2-Clause (prime_server)",
       "validation": "identity inspected; functional checks recorded in docs/TEST_RESULTS.md"
@@ -97,12 +97,12 @@
     "photon": {
       "role": "PHOTON",
       "ref": "seyra/photon:1.3.0-seyra1",
-      "image_id": "sha256:2f6c0e27a9410f2107bb84f40bd89ebe04f2d1a59e17b97968c2d99b85639f2c",
+      "image_id": "sha256:46112b0677bb6866b8c7c5c55d883d5c302264f7c855a5bc4a5fefac745f97b2",
       "repo_digests": [
-        "seyra/photon@sha256:2f6c0e27a9410f2107bb84f40bd89ebe04f2d1a59e17b97968c2d99b85639f2c"
+        "seyra/photon@sha256:46112b0677bb6866b8c7c5c55d883d5c302264f7c855a5bc4a5fefac745f97b2"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T09:43:24.701041444Z",
+      "created": "2026-10-18T09:06:10.839515984Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/photon/Dockerfile",
       "dockerfile_sha256": "919642a807c50a628448c1334410b86890cc7d72eed177d53eb8296e92d4954b",
@@ -127,12 +127,12 @@
     "overpass": {
       "role": "OVERPASS",
       "ref": "seyra/overpass:0.7.62.4-seyra1",
-      "image_id": "sha256:e0c93b85d690a7337fbb02440da1a2959c467c225c300b04656c2f90620363a3",
+      "image_id": "sha256:44d8f7a9837f953d34122189a716c663263a7e6a531104548f37c5604c4b85fa",
       "repo_digests": [
-        "seyra/overpass@sha256:e0c93b85d690a7337fbb02440da1a2959c467c225c300b04656c2f90620363a3"
+        "seyra/overpass@sha256:44d8f7a9837f953d34122189a716c663263a7e6a531104548f37c5604c4b85fa"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T12:50:24.252668982Z",
+      "created": "2026-10-18T09:04:56.035378466Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/overpass/Dockerfile",
       "dockerfile_sha256": "12850fad45a798cb92fe4f8bbbb10f80f1a8031a95f33d3e56ece295bc06c971",
@@ -148,7 +148,7 @@
       "os_packages": {
         "manager": "dpkg",
         "packages": 115,
-        "sha256": "9adbd8bdd60650d7d8a43198de59f4a4aa76c9504323c256d42cb6d70fc96366"
+        "sha256": "68890328c203f871d17b6e88c0230db3a4cfc443e4a43b508e77dd1045d381c2"
       },
       "license": "AGPL-3.0",
       "validation": "identity inspected; functional checks recorded in docs/TEST_RESULTS.md"
@@ -156,12 +156,12 @@
     "api": {
       "role": "API",
       "ref": "seyra/api:1.0.0-seyra1",
-      "image_id": "sha256:55844f00176edab3d979a1dcb2f5991bbe798cd0644da1fe3c131dfa0e528861",
+      "image_id": "sha256:ad11e92b08790044a31c23bf16a61bd6689fdeda1f7241f2c41dce4d59d36b00",
       "repo_digests": [
-        "seyra/api@sha256:55844f00176edab3d979a1dcb2f5991bbe798cd0644da1fe3c131dfa0e528861"
+        "seyra/api@sha256:ad11e92b08790044a31c23bf16a61bd6689fdeda1f7241f2c41dce4d59d36b00"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-17T07:48:51.292460176Z",
+      "created": "2026-10-18T09:09:31.389671957Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/api/Dockerfile",
       "dockerfile_sha256": "9bd23045fdbd035d909920dbf0bbd83984798c1a0dcd6c572d6747c69d0063d6",
@@ -183,12 +183,12 @@
     "proxy": {
       "role": "PROXY",
       "ref": "seyra/proxy:1.0.0-seyra1",
-      "image_id": "sha256:4cc83237dfb6cec361e79ba6cd55813439c5fd191c09461c1bf4f9d52c042fc8",
+      "image_id": "sha256:07e3eca26da70c86cf69cb4538dbcac9eb163ad507a574eb411d561d005e233c",
       "repo_digests": [
-        "seyra/proxy@sha256:4cc83237dfb6cec361e79ba6cd55813439c5fd191c09461c1bf4f9d52c042fc8"
+        "seyra/proxy@sha256:07e3eca26da70c86cf69cb4538dbcac9eb163ad507a574eb411d561d005e233c"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-17T07:48:53.644282368Z",
+      "created": "2026-10-18T09:09:54.703384172Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/proxy/Dockerfile",
       "dockerfile_sha256": "51242be8cb174bc964564e2b6df6c9789589c1826e20b8036631599a057b25a7",
@@ -208,12 +208,12 @@
     "osmtools": {
       "role": "OSMTOOLS",
       "ref": "seyra/osmtools:2.3.1-1.19.1-seyra1",
-      "image_id": "sha256:48e8fdfe6685e25008956ed238bb7d13b76046aa0ddf8e2a610ce56b16ca3e2f",
+      "image_id": "sha256:a6803a35f3a1ed2d059bb170e7e2efdabd31567412c33b94ccd518b6678acfc0",
       "repo_digests": [
-        "seyra/osmtools@sha256:48e8fdfe6685e25008956ed238bb7d13b76046aa0ddf8e2a610ce56b16ca3e2f"
+        "seyra/osmtools@sha256:a6803a35f3a1ed2d059bb170e7e2efdabd31567412c33b94ccd518b6678acfc0"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T09:35:21.65505206Z",
+      "created": "2026-10-18T08:48:46.187957774Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/osmtools/Dockerfile",
       "dockerfile_sha256": "dcd8b7f2eb8b8e16ddfbf142f78c412601e93c6be13a6b04455a48b24dc5fcd7",
@@ -239,12 +239,12 @@
     "geocoder_build": {
       "role": "GEOCODER_BUILD",
       "ref": "seyra/geocoder-build:5.3.2-1.3.0-seyra1",
-      "image_id": "sha256:7c3a11c1e76b4768610eaab7df23a7620deb01df349bcaa7776f7c302892db86",
+      "image_id": "sha256:ee886ca3890b697b2117919c1dcff389988ee782fb5c1bf20a61c90be8f80057",
       "repo_digests": [
-        "seyra/geocoder-build@sha256:7c3a11c1e76b4768610eaab7df23a7620deb01df349bcaa7776f7c302892db86"
+        "seyra/geocoder-build@sha256:ee886ca3890b697b2117919c1dcff389988ee782fb5c1bf20a61c90be8f80057"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-14T10:14:40.656421797Z",
+      "created": "2026-10-18T09:08:46.00032403Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/geocoder-build/Dockerfile",
       "dockerfile_sha256": "91e0a4d97c5f94c0f856a1d5c96bb900bea387236622840f8547d6aeea4f82ea",
@@ -260,7 +260,7 @@
       "os_packages": {
         "manager": "dpkg",
         "packages": 239,
-        "sha256": "0f1411993c38f90ca3a2a0aad8b7421b2f6485d3286f9760eb18410c6d812e96"
+        "sha256": "1ec675d1811f9fb3fa1e540c52d5f989ba836aed5590598f4cd8df283da8d851"
       },
       "license": "GPL-3.0-or-later (Nominatim), PostgreSQL/PostGIS",
       "validation": "identity inspected; functional checks recorded in docs/TEST_RESULTS.md"
@@ -268,12 +268,12 @@
     "ops": {
       "role": "OPS",
       "ref": "seyra/ops:1.0.0-seyra1",
-      "image_id": "sha256:6da5438553a1ae1df54ab42609c283ee1154d2c80f459af64d2048b02e7e5daf",
+      "image_id": "sha256:8a7ee6f7ed8f80f16fe2966ae0c3683718b701d9d0f1488e8476bd09cf196078",
       "repo_digests": [
-        "seyra/ops@sha256:6da5438553a1ae1df54ab42609c283ee1154d2c80f459af64d2048b02e7e5daf"
+        "seyra/ops@sha256:8a7ee6f7ed8f80f16fe2966ae0c3683718b701d9d0f1488e8476bd09cf196078"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-17T10:01:47.675528388Z",
+      "created": "2026-10-18T09:10:21.010604927Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/ops/Dockerfile",
       "dockerfile_sha256": "3b965a09c948207f495657ff5b017c3262b0677ec918c7b0c20e5cc143b3c331",

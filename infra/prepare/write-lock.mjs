@@ -74,7 +74,7 @@ artifactEntries['photon-1.3.0.jar'].provenance =
   'Official GitHub release asset; MANIFEST Git-Commit 523a59b4 ("prepare release 1.3.0") has the identical tree (94e69041289a0bc7aa6b11145b610ae63c519d73) as tag 1.3.0 merge commit 4c28c7c1.';
 
 const IMAGES = [
-  { role: 'DB', ref: 'postgis/postgis:17-3.5', origin: 'upstream docker.io/postgis/postgis (pulled through the mirror.gcr.io registry mirror in preparation)', versions: (r) => ({ postgres: inImage(r, 'postgres', ['--version']) }), license: 'PostgreSQL (server), GPL-2.0-or-later (PostGIS)' },
+  { role: 'DB', ref: 'postgis/postgis:17-3.5', origin: process.env.SEYRA_PREP_DB_ORIGIN ?? 'upstream docker.io/postgis/postgis (pulled through the mirror.gcr.io registry mirror in preparation)', versions: (r) => ({ postgres: inImage(r, 'postgres', ['--version']) }), license: 'PostgreSQL (server), GPL-2.0-or-later (PostGIS)' },
   { role: 'TEGOLA', ref: 'seyra/tegola:0.21.2-seyra1', dockerfile: 'infra/images/tegola/Dockerfile', sources: ['tegola'], versions: (r) => ({ tegola: inImage(r, '/usr/local/bin/tegola', ['version']).split('\n').slice(0, 3).join(' | ') }), license: 'MIT' },
   { role: 'VALHALLA', ref: 'seyra/valhalla:3.9.1-seyra1', dockerfile: 'infra/images/valhalla/Dockerfile', sources: ['valhalla', 'prime_server'], versions: (r) => ({ valhalla_service: inImage(r, 'valhalla_service', ['--version']) }), license: 'MIT (Valhalla), BSD-2-Clause (prime_server)' },
   { role: 'PHOTON', ref: 'seyra/photon:1.3.0-seyra1', dockerfile: 'infra/images/photon/Dockerfile', sources: ['photon'], versions: (r) => ({ java: inImage(r, 'java', ['-version']).split('\n')[0] ?? '', photon_jar_sha256: inImage(r, 'sha256sum', ['/opt/photon/photon.jar']).split(' ')[0] }), license: 'Apache-2.0 (Photon), GPL-2.0-with-classpath-exception (OpenJDK)' },
@@ -129,7 +129,8 @@ const out = {
     docker: shOk('docker', ['version', '--format', 'client {{.Client.Version}} / server {{.Server.Version}}']),
     compose: shOk('docker', ['compose', 'version', '--short']),
     node: process.version,
-    note: 'Cloud preparation environment (Claude Code remote session), not customer hardware. Docker Hub pulls went through mirror.gcr.io (Docker Hub returned 429); ghcr.io blob downloads were blocked by egress policy, so Valhalla is built from source.',
+    // SEYRA_PREP_NOTE describes the environment this lock was actually generated in.
+    note: process.env.SEYRA_PREP_NOTE ?? 'Cloud preparation environment (Claude Code remote session), not customer hardware. Docker Hub pulls went through mirror.gcr.io (Docker Hub returned 429); ghcr.io blob downloads were blocked by egress policy, so Valhalla is built from source.',
   },
   images,
   sources: sourceEntries,
