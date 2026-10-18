@@ -1,5 +1,7 @@
 # Seyra: preflight and Iran validation on the owner's test VM
 
+**Superseded VM facts, 2026-10-18:** the owner replaced the VM after storage shortage and other unspecified problems, and opened a new Claude Code session connected to the replacement VM. Start with `prompts/CLAUDE_IRAN_NEW_VM_RESTART.md` on this review branch. The 4-core/8-GB configuration and `/home/user` path below describe the old VM only. Discover the replacement VM's actual environment, paths and artifacts instead of applying those values.
+
 Execute through Claude Code on the **owner's VM**, not the previous cloud preparation session. Repository: `pouriya-sedaghat/seyra`; implementation branch `feat/map-services-v1`; reviewed head `9f0d7925eef0d43fc157cdd64b557b962df457a6`; PR #1 remains draft. Preserve local work and inspect newer commits if the head has moved.
 
 ## Known owner inputs
