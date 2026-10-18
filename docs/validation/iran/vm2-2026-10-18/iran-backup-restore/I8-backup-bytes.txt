@@ -1,0 +1,8 @@
+17397	/home/owner/seyra-lab/backup/seyra-backup-20261018T140109746Z-8c35ff
+total 28
+drwxr-x---    2 root     root          4096 Oct 18 14:01 .
+drwxrwxr-x    3 1000     1000          4096 Oct 18 14:01 ..
+-rw-r-----    1 root     root          1157 Oct 18 14:01 backup-manifest.json
+-rw-r--r--    1 root     root          3260 Oct 18 14:01 manifests.tar.gz
+-rw-------    1 root     root          7630 Oct 18 14:01 seyra_app.sql
+-rw-r--r--    1 root     root          1254 Oct 18 14:01 state.tar.gz

@@ -1,0 +1,18 @@
+2026-10-18T13:46:57Z free_bytes=51922599936 free_inodes=6008980 mem_avail=4907106304 swap_used=167673856 load1=1.82 host_ctr=seyra-iran-host cpu=114.25% mem=1.518GiB / 7.204GiB
+ctr peaceful_keller cpu=3.44% mem=30.04MiB / 7.204GiB
+ctr seyra-proxy-1 cpu=0.50% mem=13.23MiB / 7.204GiB
+ctr seyra-api-1 cpu=5.48% mem=114.5MiB / 7.204GiB
+ctr seyra-tegola-1 cpu=0.28% mem=7.609MiB / 7.204GiB
+ctr seyra-overpass-1 cpu=0.85% mem=5.723MiB / 7.204GiB
+ctr seyra-photon-1 cpu=256.90% mem=859MiB / 7.204GiB
+ctr seyra-valhalla-1 cpu=0.12% mem=52.46MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.10% mem=277.9MiB / 7.204GiB
+2026-10-18T13:47:11Z free_bytes=51920109568 free_inodes=6008920 mem_avail=4413059072 swap_used=166621184 load1=1.85 host_ctr=seyra-iran-host cpu=18.47% mem=2.418GiB / 7.204GiB
+ctr peaceful_keller cpu=7.61% mem=46.46MiB / 7.204GiB
+ctr seyra-proxy-1 cpu=5.39% mem=13.57MiB / 7.204GiB
+ctr seyra-api-1 cpu=0.00% mem=130.9MiB / 7.204GiB
+ctr seyra-tegola-1 cpu=10.08% mem=13.68MiB / 7.204GiB
+ctr seyra-overpass-1 cpu=0.04% mem=5.699MiB / 7.204GiB
+ctr seyra-photon-1 cpu=1.12% mem=860.9MiB / 7.204GiB
+ctr seyra-valhalla-1 cpu=0.03% mem=787.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=58.30% mem=324.6MiB / 7.204GiB

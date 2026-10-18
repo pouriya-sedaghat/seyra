@@ -1,0 +1,68 @@
+{
+  "recorded_at": "2026-10-18T10:47:28.927Z",
+  "base": "https://127.0.0.1:8443",
+  "dataset_id": "ds-20261001-9843cf36a06e",
+  "zoom": 16,
+  "tiles_fetched": 397,
+  "empty_tiles": 223,
+  "layers": {
+    "water": {
+      "distinct_features": 1,
+      "geometry_types": [
+        "Polygon"
+      ]
+    },
+    "landcover": {
+      "distinct_features": 3,
+      "geometry_types": [
+        "Polygon"
+      ]
+    },
+    "buildings": {
+      "distinct_features": 3,
+      "geometry_types": [
+        "Polygon"
+      ]
+    },
+    "waterways": {
+      "distinct_features": 3,
+      "geometry_types": [
+        "LineString"
+      ]
+    },
+    "boundaries": {
+      "distinct_features": 2,
+      "geometry_types": [
+        "LineString"
+      ]
+    },
+    "transport": {
+      "distinct_features": 23,
+      "geometry_types": [
+        "LineString"
+      ]
+    },
+    "places": {
+      "distinct_features": 3,
+      "geometry_types": [
+        "Point"
+      ]
+    },
+    "pois": {
+      "distinct_features": 24,
+      "geometry_types": [
+        "Point"
+      ]
+    }
+  },
+  "z14_layers": {
+    "boundaries": 2,
+    "waterways": 3,
+    "landcover": 3,
+    "transport": 23,
+    "places": 3,
+    "pois": 9,
+    "buildings": 3,
+    "water": 1
+  }
+}

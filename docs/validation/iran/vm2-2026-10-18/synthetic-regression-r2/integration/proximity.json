@@ -1,0 +1,115 @@
+{
+  "recorded_at": "2026-10-18T10:47:30.517Z",
+  "base": "https://127.0.0.1:8443",
+  "dataset_id": "ds-20261001-9843cf36a06e",
+  "straight_line": [
+    {
+      "id": "near",
+      "input_index": 1,
+      "rank": 1,
+      "status": "reachable",
+      "distance_m": 556.6,
+      "duration_s": null
+    },
+    {
+      "id": "tie-a",
+      "input_index": 2,
+      "rank": 2,
+      "status": "reachable",
+      "distance_m": 1105.74,
+      "duration_s": null
+    },
+    {
+      "id": "tie-b",
+      "input_index": 3,
+      "rank": 3,
+      "status": "reachable",
+      "distance_m": 1105.74,
+      "duration_s": null
+    },
+    {
+      "id": "mid",
+      "input_index": 4,
+      "rank": 4,
+      "status": "reachable",
+      "distance_m": 2353.55,
+      "duration_s": null
+    },
+    {
+      "id": "far",
+      "input_index": 0,
+      "rank": 5,
+      "status": "reachable",
+      "distance_m": 2485.86,
+      "duration_s": null
+    }
+  ],
+  "asymmetry": {
+    "origin_to_candidate": [
+      {
+        "id": "side",
+        "input_index": 1,
+        "rank": 1,
+        "status": "reachable",
+        "distance_m": 3341,
+        "duration_s": 345.804
+      },
+      {
+        "id": "south-end",
+        "input_index": 0,
+        "rank": 2,
+        "status": "reachable",
+        "distance_m": 4454,
+        "duration_s": 428.045
+      }
+    ],
+    "candidate_to_origin": [
+      {
+        "id": "south-end",
+        "input_index": 0,
+        "rank": 1,
+        "status": "reachable",
+        "distance_m": 2228,
+        "duration_s": 229.218
+      },
+      {
+        "id": "side",
+        "input_index": 1,
+        "rank": 2,
+        "status": "reachable",
+        "distance_m": 3341,
+        "duration_s": 349.093
+      }
+    ]
+  },
+  "unreachable": [
+    {
+      "id": "a",
+      "input_index": 1,
+      "rank": 1,
+      "status": "reachable",
+      "distance_m": 556,
+      "duration_s": 392.893
+    },
+    {
+      "id": "b",
+      "input_index": 2,
+      "rank": 2,
+      "status": "reachable",
+      "distance_m": 1670,
+      "duration_s": 1178.823
+    },
+    {
+      "id": "island",
+      "input_index": 0,
+      "rank": null,
+      "status": "unreachable",
+      "distance_m": null,
+      "duration_s": null
+    }
+  ],
+  "cap": {
+    "ranked": 50,
+    "rejected_51": "LIMIT_EXCEEDED"
+  }
+}

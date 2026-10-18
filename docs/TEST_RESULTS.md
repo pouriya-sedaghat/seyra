@@ -1,29 +1,36 @@
 # Seyra Map Services — test results (phase 1)
 
-## Replacement-VM run `vm2-2026-10-18` (owner's VM, real Iran data): BLOCKED at geocoder-build
+## Replacement-VM run `vm2-2026-10-18` (owner's VM, real Iran data)
 
-Separate run identity. Everything below this section is the earlier synthetic record, left unchanged except for the Iran row of "Not run / blocked". Its image table is the 2026-10-17 lock; the current lock (`f244a25`) is listed in §4 of the run record. Full record: [`docs/validation/iran/vm2-2026-10-18/README.md`](validation/iran/vm2-2026-10-18/README.md).
+Separate run identity. Everything below this section is the earlier synthetic record, left unchanged except for the Iran row of "Not run / blocked". Its image table is the 2026-10-17 lock; the current lock (`a2d3050`) is listed in the run record. Full record: [`docs/validation/iran/vm2-2026-10-18/README.md`](validation/iran/vm2-2026-10-18/README.md).
 
 - Environment: owner's replacement VM `seyra` (VMware guest, Ubuntu 26.04 LTS, kernel 7.0.0-38, 4 vCPU, 7.2 GiB RAM, 100 GiB ext4 root). Docker 29.9.1 / Compose v5.6.0. Run as a non-root operator.
-- Code: `9f0d792` plus the relock `f244a25`, which rebuilt every image from pinned sources on the VM. All nine custom image IDs changed; DB unchanged. Bundle `SHA256SUMS` `71078a6c87fcb8fb897cd5b45b4ddcc67ee253c9a748812b408318626281a243`.
-- Source: owner's `iran-261017.osm.pbf`, SHA-256 `7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f`, header snapshot `2026-10-17T20:20:51Z`.
+- Images: all rebuilt from pinned sources on the VM (`f244a25`), then OPS rebuilt twice for the corrections (`d1d1708`, `a2d3050`). Final bundle r3 `SHA256SUMS` `9c4e87daf2c97cbf1b69b12a4bf0b821a3adab62d47ef71c0a96fae97aa969f8`.
+- Source: owner's `iran-261017.osm.pbf`, SHA-256 `7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f`, header snapshot `2026-10-17T20:20:51Z` → release `ds-20261017-2d2c87f31d11`.
 
 | Suite | Result on the replacement VM |
 | --- | --- |
-| Unit/contract | 146 PASS |
-| Integration (fixture) | 137/137 PASS |
-| Security (fixture) | 28 PASS, 0 FAIL, 1 NOTE (AC16.3b) |
-| Lifecycle L1–L14 (fixture) | 15/15 PASS |
-| Bundle tamper T0–T5 | 6/6 PASS |
-| Offline host O0–O5 (fixture) | 6/6 PASS, 0 outbound packets |
-| Restore drill R1–R7, R4a (fixture) | 8/8 PASS, 0 outbound packets |
-| Browser (fixture) | PASS: 62 requests, 0 external, 0 console errors |
-| **Iran import on an isolated offline host** | **FAIL at `geocoder-build`** after render-import (197 s) and routing-build (183 s); 0 outbound packets |
-| Iran activation, API/web smoke, browser, restart, backup, restore | NOT RUN (blocked) |
+| Unit/contract | 149 PASS (146 + 3 new regressions) |
+| Integration (fixture) | 137/137 PASS on r1, r2, r3 |
+| Security (fixture) | 28 PASS, 0 FAIL, 1 NOTE (AC16.3b) on r1, r2, r3 |
+| Lifecycle L1–L14 (fixture) | 15/15 PASS on r1, r2, r3 |
+| Bundle tamper T0–T5 | 6/6 PASS on r1, r2, r3 |
+| Offline host O0–O5 (fixture) | 6/6 PASS on r1, r2, r3; 0 outbound packets |
+| Restore drill R1–R7, R4a (fixture) | 8/8 PASS on r1, r2, r3; 0 outbound packets |
+| Browser (fixture) | PASS on r1 |
+| **Iran import on an isolated offline host** | Attempt 2 FAIL at `geocoder-build` (defect 1); attempt 3 FAIL at `staging-validation` (defect 2); **attempt 4 PASS**: 3,456 s, staging providers-started/tiles/routing/geocoder/Overpass all PASS |
+| Iran verify-release, activation, stop/start | PASS |
+| Iran exploratory smoke (sequential; not owner-approved fixtures) | search hit@1 23/33, hit@5 32/33; reverse 10/12; routing 14/14 statuses, 12/12 checkable distances in range; proximity 6/6; POIs 32/32; tiles 27/27 |
+| Iran browser audit | Run 1 FAIL (2 × `/health/ready` 503, cause undetermined, not reproduced); run 3 PASS (511 requests, 0 external, 0 failed, 6/6 intended areas) |
+| Iran backup (no `--include-sources`) and host-1 egress | PASS; 0 outbound packets |
+| Iran fresh-host restore from the original PBF (no `--include-sources`) | PASS: R2–R6; `dataset_id` reproduced on a new offline host (3,340 s rebuild); 0 outbound packets |
+| Real update test / quality acceptance / load | NOT RUN: second real snapshot, owner fixtures and targets not supplied |
 
-Defects found:
-1. **Geocoder preprocessing crashes on real Photon dumps.** Photon 1.3.0 writes `address.other`/`other:<lang>` as string arrays (1,191,816 of 1,199,311 Iran places), and `geocoder-preprocess.ts` calls `.normalize()` on them. Reproduced on the reviewed code. A proposed correction exists but is not applied, pending owner authorization.
-2. **`bundle export` writes `root:root 0600` image archives**, so a non-root operator cannot verify, copy or `bootstrap-load` the bundle. Proposed correction recorded; worked around by changing ownership only.
+Defects found by the real data, and corrected:
+1. Photon 1.3.0 dumps carry `address.other`/`other:<lang>` string arrays (1,191,816 of 1,199,311 Iran places). Preprocessing threw. Fixed in `2df015f` after owner authorization; regression test included.
+2. Unknown-name placeholders «؟؟؟؟» became synonym terms without letters (`?`, `????`), and Photon rejected the whole synonym file, so the provider did not start. Fixed in `6a665ae`; regression test included.
+
+Open: `bundle export` writes root-only (`0600`) image archives that a non-root operator cannot verify or load. Also open: the 40× import guard (9.19 GB) is below the ~17 GB transient that the Iran Overpass build needed, and low-zoom vector tiles are heavy (z4 2.1 MB).
 
 **Current record: 2026-10-17, second round**, for the follow-up review of `d967a00` (remaining findings: R3 stale-lock reclamation, R5 backup generations), on branch `feat/map-services-v1` (base `a3460fcb2fed0340796f216fc9081d7e1b132fe3`).
 - Commit under test: `31961e1`, i.e. code `419bccc` plus the relocked ops image.
@@ -302,7 +309,7 @@ Limits:
 
 | Item | Status | Reason and prerequisite |
 | --- | --- | --- |
-| Iran extract import/serve (time, RAM, disk, latency, quality) | BLOCKED (run `vm2-2026-10-18`) | Owner dataset supplied 2026-10-18. Import failed at `geocoder-build` (preprocessing defect, see the top section); render and routing builds succeeded and were measured. Was NOT RUN on 2026-10-17 (no owner dataset). |
+| Iran extract import/serve (time, RAM, disk, latency, quality) | PASS for import/serve with measured resources; quality and load NOT RUN (run `vm2-2026-10-18`) | Owner dataset supplied 2026-10-18. Two preprocessing defects were found and fixed before the import passed (see the top section). Quality acceptance needs owner-approved fixtures; load needs targets. Was NOT RUN on 2026-10-17 (no owner dataset). |
 | Customer hardware / target OS / internal CA / DNS | NOT RUN | Not available; run RUNBOOK §1–2 on the target host. |
 | Mobile SDK (Android/iOS, MapLibre Native) | NOT RUN | No mobile project in scope; contract and fixtures prepared. |
 | Restore from backup on the target host / without `--include-sources` | NOT RUN | The fresh-host drill passed on simulated offline hosts (above). Repeat RUNBOOK §7 on target hardware; also exercise the path where the owner supplies the original input. |

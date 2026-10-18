@@ -1,0 +1,2 @@
+Filesystem                           1B-blocks        Used   Available Use% Mounted on
+/dev/mapper/ubuntu--vg-ubuntu--lv 105089261568 46311776256 53391998976  47% /

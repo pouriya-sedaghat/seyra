@@ -1,0 +1,17 @@
+{
+  "recorded_at": "2026-10-18T10:47:27.754Z",
+  "base": "https://127.0.0.1:8443",
+  "dataset_id": "ds-20261001-9843cf36a06e",
+  "truncation": {
+    "limit": 2,
+    "returned": 2,
+    "truncated": true
+  },
+  "concurrency": {
+    "requests": 120,
+    "tally": {
+      "200": 72,
+      "503 OVERLOADED": 48
+    }
+  }
+}

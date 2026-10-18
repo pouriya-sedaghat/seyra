@@ -2,27 +2,37 @@
 
 Run identity: **`vm2-2026-10-18`**. This is the first run on the owner's replacement VM. It does not reproduce or continue anything from the previous VM or from the 2026-10-14/17 cloud preparation container. Those results remain in `docs/TEST_RESULTS.md` and `docs/evidence/` as historical synthetic evidence.
 
-- Code under test: `feat/map-services-v1` at reviewed head `9f0d7925eef0d43fc157cdd64b557b962df457a6`, plus `f244a25` (relock only; no product code change).
+- Code under test: `feat/map-services-v1` from reviewed head `9f0d7925eef0d43fc157cdd64b557b962df457a6`.
+  - `f244a25` relocks all images rebuilt on this VM.
+  - `2df015f` and `6a665ae` are the two geocoder-preprocessing corrections found by this run (§7, §8). The first was authorized by the owner on 2026-10-18.
+  - `d1d1708` and `a2d3050` relock OPS after each correction.
+  - Final served bundle: r3 `9c4e87da…`.
 - Executed by Claude Code in the VM's own shell, as the local user `owner` (Docker group, no passwordless sudo).
 
 ## Outcome
 
-**BLOCKED by a product defect at `geocoder-build`.** The full Iran import ran offline through source validation, the render database and the Valhalla graph, and Nominatim exported 1,199,311 places. Seyra's own preprocessing of that export (`apps/ops/src/geocoder-preprocess.ts`) then failed with `TypeError: text.normalize is not a function`. Cause: Photon 1.3.0 writes unmatched address lines as string arrays (`address.other`, `other:fa`, `other:en`), and 1,191,816 of the exported places carry them. The synthetic fixture never produced them. Details, reproduction and the proposed correction: §6.
-
-Following the handoff, product code was **not** changed in this run. The release is marked `failed` and preserved on offline host 1. No activation, API/web smoke, Iran browser audit, restart, backup or restore on Iran data has run yet.
+**The full owner Iran snapshot now imports, validates in staging, activates and serves offline with all four providers.** This came after two real-data defects in Seyra's geocoder preprocessing were reproduced, reported and corrected (§7, §8). Correcting the first required the owner's authorization, given on 2026-10-18. A fresh-host restore from a backup *without* included sources then rebuilt the same `dataset_id` from the owner's original PBF and served it (§10). Every offline host recorded zero outbound packets.
 
 | Area | Result |
 | --- | --- |
 | Checkout, environment, source and storage preflight | Done; ready (§1–§3) |
-| Online preparation: sources, image builds, relock, bundle | Done (§4). Bundle `SHA256SUMS` `71078a6c…`. One defect: root-only bundle archives (§4). |
-| Synthetic regression on the rebuilt images | All PASS: unit 146, integration 137, security 28 (+1 note), lifecycle L1–L14, tamper T0–T5, offline host O0–O5, restore drill R1–R7 + R4a, browser (§5) |
-| Iran offline host 1: isolation, bundle install, init/TLS, capacity recheck | PASS (I0, I1, I2, I3a) |
-| Iran import | **FAIL at `geocoder-build`** (I3), after render-import and routing-build succeeded |
-| Outbound packets from offline host 1 (install + import) | 0 |
-| Iran verify-release, activation, API/web smoke, browser, restart, backup, restore from original input | **NOT RUN**: blocked by the defect |
+| Online preparation: sources, image builds, relock, bundle | Done (§4). Final bundle r3 `SHA256SUMS` `9c4e87da…`. Preparation defect: root-only bundle archives (§4, open). |
+| Synthetic regression on the rebuilt images | All PASS on r1, and on r2/r3 for the OPS-affected suites (§5, §8) |
+| Iran attempt 1 | Aborted: harness defect (false I0 pass), fixed before any import (§6) |
+| Iran attempt 2 | FAIL at `geocoder-build`: defect 1, Photon `address.other` arrays (§6, §7) |
+| Iran attempt 3 (after fix 1) | FAIL at `staging-validation`: defect 2, synonym terms without letters (§8) |
+| **Iran attempt 4 (after fix 2)** | **PASS**: software update U1, full import + staging (3,456 s), verify-release, activation, smoke, stop/start, browser (§9) |
+| Iran backup (no `--include-sources`) and egress, host 1 | PASS: I8, I9, 0 outbound packets over the host's whole life |
+| Iran fresh-host restore from the original PBF | **PASS**: R2–R6; same `dataset_id`; 3,340 s rebuild; 0 outbound packets (§10) |
 | Real update test | NOT RUN: needs a second real snapshot |
-| Quality acceptance / load | NOT RUN: owner-approved queries, locations and targets not supplied |
+| Quality acceptance / load | NOT RUN: owner-approved queries, locations and targets not supplied. The results in §9 are exploratory. |
 
+Open findings for the owner (none blocks this run):
+- **Import guard below the measured need.** The Overpass build needed about 17 GB of transient free space; the 40× guard is 9.19 GB (§8, §9).
+- **Heavy low-zoom vector tiles.** z4–z8 tiles over Tehran are 0.9–2.1 MB each and take up to 2.1 s (§9).
+- **Root-only bundle archives** for non-root operators (§4).
+- **One unexplained readiness flap.** Two `/health/ready` 503s about 2 minutes after `start`, not reproduced (§9).
+- **The importer's `free_bytes_min_observed` only samples between steps**, so it misses the Overpass transient (§9).
 
 ## 1. Environment preflight (measured, 2026-10-18 08:30–08:35 UTC)
 
@@ -209,16 +219,156 @@ Files: [`defect-geocoder-address-other/`](defect-geocoder-address-other/).
   - The locked Photon image then imported that output offline with the job's own arguments: 1,199,260 documents (places + release marker) in 155 s, index 573,540,688 B, no import errors ([log](defect-geocoder-address-other/scratch-photon-import-with-proposed-correction.log); the two `UnknownHostException`s are the container's hostname lookup with `--network none`).
   - `overpass-build`, `map-styles` and staging validation remain untested on Iran.
 
-### Next steps once the correction is authorized
+### Next steps once the correction is authorized (executed on 2026-10-18; see §8–§9)
 
 1. Apply the correction with a regression test in `apps/ops/src/geocoder-preprocess.test.ts` (array address values): it must fail on `9f0d792` and pass after.
 2. Rebuild only the OPS image, relock (only OPS should change), re-export and verify the bundle, and record the new `SHA256SUMS` digest. Re-run unit tests plus the OPS-dependent suites: lifecycle, offline host, restore drill, tamper, security AC16.14/15.
 3. On offline host 1, as RUNBOOK §8 (ops-only update): `bootstrap-load` the new bundle, replace the install tree, then `seyra-maps import --pbf $HOME/iran-261017.osm.pbf`. The same `dataset_id` replaces the preserved failed build. Then run the harness phases `serve browser backup restore`.
 
-### Owner inputs still needed for acceptance (unchanged)
+### Owner inputs still needed for acceptance (see §10)
 
 - Approved fa/en place and address queries with expected places or areas; representative urban/rural/border areas.
 - Routing points and known access restrictions for car, pedestrian and motorcycle.
 - Expected concurrency, request mix and latency/recovery targets (no load test without them).
 - LAN CIDRs, DNS names and certificates (loopback only until supplied).
 - A second real Iran snapshot for an update test.
+
+## 8. Defect 2: synonym terms without letters break Photon startup
+
+Found by attempt 3, after the §7 correction (`2df015f`, OPS `5e3f8cd9…`, bundle `dd210962…`) was authorized, applied and deployed to offline host 1 as a RUNBOOK §8 software update. Files: [`defect-geocoder-synonym-terms/`](defect-geocoder-synonym-terms/), [`iran-run-attempt3/`](iran-run-attempt3/).
+
+- Attempt 3 completed every build step on the full extract: render 220 s, routing 216 s, geocoder 2,255 s, Overpass 553 s, styles. Staging validation then failed: Tegola, Valhalla and Overpass passed, but the staging Photon never answered (`providers-started`, `geocoder`).
+- Reproduced on a scratch copy of the release's Photon index, with the job's exact settings and no network: Photon exits 2 with `Could not install synonyms … Failed to build analyzers: [search]`, caused by `term: ? was completely eliminated by analyzer` ([log](defect-geocoder-synonym-terms/photon-serve-with-release-synonyms.log)).
+- Cause: real names contain Arabic question marks, typically the unknown-name placeholder «؟؟؟؟». `tokens()` does not split on U+061F, and `normalizeForSearch` maps it to `?`. Of the release's 22,564 synonym entries, exactly 2 had such terms: `?,؟` and `????,؟؟؟؟` ([`offending-entries.txt`](defect-geocoder-synonym-terms/offending-entries.txt)). Photon's search analyzer removes a term with no letter or digit and then rejects the whole file. The §7 crash had masked this defect.
+- Verified before changing code: the same scratch index with those 2 entries removed was accepted by the real analyzer. Photon started in 8 s and answered `تهران` with the city at 51.3896, 35.6893.
+- Correction (`6a665ae`): `collectSynonyms()` skips a token when it or its normalized form has no letter or digit. Any release that ever passed staging had no such entries, so its output is unchanged. Regression test: fails on `2df015f` with `'?'` emitted, passes after ([prefix](defect-geocoder-synonym-terms/regression-test-prefix.txt), [postfix](defect-geocoder-synonym-terms/regression-test-postfix.txt)).
+- This guard sits in the same function and has the same purpose (make the authorized preprocessing correction accept real Photon data), so it was applied under that authorization rather than paused for another round trip. It is reported here as a separate defect.
+- Relock `a2d3050`: only OPS changes, to `sha256:489d2a4003f20cce6f044867630cf9b2053b425b72c716987b938ebe14faf2c9`. Bundle r3 `SHA256SUMS` **`9c4e87daf2c97cbf1b69b12a4bf0b821a3adab62d47ef71c0a96fae97aa969f8`**.
+
+OPS-affected suites re-run on each corrected bundle (fixture):
+
+| Suite | r2 (`5e3f8cd9`, after §7) | r3 (`489d2a40`, after §8) |
+| --- | --- | --- |
+| Unit/contract | 148 PASS | 149 PASS |
+| Integration | 137/137 | 137/137 |
+| Security | 28 PASS, 0 FAIL | 28 PASS, 0 FAIL |
+| Lifecycle L1–L14 | 15/15 (L14 exercised the busy refusal) | 15/15 |
+| Tamper T0–T5 | 6/6 | 6/6 |
+| Offline host O0–O5 | 6/6, 0 outbound | 6/6, 0 outbound |
+| Restore drill R1–R7, R4a | 8/8, 0 outbound | 8/8, 0 outbound |
+
+Evidence: [`synthetic-regression-r2/`](synthetic-regression-r2/), [`synthetic-regression-r3/`](synthetic-regression-r3/).
+
+**Capacity finding from attempt 3.** Free disk fell from 59.76 GB to **42.66 GB during `overpass-build`**, a transient of about **17.1 GB**. That is 1.86× the 40× guard (9.19 GB). The importer would therefore admit this input on a disk with 9.2–17 GB free, and it would then run out during Overpass. Once built, the release occupies about 10 GB: source 0.23, Valhalla 0.87, Photon 0.57, Overpass 5.74, geocoder inputs 1.15 GB, plus the 1.48 GB render DB.
+
+## 9. Attempt 4: the full Iran release served offline (r3 bundle)
+
+Offline host 1 (`seyra-iran-host`) is the same host as attempts 2–3, updated in place. Evidence: [`iran-run-attempt4/`](iran-run-attempt4/). Commands:
+
+```bash
+# software update on the existing offline host (RUNBOOK §8): bundle copied to transfer media under $LAB
+BUNDLE=$HOME/seyra-prep/bundle-2026-10-18-vm2 UPDATE_BUNDLE=$HOME/seyra-lab/transfer/bundle-2026-10-18-vm2-r3 \
+UPDATE_SUMS_DIGEST=9c4e87daf2c97cbf1b69b12a4bf0b821a3adab62d47ef71c0a96fae97aa969f8 PBF=$HOME/iran-261017.osm.pbf \
+LAB=$HOME/seyra-lab DIND_IMAGE=docker:29.8.2-dind OUT=$HOME/seyra-prep/iran-ev-r3 PHASES="update import serve browser" \
+PLAYWRIGHT_IMAGE=mcr.microsoft.com/playwright:v1.56.1-noble PLAYWRIGHT_DIR=$HOME/seyra-prep/playwright \
+  tests/validation/iran-offline-host.sh
+```
+
+| Step | Result | Time |
+| --- | --- | --- |
+| U1 software update | PASS: `SHA256SUMS` digest equals the out-of-band value `9c4e87da…`; install tree replaced; 10 images verified against the lock | 25 s |
+| I3a capacity recheck | PASS: 51,925,262,336 B free ≥ guard 9,193,803,280 B | |
+| I3 `import` | **PASS**: "replacing failed build of ds-20261017-2d2c87f31d11 (failed at staging-validation)", then built and validated. Staging: providers-started, tiles, routing, geocoder and Overpass all PASS. | 3,456 s |
+| I4 `verify-release` | PASS | 88 s |
+| I5 `activate` (first activation on this host) | PASS: all four providers report the release identities through `https://127.0.0.1:8443` | 90 s |
+| I6 exploratory smoke | completed, 0 transport errors (results below) | 18 s |
+| I7 `stop` / `start` | PASS: ready again with identical provider identities | 41 s + 9 s, then ready |
+| B1 browser | Run 1 FAIL, runs 2–3 PASS (see below) | |
+
+**Release `ds-20261017-2d2c87f31d11`** (snapshot date 2026-10-17 from the PBF header; the hash covers the source, pipeline and data-component image IDs). Provider identities: Tegola map `seyra_ds_20261017_2d2c87f31d11`; Valhalla tileset `1792328023`; Photon marker `seyra-release-ds-20261017-2d2c87f31d11`; Overpass label `seyra:ds-20261017-2d2c87f31d11`.
+
+| Import step | Seconds | Output | Min free disk | Min MemAvailable | Max swap | Peak offline-host RAM | Peak / mean CPU | Largest container |
+| --- | --- | --- | --- | --- | --- | --- | --- | --- |
+| render-import | 226 | render DB 1,479,199,891 B | 57.86 GB | 5.68 GB | 216 MB | 1,111 MiB | 273 % / 87 % | osm2pgsql 458 MiB |
+| routing-build | 217 | 870,731,136 B | 57.03 GB | 4.00 GB | 939 MB | 3,827 MiB | 198 % / 91 % | valhalla-build 3,448 MiB |
+| geocoder-build | 2,407 | Photon 575,352,280 B; inputs 1,145,095,208 B | 50.25 GB | 3.99 GB | 204 MB | 2,869 MiB | 383 % / 167 % | photon-import 2,211 MiB |
+| overpass-build | 516 | 5,742,650,492 B | **41.22 GB** | 3.52 GB | 742 MB | 3,211 MiB | 220 % / 74 % | overpass-import 2,739 MiB |
+| staging-validation | 81 | | 51.92 GB | 5.63 GB | 212 MB | 1,282 MiB | 34 % / 18 % | stage-photon 1,023 MiB |
+
+Method: `iran-run-attempt4/I3-import-samples.txt`, every 10 s (`df`, `/proc/meminfo`, `docker stats` of the offline host and of each container inside it); summarized by step with the manifest's step durations. Peaks between samples can be missed, so these are observed values, not ceilings. Build threads: the default 2. The importer replaced the failed release first, which freed space; relative to that baseline (~58.3 GB free), the Overpass build used about 17 GB transiently, consistent with attempt 3.
+
+**Measurement caveat:** the manifest's `free_bytes_min_observed` (51,923,865,600 B) is sampled only between steps, so it misses this intra-step minimum by about 10.7 GB. Use the external sampler for capacity planning.
+
+**Storage of the served release:** `SEYRA_HOME` totals 11,191,242,929 B (release stores ≈ 8.57 GB including the 230 MB managed source copy, plus the PostgreSQL data directory with the 1.48 GB render DB). Images inside the offline host: 3.62 GB. A retained previous release of this size would roughly double the release share. That was not measured, because a real second snapshot was not available.
+
+**Serving resources:** offline-host RAM 2.42 GiB after the smoke run. During the browser audit it peaked at 3.27 GiB and 375 % CPU (Tegola rendering uncached low-zoom tiles). MemAvailable stayed ≥ 4.03 GB.
+
+### Exploratory smoke on real Iran geography (I6; `iran-run-attempt4/I6-iran-smoke.json`)
+
+Expectations are approximate public coordinates written before the run, not owner-approved ground truth. One sequential client, through the TLS ingress, inside the offline host.
+
+| Area | Result |
+| --- | --- |
+| Search fa/en (33 cases: cities, landmarks, villages, border towns, airports, Arabic Yeh/Kaf, space/no-space and digit-noise variants) | hit@1 23, hit@5 32. Rank > 1: «Tehran» (en) province before city; «برج میلاد» building outline first, then the tower; «شیراز» a village named Shiraz before the city; «تخت جمشید» a street first; «بندر عباس» (space variant) rank 3; «آستارا» street «استارا» first. Arabic-letter queries «برج ميلاد», «شيراز», «كرج» behave like their Persian-letter forms. The one miss, «تهران» biased to Isfahan, returned a nearby «Tehran Street», which is the intended effect of location bias. |
+| Autocomplete (6) | hit@5 5. «شیرا» → Shiraz city only at rank 7. |
+| Reverse (14 calls, 7 points × fa/en) | 10/12 expected names seen. Azadi Tower, Naqsh-e Jahan, Shiraz, Tabriz and Zahedan return the right city and province in both languages. Abyaneh returned nothing within 1 km of my approximate point; search placed the village 1.5 km away, so the reference point is uncertain. The empty desert point returned `no_results`. |
+| Routing (14) | 14/14 statuses as expected; all 12 checkable distances in range. Azadi → Karaj car/time 42.3 km with 2 alternatives (40.2, 46.9 km); Tehran → Isfahan 439 km / 3.9 h; Tehran → Mashhad 899 km / 9.1 h; Tabriz → Zahedan 2,007 km / 19.4 h; pedestrian Naqsh-e Jahan → Si-o-se-pol 3.2 km with 2 alternatives; ordered 4-stop and optimized 5-stop (car/time, motorcycle/distance) in Tehran; Tehran → Kish Island 1,431 km (a ferry was used; observation only); 3-point alternatives → 422 `UNSUPPORTED_COMBINATION`. Route optimality and duration semantics are labelled `not_guaranteed` / `static_estimate`. |
+| Proximity (6) | All 3 metrics × 2 directions are 200. Direction changes road results (for example Mehrabad 5.2 km out, 3.1 km back), consistent with one-way streets. |
+| POIs (32: 8 presets × Tehran, Isfahan, Zahedan centres and a rural Kavir box) | 32/32 OK. Tehran centre: hospitals 36, pharmacies 95, police 22, fire stations 9, fuel 8, parking 66, schools 112, food 200 (truncated at the limit). The rural box returns 0 for every preset. |
+| Tiles and styles (27) | 27/27 OK, all 200. **Low-zoom tiles are heavy:** Tehran z4 2,099,808 B (1.55 s), z6 907,204 B (2.10 s), z8 1,262,720 B (0.68 s); z14 148 KB; z16 14 KB. |
+| Sequential latency (ms, p50 / p90 / max) | search 69 / 112 / 647; autocomplete 29 / 38 / 38; reverse 20 / 32 / 64; route 211 / 674 / 1,100; proximity 75 / 287 / 287; POIs 50 / 121 / 412; tiles 94 / 680 / 2,101. A baseline only: no concurrency, no SLA. |
+
+### Browser audit of the real web client (B1)
+
+| Run | Result |
+| --- | --- |
+| 1 (13:49 UTC, ~2 min after `start`, first use of cold caches) | **FAIL**: 399 requests, 0 external, 0 RTL-plugin, but 2 × `/health/ready` 503 (13:50:06, 13:50:15) and 2 matching console errors; the first search panel had not filled within 2.5 s. The API logged no error. Tegola logged 95 `broken pipe`/`connection reset` writes for tiles the browser abandoned. |
+| Diagnostics | Not reproduced. 60 s of 6-client tile load through the ingress (27,390 requests): readiness never left `ready`. Tegola's z0 tile, which the tiles probe renders on each probe, took 130–160 ms idle and 250–610 ms under uncached low-zoom load (32 probes, no failure; timeout 5 s). The cause of the two 503s remains **undetermined**. Scripts and outputs: `iran-run-attempt4/diagnostics/`. |
+| 2 | PASS on the request audit (259 requests, 0 external, 0 failed, 0 console errors; readiness `ready` in all 296 polls). However, with "bias to map view" on, «میدان آزادی» opened a road in Mahmudabad (Mazandaran) and «میدان نقش جهان» a track in Tehran province, so the views were mislabelled. The script was changed to turn off view bias and open the result whose card names the intended province. |
+| **3 (recorded)** | **PASS**: 511 requests, all to `https://127.0.0.1:8443`; 0 external, 0 RTL-plugin, 0 failed, 0 console errors; local Vazirmatn woff2 and SDF glyph ranges. 6/6 searches had the intended area at rank 1. Readiness was `ready` in all 296 polls. |
+
+Screenshots (`iran-run-attempt4/browser/`): the country view with Persian province labels; Tehran's Azadi Tower in light/dark × fa/en; the Tehran city view; Isfahan's Naqsh-e Jahan Square; Abyaneh village and region; Zahedan (dark/en); the Bazargan border crossing and region, with the national boundary; Shiraz (light/en). In English mode, objects without `name:en` show their Persian `name`, per the documented label fallback.
+
+## 10. Backup and fresh-host restore from the owner's original input
+
+Evidence: [`iran-backup-restore/`](iran-backup-restore/). Run with `PHASES="backup restore"` on the r3 bundle. Host 1 was destroyed after the backup, as for a lost machine; host 2 is a new, empty offline daemon that never saw host 1's Docker state or `SEYRA_HOME`.
+
+| Check | Result | Time |
+| --- | --- | --- |
+| I8 backup (no `--include-sources`) + separate secrets copy | PASS: generation `seyra-backup-20261018T140109746Z-8c35ff`, 3 files (control DB 7,630 B, state, manifests; 17 KB in total); the completion record names the source `iran-261017.osm.pbf`, its SHA-256 and the header snapshot time | 3 s |
+| I9 host 1 egress over its whole life (install, three imports, two software updates, activation, smoke, restart, three browser runs, backup) | PASS: **0** packets to non-local destinations; 7 link-local IGMP | |
+| R1 host 2 install from bundle r3 | done (`bootstrap-load`) | 71 s |
+| R2 `restore` before the secrets are back | PASS: refused, nothing started | |
+| R3 secrets → `init` → `restore` | PASS: generation verified (3 files by SHA-256, complete SQL, valid settings). The 5 control-DB release events are identical to host 1's. Restore printed `source iran-261017.osm.pbf sha256 7060fbb5…; rebuild it from the owner's original input with that sha256` | 4 s + 2 s |
+| R4 `import --pbf $HOME/iran-261017.osm.pbf` (the owner's original file; no included sources) | PASS: staging passed for all four providers. **`dataset_id` reproduced: `ds-20261017-2d2c87f31d11`** | 3,340 s |
+| R5 `activate` | PASS: serves through `https://127.0.0.1:8443` | 120 s |
+| R6 host 2 egress | PASS: **0** packets to non-local destinations; 7 link-local IGMP | |
+
+Host 2's identities: Tegola, Photon and Overpass are identical to host 1's. Valhalla's identity is the tileset build timestamp, so it differs per build by design (`1792332568` versus `1792328023`). Resources during the rebuild ([`resource-summary.txt`](iran-backup-restore/resource-summary.txt)) match attempt 4: minimum free disk 41.07 GB during Overpass, MemAvailable ≥ 3.57 GB, swap ≤ 538 MB, peak offline-host RAM 3.52 GiB. `SEYRA_HOME` totals 11,182,407,502 B.
+
+The harness finished every check but not its closing summary block, because its script file was edited (a comment-only commit) while this run was executing; bash reads scripts incrementally. Do not edit the harness during a run. [`summary.txt`](iran-backup-restore/summary.txt) is reconstructed from `progress.log` and says so.
+
+This validates the RUNBOOK §7 path *without* `--include-sources` on real data. The update test with a real second snapshot remains NOT RUN.
+
+## 11. What remains, and owner inputs
+
+| Item | Status | Needs |
+| --- | --- | --- |
+| Quality acceptance (fa/en search, reverse, addresses, routing restrictions) | NOT RUN: the §9 results are exploratory | Owner-approved queries and locations with expected places or areas; known access restrictions for car, pedestrian and motorcycle |
+| Load / latency / recovery targets | NOT RUN: only a sequential baseline (§9) | Expected concurrency, request mix and targets |
+| Real data update (A → B) | NOT RUN | A second real Iran snapshot |
+| LAN access | NOT RUN: loopback only | Bind address, client CIDRs, DNS names, certificates |
+| Mobile SDK, licence review | NOT RUN | Separate gates |
+| Import guard vs. measured need (~17 GB transient vs. 9.19 GB guard) | Open finding | Decide whether to raise the default factor or document a measured Iran figure; the importer's `free_bytes_min_observed` should sample within steps |
+| Heavy low-zoom tiles (z4 2.1 MB) | Open observation | Catalog zoom/simplification review if interactive country-level browsing matters |
+| Root-only bundle archives | Open defect (§4) | Small OPS change; not made in this run |
+| Two `/health/ready` 503s about 2 minutes after `start` | Not reproduced; cause undetermined | Watch during owner testing; the run 1 evidence is kept |
+
+### State left on the VM (nothing was deleted except this run's own scratch and test hosts)
+
+- Owner input `$HOME/iran-261017.osm.pbf`: unchanged (same SHA-256, mode `0644`).
+- **Offline host 2 (`seyra-iran-restore`) is still running and serving `ds-20261017-2d2c87f31d11`** on its own loopback inside the isolated network. To stop and remove it (as root inside the host):
+  `docker exec seyra-iran-restore sh -c 'docker ps -q | xargs -r docker kill; rm -rf /home/owner/seyra-lab/home /home/owner/seyra-lab/install /home/owner/seyra-lab/work'; docker rm -f seyra-iran-restore; docker volume rm seyra-iran-restore-docker`
+- Preparation material in `$HOME/seyra-prep/`: sources, bundles r1/r2/r3, Node, Playwright, logs and raw evidence. Synthetic test homes and labs are in `$HOME/seyra-synth/`; some files there are root-owned and are removed with a one-off container.
+- The VM daemon holds the built images, about 9 GB of build cache, the Playwright, DinD and busybox test images, `seyra-test-runner:local`, and the stopped containers of the synthetic stack (`seyra-*-1`, `SEYRA_HOME=$HOME/seyra-synth/home`).
+- 51,914,960,896 B were free on `/` at the end of the run.

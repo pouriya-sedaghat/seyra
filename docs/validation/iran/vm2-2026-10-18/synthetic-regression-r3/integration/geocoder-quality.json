@@ -1,0 +1,302 @@
+{
+  "recorded_at": "2026-10-18T12:18:13.159Z",
+  "base": "https://127.0.0.1:8443",
+  "dataset_id": "ds-20261001-9843cf36a06e",
+  "note": "Synthetic fixture only; not a measure of real Iranian address search quality.",
+  "summary": {
+    "search:fa": {
+      "cases": 8,
+      "hit_at_1": 7,
+      "hit_at_5": 8
+    },
+    "search:en": {
+      "cases": 3,
+      "hit_at_1": 3,
+      "hit_at_5": 3
+    },
+    "autocomplete:fa": {
+      "cases": 6,
+      "hit_at_1": 5,
+      "hit_at_5": 6
+    },
+    "autocomplete:en": {
+      "cases": 3,
+      "hit_at_1": 3,
+      "hit_at_5": 3
+    },
+    "reverse": {
+      "cases": 3,
+      "hit_at_1": 3,
+      "hit_at_5": 3
+    }
+  },
+  "cases": [
+    {
+      "op": "search",
+      "query": "خیابان اصلی آزمایشی",
+      "lang": "fa",
+      "expect": "W5004",
+      "note": "Persian Yeh/Kaf query must match Arabic-letter name",
+      "rank": 1,
+      "top": [
+        "osm:w5004 خيابان اصلي آزمايشي",
+        "osm:n1110 داروخانه كوثر آزمايشي",
+        "osm:n1109 بیمارستان آزمایشی"
+      ],
+      "normalized_query": "خیابان اصلی ازمایشی"
+    },
+    {
+      "op": "search",
+      "query": "Synthetic Main Street",
+      "lang": "en",
+      "expect": "W5004",
+      "note": null,
+      "rank": 1,
+      "top": [
+        "osm:w5004 Synthetic Main Street",
+        "osm:n1109 Synthetic Hospital",
+        "osm:n1110 Synthetic Kowsar Pharmacy"
+      ],
+      "normalized_query": "synthetic main street"
+    },
+    {
+      "op": "search",
+      "query": "خیابان آزمایشی 3",
+      "lang": "fa",
+      "expect": "W5010",
+      "note": "ASCII digit query, Persian digit data",
+      "rank": 1,
+      "top": [
+        "osm:w5010 خیابان آزمایشی ۳",
+        "osm:n1125 نانوایی آزمایشی",
+        "osm:n1126 فروشگاه ۲۴ ساعته آزمایشی"
+      ],
+      "normalized_query": "خیابان ازمایشی 3"
+    },
+    {
+      "op": "search",
+      "query": "خیابان شمالی آزمایشی",
+      "lang": "fa",
+      "expect": "W5012",
+      "note": "ZWNJ in data, space in query",
+      "rank": 3,
+      "top": [
+        "osm:n1132 بنای یادبود مُحَمَّد آزمایشی",
+        "osm:n1129 اداره آزمایشی",
+        "osm:w5012 خیابان‌ شمالی‌ آزمایشی"
+      ],
+      "normalized_query": "خیابان شمالی ازمایشی"
+    },
+    {
+      "op": "search",
+      "query": "خیابان اصلی آزمایشی 12",
+      "lang": "fa",
+      "expect": "W5030",
+      "note": "housenumber with Persian digits in data",
+      "rank": 1,
+      "top": [
+        "osm:w5030 null"
+      ],
+      "normalized_query": "خیابان اصلی ازمایشی 12"
+    },
+    {
+      "op": "search",
+      "query": "داروخانه کوثر",
+      "lang": "fa",
+      "expect": "N1110",
+      "note": "Persian Kaf query vs Arabic Kaf data",
+      "rank": 1,
+      "top": [
+        "osm:n1110 داروخانه كوثر آزمايشي"
+      ],
+      "normalized_query": "داروخانه کوثر"
+    },
+    {
+      "op": "search",
+      "query": "Kowsar",
+      "lang": "en",
+      "expect": "N1110",
+      "note": null,
+      "rank": 1,
+      "top": [
+        "osm:n1110 Synthetic Kowsar Pharmacy"
+      ],
+      "normalized_query": "kowsar"
+    },
+    {
+      "op": "search",
+      "query": "رستوران لاله",
+      "lang": "fa",
+      "expect": "N1122",
+      "note": "lam-alef",
+      "rank": 1,
+      "top": [
+        "osm:n1122 رستوران لاله آزمایشی"
+      ],
+      "normalized_query": "رستوران لاله"
+    },
+    {
+      "op": "search",
+      "query": "فروشگاه 24 ساعته",
+      "lang": "fa",
+      "expect": "N1126",
+      "note": "digits",
+      "rank": 1,
+      "top": [
+        "osm:n1126 فروشگاه ۲۴ ساعته آزمایشی"
+      ],
+      "normalized_query": "فروشگاه 24 ساعته"
+    },
+    {
+      "op": "search",
+      "query": "بنای یادبود محمد",
+      "lang": "fa",
+      "expect": "N1132",
+      "note": "diacritics in data",
+      "rank": 1,
+      "top": [
+        "osm:n1132 بنای یادبود مُحَمَّد آزمایشی"
+      ],
+      "normalized_query": "بنای یادبود محمد"
+    },
+    {
+      "op": "search",
+      "query": "Synthetic City",
+      "lang": "en",
+      "expect": "N1140",
+      "note": null,
+      "rank": 1,
+      "top": [
+        "osm:n1140 Synthetic City",
+        "osm:w5024 Synthetic River",
+        "osm:w5026 Synthetic Canal"
+      ],
+      "normalized_query": "synthetic city"
+    },
+    {
+      "op": "autocomplete",
+      "query": "خیابان اصلی آزمای",
+      "lang": "fa",
+      "expect": "W5004",
+      "rank": 1,
+      "top": [
+        "osm:w5004 خيابان اصلي آزمايشي",
+        "osm:n1109 بیمارستان آزمایشی",
+        "osm:n1110 داروخانه كوثر آزمايشي"
+      ]
+    },
+    {
+      "op": "autocomplete",
+      "query": "Synthetic Main Stre",
+      "lang": "en",
+      "expect": "W5004",
+      "rank": 1,
+      "top": [
+        "osm:w5004 Synthetic Main Street",
+        "osm:n1109 Synthetic Hospital",
+        "osm:n1110 Synthetic Kowsar Pharmacy"
+      ]
+    },
+    {
+      "op": "autocomplete",
+      "query": "خیابان شمالی آزمای",
+      "lang": "fa",
+      "expect": "W5012",
+      "rank": 3,
+      "top": [
+        "osm:n1132 بنای یادبود مُحَمَّد آزمایشی",
+        "osm:n1129 اداره آزمایشی",
+        "osm:w5012 خیابان‌ شمالی‌ آزمایشی"
+      ]
+    },
+    {
+      "op": "autocomplete",
+      "query": "داروخانه کوث",
+      "lang": "fa",
+      "expect": "N1110",
+      "rank": 1,
+      "top": [
+        "osm:n1110 داروخانه كوثر آزمايشي"
+      ]
+    },
+    {
+      "op": "autocomplete",
+      "query": "Kows",
+      "lang": "en",
+      "expect": "N1110",
+      "rank": 1,
+      "top": [
+        "osm:n1110 Synthetic Kowsar Pharmacy"
+      ]
+    },
+    {
+      "op": "autocomplete",
+      "query": "رستوران لال",
+      "lang": "fa",
+      "expect": "N1122",
+      "rank": 1,
+      "top": [
+        "osm:n1122 رستوران لاله آزمایشی"
+      ]
+    },
+    {
+      "op": "autocomplete",
+      "query": "فروشگاه 24 ساع",
+      "lang": "fa",
+      "expect": "N1126",
+      "rank": 1,
+      "top": [
+        "osm:n1126 فروشگاه ۲۴ ساعته آزمایشی"
+      ]
+    },
+    {
+      "op": "autocomplete",
+      "query": "بنای یادبود محم",
+      "lang": "fa",
+      "expect": "N1132",
+      "rank": 1,
+      "top": [
+        "osm:n1132 بنای یادبود مُحَمَّد آزمایشی"
+      ]
+    },
+    {
+      "op": "autocomplete",
+      "query": "Synthetic Cit",
+      "lang": "en",
+      "expect": "N1140",
+      "rank": 1,
+      "top": [
+        "osm:n1140 Synthetic City",
+        "osm:w5024 Synthetic River",
+        "osm:n1141 Synthetic Suburb"
+      ]
+    },
+    {
+      "op": "reverse",
+      "query": "0.0258,0.0206",
+      "expect": "N1110",
+      "rank": 1,
+      "top": [
+        "osm:n1110 داروخانه كوثر آزمايشي"
+      ]
+    },
+    {
+      "op": "reverse",
+      "query": "0.0258,0.0306",
+      "expect": "N1122",
+      "rank": 1,
+      "top": [
+        "osm:n1122 رستوران لاله آزمایشی"
+      ]
+    },
+    {
+      "op": "reverse",
+      "query": "0.03,0.027",
+      "expect": "N1140",
+      "rank": 1,
+      "top": [
+        "osm:n1140 شهر آزمایشی"
+      ]
+    }
+  ]
+}

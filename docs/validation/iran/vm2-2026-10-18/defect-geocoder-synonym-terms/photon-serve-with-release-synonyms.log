@@ -1,0 +1,3 @@
+Caused by: java.lang.IllegalArgumentException: term: ? was completely eliminated by analyzer
+[2026-10-18T12:18:45,714][ERROR][d.k.p.App                ] Could not install synonyms: Request failed: [illegal_argument_exception] Failed to build analyzers: [search]
+[2026-10-18T12:18:45,714][INFO ][d.k.p.App                ] Shutting down the service.

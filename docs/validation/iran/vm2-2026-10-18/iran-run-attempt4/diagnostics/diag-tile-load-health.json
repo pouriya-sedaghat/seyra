@@ -1,0 +1,8 @@
+{
+ "tile_requests": 27390,
+ "tile_errors": {},
+ "max_tile_ms": 2303,
+ "health_transitions": [
+  "2026-10-18T13:52:00.235Z ready tiles:ok routing:ok geocoder:ok overpass:ok"
+ ]
+}

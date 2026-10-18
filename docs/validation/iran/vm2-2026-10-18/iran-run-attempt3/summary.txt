@@ -1,0 +1,6 @@
+# Seyra real-Iran offline-host validation — 2026-10-18T12:12:22Z
+# bundle=/home/owner/seyra-lab/transfer/bundle-2026-10-18-vm2-r2 pbf=iran-261017.osm.pbf sha256=7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f dataset_id=
+PASS U1 software update: SHA256SUMS digest matches the out-of-band value (dd21096256bab4f56a82b15511900786e3420a539b130b335624c948e2e96da7); install tree replaced; all locked images verified
+PASS I3a free space 59758211072 B >= import guard 9193803280 B at the managed home
+FAIL I3 import rc=1 dataset=ds-20261017-2d2c87f31d11 (failed-release state preserved on the offline host)
+# failures: 1

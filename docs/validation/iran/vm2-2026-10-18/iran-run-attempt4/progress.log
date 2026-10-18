@@ -1,0 +1,9 @@
+# 2026-10-18T12:45:51Z iran-offline-host start phases=[update import serve browser] pbf=iran-261017.osm.pbf sha256=7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f size=229845082
+== 2026-10-18T12:46:18Z PASS U1 software update: SHA256SUMS digest matches the out-of-band value (9c4e87daf2c97cbf1b69b12a4bf0b821a3adab62d47ef71c0a96fae97aa969f8); install tree replaced; all locked images verified
+== 2026-10-18T12:46:19Z PASS I3a free space 51925262336 B >= import guard 9193803280 B at the managed home
+== 2026-10-18T13:43:58Z PASS I3 full Iran import with staging validation: ds-20261017-2d2c87f31d11 (3456 s)
+== 2026-10-18T13:45:26Z PASS I4 verify-release ds-20261017-2d2c87f31d11
+== 2026-10-18T13:46:57Z PASS I5 activated ds-20261017-2d2c87f31d11; /health/ready reports it through https://127.0.0.1:8443 with all four providers
+== 2026-10-18T13:47:15Z PASS I6 exploratory Iran smoke completed: {"dataset_id":"ds-20261017-2d2c87f31d11","ready":200,"search_hit_at_1":23,"search_hit_at_5":32,"search_cases":33,"autocomplete_hit_at_5":5,"autocomplete_cases":6,"reverse_expected_seen":10,"reverse_cases_with_expectation":12,"routing_status_as_expected":14,"routing_cases":14,"routing_distance_in_range":12,"proximity_ok":6,"pois_ok":32,"pois_cases":32,"tiles_ok":27,"tiles_requests":27,"transport_errors":0}
+== 2026-10-18T13:48:08Z PASS I7 stop/start: ready again on ds-20261017-2d2c87f31d11 with the same provider identities
+== 2026-10-18T13:50:48Z FAIL B1 rc=1 FAIL requests=399 external=0 rtl_plugin=0 failed=2 console_errors=2 visits_found=5/6
