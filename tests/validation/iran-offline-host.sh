@@ -14,6 +14,10 @@
 #   BUNDLE=/abs/bundle PBF=/abs/iran.osm.pbf LAB=/abs/lab DIND_IMAGE=docker:29.8.2-dind \
 #   OUT=/abs/evidence-dir [PHASES="install import serve backup restore"] tests/validation/iran-offline-host.sh
 #
+# Phases: install | update (UPDATE_BUNDLE under $LAB + UPDATE_SUMS_DIGEST: RUNBOOK §8 on the existing
+# host) | import | serve | browser (PLAYWRIGHT_IMAGE, PLAYWRIGHT_DIR) | backup | restore. Phases
+# without `install` attach to the existing host `seyra-iran-host`.
+#
 # Evidence (sanitized: no secrets, no data stores) goes to $OUT. Exits non-zero on any FAIL.
 set -uo pipefail
 : "${BUNDLE:?}" "${PBF:?}" "${LAB:?}" "${DIND_IMAGE:?}" "${OUT:?}"
@@ -163,6 +167,25 @@ if has install; then
   if [ $rc -eq 0 ]; then result PASS I2 "init (loopback 127.0.0.1:8443) and internal TLS CA/certificate"; else result FAIL I2 "rc=$rc"; fi
 else
   attach_host seyra-iran-host
+fi
+
+if has update; then
+  # RUNBOOK §8 software update on the existing offline host: the new bundle arrives on transfer
+  # media (a directory under $LAB, visible inside the host), its SHA256SUMS digest is compared
+  # with the value received out of band, the install tree is replaced and the images are loaded.
+  : "${UPDATE_BUNDLE:?}" "${UPDATE_SUMS_DIGEST:?}"
+  [ -f "$OUT/.egress-start" ] || egress_count > "$OUT/.egress-start"
+  got="$(sha256sum "$UPDATE_BUNDLE/SHA256SUMS" | cut -d' ' -f1)"
+  in_host rm -rf "$inst" && cp -a "$UPDATE_BUNDLE/install" "$inst"
+  timed update-bootstrap-load cli bootstrap-load "$UPDATE_BUNDLE" > "$OUT/U1-bootstrap-load.log" 2>&1; rc=$?
+  cli verify-images > "$OUT/U1-verify-images.log" 2>&1; rc2=$?
+  cli status > "$OUT/U1-status.log" 2>&1
+  if [ "$got" = "$UPDATE_SUMS_DIGEST" ] && [ $rc -eq 0 ] && [ $rc2 -eq 0 ] && grep -q 'identities match the manifest' "$OUT/U1-bootstrap-load.log"; then
+    result PASS U1 "software update: SHA256SUMS digest matches the out-of-band value ($got); install tree replaced; all locked images verified"
+  else
+    result FAIL U1 "digest=$got expected=$UPDATE_SUMS_DIGEST bootstrap=$rc verify=$rc2"
+  fi
+  BUNDLE="$UPDATE_BUNDLE"   # later phases (a restore target) install from the updated bundle
 fi
 
 if has import; then

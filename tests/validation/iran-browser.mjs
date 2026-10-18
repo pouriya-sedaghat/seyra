@@ -50,16 +50,25 @@ const setView = async (theme, lang) => {
   await page.locator('header select').nth(0).selectOption(theme);
   await settle(2500);
 };
-const searchAndOpen = async (q) => {
+// Opens the first result whose card mentions `expect` (an admin area written before the run), so
+// each view shows the intended region; records which rank that was. View bias is turned off once.
+const searchAndOpen = async (q, expect) => {
   await page.getByRole('textbox').first().fill(q);
   await page.keyboard.press('Enter');
-  await page.waitForTimeout(2000);
+  await page.waitForTimeout(2500);
   const text = (await page.locator('aside').innerText()).slice(0, 300);
-  const first = page.locator('aside li, aside button.result, aside .result').first();
-  const found = (await first.count()) > 0;
-  if (found) await first.click().catch(() => undefined);
+  const items = page.locator('aside li, aside button.result, aside .result');
+  const count = await items.count();
+  let rank = null;
+  for (let i = 0; i < count; i++) {
+    if ((await items.nth(i).innerText()).includes(expect)) {
+      rank = i + 1;
+      await items.nth(i).click().catch(() => undefined);
+      break;
+    }
+  }
   await settle(4500);
-  return { q, found, panel_text: text };
+  return { q, expect, found: rank !== null, rank_of_expected_area: rank, results_listed: count, panel_text: text };
 };
 const zoomOut = async (steps) => {
   for (let i = 0; i < steps; i++) await page.locator('.maplibregl-ctrl-zoom-out').click();
@@ -71,10 +80,13 @@ await page.waitForSelector('canvas.maplibregl-canvas', { timeout: 60_000 });
 await settle(5000);
 const title = await page.title();
 await shot('country-light-fa'); // initial view from the release style (dataset bounds)
+// Search is not biased to the current view, so results do not depend on the previous visit.
+const bias = page.locator('aside input[type=checkbox]').nth(1);
+if (await bias.isChecked().catch(() => false)) await bias.uncheck();
 
 const visits = [];
 // Capital, street level, all four theme/language combinations.
-visits.push({ area: 'Tehran (urban)', ...(await searchAndOpen('میدان آزادی')) });
+visits.push({ area: 'Tehran (urban)', ...(await searchAndOpen('برج آزادی', 'تهران')) });
 for (const [theme, lang] of [['light', 'fa'], ['dark', 'fa'], ['light', 'en'], ['dark', 'en']]) {
   await setView(theme, lang);
   await shot(`tehran-azadi-${theme}-${lang}`);
@@ -83,25 +95,25 @@ await setView('light', 'fa');
 await zoomOut(4);
 await shot('tehran-city-light-fa');
 // Historic centre with dense POIs.
-visits.push({ area: 'Isfahan (urban)', ...(await searchAndOpen('میدان نقش جهان')) });
+visits.push({ area: 'Isfahan (urban)', ...(await searchAndOpen('میدان نقش جهان', 'اصفهان')) });
 await shot('isfahan-naqshejahan-light-fa');
 // Rural village.
-visits.push({ area: 'Abyaneh (rural)', ...(await searchAndOpen('ابیانه')) });
+visits.push({ area: 'Abyaneh (rural)', ...(await searchAndOpen('ابیانه', 'اصفهان')) });
 await shot('abyaneh-rural-light-fa');
 await zoomOut(3);
 await shot('abyaneh-region-light-fa');
 // Border towns: south-east (Pakistan/Afghanistan side) and north-west (Turkey).
-visits.push({ area: 'Zahedan (south-east border province)', ...(await searchAndOpen('زاهدان')) });
+visits.push({ area: 'Zahedan (south-east border province)', ...(await searchAndOpen('زاهدان', 'سیستان')) });
 await setView('dark', 'en');
 await shot('zahedan-dark-en');
 await setView('light', 'fa');
-visits.push({ area: 'Bazargan (north-west border crossing)', ...(await searchAndOpen('بازرگان')) });
+visits.push({ area: 'Bazargan (north-west border crossing)', ...(await searchAndOpen('بازرگان', 'آذربایجان')) });
 await shot('bazargan-border-light-fa');
 await zoomOut(3);
 await shot('bazargan-region-light-fa');
 // English search on the English map.
 await setView('light', 'en');
-visits.push({ area: 'Shiraz (English query)', ...(await searchAndOpen('Shiraz')) });
+visits.push({ area: 'Shiraz (English query)', ...(await searchAndOpen('Shiraz', 'Fars')) });
 await shot('shiraz-light-en');
 await browser.close();
 
