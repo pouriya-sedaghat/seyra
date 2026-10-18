@@ -38,11 +38,19 @@ interface PlaceContent {
   object_type?: string;
   categories?: string[];
   name?: Record<string, string>;
-  address?: Record<string, string>;
+  // Photon's dump writes unmatched address lines as string arrays (`other`, `other:<lang>`).
+  address?: Record<string, string | string[]>;
   extra?: Record<string, string>;
   housenumber?: string;
   centroid?: [number, number];
   [k: string]: unknown;
+}
+
+/** The text values of a dump field: strings as they are, string arrays element-wise, nothing else. */
+export function textValues(value: unknown): string[] {
+  if (typeof value === 'string') return [value];
+  if (Array.isArray(value)) return value.filter((v): v is string => typeof v === 'string');
+  return [];
 }
 
 /** Split text into single-word tokens the way synonyms require (no spaces, hyphens, commas). */
@@ -60,6 +68,7 @@ export function addNameVariants(content: PlaceContent): { added: number; missing
   const existing = new Set(Object.values(names));
   const wanted: string[] = [];
   for (const value of Object.values(names)) {
+    if (typeof value !== 'string') continue;
     const n = normalizeForSearch(value);
     if (n.length > 0 && n !== value.toLowerCase() && !existing.has(n) && !wanted.includes(n)) wanted.push(n);
   }
@@ -150,9 +159,9 @@ export async function preprocessDump(inputPath: string, outputPath: string, syno
       const items = (Array.isArray(doc.content) ? doc.content : [doc.content]) as PlaceContent[];
       for (const c of items) {
         stats.places++;
-        for (const v of Object.values(c.name ?? {})) collectSynonyms(v, synonyms);
-        for (const v of Object.values(c.address ?? {})) collectSynonyms(v, synonyms);
-        if (c.housenumber) collectSynonyms(c.housenumber, synonyms);
+        for (const v of Object.values(c.name ?? {})) for (const t of textValues(v)) collectSynonyms(t, synonyms);
+        for (const v of Object.values(c.address ?? {})) for (const t of textValues(v)) collectSynonyms(t, synonyms);
+        for (const t of textValues(c.housenumber)) collectSynonyms(t, synonyms);
         recordOriginalNames(c);
         const r = addNameVariants(c);
         if (r.added > 0) stats.names_with_variants++;
