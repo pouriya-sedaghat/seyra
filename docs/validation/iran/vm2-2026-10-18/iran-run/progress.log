@@ -1,0 +1,6 @@
+# 2026-10-18T09:35:53Z iran-offline-host start phases=[install import serve browser] pbf=iran-261017.osm.pbf sha256=7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f size=229845082
+== 2026-10-18T09:36:04Z PASS I0 offline host has no images and no outside route (probe to example.com failed)
+== 2026-10-18T09:36:54Z PASS I1 bootstrap-load verified checksums and loaded 10 images; every reference resolves to its locked image ID
+== 2026-10-18T09:37:00Z PASS I2 init (loopback 127.0.0.1:8443) and internal TLS CA/certificate
+== 2026-10-18T09:37:00Z PASS I3a free space 67246477312 B >= import guard 9193803280 B at the managed home
+== 2026-10-18T10:19:06Z FAIL I3 import rc=1 dataset=ds-20261017-2d2c87f31d11 (failed-release state preserved on the offline host)

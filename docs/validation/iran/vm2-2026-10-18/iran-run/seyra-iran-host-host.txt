@@ -1,0 +1,10 @@
+offline host seyra-iran-host: engine 29.8.2 image=docker:29.8.2-dind (sha256:1e08cdb63405ca788aea94ef35b792d1e299607c667d33d7bcbcae1fd2611ced)
+network: seyra_offline_lab (internal); sink route via 172.22.0.250; egress counter chain SEYRA_EGRESS on OUTPUT + DOCKER-USER
+registry mirrors: []  proxies: 
+images before install: 0
+external DNS from the offline host: ** server can't find example.com: SERVFAIL  
+http probe to example.com: wget: bad address 'example.com'
+unreachable
+default via 172.22.0.250 dev eth0 
+172.17.0.0/16 dev docker0 scope link  src 172.17.0.1 
+172.22.0.0/16 dev eth0 scope link  src 172.22.0.2 

@@ -1,0 +1,17 @@
+# External URL inventory (AC04) — 2026-10-18T09:16:44Z; active release ds-20261001-9843cf36a06e
+library error-message/doc link | apps/web/dist/assets/maplibre-gl-worker-DxGNRm0a.mjs | https://github.com/maplibre/maplibre-gl-js/blob/v6.14.0/LICENSE.txt
+library error-message/doc link | apps/web/dist/assets/maplibre-gl-worker-DxGNRm0a.mjs | https://github.com/mapbox/mapbox-gl-js/issues/2907
+library error-message/doc link | apps/web/dist/assets/index-BirSHwto.js | https://react.dev/errors/
+namespace (XML/SVG/MathML constant) | apps/web/dist/assets/index-BirSHwto.js | http://www.w3.org/2000/svg
+namespace (XML/SVG/MathML constant) | apps/web/dist/assets/index-BirSHwto.js | http://www.w3.org/1998/Math/MathML
+namespace (XML/SVG/MathML constant) | apps/web/dist/assets/index-BirSHwto.js | http://www.w3.org/1999/xlink
+namespace (XML/SVG/MathML constant) | apps/web/dist/assets/index-BirSHwto.js | http://www.w3.org/XML/1998/namespace
+namespace (XML/SVG/MathML constant) | apps/web/dist/assets/index-BirSHwto.js | http://www.w3.org/1999/xhtml
+URL-parsing base on the reserved .invalid TLD (RFC 2606; never resolvable) | apps/web/dist/assets/index-BirSHwto.js | https://maplibre.invalid/
+library error-message/doc link | apps/web/dist/assets/index-BirSHwto.js | https://github.com/mapbox/mapbox-gl-js/issues/2907
+library error-message link (no-WebGL message) | apps/web/dist/assets/index-BirSHwto.js | https://wiki.openstreetmap.org/wiki/This_map_requires_WebGL
+library error-message/doc link | apps/web/dist/assets/index-BirSHwto.js | https://maplibre.org/
+internal service (private network; DSN host is the internal db service) | infra/images/proxy/nginx.conf.template | http://seyra_api
+internal service (private network; DSN host is the internal db service) | infra/images/proxy/nginx.conf.template | http://seyra_tegola/maps/$
+internal service (private network; DSN host is the internal db service) | /home/owner/seyra-synth/home/releases/ds-20261001-9843cf36a06e/tegola/tegola.toml | postgres://seyra_tile_reader:$
+# unclassified: 0

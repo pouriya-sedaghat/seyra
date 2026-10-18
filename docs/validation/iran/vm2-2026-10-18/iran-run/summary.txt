@@ -1,0 +1,8 @@
+# Seyra real-Iran offline-host validation — 2026-10-18T10:19:06Z
+# bundle=/home/owner/seyra-prep/bundle-2026-10-18-vm2 pbf=iran-261017.osm.pbf sha256=7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f dataset_id=
+PASS I0 offline host has no images and no outside route (probe to example.com failed)
+PASS I1 bootstrap-load verified checksums and loaded 10 images; every reference resolves to its locked image ID
+PASS I2 init (loopback 127.0.0.1:8443) and internal TLS CA/certificate
+PASS I3a free space 67246477312 B >= import guard 9193803280 B at the managed home
+FAIL I3 import rc=1 dataset=ds-20261017-2d2c87f31d11 (failed-release state preserved on the offline host)
+# failures: 1

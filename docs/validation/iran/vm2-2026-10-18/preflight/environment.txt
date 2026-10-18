@@ -1,0 +1,42 @@
+## captured 2026-10-18T08:33:10Z host=seyra user=owner home=/home/owner
+Linux 7.0.0-38-generic #38-Ubuntu SMP PREEMPT_DYNAMIC Fri Sep  4 09:10:14 UTC 2026 x86_64
+PRETTY_NAME="Ubuntu 26.04 LTS"
+vmware
+nproc=4
+Architecture:                            x86_64
+Model name:                              12th Gen Intel(R) Core(TM) i5-12400
+Thread(s) per core:                      1
+Core(s) per socket:                      1
+Socket(s):                               4
+               total        used        free      shared  buff/cache   available
+Mem:      7734890496   897536000  5765939200     1732608  1342517248  6837354496
+Swap:     4294963200           0  4294963200
+NAME      TYPE       SIZE USED PRIO
+/swap.img file 4294963200    0   -1
+Filesystem                        Type    1B-blocks       Used   Available Use% Mounted on
+/dev/mapper/ubuntu--vg-ubuntu--lv ext4 105089261568 8355303424 91348471808   9% /
+/dev/mapper/ubuntu--vg-ubuntu--lv ext4 105089261568 8355303424 91348471808   9% /
+/dev/sda2                         ext4   2040373248  104988672  1811234816   6% /boot
+Filesystem                         Inodes  IUsed   IFree IUse% Mounted on
+/dev/mapper/ubuntu--vg-ubuntu--lv 6553600 110994 6442606    2% /
+/dev/mapper/ubuntu--vg-ubuntu--lv ext4 rw,relatime
+NAME                              SIZE TYPE FSTYPE      MOUNTPOINT
+sda                       322122547200 disk             
+├─sda1                         1048576 part             
+├─sda2                      2147483648 part ext4        /boot
+└─sda3                    319971917824 part LVM2_member 
+  └─ubuntu--vg-ubuntu--lv 107374182400 lvm  ext4        /
+sr0                         2918598656 rom  iso9660     
+docker client 29.9.1 server 29.9.1 linux/amd64
+Docker Compose version v5.6.0
+NAME        DESCRIPTION                               DOCKER ENDPOINT               ERROR
+default *   Current DOCKER_HOST based configuration   unix:///var/run/docker.sock   
+root=/var/lib/docker driver=overlayfs cpus=4 mem=7734890496 os=Ubuntu 26.04 LTS arch=x86_64
+bridge bridge
+host host
+none null
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          0         0         0B        0B
+Containers      0         0         0B        0B
+Local Volumes   0         0         0B        0B
+Build Cache     0         0         0B        0B

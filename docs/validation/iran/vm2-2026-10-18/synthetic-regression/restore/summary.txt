@@ -1,0 +1,11 @@
+# Seyra fresh-host restore drill — 2026-10-18T10:34:16Z
+# bundle=/home/owner/seyra-prep/bundle-2026-10-18-vm2 A=ds-20261001-9843cf36a06e B=ds-20261002-9843cf36a06e backup=/home/owner/seyra-synth/restore-lab/backup
+PASS R1 source host: active ds-20261002-9843cf36a06e, previous ds-20261001-9843cf36a06e, ready through the ingress; 6 control-DB release events; non-default server names
+PASS R2 two published generations (seyra-backup-20261018T102951379Z-26457f; seyra-backup-20261018T103022229Z-9535dc with both managed inputs), each with a SHA-256 completion record, plus an interrupted attempt holding a newer real dump; no secret value or private-key material in the backup or its archives
+PASS R3 fresh host: images loaded; restore before the secrets are restored is refused and starts nothing
+PASS R4a a damaged generation (one byte of its SQL dump changed) is refused before any database change: initialised control DB still empty, settings untouched
+PASS R4 restore selected seyra-backup-20261018T103022229Z-9535dc (newest of 2 complete generations), ignored the interrupted attempt, and replaced the initialised control DB: all 6 release events identical (ids, timestamps), the interrupted attempt's extra row absent; seyra_api authenticates with the restored secret; settings restored
+PASS R5 both backed-up releases rebuilt from the backed-up inputs with the printed commands; dataset ids reproduced (ds-20261001-9843cf36a06e, ds-20261002-9843cf36a06e)
+PASS R6 restored host serves ds-20261002-9843cf36a06e (previous ds-20261001-9843cf36a06e) through the ingress; restored history kept and extended; secret files identical to the secrets backup
+PASS R7 zero packets to non-local destinations from either host during install, backup, restore, rebuild and activation
+# failures: 0

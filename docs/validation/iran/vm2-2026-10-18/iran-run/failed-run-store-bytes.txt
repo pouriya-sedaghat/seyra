@@ -1,0 +1,11 @@
+229849178	source
+870731136	valhalla
+1099609063	geocoder
+8678	tegola
+275485	logs
+6046	validation
+8192	maps
+2615827723	/home/owner/seyra-lab/home/data/postgres
+4096	/home/owner/seyra-lab/home/work
+2200562175	/home/owner/seyra-lab/home
+4159070197	/var/lib/docker

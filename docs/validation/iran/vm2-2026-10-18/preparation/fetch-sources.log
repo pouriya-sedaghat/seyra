@@ -1,0 +1,125 @@
+Submodule 'third_party/cpp-statsd-client' (https://github.com/vthiery/cpp-statsd-client) registered for path 'third_party/cpp-statsd-client'
+Submodule 'third_party/cxxopts' (https://github.com/jarro2783/cxxopts.git) registered for path 'third_party/cxxopts'
+Submodule 'third_party/date' (https://github.com/HowardHinnant/date.git) registered for path 'third_party/date'
+Submodule 'third_party/dirent' (https://github.com/tronkko/dirent) registered for path 'third_party/dirent'
+Submodule 'third_party/fastcov' (https://github.com/RPGillespie6/fastcov.git) registered for path 'third_party/fastcov'
+Submodule 'third_party/flatbush' (https://github.com/chusitoo/flatbush.git) registered for path 'third_party/flatbush'
+Submodule 'third_party/googletest' (https://github.com/google/googletest.git) registered for path 'third_party/googletest'
+Submodule 'third_party/just_gtfs' (https://github.com/valhalla/just_gtfs) registered for path 'third_party/just_gtfs'
+Submodule 'third_party/libosmium' (https://github.com/osmcode/libosmium.git) registered for path 'third_party/libosmium'
+Submodule 'third_party/microtar' (https://github.com/rxi/microtar.git) registered for path 'third_party/microtar'
+Submodule 'third_party/nanobind' (https://github.com/wjakob/nanobind) registered for path 'third_party/nanobind'
+Submodule 'third_party/protozero' (https://github.com/mapbox/protozero.git) registered for path 'third_party/protozero'
+Submodule 'rapidjson' (https://github.com/miloyip/rapidjson) registered for path 'third_party/rapidjson'
+Submodule 'third_party/tz' (https://github.com/eggert/tz.git) registered for path 'third_party/tz'
+Submodule 'third_party/unordered_dense' (https://github.com/martinus/unordered_dense) registered for path 'third_party/unordered_dense'
+Submodule 'third_party/vtzero' (https://github.com/mapbox/vtzero.git) registered for path 'third_party/vtzero'
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/cpp-statsd-client'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/cxxopts'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/date'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/dirent'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/fastcov'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/flatbush'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/googletest'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/just_gtfs'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/libosmium'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/microtar'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/nanobind'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/protozero'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/rapidjson'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/tz'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/unordered_dense'...
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/vtzero'...
+From https://github.com/vthiery/cpp-statsd-client
+ * branch            b60bc7bb930df664b4ab9573ad8bee80d29dc72d -> FETCH_HEAD
+Submodule path 'third_party/cpp-statsd-client': checked out 'b60bc7bb930df664b4ab9573ad8bee80d29dc72d'
+From https://github.com/jarro2783/cxxopts
+ * branch            63d1b65a694cfceafc20863afa75df49dfbe6b2a -> FETCH_HEAD
+Submodule path 'third_party/cxxopts': checked out '63d1b65a694cfceafc20863afa75df49dfbe6b2a'
+From https://github.com/HowardHinnant/date
+ * branch            b2e917ce6ca8dc11403772f6161b8f69f808c38b -> FETCH_HEAD
+Submodule path 'third_party/date': checked out 'b2e917ce6ca8dc11403772f6161b8f69f808c38b'
+From https://github.com/tronkko/dirent
+ * branch            287ba928bfe9d20796bf0428d449abc8d6f29d79 -> FETCH_HEAD
+Submodule path 'third_party/dirent': checked out '287ba928bfe9d20796bf0428d449abc8d6f29d79'
+From https://github.com/RPGillespie6/fastcov
+ * branch            40dffe81d62c0d897afe4108f3b5489487ff3bce -> FETCH_HEAD
+Submodule path 'third_party/fastcov': checked out '40dffe81d62c0d897afe4108f3b5489487ff3bce'
+From https://github.com/chusitoo/flatbush
+ * branch            b7a28a07bb97f708c9a8780b3d7af3908429baa8 -> FETCH_HEAD
+Submodule path 'third_party/flatbush': checked out 'b7a28a07bb97f708c9a8780b3d7af3908429baa8'
+From https://github.com/google/googletest
+ * branch            52eb8108c5bdec04579160ae17225d66034bd723 -> FETCH_HEAD
+Submodule path 'third_party/googletest': checked out '52eb8108c5bdec04579160ae17225d66034bd723'
+Submodule path 'third_party/just_gtfs': checked out '7ea77c7151d1fddd26892caf7002b5f64a56346f'
+Submodule 'doctest' (https://github.com/onqtam/doctest) registered for path 'third_party/just_gtfs/doctest'
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/just_gtfs/doctest'...
+From https://github.com/onqtam/doctest
+ * branch            f25235f4c2f8a5fcf8e888114a90864ef5e4bf56 -> FETCH_HEAD
+Submodule path 'third_party/just_gtfs/doctest': checked out 'f25235f4c2f8a5fcf8e888114a90864ef5e4bf56'
+From https://github.com/osmcode/libosmium
+ * branch            a44ae7be0fc161dc4b110c01fa176cfe5bf45503 -> FETCH_HEAD
+Submodule path 'third_party/libosmium': checked out 'a44ae7be0fc161dc4b110c01fa176cfe5bf45503'
+Submodule 'test/data-tests/osm-testdata' (https://github.com/osmcode/osm-testdata) registered for path 'third_party/libosmium/test/data-tests/osm-testdata'
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/libosmium/test/data-tests/osm-testdata'...
+From https://github.com/osmcode/osm-testdata
+ * branch            ecfdeb0d5ffcfcb60939651d517d5d7d1bb041a3 -> FETCH_HEAD
+Submodule path 'third_party/libosmium/test/data-tests/osm-testdata': checked out 'ecfdeb0d5ffcfcb60939651d517d5d7d1bb041a3'
+Submodule path 'third_party/microtar': checked out '27076e1b9290e9c7842bb7890a54fcf172406c84'
+From https://github.com/wjakob/nanobind
+ * branch            2a61ad2494d09fecb2e13322c1383342c299900d -> FETCH_HEAD
+Submodule path 'third_party/nanobind': checked out '2a61ad2494d09fecb2e13322c1383342c299900d'
+Submodule 'ext/robin_map' (https://github.com/Tessil/robin-map) registered for path 'third_party/nanobind/ext/robin_map'
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/nanobind/ext/robin_map'...
+From https://github.com/Tessil/robin-map
+ * branch            4ec1bf19c6a96125ea22062f38c2cf5b958e448e -> FETCH_HEAD
+Submodule path 'third_party/nanobind/ext/robin_map': checked out '4ec1bf19c6a96125ea22062f38c2cf5b958e448e'
+From https://github.com/mapbox/protozero
+ * branch            f379578a3f7c8162aac0ac31c2696de09a5b5f93 -> FETCH_HEAD
+Submodule path 'third_party/protozero': checked out 'f379578a3f7c8162aac0ac31c2696de09a5b5f93'
+From https://github.com/miloyip/rapidjson
+ * branch            083f359f5c36198accc2b9360ce1e32a333231d9 -> FETCH_HEAD
+Submodule path 'third_party/rapidjson': checked out '083f359f5c36198accc2b9360ce1e32a333231d9'
+Submodule 'thirdparty/gtest' (https://github.com/google/googletest.git) registered for path 'third_party/rapidjson/thirdparty/gtest'
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/rapidjson/thirdparty/gtest'...
+From https://github.com/google/googletest
+ * branch            ba96d0b1161f540656efdaed035b3c062b60e006 -> FETCH_HEAD
+Submodule path 'third_party/rapidjson/thirdparty/gtest': checked out 'ba96d0b1161f540656efdaed035b3c062b60e006'
+From https://github.com/eggert/tz
+ * branch            d633fe7ed3de8e00ce7cac991376a064a1373bb1 -> FETCH_HEAD
+Submodule path 'third_party/tz': checked out 'd633fe7ed3de8e00ce7cac991376a064a1373bb1'
+From https://github.com/martinus/unordered_dense
+ * branch            73f3cbb237e84d483afafc743f1f14ec53e12314 -> FETCH_HEAD
+Submodule path 'third_party/unordered_dense': checked out '73f3cbb237e84d483afafc743f1f14ec53e12314'
+From https://github.com/mapbox/vtzero
+ * branch            d4e8e099a32c37dfb54c04539ce73851bbe35917 -> FETCH_HEAD
+Submodule path 'third_party/vtzero': checked out 'd4e8e099a32c37dfb54c04539ce73851bbe35917'
+Submodule 'test/mvt-fixtures' (https://github.com/mapbox/mvt-fixtures.git) registered for path 'third_party/vtzero/test/mvt-fixtures'
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/vtzero/test/mvt-fixtures'...
+From https://github.com/mapbox/mvt-fixtures
+ * branch            a351144a7aa6ca4b826295cd4454cd4ce3a6f71f -> FETCH_HEAD
+Submodule path 'third_party/vtzero/test/mvt-fixtures': checked out 'a351144a7aa6ca4b826295cd4454cd4ce3a6f71f'
+Submodule 'vector-tile-spec' (https://github.com/mapbox/vector-tile-spec) registered for path 'third_party/vtzero/test/mvt-fixtures/vector-tile-spec'
+Cloning into '/home/owner/seyra-prep/sources/valhalla/third_party/vtzero/test/mvt-fixtures/vector-tile-spec'...
+From https://github.com/mapbox/vector-tile-spec
+ * branch            452ef14841f3e1288de8b355f722682b63c1b13f -> FETCH_HEAD
+Submodule path 'third_party/vtzero/test/mvt-fixtures/vector-tile-spec': checked out '452ef14841f3e1288de8b355f722682b63c1b13f'
+Submodule 'logging' (https://gist.github.com/39f2e39273c625d96790.git) registered for path 'src/logging'
+Submodule 'testing' (https://gist.github.com/ada902fb51a1ad1e5a27.git) registered for path 'test/testing'
+Cloning into '/home/owner/seyra-prep/sources/prime_server/src/logging'...
+Cloning into '/home/owner/seyra-prep/sources/prime_server/test/testing'...
+Submodule path 'src/logging': checked out 'bf5579771878d9513a4b6992f12677b2e140ba67'
+Submodule path 'test/testing': checked out 'c1498b3dc459156d934bac775353c94dca897980'
+warning: refs/tags/2.3.1 a9348d0c1d22eb29adb7bdfa066a3e02ee9c6b58 is not a commit!
+warning: refs/tags/v0.21.2 cd805fa967afdf132feb640ce5c6b94769851674 is not a commit!
+ok  valhalla 3.9.1 bafb69902220615a48307d5c790fb6c943802ba4
+ok  prime_server 0.12.0 fea0909dd07548a611ea20b81f4b42b091f6c0d2
+ok  overpass osm3s_v0.7.62.4 6a33115360dd40be95c0285b7fc6ef79fdb4fa5c
+ok  osm2pgsql 2.3.1 a32140835bf919cd3f0a15478db320b05b59a5ab
+ok  osmium-tool v1.19.1 18ac055a71ffebefb3b7407c0d324e2532770a79
+ok  tegola v0.21.2 a803ac9b084c2a9a32ff9c6fb0a7ee9ba30c7e8f
+ok  photon 1.3.0 4c28c7c132694d72673a2475ddab854bd32dac71
+ok  nominatim v5.3.2 57feabc92b216e0f1376a4e6398d805c6215468d
+ok  photon-1.3.0.jar a89707c0045e4807b2a1180e132e68e108d998709f48b6c94b98a6e281f571a5
+ok  nominatim_db-5.3.2-py3-none-any.whl c5e1c4bd27f52a48843a5fe204a1a7b5f4d4d2911880e65721b4c900b13227e5
+fetch-sources rc=0 seconds=285

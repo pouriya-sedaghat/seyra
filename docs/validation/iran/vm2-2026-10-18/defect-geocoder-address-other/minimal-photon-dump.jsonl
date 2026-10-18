@@ -1,0 +1,2 @@
+{"type":"NominatimDumpFile","content":{"version":"0.1.0","generator":"photon","database_version":"1.0.0-4","data_timestamp":"2026-10-17T20:14:22.000+00:00","features":{"sorted_by_country":true,"has_addresslines":false}}}
+{"type":"Place","content":[{"place_id":"1","object_type":"N","object_id":1,"osm_key":"amenity","osm_value":"cafe","categories":[],"name":{"name":"کافه نمونه"},"address":{"city":"شهر نمونه","other":["محله یک","بخش دو"]},"centroid":[51.4,35.7]}]}

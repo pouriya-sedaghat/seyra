@@ -1,5 +1,30 @@
 # Seyra Map Services — test results (phase 1)
 
+## Replacement-VM run `vm2-2026-10-18` (owner's VM, real Iran data): BLOCKED at geocoder-build
+
+Separate run identity. Everything below this section is the earlier synthetic record, left unchanged except for the Iran row of "Not run / blocked". Its image table is the 2026-10-17 lock; the current lock (`f244a25`) is listed in §4 of the run record. Full record: [`docs/validation/iran/vm2-2026-10-18/README.md`](validation/iran/vm2-2026-10-18/README.md).
+
+- Environment: owner's replacement VM `seyra` (VMware guest, Ubuntu 26.04 LTS, kernel 7.0.0-38, 4 vCPU, 7.2 GiB RAM, 100 GiB ext4 root). Docker 29.9.1 / Compose v5.6.0. Run as a non-root operator.
+- Code: `9f0d792` plus the relock `f244a25`, which rebuilt every image from pinned sources on the VM. All nine custom image IDs changed; DB unchanged. Bundle `SHA256SUMS` `71078a6c87fcb8fb897cd5b45b4ddcc67ee253c9a748812b408318626281a243`.
+- Source: owner's `iran-261017.osm.pbf`, SHA-256 `7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f`, header snapshot `2026-10-17T20:20:51Z`.
+
+| Suite | Result on the replacement VM |
+| --- | --- |
+| Unit/contract | 146 PASS |
+| Integration (fixture) | 137/137 PASS |
+| Security (fixture) | 28 PASS, 0 FAIL, 1 NOTE (AC16.3b) |
+| Lifecycle L1–L14 (fixture) | 15/15 PASS |
+| Bundle tamper T0–T5 | 6/6 PASS |
+| Offline host O0–O5 (fixture) | 6/6 PASS, 0 outbound packets |
+| Restore drill R1–R7, R4a (fixture) | 8/8 PASS, 0 outbound packets |
+| Browser (fixture) | PASS: 62 requests, 0 external, 0 console errors |
+| **Iran import on an isolated offline host** | **FAIL at `geocoder-build`** after render-import (197 s) and routing-build (183 s); 0 outbound packets |
+| Iran activation, API/web smoke, browser, restart, backup, restore | NOT RUN (blocked) |
+
+Defects found:
+1. **Geocoder preprocessing crashes on real Photon dumps.** Photon 1.3.0 writes `address.other`/`other:<lang>` as string arrays (1,191,816 of 1,199,311 Iran places), and `geocoder-preprocess.ts` calls `.normalize()` on them. Reproduced on the reviewed code. A proposed correction exists but is not applied, pending owner authorization.
+2. **`bundle export` writes `root:root 0600` image archives**, so a non-root operator cannot verify, copy or `bootstrap-load` the bundle. Proposed correction recorded; worked around by changing ownership only.
+
 **Current record: 2026-10-17, second round**, for the follow-up review of `d967a00` (remaining findings: R3 stale-lock reclamation, R5 backup generations), on branch `feat/map-services-v1` (base `a3460fcb2fed0340796f216fc9081d7e1b132fe3`).
 - Commit under test: `31961e1`, i.e. code `419bccc` plus the relocked ops image.
 - The first-round record (corrections R1–R4 at `c5c6f3f`) is kept where it was not re-run, and is marked as such. The 2026-10-14 results for `d8d08af` are historical.
@@ -277,7 +302,7 @@ Limits:
 
 | Item | Status | Reason and prerequisite |
 | --- | --- | --- |
-| Iran extract import/serve (time, RAM, disk, latency, quality) | NOT RUN | No owner dataset supplied. Runbook §3; repeat this suite plus owner search fixtures. |
+| Iran extract import/serve (time, RAM, disk, latency, quality) | BLOCKED (run `vm2-2026-10-18`) | Owner dataset supplied 2026-10-18. Import failed at `geocoder-build` (preprocessing defect, see the top section); render and routing builds succeeded and were measured. Was NOT RUN on 2026-10-17 (no owner dataset). |
 | Customer hardware / target OS / internal CA / DNS | NOT RUN | Not available; run RUNBOOK §1–2 on the target host. |
 | Mobile SDK (Android/iOS, MapLibre Native) | NOT RUN | No mobile project in scope; contract and fixtures prepared. |
 | Restore from backup on the target host / without `--include-sources` | NOT RUN | The fresh-host drill passed on simulated offline hosts (above). Repeat RUNBOOK §7 on target hardware; also exercise the path where the owner supplies the original input. |

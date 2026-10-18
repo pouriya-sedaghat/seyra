@@ -4,6 +4,8 @@ Date: 2026-10-14; updated 2026-10-17 for the corrections to the PR #1 review of 
 
 **Overall:** the engineering scope is implemented and verified with real providers on a **synthetic fixture** in a **cloud preparation container**. It is **not production-validated**: there has been no Iran dataset, customer hardware, mobile execution or load test. Do not treat this as production readiness.
 
+**Update 2026-10-18, replacement-VM run `vm2-2026-10-18`** ([record](validation/iran/vm2-2026-10-18/README.md)). On the owner's replacement VM (Ubuntu 26.04, 4 vCPU, 7.2 GiB RAM), every image was rebuilt from the pinned sources and relocked in `f244a25`. All nine custom image IDs are new; versions and base digests are unchanged. The synthetic suites all pass again on those images. The first real-Iran import, on an isolated offline host, **failed at `geocoder-build`**: Photon's dump carries `address.other` string arrays, which `apps/ops/src/geocoder-preprocess.ts` does not accept. Render and routing builds succeeded on the full Iran extract. The correction is proposed, not applied (it needs owner authorization), so Iran serving, quality, restore and performance remain unvalidated. A second preparation defect, root-only bundle archives, is also recorded with a proposed correction.
+
 ## Scope delivered
 
 | Area | State | Where |
@@ -82,6 +84,9 @@ Image IDs are the local content-addressed IDs (containerd image store). No regis
 12. **Cutover remains non-atomic.** The journal makes an interrupted transition recoverable (`seyra-maps recover`); it does not make the switch atomic.
 13. **The lifecycle lock relies on kernel `flock(2)`** (follow-up R3). `SEYRA_HOME` must therefore be on a local Linux filesystem; network shares are not supported, and each command refuses to run if `flock` is not enforced. The lock file is permanent; only its owner record changes.
 14. **Backup format changed within this PR** (R5). The flat `seyra_app-*.sql` / `state-*.tar.gz` / `manifests-*.tar.gz` layout from the first round has no completion record and is refused by `restore`. It only ever existed on this unmerged branch.
+15. **Real Photon dumps contain address arrays** (found by the Iran run, `vm2-2026-10-18`; open). Photon 1.3.0 `dump-nominatim-db` writes unmatched address lines as `address.other`/`other:<lang>` string arrays. Seyra's preprocessing assumes strings and throws, so no Iran release can be built until the correction in `docs/validation/iran/vm2-2026-10-18/defect-geocoder-address-other/` is applied.
+16. **Bundle archives are root-only** (found on the replacement VM; open). `bundle export` runs `docker save -o` as root in the ops container, which produces `root:root 0600` archives that a non-root operator cannot checksum, copy or `bootstrap-load`. The proposed correction is to make the archives `0444` and chown the tree to the invoking user.
+17. **Image identities are not reproducible across preparation runs.** apt is not snapshot-pinned, so a rebuild from the same pinned sources yields new image IDs (and hence new `dataset_id`s) and needs a relock plus re-running the image-dependent suites (`f244a25`).
 
 ## Remaining validation (owner / target environment)
 

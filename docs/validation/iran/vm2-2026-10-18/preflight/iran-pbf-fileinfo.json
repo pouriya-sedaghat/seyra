@@ -1,0 +1,83 @@
+{
+    "file": {
+        "name": "/in/input.osm.pbf",
+        "format": "PBF",
+        "compression": "none",
+        "size": 229845082
+    },
+    "header": {
+        "boxes": [
+            [
+                44.023033,
+                24.039475,
+                63.35413,
+                39.790447
+            ]
+        ],
+        "with_history": false,
+        "option": {
+            "generator": "osmium/1.16.0",
+            "osmosis_replication_base_url": "https://download.geofabrik.de/asia/iran-updates",
+            "osmosis_replication_sequence_number": "4940",
+            "osmosis_replication_timestamp": "2026-10-17T20:20:51Z",
+            "pbf_dense_nodes": "true",
+            "pbf_optional_feature_0": "Sort.Type_then_ID",
+            "sorting": "Type_then_ID",
+            "timestamp": "2026-10-17T20:20:51Z"
+        }
+    },
+    "data": {
+        "bbox": [
+            43.315691,
+            24.813511,
+            64.3179533,
+            46.9863421
+        ],
+        "timestamp": {
+            "first": "2007-04-06T17:00:10Z",
+            "last": "2026-10-17T20:14:22Z"
+        },
+        "objects_ordered": true,
+        "multiple_versions": false,
+        "crc32": "cc663681",
+        "count": {
+            "changesets": 0,
+            "nodes": 27001241,
+            "ways": 3396283,
+            "relations": 99075
+        },
+        "minid": {
+            "changesets": 0,
+            "nodes": 5,
+            "ways": 4292665,
+            "relations": 3099
+        },
+        "maxid": {
+            "changesets": 0,
+            "nodes": 14293946810,
+            "ways": 1569184271,
+            "relations": 21704665
+        },
+        "buffers": {
+            "count": 38399,
+            "size": 2414951464,
+            "capacity": 2520186880
+        },
+        "metadata": {
+            "all_objects": {
+                "version": true,
+                "timestamp": true,
+                "changeset": false,
+                "user": false,
+                "uid": false
+            },
+            "some_objects": {
+                "version": true,
+                "timestamp": true,
+                "changeset": false,
+                "user": false,
+                "uid": false
+            }
+        }
+    }
+}
