@@ -76,6 +76,26 @@ describe('geocoder dump preprocessing', () => {
     expect(JSON.parse(readFileSync(syn, 'utf8')).search_synonyms as string[]).toContain('یک,يك');
   });
 
+  // Real Iran names include «؟؟؟؟» (unknown-name placeholders) and a bare «؟». The tokenizer kept
+  // them and normalization turned them into «????»/«?»; Photon's search analyzer eliminates such
+  // terms completely and then refuses the whole synonym file, so the provider did not start
+  // (run vm2-2026-10-18, staging-validation). Terms without a letter or digit are never synonyms.
+  it('never emits synonym terms without a letter or digit', async () => {
+    const input = join(dir, 'in-punct.jsonl');
+    writeFileSync(
+      input,
+      [
+        JSON.stringify({ type: 'NominatimDumpFile', content: { version: '0.1.0' } }),
+        JSON.stringify({ type: 'Place', content: [{ place_id: '3', object_type: 'W', object_id: 9, name: { name: '؟؟؟؟' }, address: { street: 'كوچه ؟', other: ['؟'] }, centroid: [51.4, 35.7] }] }),
+      ].join('\n'),
+    );
+    const syn = join(dir, 'syn-punct.json');
+    await preprocessDump(input, join(dir, 'out-punct.jsonl'), syn, 'seyra-release-ds-z');
+    const entries = JSON.parse(readFileSync(syn, 'utf8')).search_synonyms as string[];
+    for (const term of entries.flatMap((e) => e.split(','))) expect(term).toMatch(/[\p{L}\p{N}]/u);
+    expect(entries).toContain('کوچه,كوچه');
+  });
+
   it('takes text values from strings and string arrays only', () => {
     expect(textValues('a')).toEqual(['a']);
     expect(textValues(['a', 3, 'b', null])).toEqual(['a', 'b']);

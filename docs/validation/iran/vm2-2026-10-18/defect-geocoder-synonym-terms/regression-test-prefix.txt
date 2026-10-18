@@ -1,0 +1,34 @@
+
+ RUN  v5.0.4 /home/owner/seyra/apps/ops
+
+ ❯ src/geocoder-preprocess.test.ts (6 tests | 1 failed) 15ms
+   ❯ geocoder dump preprocessing (6)
+     × never emits synonym terms without a letter or digit 5ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 1 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/geocoder-preprocess.test.ts > geocoder dump preprocessing > never emits synonym terms without a letter or digit
+AssertionError: expected '?' to match /[\p{L}\p{N}]/u
+
+- Expected:
+/[\p{L}\p{N}]/u
+
++ Received:
+"?"
+
+ ❯ src/geocoder-preprocess.test.ts:95:75
+     93|     await preprocessDump(input, join(dir, 'out-punct.jsonl'), syn, 'se…
+     94|     const entries = JSON.parse(readFileSync(syn, 'utf8')).search_synon…
+     95|     for (const term of entries.flatMap((e) => e.split(','))) expect(te…
+       |                                                                           ^
+     96|     expect(entries).toContain('کوچه,كوچه');
+     97|   });
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/1]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  1 failed | 5 passed (6)
+   Start at  12:14:42
+   Duration  1.05s (import 75%, transform 22%, tests 2%, worker 1%)
+

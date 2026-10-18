@@ -99,10 +99,13 @@ export function recordOriginalNames(content: PlaceContent): void {
   content.extra = extra;
 }
 
+/** A synonym term needs a letter or digit; Photon's analyzer eliminates anything else (e.g. «؟؟؟؟»). */
+const HAS_TEXT = /[\p{L}\p{N}]/u;
+
 export function collectSynonyms(text: string, into: Map<string, Set<string>>): void {
   for (const token of tokens(text)) {
     const n = normalizeForSearch(token);
-    if (n.length === 0 || n === token.toLowerCase() || /[\s,]/u.test(n)) continue;
+    if (!HAS_TEXT.test(n) || !HAS_TEXT.test(token) || n === token.toLowerCase() || /[\s,]/u.test(n)) continue;
     let set = into.get(n);
     if (!set) into.set(n, (set = new Set()));
     set.add(token.toLowerCase());

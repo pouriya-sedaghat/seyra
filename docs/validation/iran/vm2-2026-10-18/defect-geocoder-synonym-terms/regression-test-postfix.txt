@@ -1,0 +1,9 @@
+
+ RUN  v5.0.4 /home/owner/seyra/apps/ops
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  12:14:52
+   Duration  239ms (import 60%, transform 29%, tests 9%, worker 2%)
+
