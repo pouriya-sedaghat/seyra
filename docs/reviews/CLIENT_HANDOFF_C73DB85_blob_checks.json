@@ -1,0 +1,601 @@
+{
+  "sha256": "aa05ca6808311ceca889b61f69e3ec469b293b8c9bc33b43a229bf97db9d1131",
+  "commits": [
+    {
+      "commit": "fdbe1c501ec9eaba513b3528174768459b5b9a8d",
+      "files_checked": [
+        {
+          "path": "apps/ops/src/tls.test.ts",
+          "sha": "537ebf769a7123051388c883f8eb77879bdbb8a0"
+        },
+        {
+          "path": "apps/ops/src/tls.ts",
+          "sha": "62d3b3e2391af7c19ae4cc844e3d6271c196d84d"
+        }
+      ]
+    },
+    {
+      "commit": "861c53224132828736390941a7fbf3613304d7fe",
+      "files_checked": [
+        {
+          "path": "docs/RUNBOOK.md",
+          "sha": "e44eab7adb8b7aebe59dd678f713c3cb0c6e5821"
+        },
+        {
+          "path": "docs/handoff/DEPLOYMENT_PLAN.md",
+          "sha": "249ba41d9542fc50f9a009200c19ac4f258c1ede"
+        },
+        {
+          "path": "infra/edge/edge.sh",
+          "sha": "d1adab62e7be35f5126ac7986a01f0b04a1e0548"
+        },
+        {
+          "path": "tests/security/test-edge-stop.mjs",
+          "sha": "155e750f022e9f7cf3d2a4fb4aab5ffd17a6ec43"
+        }
+      ]
+    },
+    {
+      "commit": "064eafb58ed88fde6cef78deb6d5753ba5579b4c",
+      "files_checked": [
+        {
+          "path": "tests/offline/namespace-egress.sh",
+          "sha": "1f5168cffecd2f9f09514eb5d3eedd87776334bf"
+        },
+        {
+          "path": "tests/offline/stubs/docker-egress.sh",
+          "sha": "0f4b034c47676e271d91fdb58ccadad2f7a64566"
+        },
+        {
+          "path": "tests/offline/test-namespace-egress.mjs",
+          "sha": "1b1fcfb773fac107b733fc83617263b7aee4686b"
+        }
+      ]
+    },
+    {
+      "commit": "043993c45c177fbeefe5f4283329aa3dba51779e",
+      "files_checked": [
+        {
+          "path": "tests/browser/swagger-ui.mjs",
+          "sha": "32bac8c07071df03686f134daca267e11789304d"
+        },
+        {
+          "path": "tests/rehearsal/handoff-rehearsal.sh",
+          "sha": "250be0c50ab5339d54e71ca51a3a48a98205cc24"
+        },
+        {
+          "path": "tests/rehearsal/relay-client.mjs",
+          "sha": "1aa9be1731253aad0ace5c472b044082336ce694"
+        },
+        {
+          "path": "tests/validation/resource-supervisor.sh",
+          "sha": "3e9f03e2cea6ba3f6be8b7f4d736434bd9ba6087"
+        }
+      ]
+    },
+    {
+      "commit": "430f139074705c676708dafddb028c3741f87d0c",
+      "files_checked": [
+        {
+          "path": "infra/dependencies.lock.json",
+          "sha": "bc269377ab69c1334bdf60979c4b08f13b223e42"
+        }
+      ]
+    },
+    {
+      "commit": "862dc8d562f589fe69953887eae40b8c8cb32b27",
+      "files_checked": [
+        {
+          "path": "bin/seyra-maps",
+          "sha": "12e2380bf07f3dec516d8b42336658d66f5f1bce"
+        },
+        {
+          "path": "tests/wrapper/test-wrapper-inputs.mjs",
+          "sha": "a1538f1d504f8565b4d13d07f2c9d3a5e815a6aa"
+        }
+      ]
+    },
+    {
+      "commit": "a98a96a273a82b2a6d7eb95771ba9c598b48ea5f",
+      "files_checked": [
+        {
+          "path": "tests/browser/swagger-ui.mjs",
+          "sha": "3b12413cc172a9210bff087240462cac7c59b39a"
+        }
+      ]
+    },
+    {
+      "commit": "3be75b26c46cec2bc38f84917753a2290128b4ac",
+      "files_checked": [
+        {
+          "path": "bin/seyra-maps",
+          "sha": "c26cfb99dfc71dce4577cc92fd5880fb3da4d1d6"
+        },
+        {
+          "path": "tests/wrapper/test-wrapper-inputs.mjs",
+          "sha": "7983f9994058d54664097b90d3b852cfd24aad96"
+        }
+      ]
+    },
+    {
+      "commit": "734c199662408f3bddfd73dfbf2d333b6fe0b2c3",
+      "files_checked": [
+        {
+          "path": "tests/rehearsal/handoff-rehearsal.sh",
+          "sha": "b8c60f68aa6bc2909756d4c66cd692d6968287a2"
+        },
+        {
+          "path": "tests/rehearsal/relay-client.mjs",
+          "sha": "37d1a899579a0bba35b2ae5e626cea4397bddcf4"
+        }
+      ]
+    },
+    {
+      "commit": "92c072653dbdc8a6ba3fb50a9a63952abc79b461",
+      "files_checked": [
+        {
+          "path": "docs/RUNBOOK.md",
+          "sha": "7224234fff9a15e31ef9cd00d67b424b54e522c3"
+        }
+      ]
+    },
+    {
+      "commit": "a319b0851c64d006e15471b173295e3b90010ee7",
+      "files_checked": [
+        {
+          "path": "docs/IMPLEMENTATION_STATUS.md",
+          "sha": "c310bc0203808315c4e76630c93e9d6276195d04"
+        },
+        {
+          "path": "docs/TEST_RESULTS.md",
+          "sha": "9ea30d4fb53debfd3b3c3045ee60d61513f9e2b8"
+        },
+        {
+          "path": "docs/handoff/DEPLOYMENT_PLAN.md",
+          "sha": "3d9af3197d35acc8d7f7767d8f256b02aeb2cb7d"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/README.md",
+          "sha": "7d7f98d812314292bfdb5257521ac200eabc9a31"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/build/images-before.txt",
+          "sha": "2f37af615d34e80acf4542950258b52d0fb54ca1"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/build/images-built.txt",
+          "sha": "77f304955b755edb7af6b14f905c57b1e979410b"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/build/lock-ids-after.txt",
+          "sha": "837ff8c3946fba9a0b5c565187776e430dbb5e36"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/build/lock-ids-before.txt",
+          "sha": "8087b6976e8bb77bb0516bdfd6445b8f70515c17"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/build/source.revision",
+          "sha": "2a95deb01d44213ae398ae4ac414af9ba87ca1c9"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/build/workloads.txt",
+          "sha": "c2d70cbc720db19d31ca08dfd412a09077a1ffdf"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/bundle/r8-export.log",
+          "sha": "af3c2caee11bdb64ad372e737ca1b897a089b6f0"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/bundle/r8-sums-digest.txt",
+          "sha": "69e89eb42d6f223533cb8161a7954ca1135bfa3c"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/bundle/r8-verify.log",
+          "sha": "25224305bb8df1e0700c6fb40d1fa10f4f7b66f9"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/bundle/reclaimed.txt",
+          "sha": "eb0eff061f543c93a0231972e97fb0d34f39b9e1"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/maintenance/README.txt",
+          "sha": "b468456af58d8b16ef50815c11bd43beec74138e"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/outages/synthetic-test-outages.txt",
+          "sha": "b93b07ab32f0751fae2da300e6825d1dfa10875a"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/summary.txt",
+          "sha": "84a9adbdd94d81d3abc70bc1be1b90a8abc2e8c8"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/test-browser-navigation.txt",
+          "sha": "2d90f05c52ac690ae9626d4b17d58529f4322f83"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/test-browser-verdict.txt",
+          "sha": "417c253c621bbd6922f83b29432d80165b54ee22"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/test-dev-proxy.txt",
+          "sha": "9f67a03e0a2bbf5a123b26e5d3e865e59b6c4149"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/test-edge-stop.txt",
+          "sha": "236f18e5286f1d499479ff29dc6bd0fca7b1a242"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/test-error-contract.txt",
+          "sha": "1016038c89472d56eaffa9b1e9a96218c3b2d4e8"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/test-handoff-artifacts.txt",
+          "sha": "b4870c9622dc44f6d5e52a9eddbe403c048b0c1f"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/test-host-guard.txt",
+          "sha": "33881d8124d9f37885caaa5e276187cace57b14b"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/test-namespace-egress.txt",
+          "sha": "510fe9b748c07f44db62109664a13fbc7a21aa22"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/test-reclaim-credit.txt",
+          "sha": "acaf3656d59a1bf1dfa1141c5657aa78abaee9c0"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/test-search-seeds.txt",
+          "sha": "7f60ab1adc6166053b2ac52f29134a57d43be2f2"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/test-tls-cli.txt",
+          "sha": "ead300a17003a4b0c28085c1b60ac84da3c67698"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/test-tls-recover.txt",
+          "sha": "dd2a24714c59cf980e0495ff7ca96d08dc8d4e04"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/test-update-gate.txt",
+          "sha": "0fc388cd71296afb925b41781cf730dea6920a68"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions/test-wrapper-inputs.txt",
+          "sha": "ee5bd63a70b89dbc9c92f0c13f8ec02ee3eb54cc"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/attempt1-r7-edge-stop-interlock.log",
+          "sha": "cca73f9c52edf4dca106fb6bc4916385b593974d"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/attempt1-r7-rollback-tls-restore.log",
+          "sha": "438f30ca189a0f3c2c06cce318e2a2f0b31b78c4"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/attempt1-r7-summary.txt",
+          "sha": "26117208d8f825d0bf446816eaf5d8225e98bb93"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/client-approved.json",
+          "sha": "675f8ccf2232ad8f2b2042341035e77fd52af277"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/client-closed.json",
+          "sha": "91846d77fc339ce51e714adb5181a5e6dff16de6"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/client-control.json",
+          "sha": "9094fd4e0405bfe6b49d8ed90a760eb0dcbbbcd6"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/client-far-outsider.json",
+          "sha": "d0fe5e9ee619c3f9cb8aa4c80d8758c6ea18a46f"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/client-forger.json",
+          "sha": "1460192743288e224ab115b4b4fed5c0ea8efdc3"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/client-near-outsider.json",
+          "sha": "6570eb749333ad764efbbeb9222300f40fed6444"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/edge.log",
+          "sha": "8019c7bcb71f0b5bcd992e5b6f8c14e432539ec9"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/egress-summary.txt",
+          "sha": "db0db99807b9ca334b26d6377de01895121de097"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/frozen-20261019T155042Z.revision",
+          "sha": "a8dd7c92e9c864024909a259eb5dd2aa1fe24675"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t1-update-start.idents-after",
+          "sha": "6fe4d5a46e2221e7489534dabeb7dc1c5fd63874"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t1-update-start.idents-before",
+          "sha": "6fe4d5a46e2221e7489534dabeb7dc1c5fd63874"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t1-update-start.ids-after",
+          "sha": "b0d3b379f73ac4fe8c004e35e46bb901129237d1"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t1-update-start.ids-before",
+          "sha": "4a1fe404d472bf338a1b4a40c1ba31e7db2df199"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t2-proxy-restart-tls.idents-after",
+          "sha": "6fe4d5a46e2221e7489534dabeb7dc1c5fd63874"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t2-proxy-restart-tls.idents-before",
+          "sha": "6fe4d5a46e2221e7489534dabeb7dc1c5fd63874"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t2-proxy-restart-tls.ids-after",
+          "sha": "5c784d7bc7041804cc0fbd505646964d5d496068"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t2-proxy-restart-tls.ids-before",
+          "sha": "b0d3b379f73ac4fe8c004e35e46bb901129237d1"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t3-relay-on.idents-after",
+          "sha": "6fe4d5a46e2221e7489534dabeb7dc1c5fd63874"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t3-relay-on.idents-before",
+          "sha": "6fe4d5a46e2221e7489534dabeb7dc1c5fd63874"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t3-relay-on.ids-after",
+          "sha": "12c192f7282aa969d0175685279630a4d209c57d"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t3-relay-on.ids-before",
+          "sha": "5c784d7bc7041804cc0fbd505646964d5d496068"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t4-rollback-relay.idents-after",
+          "sha": "6fe4d5a46e2221e7489534dabeb7dc1c5fd63874"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t4-rollback-relay.idents-before",
+          "sha": "6fe4d5a46e2221e7489534dabeb7dc1c5fd63874"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t4-rollback-relay.ids-after",
+          "sha": "c5019c7ccb903b63efefa091e16f779ef8310ca3"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t4-rollback-relay.ids-before",
+          "sha": "12c192f7282aa969d0175685279630a4d209c57d"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t5-rollback-tls.idents-after",
+          "sha": "6fe4d5a46e2221e7489534dabeb7dc1c5fd63874"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t5-rollback-tls.idents-before",
+          "sha": "6fe4d5a46e2221e7489534dabeb7dc1c5fd63874"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t5-rollback-tls.ids-after",
+          "sha": "c73f52ce55590265e9cb305c740462a67facd499"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t5-rollback-tls.ids-before",
+          "sha": "c5019c7ccb903b63efefa091e16f779ef8310ca3"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t6-rollback-software.idents-after",
+          "sha": "6fe4d5a46e2221e7489534dabeb7dc1c5fd63874"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t6-rollback-software.idents-before",
+          "sha": "6fe4d5a46e2221e7489534dabeb7dc1c5fd63874"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t6-rollback-software.ids-after",
+          "sha": "c5bb90c8c68499e55a76813f13f59113ac9f716d"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/ids/t6-rollback-software.ids-before",
+          "sha": "c73f52ce55590265e9cb305c740462a67facd499"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/rb0-edge-stop-refused.log",
+          "sha": "cca73f9c52edf4dca106fb6bc4916385b593974d"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/rehearsal-vm.txt",
+          "sha": "f1a9c6c1705842d1600f79b73072f93d4245e90d"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/samples/t1-update-start.samples",
+          "sha": "21842c989e5cd85b5219c8b14fb0c21809e644cb"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/samples/t2-proxy-restart-tls.samples",
+          "sha": "286f391dc8856731a8bbf01e3f9fab5293c4d6cf"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/samples/t3-relay-on.samples",
+          "sha": "e3d5b14e10f8831c16037d15683c57ceed228ee5"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/samples/t4-rollback-relay.samples",
+          "sha": "57f108a7bd30dff63a936108c09a7c3254349812"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/samples/t5-rollback-tls.samples",
+          "sha": "ca3c33c5cdb49f34f0e6b4e6d04ffa2e0cd1ef4b"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/samples/t6-rollback-software.samples",
+          "sha": "b61cffdd3eb1dc95d01a8efd1a756999dd70855d"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/summary.txt",
+          "sha": "656b78127f5309d34570e59c9dab02eea7ee57d1"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/rehearsal/transitions.txt",
+          "sha": "11fcae42701b9377613d07dd277583defe9bd000"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/resources/supervisor.log",
+          "sha": "08f9ab9bb47d1f107669b6748b9ac9fe4c4005ad"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/suites/external-urls.txt",
+          "sha": "107196464b9fea8d1b891f9126c6c2d7f8e4d824"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/suites/integration-vitest-report.json",
+          "sha": "5a2116f848e54575ec9672b3fd46273c54f8109c"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/suites/integration.log",
+          "sha": "2f47c49a5395faf4212443d54db826588276ea57"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/suites/lifecycle-summary.txt",
+          "sha": "b75ede259cca3289534f3915c8da684736a9482f"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/suites/proxy-boundary.txt",
+          "sha": "5df21ed02f3247ab546793c9cc008377e0bd8655"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/suites/r8-offline-host.txt",
+          "sha": "119ae5ed5e43634a26740d35ef335b825ea88f56"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/suites/r8-restore-drill.txt",
+          "sha": "f8e52e29e2c8d0807b089dcc0390da92c3e1b1ae"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/suites/r8-tamper.txt",
+          "sha": "24990c52d4fdd6ab4f0904703e9be341fc6afccb"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/suites/security-checks.txt",
+          "sha": "4c1ada9551ce39f6340bc8e40275207a97dd1c0b"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/suites/swagger-normal.jpg",
+          "sha": "27e032480b9318617696485a7cddb718b9705105"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/suites/swagger-normal.json",
+          "sha": "4ab5b51900449ef642d899cab4241f7ffea22c5b"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/suites/swagger-provider-down.jpg",
+          "sha": "89ed0f5a90209f521f40318a00e6add48bd1fc1f"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/suites/swagger-provider-down.json",
+          "sha": "1a9d772eb540d8cdafd30a323e2e70576de3d7ec"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/unit/npm-build.log",
+          "sha": "f3e9aeb7fe2d2a83d40b40592266fd530b6a9990"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/unit/npm-test.log",
+          "sha": "bc7e178e6a1770ed91f16143822f1e875669591e"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/unit/npm-typecheck.log",
+          "sha": "4283de1db80e28a1d18e7f1213c6115712119ffb"
+        }
+      ]
+    },
+    {
+      "commit": "c73db85d824a801ff9c31fe958c2ee8da164c496",
+      "files_checked": [
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/bundle/reclaimed.txt",
+          "sha": "002f03efbe935c8b9c61c724ba077faf0b7b195e"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/final-tree.txt",
+          "sha": "d4f61ef8062eabef90e76dda6647b779f7c761ea"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/node-version.txt",
+          "sha": "f551f91468c2a527c7a47ffe1556c2e0855face9"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/summary.txt",
+          "sha": "81f53d42623aedb6956769bc223cb53a7b7b0b6e"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/test-browser-navigation.txt",
+          "sha": "2d90f05c52ac690ae9626d4b17d58529f4322f83"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/test-browser-verdict.txt",
+          "sha": "417c253c621bbd6922f83b29432d80165b54ee22"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/test-dev-proxy.txt",
+          "sha": "9f67a03e0a2bbf5a123b26e5d3e865e59b6c4149"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/test-edge-stop.txt",
+          "sha": "236f18e5286f1d499479ff29dc6bd0fca7b1a242"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/test-error-contract.txt",
+          "sha": "1016038c89472d56eaffa9b1e9a96218c3b2d4e8"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/test-handoff-artifacts.txt",
+          "sha": "b4870c9622dc44f6d5e52a9eddbe403c048b0c1f"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/test-host-guard.txt",
+          "sha": "33881d8124d9f37885caaa5e276187cace57b14b"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/test-namespace-egress.txt",
+          "sha": "510fe9b748c07f44db62109664a13fbc7a21aa22"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/test-reclaim-credit.txt",
+          "sha": "acaf3656d59a1bf1dfa1141c5657aa78abaee9c0"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/test-search-seeds.txt",
+          "sha": "7f60ab1adc6166053b2ac52f29134a57d43be2f2"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/test-tls-cli.txt",
+          "sha": "ead300a17003a4b0c28085c1b60ac84da3c67698"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/test-tls-recover.txt",
+          "sha": "dd2a24714c59cf980e0495ff7ca96d08dc8d4e04"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/test-update-gate.txt",
+          "sha": "0fc388cd71296afb925b41781cf730dea6920a68"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/regressions-final/test-wrapper-inputs.txt",
+          "sha": "75b445034a3796d27ed5cff13ea90482c0b8ce4c"
+        }
+      ]
+    }
+  ]
+}
