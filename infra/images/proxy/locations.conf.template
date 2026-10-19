@@ -1,5 +1,7 @@
 # Seyra ingress locations, included by every listener's server block (control and relay listeners
 # share exactly the same routes; only their access rules differ). Rendered by seyra-proxy-render.
+# JSON errors generated here use the API's error envelope; request_id is nginx's $request_id, which
+# the access log records, so ingress errors can be correlated like API errors.
     client_max_body_size 64k;
     client_body_buffer_size 64k;
     large_client_header_buffers 4 8k;
@@ -13,7 +15,7 @@
       default_type application/json;
       add_header Cache-Control "no-store" always;
       include /etc/seyra/security-headers.conf;
-      return 413 '{"error":{"code":"PAYLOAD_TOO_LARGE","message":"request body exceeds 64 KiB"}}';
+      return 413 '{"error":{"code":"PAYLOAD_TOO_LARGE","message":"request body exceeds 64 KiB","request_id":"$request_id"}}';
     }
 
     # Operator-only diagnostics stay inside the backend network. Prefix match on the normalized URI
@@ -24,7 +26,7 @@
       default_type application/json;
       add_header Cache-Control "no-store" always;
       include /etc/seyra/security-headers.conf;
-      return 404 '{"error":{"code":"NOT_FOUND","message":"no such endpoint"}}';
+      return 404 '{"error":{"code":"NOT_FOUND","message":"no such endpoint","request_id":"$request_id"}}';
     }
 
     location /api/ {
@@ -81,7 +83,7 @@
       default_type application/json;
       add_header Cache-Control "no-store" always;
       include /etc/seyra/security-headers.conf;
-      return 503 '{"error":{"code":"PROVIDER_UNAVAILABLE","message":"tile provider unavailable"}}';
+      return 503 '{"error":{"code":"PROVIDER_UNAVAILABLE","message":"tile provider unavailable","request_id":"$request_id"}}';
     }
     location ~ "^/maps/(?<ds>[a-z0-9][a-z0-9-]{2,79})/(?<file>tiles\.json|styles/(light|dark)-(fa|en)\.json)$" {
       if ($ds_active = 0) { rewrite ^ /__seyra/dataset-mismatch last; }
@@ -113,9 +115,9 @@
       default_type application/json;
       add_header Cache-Control "no-store" always;
       include /etc/seyra/security-headers.conf;
-      return 404 '{"error":{"code":"DATASET_MISMATCH","message":"dataset is not the active release"}}';
+      return 404 '{"error":{"code":"DATASET_MISMATCH","message":"dataset is not the active release","request_id":"$request_id"}}';
     }
-    location /maps/ { types { } default_type application/json; return 404 '{"error":{"code":"NOT_FOUND","message":"unknown map resource"}}'; }
+    location /maps/ { types { } default_type application/json; return 404 '{"error":{"code":"NOT_FOUND","message":"unknown map resource","request_id":"$request_id"}}'; }
     location = /licenses/vazirmatn-ofl.txt { alias /usr/share/seyra/assets/licenses/Vazirmatn-OFL.txt; default_type text/plain; }
 
     root /usr/share/seyra/web;

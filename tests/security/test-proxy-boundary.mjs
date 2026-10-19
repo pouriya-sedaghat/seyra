@@ -18,6 +18,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { connect as tlsConnect } from 'node:tls';
 import { fileURLToPath, pathToFileURL } from 'node:url';
+import { createRequire } from 'node:module';
 
 const repo = resolve(dirname(fileURLToPath(import.meta.url)), '..', '..');
 const extracted = resolve(process.argv[2] ?? '');
@@ -325,6 +326,17 @@ try {
   check('relay e2e: control-path name localhost as Host gets 421 on the relay listener', (await viaEdge({ host: 'localhost', sni: LAN_NAME })).status === 421);
   const big = await viaEdge({ path: '/api/v1/map/route', method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ pad: 'x'.repeat(70 * 1024) }) });
   check('relay e2e: body over 64 KiB gets the typed 413 envelope', big.status === 413 && JSON.parse(big.body).error.code === 'PAYLOAD_TOO_LARGE', `${big.status} ${big.body.slice(0, 80)}`);
+  // Review H5: the real ingress bodies satisfy the exported schema (request_id = nginx $request_id).
+  const Ajv = createRequire(join(repo, 'package.json'))('ajv');
+  const ajv = new (Ajv.default ?? Ajv)({ strict: false });
+  const v413 = ajv.compile(exported.paths['/api/v1/map/route'].post.responses['413'].content['application/json'].schema);
+  const body413 = JSON.parse(big.body);
+  check('relay e2e: the ingress 413 body validates against the exported 413 schema', v413(body413) && /^[0-9a-f]{32}$/.test(body413.error.request_id), `${JSON.stringify(v413.errors)} ${big.body}`);
+  for (const [path, code] of [['/maps/ds-other-release/tiles.json', 'DATASET_MISMATCH'], ['/maps/nothing-here', 'NOT_FOUND'], ['/api/v1/map/diagnostics', 'NOT_FOUND']]) {
+    const r = await viaEdge({ path });
+    const b = JSON.parse(r.body || '{}');
+    check(`relay e2e: ingress ${code} for ${path} carries a request_id and validates`, b.error?.code === code && v413(b) && /^[0-9a-f]{32}$/.test(b.error.request_id), r.body);
+  }
   check('relay e2e: spoofed X-Forwarded-For/X-Real-IP/Forwarded naming an outsider are ignored', (await viaEdge({ headers: { 'X-Forwarded-For': OUTSIDER, 'X-Real-IP': OUTSIDER, Forwarded: `for=${OUTSIDER}` } })).status === 200);
 
   // ------------------------------------------------------------------------------------------

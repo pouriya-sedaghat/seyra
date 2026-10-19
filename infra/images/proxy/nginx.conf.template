@@ -18,8 +18,9 @@ http {
   uwsgi_temp_path /tmp/nginx/uwsgi;
   scgi_temp_path /tmp/nginx/scgi;
 
-  # Redacted access log: no query strings (search text, coordinates) and no client addresses.
-  log_format seyra '$time_iso8601 $request_method $uri $status $body_bytes_sent $request_time';
+  # Redacted access log: no query strings (search text, coordinates) and no client addresses. The
+  # request id is a random per-request value (also returned in ingress-generated JSON errors).
+  log_format seyra '$time_iso8601 $request_method $uri $status $body_bytes_sent $request_time $request_id';
   access_log /dev/stdout seyra;
 
   # Bounded, dataset-scoped tile cache (keys include /maps/<dataset_id>/).

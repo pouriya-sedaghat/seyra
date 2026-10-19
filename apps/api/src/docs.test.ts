@@ -3,6 +3,7 @@ import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { describe, expect, it } from 'vitest';
 import { Value } from 'typebox/value';
+import Ajv from 'ajv';
 import { CapabilitiesSchema, DEFAULT_LIMITS, MapServiceError } from '@seyra/contracts';
 import { buildApp } from './app.js';
 import { OPERATION_DOCS } from './api-docs.js';
@@ -172,6 +173,66 @@ describe('hidden diagnostics route', () => {
     for (const url of ['/api/v1/map/Diagnostics', '/api/v1/map/diagnostics/', '/api/v1/map/diagnostics;x', '/API/v1/map/diagnostics']) {
       expect((await app.inject({ method: 'GET', url })).statusCode, url).toBe(404);
     }
+    await app.close();
+  });
+});
+
+describe('error responses against the served schema (review H5)', () => {
+  const ajv = new Ajv({ strict: false, allErrors: true });
+  const schemaFor = (spec: Record<string, any>, path: string, method: string, status: string) => spec.paths[path][method].responses[status].content['application/json'].schema;
+  it('API-generated and ingress-generated 413 bodies both satisfy the served 413 schemas', async () => {
+    // API-generated: a provider answer above its size bound (routing and proximity).
+    const tooLarge = () => Promise.reject(new MapServiceError('PAYLOAD_TOO_LARGE', 'valhalla response exceeded 1048576 bytes', { provider: 'valhalla' }));
+    const health = new HealthService(
+      { schema: 'seyra.active-release/1', dataset_id: 'ds-docs-check', activated_at: '2026-10-19T00:00:00Z', identities: { tiles: 'a', routing: 'b', geocoder: 'c', overpass: 'd' } },
+      { tiles: async () => ({ identity: 'a' }), routing: async () => ({ identity: 'b' }), geocoder: async () => ({ identity: 'c' }), overpass: async () => ({ identity: 'd' }), controlDb: async () => undefined },
+      { cacheMs: 60_000, probeTimeoutMs: 50, maintenanceFlagFile: '/nonexistent' },
+    );
+    await health.refresh();
+    const app = await buildApp({ limits: DEFAULT_LIMITS, health, routing: { route: tooLarge, pair: tooLarge }, geocoder: { search: tooLarge, reverse: tooLarge }, poi: { run: tooLarge }, geography: { distances: tooLarge }, logLevel: 'silent' });
+    const spec = (await app.inject({ method: 'GET', url: '/api/docs/json' })).json();
+    const pts = [{ id: 'a', lon: 0.01, lat: 0.02 }, { id: 'b', lon: 0.05, lat: 0.03 }];
+    const cases: [string, string, Record<string, unknown> | null][] = [
+      ['/api/v1/map/route', 'post', { profile: 'car', objective: 'time', points: pts }],
+      ['/api/v1/map/proximity', 'post', { metric: 'road_distance', direction: 'origin_to_candidate', profile: 'car', origin: { lon: 0.03, lat: 0.04 }, candidates: [{ id: 'c', lon: 0.03, lat: 0.02 }] }],
+      ['/api/v1/map/search', 'get', null],
+      ['/api/v1/map/pois', 'get', null],
+    ];
+    for (const [path, method, body] of cases) {
+      const url = method === 'get' ? `${path}?${path.endsWith('search') ? 'q=x' : 'bbox=0.005,0.005,0.06,0.06&preset=food'}` : path;
+      const r = await app.inject({ method: method.toUpperCase() as 'GET' | 'POST', url, ...(body ? { payload: body } : {}) });
+      expect(r.statusCode, path).toBe(413);
+      const validate = ajv.compile(schemaFor(spec, path, method, '413'));
+      expect(validate(r.json()), `${path} API 413: ${JSON.stringify(validate.errors)}`).toBe(true);
+    }
+    // Ingress-generated: the exact body the proxy template renders (nginx substitutes $request_id).
+    const tpl = readFileSync(join(repo, 'infra', 'images', 'proxy', 'locations.conf.template'), 'utf8');
+    const literal = tpl.match(/return 413 '([^']+)';/)![1]!.replace('$request_id', '0123456789abcdef0123456789abcdef');
+    for (const path of ['/api/v1/map/route', '/api/v1/map/proximity']) {
+      const validate = ajv.compile(schemaFor(spec, path, 'post', '413'));
+      expect(validate(JSON.parse(literal)), `${path} ingress 413: ${JSON.stringify(validate.errors)}`).toBe(true);
+    }
+    // The schema stays strong: an error body without request_id (the old ingress literal) is rejected.
+    const weak = ajv.compile(schemaFor(spec, '/api/v1/map/route', 'post', '413'));
+    expect(weak({ error: { code: 'PAYLOAD_TOO_LARGE', message: 'request body exceeds 64 KiB' } })).toBe(false);
+    expect(weak({ error: { code: 'NOT_A_CODE', message: 'x', request_id: 'r' } })).toBe(false);
+    await app.close();
+  });
+
+  it('every ingress-generated JSON error in the proxy template carries request_id', () => {
+    const tpl = readFileSync(join(repo, 'infra', 'images', 'proxy', 'locations.conf.template'), 'utf8');
+    const bodies = [...tpl.matchAll(/return \d{3} '(\{"error"[^']+)';/g)].map((m) => m[1]!);
+    expect(bodies.length).toBeGreaterThanOrEqual(5);
+    for (const b of bodies) expect(JSON.parse(b.replace('$request_id', 'x')).error.request_id, b).toBe('x');
+  });
+
+  it('API 4xx/5xx bodies validate against their documented schemas', async () => {
+    const { app } = await makeApp('ds-docs-check');
+    const spec = (await app.inject({ method: 'GET', url: '/api/docs/json' })).json();
+    const bad = await app.inject({ method: 'GET', url: '/api/v1/map/search' });
+    expect(ajv.compile(schemaFor(spec, '/api/v1/map/search', 'get', '400'))(bad.json())).toBe(true);
+    const down = await app.inject({ method: 'GET', url: '/api/v1/map/search?q=x' });
+    expect(ajv.compile(schemaFor(spec, '/api/v1/map/search', 'get', '503'))(down.json())).toBe(true);
     await app.close();
   });
 });
