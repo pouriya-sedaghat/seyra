@@ -21,6 +21,11 @@ targets=(
   "$repo/infra/images/overpass/entrypoint.sh" "$repo/infra/images/overpass/nginx.conf"
   "$repo/infra/images/photon/serve.sh" "$repo/infra/images/tegola/serve.sh" "$repo/infra/images/geocoder-build/geocoder-build.sh"
   "$repo/bin/seyra-maps"
+  # Client handoff: proxy locations/render/relay, the edge template, the served OpenAPI document and
+  # the Swagger UI assets the API image ships (same package-lock as the image build).
+  "$repo/infra/images/proxy/locations.conf.template" "$repo/infra/images/proxy/render.sh" "$repo/infra/compose/runtime.relay.yml"
+  "$repo/infra/edge/edge.conf.template" "$repo/docs/openapi/map-services-v1.json"
+  "$repo/node_modules/@fastify/swagger-ui/static" "$repo/node_modules/@fastify/swagger-ui/lib"
 )
 # Known non-fetch URL classes (string constants, never requested by the product at runtime).
 classify() {
@@ -34,6 +39,12 @@ classify() {
     https://www.opensearch.org*|https://opensearch.org*) echo "comment/doc link" ;;
     https://127.0.0.1*|http://127.0.0.1*|http://localhost*|https://localhost*) echo "loopback" ;;
     http://api:*|http://tegola:*|http://valhalla:*|http://photon:*|http://overpass:*|http://seyra_*|postgres://seyra_*) echo "internal service (private network; DSN host is the internal db service)" ;;
+    https://validator.swagger.io/*) echo "Swagger UI online-validator default, overridden (validatorUrl null; tested) and blocked by CSP connect-src 'self'" ;;
+    https://datatracker.ietf.org/*|https://www.rfc-editor.org/*|https://spec.openapis.org/*|https://json-schema.org/*|http://json-schema.org/*|https://spdx.org/*) echo "specification/schema identifier constant (not fetched)" ;;
+    https://github.com/*|https://swagger.io*|https://stackoverflow.com/*|https://redux.js.org/*|http://fb.me/*|https://vladimirgorej.com*) echo "library doc/error link" ;;
+    https://www.tiktok.com/*|https://twitter.com/*|https://instagram.com/*|https://www.facebook.com/*|https://soundcloud.com/*) echo "library link template (user-clicked anchor, never fetched)" ;;
+    https://example.com*) echo "documentation example domain (RFC 2606)" ;;
+    'https://base$'*) echo "URL-parsing base for sanitizing (never fetched)" ;;
     *) echo "UNCLASSIFIED" ;;
   esac
 }

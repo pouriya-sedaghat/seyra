@@ -27,9 +27,11 @@ RUN rm -rf /etc/nginx/conf.d /docker-entrypoint.d /docker-entrypoint.sh /usr/sha
     && mkdir -p /var/cache/seyra/tiles /tmp/nginx && chown -R nginx:nginx /var/cache/seyra /tmp/nginx
 COPY --from=build /out/assets /usr/share/seyra/assets
 COPY --from=build /out/web /usr/share/seyra/web
-COPY infra/images/proxy/nginx.conf.template infra/images/proxy/security-headers.conf /etc/seyra/
+COPY infra/images/proxy/nginx.conf.template infra/images/proxy/locations.conf.template infra/images/proxy/security-headers.conf /etc/seyra/
 COPY infra/images/proxy/entrypoint.sh /usr/local/bin/seyra-proxy-entrypoint
-RUN chmod 0755 /usr/local/bin/seyra-proxy-entrypoint
+COPY infra/images/proxy/render.sh /usr/local/bin/seyra-proxy-render
+RUN chmod 0755 /usr/local/bin/seyra-proxy-entrypoint /usr/local/bin/seyra-proxy-render
 USER nginx
-EXPOSE 8443
+# 8443: ordinary listener (loopback control path or direct LAN mode); 8444: optional relay listener.
+EXPOSE 8443 8444
 ENTRYPOINT ["/usr/local/bin/seyra-proxy-entrypoint"]

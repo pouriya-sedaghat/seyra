@@ -217,6 +217,35 @@ logs_redacted() {
 }
 check AC17.11 "default API/proxy logs contain no query text, coordinates or secrets" logs_redacted
 
+# ---------------------------------------------------------------- client handoff (docs / diagnostics)
+diagnostics_blocked() {
+  local bad="" p c b
+  for p in /api/v1/map/diagnostics /api/v1/map/diagnostics/ /api/v1/map//diagnostics /api/v1/map/%64iagnostics /health/../api/v1/map/diagnostics; do
+    b="$(curl -s --path-as-is --max-time 5 --cacert "$CA" -w ' %{http_code}' "$BASE$p")"; c="${b##* }"
+    { [ "$c" = 404 ] && ! grep -q provider_queues <<<"$b"; } || bad="$bad $p=$c"
+  done
+  [ -z "$bad" ] && echo "5 path variants answer 404 at the ingress; the API handler is never reached" || { echo "served:$bad"; return 1; }
+}
+check AC16.16 "hidden diagnostics route and its path variants are blocked at the ingress" diagnostics_blocked
+
+docs_same_origin() {
+  local h n spec
+  h="$(curl -s -D - -o /dev/null --max-time 5 --cacert "$CA" "$BASE/api/docs/")"
+  n="$(grep -ci '^content-security-policy:' <<<"$h")"
+  [ "$(head -1 <<<"$h" | awk '{print $2}')" = 200 ] && [ "$n" = 1 ] || { echo "docs status/CSP headers: $(head -1 <<<"$h") csp=$n"; return 1; }
+  spec="$(curl -s --max-time 5 --cacert "$CA" "$BASE/api/docs/json")"
+  diff <(jq -S . <<<"$spec") <(jq -S . "$repo/docs/openapi/map-services-v1.json") >/dev/null || { echo "runtime spec differs from docs/openapi/map-services-v1.json"; return 1; }
+  echo "Swagger UI served with exactly one (ingress) CSP; /api/docs/json equals the exported specification"
+}
+check AC16.17 "Swagger UI and the runtime specification are served same-origin and match the export" docs_same_origin
+
+body_limit_typed() {
+  local b
+  b="$(head -c 70000 /dev/zero | tr '\0' 'x' | curl -s --max-time 5 --cacert "$CA" -H 'content-type: application/json' --data-binary @- -w ' %{http_code}' "$BASE/api/v1/map/route")"
+  [ "${b##* }" = 413 ] && grep -q '"PAYLOAD_TOO_LARGE"' <<<"$b" && echo "70000-byte body: 413 PAYLOAD_TOO_LARGE envelope" || { echo "got: ${b: -120}"; return 1; }
+}
+check AC16.18 "a body over 64 KiB gets the typed 413 envelope from the ingress" body_limit_typed
+
 {
   echo "# Seyra security checks (AC16/AC17)"
   echo "# recorded_at: $(date -u +%FT%TZ)  dataset: $ds  proxy image: $proxy_ref"
