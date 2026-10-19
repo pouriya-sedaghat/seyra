@@ -1,6 +1,6 @@
 {
   "schema": "seyra.dependencies-lock/1",
-  "generated_at": "2026-10-19T07:04:59.144Z",
+  "generated_at": "2026-10-19T14:50:19.732Z",
   "generated_by": "infra/prepare/write-lock.mjs",
   "status": "LOCKED (preparation build verified); runtime/acceptance evidence is in docs/TEST_RESULTS.md",
   "preparation_environment": {
@@ -10,7 +10,7 @@
     "docker": "client 29.9.1 / server 29.9.1",
     "compose": "5.6.0",
     "node": "v24.21.0",
-    "note": "Owner's replacement VM 'seyra' (VMware guest on the owner's host; Ubuntu 26.04 LTS, 4 vCPU, 7.2 GiB RAM), used as the authorized online preparation environment on 2026-10-18 before isolated offline validation. Not production hardware. Docker Hub base images pulled directly by pinned digest (no mirror); Valhalla built from source as before; apt packages are not snapshot-pinned, so custom image IDs differ from the 2026-10-17 cloud lock."
+    "note": "Owner's replacement VM 'seyra' (VMware guest on the owner's host; Ubuntu 26.04 LTS, 4 vCPU, 7.2 GiB RAM), used as the authorized online preparation environment on 2026-10-18 before isolated offline validation. Not production hardware. Docker Hub base images pulled directly by pinned digest (no mirror); Valhalla built from source as before; apt packages are not snapshot-pinned, so custom image IDs differ from the 2026-10-17 cloud lock. On 2026-10-19 the API, proxy and OPS images were rebuilt with `docker build --network host` (the build steps' npm and apt downloads only), because outbound TCP from Docker's NAT bridge to the npm registry timed out on that day; base images, lockfile and Dockerfiles are the pinned ones."
   },
   "images": {
     "db": {
@@ -156,12 +156,12 @@
     "api": {
       "role": "API",
       "ref": "seyra/api:1.0.0-seyra1",
-      "image_id": "sha256:ad11e92b08790044a31c23bf16a61bd6689fdeda1f7241f2c41dce4d59d36b00",
+      "image_id": "sha256:710d5e37dbc9b844760550dcc54f11fda7ff919d1a1bd591e2a1cb40456c44e0",
       "repo_digests": [
-        "seyra/api@sha256:ad11e92b08790044a31c23bf16a61bd6689fdeda1f7241f2c41dce4d59d36b00"
+        "seyra/api@sha256:710d5e37dbc9b844760550dcc54f11fda7ff919d1a1bd591e2a1cb40456c44e0"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-18T09:09:31.389671957Z",
+      "created": "2026-10-19T14:48:28.411310134Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/api/Dockerfile",
       "dockerfile_sha256": "9bd23045fdbd035d909920dbf0bbd83984798c1a0dcd6c572d6747c69d0063d6",
@@ -183,15 +183,15 @@
     "proxy": {
       "role": "PROXY",
       "ref": "seyra/proxy:1.0.0-seyra1",
-      "image_id": "sha256:07e3eca26da70c86cf69cb4538dbcac9eb163ad507a574eb411d561d005e233c",
+      "image_id": "sha256:b953043a5c1c53861f6df68d6f94dd0a5492efc3dd4d9b24cc9c3c961e007b62",
       "repo_digests": [
-        "seyra/proxy@sha256:07e3eca26da70c86cf69cb4538dbcac9eb163ad507a574eb411d561d005e233c"
+        "seyra/proxy@sha256:b953043a5c1c53861f6df68d6f94dd0a5492efc3dd4d9b24cc9c3c961e007b62"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-18T09:09:54.703384172Z",
+      "created": "2026-10-19T14:48:43.23869003Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/proxy/Dockerfile",
-      "dockerfile_sha256": "51242be8cb174bc964564e2b6df6c9789589c1826e20b8036631599a057b25a7",
+      "dockerfile_sha256": "25e90a392478bcdea22c9cafff9a54dade72a2565e932e5cfab23b9acdf37810",
       "base_images": [
         "node:24-bookworm-slim@sha256:d6aa754f16b3197301076f047b5def2f02ea1dbbc2ca920407d46d7ec7f87b20",
         "nginx:1.28-alpine@sha256:a8b39bd9cf0f83869a2162827a0caf6137ddf759d50a171451b335cecc87d236"
@@ -268,12 +268,12 @@
     "ops": {
       "role": "OPS",
       "ref": "seyra/ops:1.0.0-seyra1",
-      "image_id": "sha256:135ef05c476379db3b51165ab816967cd3ba4c789c96fbd2311c9a6221325dc7",
+      "image_id": "sha256:8cbabae57ff4609b9fa8dacebc20a70567c0b075804c070654c675b81306d928",
       "repo_digests": [
-        "seyra/ops@sha256:135ef05c476379db3b51165ab816967cd3ba4c789c96fbd2311c9a6221325dc7"
+        "seyra/ops@sha256:8cbabae57ff4609b9fa8dacebc20a70567c0b075804c070654c675b81306d928"
       ],
       "platform": "linux/amd64",
-      "created": "2026-10-19T07:04:45.713585877Z",
+      "created": "2026-10-19T14:49:13.02970449Z",
       "origin": "custom build from pinned sources (preparation environment)",
       "dockerfile": "infra/images/ops/Dockerfile",
       "dockerfile_sha256": "3b965a09c948207f495657ff5b017c3262b0677ec918c7b0c20e5cc143b3c331",
@@ -401,7 +401,7 @@
     }
   },
   "npm": {
-    "package_lock_sha256": "5465154a44ab7374c4d8b97d6d76ab5a56425c3bfb8f7310c3c6dec03b69142d",
+    "package_lock_sha256": "4115d2bc34180d4f74d46d10b82cb0a136ff8229c866cdc38e769e0e00b2cd5a",
     "lockfile_version": 3,
     "packages": {
       "fastify": {
