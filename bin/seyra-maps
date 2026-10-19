@@ -30,19 +30,44 @@ fi
 case "$SEYRA_HOME" in /*) ;; *) echo "SEYRA_HOME must be absolute" >&2; exit 2;; esac
 mkdir -p "$SEYRA_HOME"
 mounts=(-v /var/run/docker.sock:/var/run/docker.sock -v "$SEYRA_HOME:$SEYRA_HOME" -v "$install_dir:/opt/seyra-install:ro")
-# Owner-supplied input files are mounted read-only at their own path.
+die() { echo "seyra-maps: $*" >&2; exit 2; }
+home_cmp="$(cd "$SEYRA_HOME" && pwd)"
+inside_home() { case "$1" in "$home_cmp"|"$home_cmp"/*) return 0;; *) return 1;; esac; }
+declare -A mounted=()
+# Owner-supplied input files (--pbf, TLS --cert/--key/--ca/--chain) are checked here, before Docker
+# runs: the argument must be present and name an existing readable regular file. Each file is
+# bind-mounted read-only at its own absolute path (relative paths resolve against the caller's
+# directory). Inputs inside SEYRA_HOME are already visible through its writable mount and get no
+# extra mount, which would shadow writable state; a file named twice is mounted once.
+resolve_input() { # flag value -> sets $resolved and registers the mount
+  local flag="$1" v="$2" d
+  [ -n "$v" ] || die "$flag needs a file argument"
+  case "$v" in *$'\n'*|*'"'*) die "$flag path contains a newline or double quote";; esac
+  d="$(cd "$(dirname -- "$v")" 2>/dev/null && pwd)" || die "$flag: the directory of $v does not exist"
+  resolved="$d/$(basename -- "$v")"
+  [ -f "$resolved" ] || die "$flag: $resolved is not an existing regular file"
+  [ -r "$resolved" ] || die "$flag: $resolved is not readable"
+  if ! inside_home "$resolved" && [ -z "${mounted[$resolved]:-}" ]; then
+    mounted[$resolved]=1
+    # --mount (CSV with quoted fields) keeps paths with spaces, commas or colons intact.
+    mounts+=(--mount "type=bind,\"source=$resolved\",\"target=$resolved\",readonly")
+  fi
+}
 args=("$@")
 for ((i = 0; i < ${#args[@]}; i++)); do
   case "${args[$i]}" in
-    --pbf|--cert|--key)
-      f="$(cd "$(dirname "${args[$((i + 1))]}")" && pwd)/$(basename "${args[$((i + 1))]}")"
-      args[$((i + 1))]="$f"
-      mounts+=(-v "$(dirname "$f"):$(dirname "$f"):ro") ;;
+    --pbf|--cert|--key|--ca|--chain)
+      [ $((i + 1)) -lt ${#args[@]} ] || die "${args[$i]} needs a file argument"
+      resolve_input "${args[$i]}" "${args[$((i + 1))]}"
+      args[$((i + 1))]="$resolved"; i=$((i + 1)) ;;
     --from)
-      d="$(cd "${args[$((i + 1))]}" && pwd)"; args[$((i + 1))]="$d"; mounts+=(-v "$d:$d:ro") ;;
+      [ $((i + 1)) -lt ${#args[@]} ] || die "--from needs a directory"
+      d="$(cd "${args[$((i + 1))]}" 2>/dev/null && pwd)" || die "--from: ${args[$((i + 1))]} is not a directory"
+      args[$((i + 1))]="$d"; inside_home "$d" || mounts+=(-v "$d:$d:ro"); i=$((i + 1)) ;;
     --out)
+      [ $((i + 1)) -lt ${#args[@]} ] || die "--out needs a directory"
       mkdir -p "${args[$((i + 1))]}"
-      d="$(cd "${args[$((i + 1))]}" && pwd)"; args[$((i + 1))]="$d"; mounts+=(-v "$d:$d") ;;
+      d="$(cd "${args[$((i + 1))]}" && pwd)"; args[$((i + 1))]="$d"; inside_home "$d" || mounts+=(-v "$d:$d"); i=$((i + 1)) ;;
   esac
 done
 # `bundle verify|load DIR`: the bundle directory is mounted read-only at its own path.
