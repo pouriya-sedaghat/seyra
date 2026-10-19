@@ -1,0 +1,77 @@
+{
+  "node": "v24.19.0",
+  "scope": "Actual shell scripts with recording Docker/ip stand-ins; no real Docker, VM or LAN execution.",
+  "results": [
+    {
+      "name": "R1 existing foreign volume is mounted before any ownership check",
+      "exit_code": 1,
+      "reproduced": true,
+      "detail": {
+        "volume_create_called": true,
+        "volume_inspect_called": false,
+        "foreign_volume_mount_attempted": true
+      },
+      "stdout": "FAIL RV1 cannot start the rehearsal VM\n# 2026-10-19T16:16:30Z phases=[vm] failures=1\n",
+      "stderr": "deliberately stop after recording the attempted foreign-volume mount\n"
+    },
+    {
+      "name": "R2 control: probe 0",
+      "exit_code": 2,
+      "reproduced": true,
+      "detail": {
+        "edge_stopped": false,
+        "persisted_trust_unchanged": true,
+        "listener_probe": "0"
+      },
+      "stdout": "",
+      "stderr": "edge: the inner relay listener 198.18.1.2:8444 still answers, so it still trusts this edge's address; stopping would release that address for reuse. First: seyra-maps init --no-relay; access apply; proxy restart. Nothing changed (emergency only: stop --force)\n"
+    },
+    {
+      "name": "R2 control: probe error",
+      "exit_code": 2,
+      "reproduced": true,
+      "detail": {
+        "edge_stopped": false,
+        "persisted_trust_unchanged": true,
+        "listener_probe": "error"
+      },
+      "stdout": "",
+      "stderr": "edge: could not probe the relay upstream (probe failed to run); nothing changed (emergency only: stop --force)\n"
+    },
+    {
+      "name": "R2 closed TCP listener releases edge while persisted trust remains",
+      "exit_code": 0,
+      "reproduced": true,
+      "detail": {
+        "edge_stopped": true,
+        "persisted_trust_unchanged": true,
+        "listener_probe": "1"
+      },
+      "stdout": "edge: stopped; the LAN path is closed. Next: edge.sh remove\n",
+      "stderr": ""
+    },
+    {
+      "name": "R3 missing ping executable is accepted as verified absent sink",
+      "exit_code": 0,
+      "reproduced": true,
+      "detail": {
+        "ping_command": "exit 127",
+        "verdict": "PASS"
+      },
+      "stdout": "PASS nested host: route table read\nPASS nested host: 10 destinations route only to the absent sink 198.18.0.250 on internal network(s) (seyra_offline_lab )\nPASS nested host: control destination 198.18.0.60:8443 connects (probe path works)\nPASS nested host: 2 NEW connections to controlled sinks outside its networks refused\n# failures: 0\n",
+      "stderr": ""
+    },
+    {
+      "name": "R4 cleanup failures and changed outer routes still yield success",
+      "exit_code": 0,
+      "reproduced": true,
+      "detail": {
+        "cleanup_verdict": "NOTE",
+        "removal_commands": "exit 125",
+        "routes": "CHANGED"
+      },
+      "stdout": "NOTE RC1 cleanup of this lab's objects; remaining: 1 containers, 1 networks, 1 volumes, lab dir removed; VM routing table CHANGED\n# 2026-10-19T16:16:31Z phases=[cleanup] failures=0\n",
+      "stderr": "deliberate daemon removal failure\ndeliberate daemon removal failure\ndeliberate daemon removal failure\ndeliberate daemon removal failure\ndeliberate daemon removal failure\n"
+    }
+  ]
+}
