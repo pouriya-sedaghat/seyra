@@ -106,12 +106,14 @@ transition() { # label command... : readiness samples, ids and identities before
   sleep 3
   local m; m="$(stop_poll "$label")"
   ids > "$OUT/$label.ids-after"; idents > "$OUT/$label.idents-after"
-  local rec; rec="$(join -t= -j1 "$OUT/$label.ids-before" "$OUT/$label.ids-after" | awk -F= '$2!=$3{print $1}' | paste -sd, -)"
+  local rec; rec="$(recreated "$OUT/$label.ids-before" "$OUT/$label.ids-after")"
   echo "$label rc=$rc $m recreated=[${rec}] identities_equal=$(cmp -s "$OUT/$label.idents-before" "$OUT/$label.idents-after" && echo yes || echo no)" | tee -a "$OUT/transitions.txt"
   touch "$OUT/.expect-ready"
   return $rc
 }
 tline() { grep "^$1 " "$OUT/transitions.txt" | tail -1; }
+# Services whose container id changed (or that appeared/disappeared), from "service=id" lists.
+recreated() { awk -F= 'NR==FNR { b[$1] = $2; next } { a[$1] = $2 } END { for (k in b) if (!(k in a) || a[k] != b[k]) print k (k in a ? "" : "(gone)"); for (k in a) if (!(k in b)) print k "(new)" }' "$1" "$2" | sort | paste -sd, -; }
 
 # ------------------------------------------------------------------------------------------------
 if has vm; then
@@ -323,34 +325,47 @@ fi
 
 if has rollback; then
   b1="$(cat "$OUT/.backup-fixture")"
-  # Order: remove the inner relay trust and restart the proxy BEFORE the edge stops, so the relay
-  # peer address is never trusted while it could be assigned to another container.
-  rollback_relay_tls() { cli init --no-relay --server-names "localhost 127.0.0.1" && cli access apply && cli tls restore --from "$b1" && cli proxy restart; }
-  transition t4-rollback-relay-tls rollback_relay_tls; rc=$?
-  line="$(tline t4-rollback-relay-tls)"
+  # RB0: the edge interlock refuses to stop while the inner relay still trusts the edge address.
+  bash "$F/infra/edge/edge.sh" "$LAB/edge.env" stop > "$OUT/rb0-edge-stop-refused.log" 2>&1; rc=$?
+  if [ $rc -eq 2 ] && grep -q 'still answers' "$OUT/rb0-edge-stop-refused.log" && [ "$(docker container inspect -f '{{.State.Running}}' seyra-rh-edge)" = true ]; then
+    result PASS RB0 "edge.sh stop refused while the relay upstream still answered (edge kept running, address still held)"
+  else result FAIL RB0 "rc=$rc running=$(docker container inspect -f '{{.State.Running}}' seyra-rh-edge 2>/dev/null)"; fi
+  # RB1: relay trust removed and the proxy restarted BEFORE the edge stops (DEPLOYMENT_PLAN §4.1).
+  rollback_relay() { cli init --no-relay --server-names "localhost 127.0.0.1" && cli access apply && cli proxy restart; }
+  transition t4-rollback-relay rollback_relay; rc=$?
+  line="$(tline t4-rollback-relay)"
   peer="$(secret_cat "$SEYRA_HOME/runtime.env" 2>/dev/null | grep -c '^SEYRA_RELAY_PEER=.')"
   pub="$(D port "$(D ps -q --filter label=com.docker.compose.service=proxy)" 2>/dev/null | grep -c 8444)"
   edge_running="$(docker container inspect -f '{{.State.Running}}' seyra-rh-edge 2>/dev/null)"
-  fpn="$(fp_file "$SEYRA_HOME/secrets/tls/server.crt")"; can="$(docker exec "$HOST" sha256sum "$SEYRA_HOME/secrets/tls/ca.crt" | cut -c1-64)"
-  if [ $rc -eq 0 ] && [ "$peer" = 0 ] && [ "$pub" = 0 ] && [ "$edge_running" = true ] && [ "$fpn" = "$(cat "$OUT/.fixture-fingerprint")" ] && [ "$can" = "$(cat "$OUT/.fixture-ca-sha")" ] && grep -q 'final=200' <<<"$line"; then
-    result PASS RB1 "relay trust removed and relay port unpublished while the edge still held its address; tls restore re-installed the fixture certificate and CA; $line"
-  else result FAIL RB1 "rc=$rc peer_lines=$peer relay_published=$pub edge_running=$edge_running cert_restored=$([ "$fpn" = "$(cat "$OUT/.fixture-fingerprint")" ] && echo y || echo n) $line"; fi
+  if [ $rc -eq 0 ] && [ "$peer" = 0 ] && [ "$pub" = 0 ] && [ "$edge_running" = true ] && grep -q 'final=200' <<<"$line"; then
+    result PASS RB1 "relay trust removed and relay port unpublished while the edge still held its address; $line"
+  else result FAIL RB1 "rc=$rc peer_lines=$peer relay_published=$pub edge_running=$edge_running $line"; fi
   runc docker closed "$NET" "" closed; rc=$?
-  [ $rc -eq 0 ] && result PASS RB2 "after rollback the relay listener answers nobody on the lab network" || result FAIL RB2 "$(fl closed)"
-  bash "$F/infra/edge/edge.sh" "$LAB/edge.env" stop > "$OUT/rb-edge-stop.log" 2>&1 && bash "$F/infra/edge/edge.sh" "$LAB/edge.env" remove > "$OUT/rb-edge-remove.log" 2>&1; rc=$?
-  if [ $rc -eq 0 ] && ! docker container inspect seyra-rh-edge >/dev/null 2>&1; then result PASS RB3 "edge stopped and removed after the relay trust was withdrawn"; else result FAIL RB3 "edge stop/remove rc=$rc"; fi
-  # Software rollback to the old bundle: verified install copy + verified image load, then start.
+  [ $rc -eq 0 ] && result PASS RB2 "after the relay rollback the relay listener answers nobody on the lab network" || result FAIL RB2 "$(fl closed)"
+  # RB3: only now the edge stops (interlock satisfied) and is removed.
+  bash "$F/infra/edge/edge.sh" "$LAB/edge.env" stop > "$OUT/rb3-edge-stop.log" 2>&1 && bash "$F/infra/edge/edge.sh" "$LAB/edge.env" remove > "$OUT/rb3-edge-remove.log" 2>&1; rc=$?
+  if [ $rc -eq 0 ] && ! docker container inspect seyra-rh-edge >/dev/null 2>&1; then result PASS RB3 "edge stopped (interlock satisfied) and removed after the relay trust was withdrawn"; else result FAIL RB3 "edge stop/remove rc=$rc"; fi
+  # RB4: certificate rollback with tls restore from the fixture backup (root-only previous-* dir).
+  rollback_tls() { cli tls restore --from "$b1" && cli proxy restart; }
+  transition t5-rollback-tls rollback_tls; rc=$?
+  line="$(tline t5-rollback-tls)"
+  fpn="$(fp_file "$SEYRA_HOME/secrets/tls/server.crt")"; can="$(docker exec "$HOST" sha256sum "$SEYRA_HOME/secrets/tls/ca.crt" | cut -c1-64)"
+  served="$(node_in_host fingerprint)"
+  if [ $rc -eq 0 ] && [ "$fpn" = "$(cat "$OUT/.fixture-fingerprint")" ] && [ "$served" = "$fpn" ] && [ "$can" = "$(cat "$OUT/.fixture-ca-sha")" ] && grep -q 'final=200' <<<"$line"; then
+    result PASS RB4 "tls restore re-installed the fixture certificate and CA from the root-only backup; the proxy serves it; $line"
+  else result FAIL RB4 "rc=$rc cert_restored=$([ "$fpn" = "$(cat "$OUT/.fixture-fingerprint")" ] && echo y || echo n) served=$served $line"; fi
+  # RB5: software rollback to the old bundle: verified install copy + verified image load, then start.
   rollback_software() {
     local o="$LAB/transfer/old"; rm -rf "$o"; cp -al "$OLD_BUNDLE" "$o" || return 1
     docker exec "$HOST" rm -rf "$inst.rollback" && cp -a "$o/install" "$inst.rollback" \
       && (cd "$inst.rollback" && sed -n -E 's#^([0-9a-f]{64})  install/#\1  #p' "$o/SHA256SUMS" | sha256sum --quiet --strict -c -) \
       && docker exec "$HOST" rm -rf "$inst" && mv "$inst.rollback" "$inst" && cli bootstrap-load "$o" && cli verify-images && cli start; }
-  transition t5-rollback-software rollback_software; rc=$?
-  line="$(tline t5-rollback-software)"
+  transition t6-rollback-software rollback_software; rc=$?
+  line="$(tline t6-rollback-software)"
   ops_now="$(D image inspect -f '{{.Id}}' "$(jq -r '.images.ops.ref' "$inst/infra/dependencies.lock.json")")"
   if [ $rc -eq 0 ] && grep -q 'final=200' <<<"$line" && grep -q 'identities_equal=yes' <<<"$line" && [ "$ops_now" = "$(jq -r '.images.ops.image_id' "$OLD_BUNDLE/install/infra/dependencies.lock.json")" ]; then
-    result PASS RB4 "software rollback to the old bundle (images verified, old OPS identity): $line"
-  else result FAIL RB4 "rc=$rc ops=$ops_now $line"; fi
+    result PASS RB5 "software rollback to the old bundle (images verified, old OPS identity): $line"
+  else result FAIL RB5 "rc=$rc ops=$ops_now $line"; fi
 fi
 
 if has cleanup; then

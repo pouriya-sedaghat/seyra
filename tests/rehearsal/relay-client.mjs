@@ -95,7 +95,7 @@ try {
       ['/api/docs/', 200, (r) => r.headers['content-security-policy']?.length === 1 && r.headers['content-security-policy'][0] === csp],
       ['/api/docs/json', 200, (r) => JSON.stringify(JSON.parse(r.body)) === JSON.stringify(exported)],
       [`/maps/${ds}/tiles.json`, 200, (r) => r.body.includes(`${base}/maps/${ds}/tiles/`)],
-      [`/maps/${ds}/styles/light-fa.json`, 200, (r) => r.body.includes(`"glyphs":"${base}/maps/${ds}/fonts/`) && !r.body.includes('__SEYRA_BASE__')],
+      [`/maps/${ds}/styles/light-fa.json`, 200, (r) => JSON.parse(r.body).glyphs?.startsWith(`${base}/maps/${ds}/fonts/`) && JSON.parse(r.body).sprite?.startsWith(`${base}/maps/${ds}/sprites/`) && !r.body.includes('__SEYRA_BASE__')],
       [`/maps/${ds}/tiles/14/8192/8191.pbf`, null, (r) => [200, 204].includes(r.status)],
       [`/maps/${ds}/sprites/light.json`, 200],
       [`/maps/${ds}/fonts/Vazirmatn%20Regular/0-255.pbf`, 200],
