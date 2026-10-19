@@ -29,6 +29,10 @@ set_setting() { in_host sed -i -E "s/(\"$1\": )[0-9.]+/\\1$2/" "$settings"; }
 get_setting() { in_host cat "$settings" | sed -nE "s/.*\"$1\": ([0-9.]+).*/\\1/p"; }
 manifest() { in_host cat "$SEYRA_HOME/releases/$1/manifest.json"; }
 release_of() { grep -oE 'dataset_id ds-[0-9a-z-]+' "$1" | head -1 | awk '{print $2}'; }
+# Snapshot dates unique to this run (dataset_id = ds-<date>-<hash of inputs and images>), so a rerun
+# never collides with a release an earlier run left on the host.
+BASE=$(( $(date +%s) / 60 % 300 ))
+day() { date -u -d "2025-01-01 +$(( BASE + $1 )) days" +%Y-%m-%dT00:00:00Z; }
 render_dbs() { q "SELECT datname FROM pg_database WHERE datname LIKE 'render_%' ORDER BY 1" postgres | tr '\n' ' '; }
 events() { q "SELECT count(*) FROM seyra_control.release_events"; }
 summary=(); fails=0
@@ -42,7 +46,7 @@ orig_factor="$(get_setting minFreeFactor)"; orig_bytes="$(get_setting minFreeByt
 echo "# $(date -u +%FT%TZ) host=$HOST ops=$(jq -r .images.ops.image_id "$LAB/install/infra/dependencies.lock.json") settings: minFreeFactor=$orig_factor minFreeBytes=$orig_bytes" | tee "$OUT/progress.log"
 
 # ---------------------------------------------------------------- C1 adequate capacity
-cli import --pbf "$PBF" --snapshot-timestamp 2026-10-03T00:00:00Z > "$OUT/C1-import.log" 2>&1; rc=$?
+cli import --pbf "$PBF" --snapshot-timestamp "$(day 0)" > "$OUT/C1-import.log" 2>&1; rc=$?
 C1="$(release_of "$OUT/C1-import.log")"
 manifest "$C1" > "$OUT/C1-manifest.json" 2>/dev/null
 if [ $rc -eq 0 ] && grep -q '\[import\] capacity: available .* >= required' "$OUT/C1-import.log" \
@@ -54,7 +58,7 @@ fi
 
 # ---------------------------------------------------------------- C2 within-step dip
 set_setting minFreeFactor 120   # the operator adopts the measured reference (RUNBOOK §3)
-cli import --pbf "$PBF" --snapshot-timestamp 2026-10-04T00:00:00Z > "$OUT/C2-import.log" 2>&1 &
+cli import --pbf "$PBF" --snapshot-timestamp "$(day 1)" > "$OUT/C2-import.log" 2>&1 &
 ip=$!
 for _ in $(seq 1 1200); do grep -q 'geocoder-build …' "$OUT/C2-import.log" 2>/dev/null && break; sleep 0.1; done
 sleep 2
@@ -77,8 +81,8 @@ fi
 # ---------------------------------------------------------------- C3 insufficient, no side effects
 set_setting minFreeBytes 10000000000000   # 10 TB: no disposable host has that much
 dbs0="$(render_dbs)"; ev0="$(events)"; rel0="$(in_host ls "$SEYRA_HOME/releases" | sort | tr '\n' ' ')"
-cli import --pbf "$PBF" --snapshot-timestamp 2026-10-05T00:00:00Z > "$OUT/C3-import.log" 2>&1; rc=$?
-C3="$(release_of "$OUT/C3-import.log")"
+cli import --pbf "$PBF" --snapshot-timestamp "$(day 2)" > "$OUT/C3-import.log" 2>&1; rc=$?
+C3="ds-$(date -u -d "$(day 2)" +%Y%m%d)-${C1##*-}"   # a refused import never logs its id (admission precedes it)
 dbs1="$(render_dbs)"; ev1="$(events)"; rel1="$(in_host ls "$SEYRA_HOME/releases" | sort | tr '\n' ' ')"
 cli status > "$OUT/C3-status.log" 2>&1
 if [ $rc -ne 0 ] && grep -q 'insufficient free space on .*nothing was changed' "$OUT/C3-import.log" && [ "$dbs0" = "$dbs1" ] && [ "$ev0" = "$ev1" ] && [ "$rel0" = "$rel1" ] \
@@ -90,7 +94,7 @@ fi
 
 # ---------------------------------------------------------------- C4 failed build kept, then replaced
 set_setting minFreeBytes "$orig_bytes"
-cli import --pbf "$PBF" --snapshot-timestamp 2026-10-06T00:00:00Z > "$OUT/C4-killed-import.log" 2>&1 &
+cli import --pbf "$PBF" --snapshot-timestamp "$(day 3)" > "$OUT/C4-killed-import.log" 2>&1 &
 kp=$!
 for _ in $(seq 1 1200); do grep -q 'routing-build …' "$OUT/C4-killed-import.log" 2>/dev/null && break; sleep 0.1; done
 victim="$(D ps --no-trunc --format '{{.ID}} {{.Command}}' | awk '/ import --pbf/ {print $1}' | head -1)"
@@ -98,11 +102,11 @@ victim="$(D ps --no-trunc --format '{{.ID}} {{.Command}}' | awk '/ import --pbf/
 wait $kp 2>/dev/null
 C4="$(release_of "$OUT/C4-killed-import.log")"
 set_setting minFreeBytes 10000000000000
-cli import --pbf "$PBF" --snapshot-timestamp 2026-10-06T00:00:00Z > "$OUT/C4-refused.log" 2>&1; rc_ref=$?
+cli import --pbf "$PBF" --snapshot-timestamp "$(day 3)" > "$OUT/C4-refused.log" 2>&1; rc_ref=$?
 st="$(manifest "$C4" 2>/dev/null | jq -r '.status')"
 db_kept="$(render_dbs | grep -c "render_${C4//-/_}")"
 set_setting minFreeBytes "$orig_bytes"
-cli import --pbf "$PBF" --snapshot-timestamp 2026-10-06T00:00:00Z > "$OUT/C4-replace.log" 2>&1; rc_rep=$?
+cli import --pbf "$PBF" --snapshot-timestamp "$(day 3)" > "$OUT/C4-replace.log" 2>&1; rc_rep=$?
 manifest "$C4" > "$OUT/C4-manifest.json" 2>/dev/null
 recl="$(jq -r '.measurements.capacity_check.reclaimable_bytes' "$OUT/C4-manifest.json")"
 if [ -n "$victim" ] && [ $rc_ref -ne 0 ] && grep -q "the failed build of $C4 was kept" "$OUT/C4-refused.log" && [ "$st" = failed ] && [ "$db_kept" = 1 ] \
