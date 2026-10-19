@@ -164,13 +164,16 @@ export async function tlsCsr(p: TlsPaths, namesIn: string[], log: (m: string) =>
   const dir = join(p.dir, PENDING);
   if (existsSync(join(dir, TLS_FILES.key)) && !opts.replacePending) throw new Error(`a pending key already exists in ${dir}; import its certificate, or pass --replace-pending to discard it deliberately`);
   rmSync(dir, { recursive: true, force: true });
-  mkdirSync(dir, { recursive: true, mode: 0o700 });
+  // 0711: the operator (not root) can read the public CSR by its path; the key itself stays 0400.
+  mkdirSync(dir, { recursive: true, mode: 0o711 });
+  chmodSync(dir, 0o711);
   const ossl = opts.openssl ?? 'openssl';
   const san = names.map(nameEntry).join(',');
   await run(ossl, ['req', '-new', '-newkey', 'ec', '-pkeyopt', 'ec_paramgen_curve:prime256v1', '-nodes', '-keyout', join(dir, TLS_FILES.key), '-out', join(dir, 'server.csr'), '-subj', `/CN=${names[0]}`, '-addext', `subjectAltName=${san}`, '-addext', 'extendedKeyUsage=serverAuth', '-addext', 'keyUsage=critical,digitalSignature', '-addext', 'basicConstraints=critical,CA:FALSE']);
   chmodSync(join(dir, TLS_FILES.key), 0o400);
   const csrText = readFileSync(join(dir, 'server.csr'));
-  writeFileSync(join(dir, 'names.json'), `${JSON.stringify({ names, created_at: new Date().toISOString() }, null, 2)}\n`);
+  chmodSync(join(dir, 'server.csr'), 0o444);
+  writeFileSync(join(dir, 'names.json'), `${JSON.stringify({ names, created_at: new Date().toISOString() }, null, 2)}\n`, { mode: 0o444 });
   log(`[tls] new server key kept in ${dir} (mode 0400; never copy it off the host)`);
   log(`[tls] certificate signing request: ${join(dir, 'server.csr')} (sha256 ${sha256(csrText)}) for ${names.join(', ')}`);
   log('[tls] have the issuer (company CA or the operator development issuer) sign it for serverAuth; then: seyra-maps tls import --cert <leaf> [--chain <intermediates>] --ca <root> --names ...');

@@ -1,6 +1,6 @@
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { appendFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { appendFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -133,6 +133,10 @@ describe('replacement of the served pair', () => {
 
   it('CSR flow: the key is created and kept on the host, the issued certificate is imported against it', async () => {
     const r = await tlsCsr(p(), NAMES, () => {});
+    // The public CSR is readable by the operator through a traversable directory; the key is not.
+    expect(statSync(join(dir, 'pending')).mode & 0o777).toBe(0o711);
+    expect(statSync(r.csr).mode & 0o777).toBe(0o444);
+    expect(statSync(join(dir, 'pending', 'server.key')).mode & 0o777).toBe(0o400);
     const csrText = ossl('req', '-in', r.csr, '-noout', '-text');
     expect(csrText).toMatch(/IP Address:192\.0\.2\.10/);
     expect(csrText).toMatch(/DNS:maps\.example\.test/);
