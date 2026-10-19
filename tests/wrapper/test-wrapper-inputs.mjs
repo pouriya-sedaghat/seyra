@@ -109,6 +109,33 @@ run('directory-instead-of-file', { args: ['tls', 'import', '--cert', join(w, 're
   const mode = existsSync(outDir) ? (statSync(outDir).mode & 0o777).toString(8) : 'absent';
   check('new --out directory is 0755 under umask 0002', r.status === 0 && mode === '755', `rc=${r.status} mode=${mode} ${r.stderr.trim()}`);
 }
+// 10. --from: a root-only service-local directory inside SEYRA_HOME (a tls import backup, 0700
+// root on a real host; here mode 000, so the operator cannot enter it) is passed through as an
+// absolute path with no extra mount; the CLI checks it as root. Outside SEYRA_HOME a directory the
+// operator cannot enter, or one that does not exist, is still refused before Docker.
+{
+  const home = join(w, 'home-from');
+  const prev = join(home, 'secrets', 'tls', 'previous-20261019T000000000Z');
+  mkdirSync(prev, { recursive: true });
+  chmodSync(prev, 0o000);
+  for (const [label, arg, cwd] of [['absolute', prev, w], ['relative', 'secrets/tls/previous-20261019T000000000Z', home]]) {
+    const log = join(w, `from-${label}.argv`);
+    const r = spawnSync('bash', [wrapper, 'tls', 'restore', '--from', arg], { cwd, env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, SEYRA_HOME: home, WRAPPER_DOCKER_LOG: log }, encoding: 'utf8' });
+    const argv = existsSync(log) ? readFileSync(log).toString().split('\0').filter(Boolean) : [];
+    const extra = mountsOf(argv).filter((m) => m.dst === prev || m.dst.startsWith(`${prev}/`));
+    check(`--from root-only backup inside SEYRA_HOME (${label}): passed as ${prev}, no extra mount`, r.status === 0 && argv[argv.indexOf('--from') + 1] === prev && extra.length === 0, `rc=${r.status} ${r.stderr.trim()} argv=${argv.slice(-3).join(' ')}`);
+  }
+  chmodSync(prev, 0o700);
+  const outside = join(w, 'operator-locked');
+  mkdirSync(outside);
+  chmodSync(outside, 0o000);
+  for (const [label, arg] of [['operator directory it cannot enter', outside], ['missing directory', join(w, 'no-such-backup')]]) {
+    const log = join(w, `from-out-${label.length}.argv`);
+    const r = spawnSync('bash', [wrapper, 'tls', 'restore', '--from', arg], { env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, SEYRA_HOME: home, WRAPPER_DOCKER_LOG: log }, encoding: 'utf8' });
+    check(`--from outside SEYRA_HOME, ${label}: refused before Docker`, r.status === 2 && !existsSync(log), `rc=${r.status} ${r.stderr.trim()}`);
+  }
+  chmodSync(outside, 0o700);
+}
 
 for (const r of results) console.log(`${r.ok ? 'PASS' : 'FAIL'} ${r.name}${r.ok ? '' : ` -- ${r.detail.slice(0, 300)}`}`);
 const failed = results.filter((r) => !r.ok).length;

@@ -62,8 +62,16 @@ for ((i = 0; i < ${#args[@]}; i++)); do
       args[$((i + 1))]="$resolved"; i=$((i + 1)) ;;
     --from)
       [ $((i + 1)) -lt ${#args[@]} ] || die "--from needs a directory"
-      d="$(cd "${args[$((i + 1))]}" 2>/dev/null && pwd)" || die "--from: ${args[$((i + 1))]} is not a directory"
-      args[$((i + 1))]="$d"; inside_home "$d" || mounts+=(-v "$d:$d:ro"); i=$((i + 1)) ;;
+      # Service-local sources (a tls import backup previous-*, a backup generation) live inside
+      # SEYRA_HOME and are root-only (0700); the CLI checks them as root through the home mount, so
+      # resolve those lexically instead of entering them as the operator. Others: an operator
+      # directory, checked here and mounted read-only.
+      d="$(realpath -s -m -- "${args[$((i + 1))]}")"
+      if ! inside_home "$d"; then
+        d="$(cd "${args[$((i + 1))]}" 2>/dev/null && pwd)" || die "--from: ${args[$((i + 1))]} is not a directory"
+        inside_home "$d" || mounts+=(-v "$d:$d:ro")
+      fi
+      args[$((i + 1))]="$d"; i=$((i + 1)) ;;
     --out)
       [ $((i + 1)) -lt ${#args[@]} ] || die "--out needs a directory"
       # A new output directory is 0755 whatever the operator's umask (bundles and backups are read
