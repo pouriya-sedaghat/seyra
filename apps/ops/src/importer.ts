@@ -1,8 +1,8 @@
-import { chownSync, copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync, chmodSync, unlinkSync } from 'node:fs';
+import { chownSync, copyFileSync, existsSync, lstatSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync, chmodSync, unlinkSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { CATALOG_VERSION, SEARCH_NORMALIZATION_VERSION } from '@seyra/contracts';
 import { STYLE_VERSION, buildStyle, buildTileJson } from '@seyra/map-assets';
-import { FREE_SPACE_SAMPLE_MS, FreeSpaceMonitor, REFERENCE_MIN_FREE_FACTOR, capacityCheck, describeCapacity, freeBytes, type CapacityCheck } from './capacity.js';
+import { FREE_SPACE_SAMPLE_MS, FreeSpaceMonitor, REFERENCE_MIN_FREE_FACTOR, admitImport, freeBytes, reclaimableBytes, type Admission } from './capacity.js';
 import { composeJobs, jobsInvocation } from './compose.js';
 import { psql, recordEvent, renderDbName } from './db.js';
 import { PHOTON_EXTRA_TAGS, preprocessDump } from './geocoder-preprocess.js';
@@ -115,7 +115,7 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
   const monitor = new FreeSpaceMonitor(() => freeBytes(l.home));
   const freeBefore = monitor.sample();
   monitor.start(FREE_SPACE_SAMPLE_MS);
-  let capacity: CapacityCheck | null = null;
+  let capacity: Admission | null = null;
   const measurements = (): Manifest['measurements'] => ({
     steps,
     free_bytes_before: freeBefore,
@@ -216,24 +216,32 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
           failedBuild = previous;
         }
 
-        // Capacity admission happens before any side effect, including removing a failed build: the
-        // bytes that build would release count as available, but nothing is deleted on refusal.
-        const reclaimable = failedBuild ? duBytes(setupDir) + (await renderDbBytes(l, datasetId)) : 0;
-        capacity = capacityCheck(l.home, monitor.sample(), reclaimable, st.size, s);
-        opts.log(`[import] capacity: ${describeCapacity(capacity)}`);
+        // Capacity admission before any side effect (capacity.ts): a failed build earns only a
+        // conservative reclaim credit; it is removed only after admission, and the observed free
+        // space is checked again before anything new is written. A refusal changes nothing.
         if (s.minFreeFactor < REFERENCE_MIN_FREE_FACTOR) {
           opts.log(`[import] warning: minFreeFactor ${s.minFreeFactor} is below the measured reference ${REFERENCE_MIN_FREE_FACTOR} (RUNBOOK §3); the import may run out of space`);
         }
-        if (!capacity.ok) {
-          throw new Error(
-            `insufficient free space for ${datasetId} on ${l.home}: ${describeCapacity(capacity)}; nothing was changed${failedBuild ? ` (the failed build of ${datasetId} was kept)` : ''}. Add capacity or, after measuring, adjust minFreeFactor/minFreeBytes in state/settings.json; never delete unrelated data`,
-          );
-        }
-        if (failedBuild) {
-          opts.log(`[import] replacing failed build of ${datasetId} (failed at ${failedBuild.failure?.step ?? 'unknown'})`);
-          await psql(l, 'postgres', `DROP DATABASE IF EXISTS ${renderDbName(datasetId)} WITH (FORCE);`);
-          rmSync(setupDir, { recursive: true, force: true });
-        }
+        const fsDev = lstatSync(l.home, { bigint: true }).dev;
+        capacity = await admitImport({
+          path: l.home,
+          datasetId,
+          inputBytes: st.size,
+          settings: s,
+          free: () => monitor.sample(),
+          log: opts.log,
+          failedBuild: failedBuild
+            ? {
+                estimate: () => reclaimableBytes(setupDir, fsDev),
+                renderDbLogicalBytes: () => renderDbLogicalBytes(l, datasetId),
+                cleanup: async () => {
+                  opts.log(`[import] replacing failed build of ${datasetId} (failed at ${failedBuild!.failure?.step ?? 'unknown'})`);
+                  await psql(l, 'postgres', `DROP DATABASE IF EXISTS ${renderDbName(datasetId)} WITH (FORCE);`);
+                  rmSync(setupDir, { recursive: true, force: true });
+                },
+              }
+            : null,
+        });
 
         mkdirSync(join(setupDir, 'source'), { recursive: true });
         for (const d of ['logs', 'validation', 'maps/styles', 'geocoder', '.work']) mkdirSync(join(setupDir, d), { recursive: true });
@@ -429,8 +437,8 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
   }
 }
 
-/** Size of a release's render database, 0 when it does not exist. */
-async function renderDbBytes(l: Layout, datasetId: string): Promise<number> {
+/** pg_database_size of a release's render DB (informational; never credited as free space). */
+async function renderDbLogicalBytes(l: Layout, datasetId: string): Promise<number> {
   const out = await psql(l, 'postgres', `SELECT coalesce((SELECT pg_database_size(datname) FROM pg_database WHERE datname = '${renderDbName(datasetId)}'), 0);`);
   const n = Number(out.trim());
   return Number.isFinite(n) ? n : 0;

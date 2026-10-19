@@ -86,8 +86,9 @@ Steps:
 
 Free-space admission (before anything is created or removed):
 - `required = max(minFreeBytes, minFreeFactor × PBF size)`, with defaults of 2 GiB and **120** (`state/settings.json`).
-- `available = free space on SEYRA_HOME's filesystem + the bytes of a failed build of the same dataset_id` (its release directory and render database). That build is only removed after the check passes.
-- If `available < required`, the import stops with both figures and **nothing is changed**; a failed build is kept.
+- `available = free space on SEYRA_HOME's filesystem + a conservative reclaim estimate for a failed build of the same dataset_id`. The estimate counts only allocated blocks of that release's regular files and directories on the same filesystem. It never follows symlinks, gives no credit to a file that keeps another hard link outside the release, and counts the render database as 0 (`pg_database_size` is recorded but is not an equal free-space gain).
+- If `available < required`, the import stops with both figures and **nothing is changed**; the failed build and its render database are kept.
+- Otherwise the failed build is removed. Free space is then *observed* again and compared with the requirement before anything new is written. If the removal released less than estimated, the import stops there.
 - `init` writes every setting into `settings.json`. A home initialised before this default changed therefore keeps `minFreeFactor: 40` until you edit it, and every import then logs a warning that the factor is below the measured reference. Raise it, or lower it only after measuring your own extract.
 - The guard is a sizing guard, not a reservation: another process can still fill the disk during an import.
 

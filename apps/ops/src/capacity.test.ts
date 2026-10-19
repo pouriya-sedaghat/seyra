@@ -1,5 +1,9 @@
+import { execFileSync } from 'node:child_process';
+import { chmodSync, linkSync, lstatSync, mkdirSync, mkdtempSync, rmSync, symlinkSync, truncateSync, writeFileSync } from 'node:fs';
+import { tmpdir } from 'node:os';
+import { join } from 'node:path';
 import { describe, expect, it } from 'vitest';
-import { FreeSpaceMonitor, REFERENCE_MIN_FREE_FACTOR, capacityCheck } from './capacity.js';
+import { CapacityRefusal, FreeSpaceMonitor, REFERENCE_MIN_FREE_FACTOR, admitImport, capacityCheck, reclaimableBytes } from './capacity.js';
 import { DEFAULT_SETTINGS } from './layout.js';
 
 const IRAN = 229_845_082; // bytes of the owner's Iran PBF in run vm2-2026-10-18
@@ -92,5 +96,154 @@ describe('within-step free-space measurement', () => {
     expect(after).toBeGreaterThan(3);
     await new Promise((r) => setTimeout(r, 30));
     expect(m.samples).toBe(after);
+  });
+});
+
+describe('conservative reclaim estimate (review F1)', () => {
+  const MiB = 1024 ** 2;
+  const fsDevOf = (p: string) => lstatSync(p, { bigint: true }).dev;
+  const fresh = () => mkdtempSync(join(tmpdir(), 'seyra-reclaim-'));
+
+  it('credits a sparse file only for its allocated blocks', () => {
+    const d = fresh();
+    const f = join(d, 'partial-store.bin');
+    writeFileSync(f, '');
+    truncateSync(f, 8 * GiB);
+    const r = reclaimableBytes(d, fsDevOf(d));
+    expect(r.logical_bytes).toBe(8 * GiB);
+    expect(r.bytes).toBeLessThan(MiB); // apparent length is never credited
+    rmSync(d, { recursive: true, force: true });
+  });
+
+  it('never follows a symlink to credit its target', () => {
+    const d = fresh();
+    const outside = fresh();
+    writeFileSync(join(outside, 'store.bin'), Buffer.alloc(4 * MiB, 1));
+    symlinkSync(join(outside, 'store.bin'), join(d, 'linked-store'));
+    const r = reclaimableBytes(d, fsDevOf(d));
+    expect(r.not_credited.symlinks).toBe(1);
+    expect(r.bytes).toBeLessThan(MiB);
+    rmSync(d, { recursive: true, force: true });
+    rmSync(outside, { recursive: true, force: true });
+  });
+
+  it('gives no credit to a hard-linked file whose other link survives, and counts an inside pair once', () => {
+    const d = fresh();
+    const outside = fresh();
+    writeFileSync(join(d, 'shared.bin'), Buffer.alloc(4 * MiB, 2));
+    linkSync(join(d, 'shared.bin'), join(outside, 'kept-link.bin'));
+    const shared = reclaimableBytes(d, fsDevOf(d));
+    expect(shared.not_credited.shared_inodes).toBe(1);
+    expect(shared.bytes).toBeLessThan(MiB);
+    rmSync(join(outside, 'kept-link.bin'));
+    linkSync(join(d, 'shared.bin'), join(d, 'second-name.bin'));
+    const pair = reclaimableBytes(d, fsDevOf(d));
+    expect(pair.not_credited.shared_inodes).toBe(0);
+    expect(pair.bytes).toBeGreaterThanOrEqual(4 * MiB);
+    expect(pair.bytes).toBeLessThan(5 * MiB); // once, not twice
+    rmSync(d, { recursive: true, force: true });
+    rmSync(outside, { recursive: true, force: true });
+  });
+
+  it('credits an ordinary allocated file', () => {
+    const d = fresh();
+    mkdirSync(join(d, 'valhalla'));
+    writeFileSync(join(d, 'valhalla', 'tiles.bin'), Buffer.alloc(16 * MiB, 3));
+    const r = reclaimableBytes(d, fsDevOf(d));
+    expect(r.bytes).toBeGreaterThanOrEqual(16 * MiB);
+    expect(r.files).toBe(1);
+    rmSync(d, { recursive: true, force: true });
+  });
+
+  it('gives no credit for another filesystem, special files or unreadable subtrees', () => {
+    const d = fresh();
+    writeFileSync(join(d, 'a.bin'), Buffer.alloc(MiB, 4));
+    expect(reclaimableBytes(d, fsDevOf(d) + 1n).bytes).toBe(0); // as if the tree were on another device
+    expect(reclaimableBytes(d, fsDevOf(d) + 1n).not_credited.other_filesystem).toBe(1);
+    execFileSync('mkfifo', [join(d, 'pipe')]);
+    const withFifo = reclaimableBytes(d, fsDevOf(d)); // must not open (and block on) the FIFO
+    expect(withFifo.not_credited.special).toBe(1);
+    if (process.getuid?.() !== 0) {
+      mkdirSync(join(d, 'locked'));
+      writeFileSync(join(d, 'locked', 'hidden.bin'), Buffer.alloc(MiB, 5));
+      chmodSync(join(d, 'locked'), 0o000);
+      const r = reclaimableBytes(d, fsDevOf(d));
+      expect(r.not_credited.unreadable).toBe(1);
+      chmodSync(join(d, 'locked'), 0o755);
+    }
+    rmSync(d, { recursive: true, force: true });
+  });
+});
+
+describe('import admission with a failed build (review F1)', () => {
+  const MiB = 1024 ** 2;
+  const settings = { minFreeFactor: 120, minFreeBytes: 0 };
+  const input = 4 * 1024 ** 2; // requirement 480 MiB
+  const required = 120 * input;
+  const fresh = () => mkdtempSync(join(tmpdir(), 'seyra-admit-'));
+  const run = (o: { free: number[]; failedDir?: string; dbBytes?: number }) => {
+    const calls: string[] = [];
+    let i = 0;
+    const p = admitImport({
+      path: '/srv/seyra',
+      datasetId: 'ds-20261019-000000000000',
+      inputBytes: input,
+      settings,
+      free: () => o.free[Math.min(i++, o.free.length - 1)]!,
+      log: () => undefined,
+      failedBuild: o.failedDir
+        ? {
+            estimate: () => reclaimableBytes(o.failedDir!, lstatSync(o.failedDir!, { bigint: true }).dev),
+            renderDbLogicalBytes: async () => o.dbBytes ?? 0,
+            cleanup: async () => {
+              calls.push('cleanup');
+            },
+          }
+        : null,
+    });
+    return { p, calls };
+  };
+
+  it('refuses near the boundary when the failed build is sparse, without cleanup (old credit admitted this)', async () => {
+    const d = fresh();
+    writeFileSync(join(d, 'store.bin'), '');
+    truncateSync(join(d, 'store.bin'), 8 * GiB);
+    const { p, calls } = run({ free: [required - 64 * MiB], failedDir: d, dbBytes: 2 * GiB });
+    await expect(p).rejects.toThrow(/nothing was changed \(the failed build of ds-20261019-000000000000 was kept\)/);
+    expect(calls).toEqual([]);
+    rmSync(d, { recursive: true, force: true });
+  });
+
+  it('does not credit the render DB size', async () => {
+    const { p, calls } = run({ free: [required - 1], failedDir: fresh(), dbBytes: 50 * GiB });
+    await expect(p).rejects.toBeInstanceOf(CapacityRefusal);
+    expect(calls).toEqual([]);
+  });
+
+  it('admits near the boundary when the failed build holds allocated data, then rechecks observed free space', async () => {
+    const d = fresh();
+    writeFileSync(join(d, 'store.bin'), Buffer.alloc(96 * MiB, 7));
+    const { p, calls } = run({ free: [required - 64 * MiB, required + 32 * MiB], failedDir: d });
+    const a = await p;
+    expect(calls).toEqual(['cleanup']);
+    expect(a.admission.ok).toBe(true);
+    expect(a.reclaim!.bytes).toBeGreaterThanOrEqual(96 * MiB);
+    expect(a.after_cleanup!.ok).toBe(true);
+    expect(a.render_db_credit_bytes).toBe(0);
+    rmSync(d, { recursive: true, force: true });
+  });
+
+  it('stops before any new write when the cleanup released less than estimated', async () => {
+    const d = fresh();
+    writeFileSync(join(d, 'store.bin'), Buffer.alloc(96 * MiB, 8));
+    const { p, calls } = run({ free: [required - 64 * MiB, required - 64 * MiB], failedDir: d });
+    await expect(p).rejects.toThrow(/after removing its failed build: observed .*; no new import data was written/);
+    expect(calls).toEqual(['cleanup']);
+    rmSync(d, { recursive: true, force: true });
+  });
+
+  it('without a failed build only observed free space counts', async () => {
+    await expect(run({ free: [required] }).p).resolves.toMatchObject({ reclaim: null, after_cleanup: null });
+    await expect(run({ free: [required - 1] }).p).rejects.toThrow(/nothing was changed\. /);
   });
 });
