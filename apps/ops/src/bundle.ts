@@ -1,4 +1,4 @@
-import { copyFileSync, cpSync, existsSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
+import { chmodSync, chownSync, copyFileSync, cpSync, existsSync, lstatSync, mkdirSync, readFileSync, readdirSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, relative } from 'node:path';
 import { lockedImages, inspectImageId, readLock } from './lock.js';
 import { sha256File, sha256Text } from './manifest.js';
@@ -83,7 +83,35 @@ export async function bundleExport(installDir: string, out: string, extraFiles: 
   const sums: string[] = [];
   for (const rel of walkFiles(out).filter((f) => f !== 'SHA256SUMS')) sums.push(`${await sha256File(join(out, rel))}  ${rel}`);
   writeFileSync(join(out, 'SHA256SUMS'), `${sums.join('\n')}\n`);
-  log(`[bundle] wrote ${entries.length} image archives and ${Object.keys(files).length} install files to ${out}`);
+  const owner = applyBundleOwnership(out);
+  log(`[bundle] wrote ${entries.length} image archives and ${Object.keys(files).length} install files to ${out} (owner ${owner.uid}:${owner.gid}, files 0644/0755, directories 0755)`);
+}
+
+/**
+ * Output ownership policy. Everything `bundle export` writes under OUT belongs to the owner of OUT
+ * itself and is readable by everyone: directories 0755, executable files 0755, other files 0644.
+ * The host wrapper creates OUT as the invoking operator before the ops container runs, so that
+ * operator can verify (`sha256sum -c SHA256SUMS`), copy and `bootstrap-load` the bundle without root.
+ * `docker save -o` alone leaves root-owned 0600 archives. A bundle carries image archives and install
+ * files, never secrets or keys. Only the paths under OUT are touched (OUT's own mode is left alone);
+ * file contents, and therefore every checksum, are unchanged.
+ */
+export function applyBundleOwnership(out: string): { uid: number; gid: number } {
+  const { uid, gid } = statSync(out);
+  const canChown = process.getuid?.() === 0 || process.getuid?.() === uid;
+  const visit = (p: string): void => {
+    const st = lstatSync(p);
+    if (st.isSymbolicLink()) return;
+    if (st.isDirectory()) {
+      chmodSync(p, 0o755);
+      for (const name of readdirSync(p)) visit(join(p, name));
+    } else {
+      chmodSync(p, st.mode & 0o111 ? 0o755 : 0o644);
+    }
+    if (canChown && (st.uid !== uid || st.gid !== gid)) chownSync(p, uid, gid);
+  };
+  for (const name of readdirSync(out)) visit(join(out, name));
+  return { uid, gid };
 }
 
 /** Verify every checksum; returns the list of problems (empty = intact). */
