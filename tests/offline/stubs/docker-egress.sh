@@ -1,0 +1,38 @@
+#!/bin/bash
+echo "docker $*" >> "$STUB_LOG"
+state="$STUB_STATE"; [ -f "$state" ] || echo 0 > "$state"
+case "$1 $2" in
+  "exec "*)
+    shift 2
+    if [ -n "${HOST_EXEC_FAIL:-}" ]; then echo "Error response from daemon: No such container: x" >&2; exit 1; fi
+    case "$*" in
+      "ip -4 route get "*) d="${@: -1}"
+        if [ "$d" = "${HOST_ROUTABLE:-none}" ]; then echo "$d via 172.22.0.1 dev eth0"; exit 0; fi
+        echo "RTNETLINK answers: Network is unreachable" >&2; exit 2 ;;
+      "ip -4 route") echo "172.22.0.0/16 dev eth0 proto kernel scope link"; exit 0 ;;
+      *ip_forward*) echo 0; exit 0 ;;
+    esac ;;
+  "container inspect")
+    for a in "$@"; do case "$a" in *IPAddress*) echo 198.18.0.50; exit 0;; *"range $k"*) echo "seyra_edge seyra_offline_lab "; exit 0;; esac; done
+    exit 0 ;;
+  "rm -f") echo "$3" >> "$STUB_REMOVED"; exit 0 ;;
+esac
+if [ "$1" = run ]; then
+  for a in "$@"; do if [ "$a" = -d ]; then echo sink-id; exit 0; fi; done
+  script="${@: -1}"
+  case "$script" in
+    *"iptables -L OUTPUT"*)
+      [ "${COUNTER:-}" = missing ] && { echo "Chain OUTPUT (policy DROP 0 packets, 0 bytes)"; exit 0; }
+      echo "Chain OUTPUT (policy DROP)"; echo "    $(cat "$state")     0 DROP all -- * * 0.0.0.0/0 0.0.0.0/0 /* SEYRA_EDGE_EGRESS_DROP */"; exit 0 ;;
+    *"ip -4 route"*) echo "default via 198.18.0.1 dev eth0"; echo 0; exit 0 ;;
+    *"nc -w 3 -z"*)
+      [ -n "${RUN_FAIL:-}" ] && { echo "docker: Error response from daemon: cannot join network namespace" >&2; exit 125; }
+      dst="$(sed -E 's/.*nc -w 3 -z ([^ ;]+) ([0-9]+).*/\1:\2/' <<<"$script")"
+      if [ "$dst" = "$UPSTREAM" ]; then [ -n "${UPSTREAM_DOWN:-}" ] && { echo "nc: can't connect: Connection refused"; echo rc=1; exit 0; }; echo rc=0; exit 0; fi
+      [ -n "${NC_MISSING:-}" ] && { echo "sh: nc: not found"; echo rc=127; exit 0; }
+      [ "$dst" = "${FORBIDDEN_OK:-none}" ] && { echo rc=0; exit 0; }
+      [ "${COUNTER:-}" = frozen ] || echo $(( $(cat "$state") + 1 )) > "$state"
+      echo "nc: can't connect to remote host: Operation not permitted"; echo rc=1; exit 0 ;;
+  esac
+fi
+exit 0
