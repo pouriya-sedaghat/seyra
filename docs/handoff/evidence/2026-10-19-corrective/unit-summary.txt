@@ -1,0 +1,18 @@
+> seyra@1.0.0 test
+> npm run test --workspaces --if-present
+> @seyra/contracts@1.0.0 test
+> vitest run
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+> @seyra/map-assets@1.0.0 test
+> vitest run
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+> @seyra/api@1.0.0 test
+> vitest run
+ Test Files  7 passed (7)
+      Tests  57 passed (57)
+> @seyra/ops@1.0.0 test
+> vitest run
+ Test Files  11 passed (11)
+      Tests  151 passed (151)

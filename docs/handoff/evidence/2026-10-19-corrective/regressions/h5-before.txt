@@ -1,0 +1,11 @@
+PASS the proxy template generates JSON errors
+FAIL ingress 413 PAYLOAD_TOO_LARGE satisfies the documented error schema -- [{"instancePath":"/error","schemaPath":"#/properties/error/required","keyword":"required","params":{"missingProperty":"request_id"},"message":"must have required property 'request_id'"}]
+FAIL ingress 404 NOT_FOUND satisfies the documented error schema -- [{"instancePath":"/error","schemaPath":"#/properties/error/required","keyword":"required","params":{"missingProperty":"request_id"},"message":"must have required property 'request_id'"}]
+FAIL ingress 503 PROVIDER_UNAVAILABLE satisfies the documented error schema -- [{"instancePath":"/error","schemaPath":"#/properties/error/required","keyword":"required","params":{"missingProperty":"request_id"},"message":"must have required property 'request_id'"}]
+FAIL ingress 404 DATASET_MISMATCH satisfies the documented error schema -- [{"instancePath":"/error","schemaPath":"#/properties/error/required","keyword":"required","params":{"missingProperty":"request_id"},"message":"must have required property 'request_id'"}]
+FAIL ingress 404 NOT_FOUND satisfies the documented error schema -- [{"instancePath":"/error","schemaPath":"#/properties/error/required","keyword":"required","params":{"missingProperty":"request_id"},"message":"must have required property 'request_id'"}]
+FAIL ingress 413 satisfies the exported /api/v1/map/route 413 schema -- [{"instancePath":"/error","schemaPath":"#/properties/error/required","keyword":"required","params":{"missingProperty":"request_id"},"message":"must have required property 'request_id'"}]
+PASS the exported /api/v1/map/route 413 schema still requires request_id
+FAIL ingress 413 satisfies the exported /api/v1/map/proximity 413 schema -- [{"instancePath":"/error","schemaPath":"#/properties/error/required","keyword":"required","params":{"missingProperty":"request_id"},"message":"must have required property 'request_id'"}]
+PASS the exported /api/v1/map/proximity 413 schema still requires request_id
+# checkout=<scratch>/review-6602199/checkout checks=10 failed=7

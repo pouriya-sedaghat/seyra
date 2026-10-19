@@ -12,6 +12,8 @@ Date: 2026-10-14; updated 2026-10-17 for the corrections to the PR #1 review of 
 
 **Update 2026-10-19, client handoff preparation (brief v0.3)** ([evidence](handoff/evidence/2026-10-19-prep/README.md), [plan](handoff/DEPLOYMENT_PLAN.md)). Offline Swagger UI and a documented OpenAPI contract; the shared web/mobile guide [`CLIENT_INTEGRATION.md`](CLIENT_INTEGRATION.md) with a tested web development proxy example; an optional relay listener for the nested-host topology (PROXY protocol from one exact peer, approved subnet on the conveyed address, local control path kept) plus an edge template with a namespace egress guard; external-issuer TLS provisioning with validation before a journalled replacement; the hidden diagnostics route blocked at the ingress; a Persian seed runner. Code and focused tests only: no image, bundle, live setting, certificate or endpoint changed. Builds, rehearsal, cutover, Windows/mobile and load checks are pending, and the readiness 503 observation remains open.
 
+**Update 2026-10-19, handoff corrections H1–H5** ([evidence](handoff/evidence/2026-10-19-corrective/README.md)). The CLI wrapper exposes every input file read-only. TLS mutations are serialized under the lifecycle lock, imports validate and install an immutable staged snapshot, recovery validates its candidates, and `tls restore` rolls back saved full-chain sets. The egress test fails on any failed assertion. Ingress-generated errors carry `request_id`, matching the strict error schema. The client handoff pack is declared separately from the operational bundle and link-checked. Image builds, rehearsal and deployment remain pending.
+
 ## Scope delivered
 
 | Area | State | Where |

@@ -1,0 +1,12 @@
+PASS bundle: all 14 declared install paths exist
+PASS bundle: every relative link in the install docs resolves inside the install set
+PASS bundle: no install file holds a PEM private key
+PASS bundle: no development issuer tool in the install set
+PASS pack: built from the declared list
+PASS pack: every relative link resolves inside the built pack
+PASS pack: the guide links the dev proxy example and the handoff index, and both are packed
+PASS pack: no operator plan, evidence, edge or issuer tooling
+PASS pack: no PEM private key in any packed file
+PASS pack: manifest hashes equal the packed bytes
+PASS pack: manifest written
+# checkout=<repo> checks=11 failed=0

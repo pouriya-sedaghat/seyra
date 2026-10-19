@@ -1,0 +1,21 @@
+FAIL H2a: tls csr --replace-pending is refused while tls import holds the lifecycle lock -- rc=0 
+FAIL H2a: the import completes -- seyra-maps: served certificate <tmp>/csr-race/secrets/tls/server.crt does not match <tmp>/csr-race/secrets/tls/server.key
+FAIL H2a: served certificate and key match after the import -- 
+FAIL H2a: the served key is the validated pending key -- 
+FAIL H2a: no replacement journal is left -- 
+PASS H2a: the served set changed exactly once (to the new pair)
+FAIL H2b: tls recover is refused while tls import holds the lifecycle lock -- rc=0 [tls] recover: none
+PASS H2b: the import completes with a matching pair
+FAIL H2c: the import installs the validated snapshot, not the replaced path -- rc=1 seyra-maps: served certificate <tmp>/snapshot/secrets/tls/server.crt does not match <tmp>/snapshot/secrets/tls/server.key
+FAIL H2d: recover restores the verified previous pair instead of the journal-matching incompatible set -- rc=1 seyra-maps: served certificate <tmp>/recover-fallback/secrets/tls/server.crt does not match <tmp>/recover-fallback/secrets/tls/server.key
+PASS H2e: with no valid candidate, recover refuses and keeps the journal and files
+FAIL H2e: a new CSR is refused while the replacement is unfinished -- rc=0 
+PASS H4: the served certificate is leaf + intermediate
+PASS H4: renewal import succeeds
+PASS H4: the renewal kept the first served set as a backup
+FAIL H4: documented rollback (tls restore --from <backup>) succeeds on the full-chain backup -- rc=1 seyra-maps: tls csr | tls import | tls status | tls recover | tls init (test only)
+FAIL H4: served chain, key and trust anchor are byte-identical to the first served set -- 
+PASS H4: no journal left after the rollback
+FAIL H4: the backup's split leaf.crt/chain.pem import cleanly as well -- rc=1 seyra-maps: ENOENT: no such file or directory, open '<tmp>/rollback/secrets/tls/previous-2026-10-19T105628329Z/leaf.crt'
+PASS H4: a backup whose key does not match is refused and the served set is kept
+# checkout=<scratch>/review-6602199/checkout checks=20 failed=12

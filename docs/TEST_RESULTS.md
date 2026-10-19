@@ -1,5 +1,16 @@
 # Seyra Map Services — test results (phase 1)
 
+## Client handoff corrections H1–H5 (review of `6602199`)
+
+Record: [`docs/handoff/evidence/2026-10-19-corrective/README.md`](handoff/evidence/2026-10-19-corrective/README.md). All five reviewed defects reproduced on the pinned runtime, and each now has a failing-before/passing-after regression:
+- **H1** wrapper inputs: 13 FAIL → 59/59.
+- **H2/H4** TLS serialization, staged validation, recovery and full-chain rollback: 12 FAIL → 20/20.
+- **H3** egress exit status: 8 FAIL → 13/13.
+- **H5** error schema: 7 FAIL → 10/10.
+- **Packaging/link inventory:** 2 FAIL → 11/11.
+
+Unit 226 PASS, existing standalone suites 175/175, exact-image boundary 104/104; build and typecheck pass. Image builds, full Docker suites, rehearsal and deployment remain NOT RUN.
+
 ## Client handoff preparation (2026-10-19, brief v0.3)
 
 Code, documentation and focused tests; no image, bundle, live setting or endpoint changed. Record: [`docs/handoff/evidence/2026-10-19-prep/README.md`](handoff/evidence/2026-10-19-prep/README.md). Plan: [`docs/handoff/DEPLOYMENT_PLAN.md`](handoff/DEPLOYMENT_PLAN.md).
