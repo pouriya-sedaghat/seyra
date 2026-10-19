@@ -1,0 +1,21 @@
+{
+  "changed_image_roles": [
+    "api",
+    "proxy",
+    "ops"
+  ],
+  "unchanged_data_roles": [
+    "db",
+    "tegola",
+    "valhalla",
+    "photon",
+    "overpass",
+    "osmtools",
+    "geocoder_build"
+  ],
+  "dockerfile_hashes": {
+    "api": true,
+    "proxy": true,
+    "ops": true
+  }
+}
