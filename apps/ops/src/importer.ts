@@ -198,6 +198,7 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
     // release); it runs under the lifecycle lock so prune/activation never see it half-done, and the
     // lease names its target from here on.
     const setupDir = releaseDir;
+    current = 'setup'; // capacity admission and release creation (not a measured build step)
     await withLifecycleLock(
       l,
       'import-setup',
@@ -225,7 +226,7 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
         }
         if (!capacity.ok) {
           throw new Error(
-            `insufficient free space on ${l.home}: ${describeCapacity(capacity)}; nothing was changed${failedBuild ? ` (the failed build of ${datasetId} was kept)` : ''}. Add capacity or, after measuring, adjust minFreeFactor/minFreeBytes in state/settings.json; never delete unrelated data`,
+            `insufficient free space for ${datasetId} on ${l.home}: ${describeCapacity(capacity)}; nothing was changed${failedBuild ? ` (the failed build of ${datasetId} was kept)` : ''}. Add capacity or, after measuring, adjust minFreeFactor/minFreeBytes in state/settings.json; never delete unrelated data`,
           );
         }
         if (failedBuild) {

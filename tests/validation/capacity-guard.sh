@@ -8,8 +8,10 @@
 #     tests/validation/capacity-guard.sh
 #
 # C1 adequate capacity passes; the manifest records the admission figures and sampling
-# C2 a 3 GB file created and removed inside a step (same filesystem) appears as the run's and that
-#    step's free-space minimum, which boundary samples alone would not show
+# C2 a 3 GiB file created and removed inside one long step (staging validation; same filesystem)
+#    appears as the run's and that step's free-space minimum, while the neighbouring boundary values
+#    (the previous step's minimum, free space after the import) stay ~3 GiB higher: a sampler that
+#    only looked at step boundaries would have missed it
 # C3 insufficient capacity is refused before side effects: no release directory, no render DB,
 #    no control-DB event
 # C4 insufficient capacity with a failed build of the same dataset present keeps that build; once
@@ -60,22 +62,27 @@ fi
 set_setting minFreeFactor 120   # the operator adopts the measured reference (RUNBOOK §3)
 cli import --pbf "$PBF" --snapshot-timestamp "$(day 1)" > "$OUT/C2-import.log" 2>&1 &
 ip=$!
-for _ in $(seq 1 1200); do grep -q 'geocoder-build …' "$OUT/C2-import.log" 2>/dev/null && break; sleep 0.1; done
-sleep 2
+for _ in $(seq 1 3000); do grep -q 'staging-validation …' "$OUT/C2-import.log" 2>/dev/null && break; sleep 0.1; done
+sleep 3
 dip_start="$(date -u +%FT%T.%3NZ)"; free_pre="$(df -B1 --output=avail "$LAB" | tail -1 | tr -d ' ')"
 fallocate -l 3G "$LAB/.capacity-guard-dip.bin"; sleep 15; rm -f "$LAB/.capacity-guard-dip.bin"
 dip_end="$(date -u +%FT%T.%3NZ)"
+still_running="$(kill -0 $ip 2>/dev/null && echo yes || echo no)"   # the dip must end inside the step
 wait $ip; rc=$?
+free_after="$(df -B1 --output=avail "$LAB" | tail -1 | tr -d ' ')"
 C2="$(release_of "$OUT/C2-import.log")"
 manifest "$C2" > "$OUT/C2-manifest.json" 2>/dev/null
 min="$(jq -r '.measurements.free_bytes_min_observed' "$OUT/C2-manifest.json")"
 at="$(jq -r '.measurements.free_bytes_min_observed_at' "$OUT/C2-manifest.json")"
 step="$(jq -r --argjson m "$min" '.measurements.steps[] | select(.free_bytes_min == $m) | .step' "$OUT/C2-manifest.json" | head -1)"
-{ echo "dip window $dip_start .. $dip_end; free before the dip $free_pre"; jq '.measurements | {free_bytes_before, free_bytes_min_observed, free_bytes_min_observed_at, free_space_sampling, steps: [.steps[] | {step, seconds, free_bytes_min}]}' "$OUT/C2-manifest.json"; } > "$OUT/C2-dip.txt"
-if [ $rc -eq 0 ] && [ -n "$min" ] && [ "$min" != null ] && [ $(( free_pre - min )) -ge 2900000000 ] && [[ "$at" > "$dip_start" ]] && [[ "$at" < "$dip_end" ]]; then
-  result PASS C2 "a 3 GiB file held for 15 s inside the import appears as the run minimum $min B at $at (free before the dip $free_pre B; step '$step'); the boundary samples after it were back up"
+prev="$(jq -r '.measurements.steps[] | select(.step == "map-styles") | .free_bytes_min' "$OUT/C2-manifest.json")"
+{ echo "dip window $dip_start .. $dip_end (import still running at dip end: $still_running); free before the dip $free_pre; free after the import $free_after"; jq '.measurements | {free_bytes_before, free_bytes_min_observed, free_bytes_min_observed_at, free_space_sampling, steps: [.steps[] | {step, seconds, free_bytes_min}]}' "$OUT/C2-manifest.json"; } > "$OUT/C2-dip.txt"
+if [ $rc -eq 0 ] && [ -n "$min" ] && [ "$min" != null ] && [ "$still_running" = yes ] && [ "$step" = staging-validation ] \
+  && [ $(( free_pre - min )) -ge 2900000000 ] && [ $(( prev - min )) -ge 2900000000 ] && [ $(( free_after - min )) -ge 2900000000 ] \
+  && [[ "$at" > "$dip_start" ]] && [[ "$at" < "$dip_end" ]]; then
+  result PASS C2 "a 3 GiB file held for 15 s inside staging-validation is the run minimum $min B at $at; the previous step's minimum ($prev B) and free space after the import ($free_after B) are >= 2.9 GB higher, so step-boundary sampling alone would have missed it"
 else
-  result FAIL C2 "rc=$rc min=$min at=$at window=$dip_start..$dip_end free_pre=$free_pre"
+  result FAIL C2 "rc=$rc min=$min at=$at step=$step still_running=$still_running window=$dip_start..$dip_end free_pre=$free_pre prev=$prev after=$free_after"
 fi
 
 # ---------------------------------------------------------------- C3 insufficient, no side effects
@@ -85,7 +92,7 @@ cli import --pbf "$PBF" --snapshot-timestamp "$(day 2)" > "$OUT/C3-import.log" 2
 C3="ds-$(date -u -d "$(day 2)" +%Y%m%d)-${C1##*-}"   # a refused import never logs its id (admission precedes it)
 dbs1="$(render_dbs)"; ev1="$(events)"; rel1="$(in_host ls "$SEYRA_HOME/releases" | sort | tr '\n' ' ')"
 cli status > "$OUT/C3-status.log" 2>&1
-if [ $rc -ne 0 ] && grep -q 'insufficient free space on .*nothing was changed' "$OUT/C3-import.log" && [ "$dbs0" = "$dbs1" ] && [ "$ev0" = "$ev1" ] && [ "$rel0" = "$rel1" ] \
+if [ $rc -ne 0 ] && grep -q "import failed at setup: insufficient free space for $C3 on .*nothing was changed" "$OUT/C3-import.log" && [ "$dbs0" = "$dbs1" ] && [ "$ev0" = "$ev1" ] && [ "$rel0" = "$rel1" ] \
   && ! in_host test -e "$SEYRA_HOME/releases/$C3" && ! grep -q '^import lease:' "$OUT/C3-status.log"; then
   result PASS C3 "insufficient capacity refused before side effects: no release directory for $C3, render DBs, release events ($ev1) and releases unchanged, lease released"
 else
