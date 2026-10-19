@@ -1,0 +1,6 @@
+# Final tree verification (pinned Node v24.21.0, OpenSSL 3.5.5) at a319b0851c64d006e15471b173295e3b90010ee7
+standalone regressions (14 suites): 337 PASS, 0 FAIL -> regressions-final/
+npm run build: rc 0; npm run typecheck: rc 0; unit: 226 passed (contracts 12, map-assets 6, api 57, ops 151)
+client pack (fresh directory, built from a319b0851c64d006e15471b173295e3b90010ee7): 24 files, source_tree_clean=true; PACK-MANIFEST.json sha256 279170cb83169c75cdee85f54f14950e45585f8beeb3634134b36b35da33eacd; hashes and inventory verified; no private key or private address
+bundle r8 (built from 92c0726; later commits change only documentation/evidence outside the install tree): SHA256SUMS 10797ff117c8cddc3271fe3573e236f82979e1d3f14a59a750f1443661e422bd
+install-tree files changed after 92c0726: 0

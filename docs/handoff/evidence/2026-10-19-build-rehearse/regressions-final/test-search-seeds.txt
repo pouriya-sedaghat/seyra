@@ -1,0 +1,19 @@
+PASS every case id is unique
+PASS every variant names an existing base case
+PASS yeh and diacritic variants are independent (one change each)
+PASS isolated kaf coverage exists on observed data (Iran location reference, fixture identity)
+PASS isolated ZWNJ coverage exists (fixture measured; Iran pending, never PASS without a reference)
+PASS Persian Shiraz is not marked validated by identity
+PASS no operational binding is committed in the seeds file
+PASS identity in the top 5 within tolerance: PASS (rank 3 is fine; rank 1 is not forced)
+PASS identity only at rank 6: FAIL
+PASS a different id at the reference position: FAIL with a reviewable identity-change note, no rewrite
+PASS the right id far from the reference: FAIL
+PASS province or name text alone never passes (same-named village elsewhere)
+PASS location-only reference: LOCATION_MATCH with a proposed id for review, never PASS
+PASS no reviewed reference: NOT_EVALUATED, candidates recorded
+PASS fixture identity-only case: PASS by id without a position
+PASS unbound run is not attributable
+PASS a different active dataset is SNAPSHOT_CHANGED
+PASS the bound dataset is accepted
+# checks=18 failed=0

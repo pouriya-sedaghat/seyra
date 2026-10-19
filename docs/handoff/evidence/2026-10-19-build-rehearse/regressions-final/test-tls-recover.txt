@@ -1,0 +1,25 @@
+PASS valid completion: recover completes the proposed set
+PASS valid fallback: recover restores the complete previous set
+PASS valid fallback: certificate, key, trust anchor and metadata equal the previous set
+PASS valid fallback: the restored certificate verifies against the restored trust anchor
+PASS valid fallback: journal removed
+PASS backup with an unrelated root (review R1): recover refuses
+PASS backup with an unrelated root (review R1): every active file unchanged
+PASS backup with an unrelated root (review R1): journal kept unchanged
+PASS backup without its trust anchor: recover refuses
+PASS backup without its trust anchor: every active file unchanged
+PASS backup without its trust anchor: journal kept unchanged
+PASS backup with a corrupt trust anchor: recover refuses
+PASS backup with a corrupt trust anchor: every active file unchanged
+PASS backup with a corrupt trust anchor: journal kept unchanged
+PASS incomplete backup (no key): recover refuses
+PASS incomplete backup (no key): every active file unchanged
+PASS incomplete backup (no key): journal kept unchanged
+PASS backup with inconsistent metadata: recover refuses
+PASS backup with inconsistent metadata: every active file unchanged
+PASS backup with inconsistent metadata: journal kept unchanged
+PASS older journal, complete chain-valid backup: restored
+PASS older journal, backup with an unrelated root: recover refuses
+PASS older journal, backup with an unrelated root: every active file unchanged
+PASS older journal, backup with an unrelated root: journal kept unchanged
+# checkout=<REPO> checks=24 failed=0

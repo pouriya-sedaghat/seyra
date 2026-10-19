@@ -1,0 +1,5 @@
+PASS upstream still answers: refused, edge not stopped
+PASS probe did not run: refused (a tool error is not a closed upstream)
+PASS upstream refuses (relay trust removed): edge stopped
+PASS --force (emergency): stopped without the probe, with a warning
+# edge stop interlock: 4/4 passed
