@@ -42,3 +42,9 @@ export function parseLanCidrs(list: string): Cidr[] {
   if (entries.length === 0 || entries.some((c) => c === '')) throw new Error('LAN CIDR allowlist has an empty entry');
   return entries.map(parseLanCidr);
 }
+
+/** Is IPv4 address `ip` (32-bit value) inside `c`? */
+export function inCidr(ip: number, c: Cidr): boolean {
+  const size = 2 ** (32 - c.prefix);
+  return Math.floor(ip / size) === Math.floor(c.network / size);
+}

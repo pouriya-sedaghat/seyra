@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync, renameSync, chmodSync } from 'node:fs';
 import { join, resolve, sep } from 'node:path';
-import { isLoopbackIPv4, parseIPv4, parseLanCidrs } from './net.js';
+import { inCidr, isLoopbackIPv4, parseIPv4, parseLanCidrs } from './net.js';
 import { REFERENCE_MIN_FREE_FACTOR } from './capacity.js';
 
 /** On-disk layout under SEYRA_HOME (identical path inside the ops container and on the host). */
@@ -111,6 +111,18 @@ export interface Settings {
   minFreeFactor: number;
   minFreeBytes: number;
   readinessTimeoutS: number;
+  /**
+   * Optional relay listener (nested-host topology, RUNBOOK §6.2). Enabled by relayPeer: the one
+   * relay address allowed to connect (PROXY protocol). relayBindAddr:relayPort is where compose
+   * publishes the relay listener; relayClientCidrs are checked on the client address the relay
+   * conveys; relayServerNames are the LAN names. Requires loopback access mode, so the ordinary
+   * listener stays the local control path.
+   */
+  relayPeer: string;
+  relayBindAddr: string;
+  relayPort: number;
+  relayClientCidrs: string;
+  relayServerNames: string;
 }
 
 export const DEFAULT_SETTINGS: Settings = {
@@ -126,6 +138,11 @@ export const DEFAULT_SETTINGS: Settings = {
   minFreeFactor: REFERENCE_MIN_FREE_FACTOR,
   minFreeBytes: 2 * 1024 ** 3,
   readinessTimeoutS: 300,
+  relayPeer: '',
+  relayBindAddr: '',
+  relayPort: 0,
+  relayClientCidrs: '',
+  relayServerNames: '',
 };
 
 export function readSettings(l: Layout): Settings {
@@ -142,7 +159,47 @@ const HOST_RE = /^(?=.{1,253}$)[A-Za-z0-9]([A-Za-z0-9-]{0,61}[A-Za-z0-9])?(\.[A-
  *  - lan: any non-loopback exposure needs explicit, valid CIDRs (nginx adds `deny all` after them).
  * A non-loopback bind is therefore impossible without an allowlist.
  */
-export function validateAccess(a: { accessMode: unknown; bindAddr: unknown; lanCidrs: unknown; httpsPort: unknown; serverNames: unknown }): void {
+export interface RelayAccess {
+  relayPeer?: unknown;
+  relayBindAddr?: unknown;
+  relayPort?: unknown;
+  relayClientCidrs?: unknown;
+  relayServerNames?: unknown;
+}
+
+/**
+ * Relay rules (fail closed): all relay settings or none; loopback access mode; one exact non-loopback
+ * relay address outside the client allowlist; a concrete non-loopback publication address; canonical
+ * client CIDRs; LAN server names without loopback names. The proxy entrypoint re-checks the same.
+ */
+export function validateRelay(a: RelayAccess & { accessMode: unknown }): void {
+  const str = (v: unknown) => (typeof v === 'string' ? v.trim() : v === undefined ? '' : null);
+  const peer = str(a.relayPeer);
+  const bind = str(a.relayBindAddr);
+  const cidrs = str(a.relayClientCidrs);
+  const names = str(a.relayServerNames);
+  const port = a.relayPort === undefined || a.relayPort === '' ? 0 : a.relayPort;
+  if (peer === null || bind === null || cidrs === null || names === null) throw new Error('relay settings must be strings');
+  if (!peer) {
+    if (bind || cidrs || names || port) throw new Error('relay settings are only valid together with --relay-peer');
+    return;
+  }
+  if (a.accessMode !== 'loopback') throw new Error('a relay requires loopback access mode: the ordinary listener stays the local control path');
+  const peerN = parseIPv4(peer);
+  if (peerN === null || peerN === 0 || peerN === 0xffffffff || isLoopbackIPv4(peer)) throw new Error(`relay peer ${JSON.stringify(peer)} must be one exact non-loopback IPv4 address`);
+  const bindN = parseIPv4(bind);
+  if (bindN === null || bindN === 0 || isLoopbackIPv4(bind)) throw new Error(`relay bind address ${JSON.stringify(bind)} must be one concrete non-loopback IPv4 address (not 0.0.0.0)`);
+  if (!Number.isInteger(port) || (port as number) < 1 || (port as number) > 65535) throw new Error(`invalid relay port ${JSON.stringify(port)}`);
+  if (!cidrs) throw new Error('a relay requires --relay-client-cidrs (the approved client networks)');
+  const parsed = parseLanCidrs(cidrs);
+  if (parsed.some((c) => inCidr(peerN, c))) throw new Error(`relay peer ${peer} lies inside the client allowlist; the relay and the clients must be distinct`);
+  const list = names.split(/\s+/).filter(Boolean);
+  if (!list.length || !list.every((n) => HOST_RE.test(n) || parseIPv4(n) !== null)) throw new Error(`invalid relay server names ${JSON.stringify(names)}`);
+  const loop = list.filter((n) => /^localhost(\.|$)/i.test(n) || isLoopbackIPv4(n) || n.startsWith('0.'));
+  if (loop.length) throw new Error(`relay server names must not contain loopback names (${loop.join(', ')}); they stay on the control path`);
+}
+
+export function validateAccess(a: { accessMode: unknown; bindAddr: unknown; lanCidrs: unknown; httpsPort: unknown; serverNames: unknown } & RelayAccess): void {
   if (!ACCESS_MODES.includes(a.accessMode as never)) throw new Error(`access mode must be one of ${ACCESS_MODES.join(', ')} (got ${JSON.stringify(a.accessMode)})`);
   if (typeof a.bindAddr !== 'string' || parseIPv4(a.bindAddr) === null) throw new Error(`bind address ${JSON.stringify(a.bindAddr)} is not a valid IPv4 address`);
   if (typeof a.lanCidrs !== 'string') throw new Error('LAN CIDRs must be a comma-separated string');
@@ -160,6 +217,7 @@ export function validateAccess(a: { accessMode: unknown; bindAddr: unknown; lanC
     parseLanCidrs(a.lanCidrs);
     if (isLoopbackIPv4(a.bindAddr)) throw new Error('LAN access mode needs a non-loopback --bind address');
   }
+  validateRelay(a);
 }
 
 export function validateSettings(s: Settings): void {
@@ -184,6 +242,11 @@ export function validateRuntimeAccess(env: Record<string, string>): void {
     lanCidrs: env.SEYRA_LAN_ALLOW_CIDRS ?? '',
     httpsPort: Number(env.SEYRA_HTTPS_PORT),
     serverNames: env.SEYRA_SERVER_NAMES,
+    relayPeer: env.SEYRA_RELAY_PEER ?? '',
+    relayBindAddr: env.SEYRA_RELAY_BIND_ADDR ?? '',
+    relayPort: env.SEYRA_RELAY_PORT ? Number(env.SEYRA_RELAY_PORT) : 0,
+    relayClientCidrs: env.SEYRA_RELAY_CLIENT_CIDRS ?? '',
+    relayServerNames: env.SEYRA_RELAY_SERVER_NAMES ?? '',
   });
 }
 

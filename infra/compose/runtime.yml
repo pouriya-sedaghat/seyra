@@ -146,6 +146,10 @@ services:
       SEYRA_LAN_ALLOW_CIDRS: "${SEYRA_LAN_ALLOW_CIDRS:-}"
       SEYRA_SERVER_NAMES: "${SEYRA_SERVER_NAMES:-localhost 127.0.0.1}"
       SEYRA_TILE_CACHE_MAX: "${SEYRA_TILE_CACHE_MAX:-2g}"
+      # Optional relay listener (all empty = none); its port mapping is in runtime.relay.yml.
+      SEYRA_RELAY_PEER: "${SEYRA_RELAY_PEER:-}"
+      SEYRA_RELAY_CLIENT_CIDRS: "${SEYRA_RELAY_CLIENT_CIDRS:-}"
+      SEYRA_RELAY_SERVER_NAMES: "${SEYRA_RELAY_SERVER_NAMES:-}"
     secrets:
       - source: tls_cert
       - source: tls_key

@@ -45,7 +45,11 @@ export async function init(opts: Partial<Settings>, log: (m: string) => void): P
   log(`[init] database roles ensured; migrations applied: ${applied.length ? applied.join(', ') : 'none (up to date)'}`);
 }
 
-/** Local CA + server certificate for the internal entry point (no ACME, no public CA). */
+/**
+ * TEST ONLY (synthetic fixtures): an on-host test CA + server certificate. Its CA key stays in
+ * secrets/tls, so it is not the LAN provisioning design; LAN hosts use `tls csr` + `tls import`
+ * with an issuer managed off the host (tls.ts).
+ */
 export async function tlsInit(names: string[], log: (m: string) => void, days = 825): Promise<void> {
   const l = layout();
   mkdirSync(l.tls, { recursive: true, mode: 0o711 });
@@ -67,14 +71,6 @@ export async function tlsInit(names: string[], log: (m: string) => void, days = 
   chmodSync(crt, 0o444);
   chmodSync(caCrt, 0o444);
   log(`[tls] issued server certificate for ${names.join(', ')}; distribute ${caCrt} to clients that must trust it`);
+  log('[tls] TEST ONLY: this CA key is on the host; for LAN provisioning use tls csr + tls import with an issuer managed elsewhere');
 }
 
-export async function tlsImport(certPath: string, keyPath: string, log: (m: string) => void): Promise<void> {
-  const l = layout();
-  mkdirSync(l.tls, { recursive: true, mode: 0o711 });
-  writeFileSync(join(l.tls, 'server.crt'), readFileSync(certPath), { mode: 0o444 });
-  writeFileSync(join(l.tls, 'server.key'), readFileSync(keyPath), { mode: 0o400 });
-  chownSync(join(l.tls, 'server.key'), 101, 101);
-  await run('openssl', ['x509', '-in', join(l.tls, 'server.crt'), '-noout', '-subject', '-enddate']);
-  log('[tls] imported operator-provided certificate and key');
-}

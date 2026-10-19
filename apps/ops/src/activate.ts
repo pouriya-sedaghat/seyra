@@ -1,6 +1,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { assertRuntimeEnvSafe, composeRuntime, parseEnv, runtimeEnv, writeRuntimeEnv, NO_RELEASE } from './compose.js';
+import { assertNoTlsReplacement, assertServedPair } from './tls.js';
 import { importLeaseState, recoverInterrupted } from './import-lock.js';
 import { readOwner, withLifecycleLock } from './lifecycle-lock.js';
 import { psql, recordEvent, renderDbName } from './db.js';
@@ -114,18 +115,72 @@ function releaseDescriptor(m: Manifest): string {
 export async function startStack(l: Layout, log: (m: string) => void): Promise<void> {
   assertRuntimeEnvSafe(l);
   await composeRuntime(l, ['up', '-d', '--remove-orphans']);
+  await assertIngressPublished(l, log);
+}
+
+/** Expected publications: the ordinary listener and, with a relay, the relay listener. */
+function expectedPublications(env: Record<string, string>): { port: string; want: string }[] {
+  const out = [{ port: '8443', want: `${env.SEYRA_BIND_ADDR}:${env.SEYRA_HTTPS_PORT}` }];
+  if (env.SEYRA_RELAY_PEER) out.push({ port: '8444', want: `${env.SEYRA_RELAY_BIND_ADDR}:${env.SEYRA_RELAY_PORT}` });
+  return out;
+}
+
+export async function assertIngressPublished(l: Layout, log: (m: string) => void): Promise<void> {
   const env = parseEnv(readFileSync(l.runtimeEnv, 'utf8'));
-  const want = `${env.SEYRA_BIND_ADDR}:${env.SEYRA_HTTPS_PORT}`;
-  const published = async () => {
-    const r = await composeRuntime(l, ['port', 'proxy', '8443'], { allowFailure: true });
-    return { ok: r.code === 0 && r.stdout.trim() === want, got: (r.stdout.trim() || r.stderr.trim()) || 'nothing' };
+  const check = async () => {
+    const res = [];
+    for (const p of expectedPublications(env)) {
+      const r = await composeRuntime(l, ['port', 'proxy', p.port], { allowFailure: true });
+      res.push({ ...p, ok: r.code === 0 && r.stdout.trim() === p.want, got: (r.stdout.trim() || r.stderr.trim()) || 'nothing' });
+    }
+    return res;
   };
-  const first = await published();
-  if (first.ok) return;
-  log(`[ingress] the proxy is running without ${want} published (docker reports: ${first.got}); recreating it`);
+  const first = await check();
+  if (first.every((r) => r.ok)) return;
+  log(`[ingress] the proxy is running without ${first.filter((r) => !r.ok).map((r) => `${r.want} (docker reports: ${r.got})`).join(', ')} published; recreating it`);
   await composeRuntime(l, ['up', '-d', '--no-deps', '--force-recreate', 'proxy']);
-  const again = await published();
-  if (!again.ok) throw new Error(`the proxy does not publish ${want} (docker reports: ${again.got})`);
+  const again = await check();
+  const bad = again.filter((r) => !r.ok);
+  if (bad.length) throw new Error(`the proxy does not publish ${bad.map((r) => `${r.want} (docker reports: ${r.got})`).join(', ')}`);
+}
+
+/**
+ * Recreate only the proxy (after a certificate replacement or a relay/access change applied to
+ * runtime.env), then confirm every expected publication. Providers and the API keep running.
+ */
+export async function restartProxy(l: Layout, log: (m: string) => void): Promise<void> {
+  assertRuntimeEnvSafe(l);
+  assertServedPair({ dir: l.tls });
+  await composeRuntime(l, ['up', '-d', '--no-deps', '--force-recreate', 'proxy']);
+  await assertIngressPublished(l, log);
+  log('[ingress] proxy recreated with the current certificate and access configuration');
+}
+
+/**
+ * Regenerate runtime.env from the persisted settings for the ACTIVE release (no dataset change).
+ * `init` persists access settings but runtime.env is otherwise only rewritten by an activation, so
+ * an access/relay change on a running install needs this explicit step. The previous file is kept
+ * as runtime.env.prev; nothing is restarted here.
+ */
+export function applyAccess(l: Layout, log: (m: string) => void): { changed: string[] } {
+  if (readTransition(l)) throw new Error('an activation/rollback did not finish; run: seyra-maps recover');
+  const pointers = readPointers(l);
+  if (!pointers.active) throw new Error('no active release; access settings are applied by the first activation');
+  const s = readSettings(l);
+  const next = runtimeEnv(l, s, lockedImages(l.install), pointers.active); // validates the settings
+  const prev = existsSync(l.runtimeEnv) ? parseEnv(readFileSync(l.runtimeEnv, 'utf8')) : {};
+  const changed = [...new Set([...Object.keys(prev), ...Object.keys(next)])].filter((k) => (prev[k] ?? '') !== (next[k] ?? '')).sort();
+  if (!changed.length) {
+    log('[access] runtime.env already matches the persisted settings');
+    return { changed };
+  }
+  const allowed = /^SEYRA_(ACCESS_MODE|BIND_ADDR|HTTPS_PORT|LAN_ALLOW_CIDRS|SERVER_NAMES|RELAY_[A-Z_]+)$/;
+  const other = changed.filter((k) => !allowed.test(k));
+  if (other.length) throw new Error(`runtime.env differs beyond access settings (${other.join(', ')}); use the regular activation path`);
+  if (existsSync(l.runtimeEnv)) writeAtomic(`${l.runtimeEnv}.prev`, readFileSync(l.runtimeEnv, 'utf8'), 0o640);
+  writeRuntimeEnv(l, next);
+  log(`[access] runtime.env updated (${changed.join(', ')}); previous kept as runtime.env.prev. Apply with: seyra-maps proxy restart`);
+  return { changed };
 }
 
 // ------------------------------------------------------------------------------------------------
@@ -205,6 +260,7 @@ async function restorePrevious(l: Layout, from: string, timeoutS: number, pollMs
 
 export async function activate(datasetId: string, opts: ActivateOptions): Promise<void> {
   const l = layout();
+  assertNoTlsReplacement({ dir: l.tls }); // refuse before anything changes; recovery paths never check
   await withLifecycleLock(l, opts.reason ?? 'activate', datasetId, () => activateLocked(l, datasetId, opts));
 }
 

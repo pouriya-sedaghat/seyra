@@ -35,7 +35,9 @@ function walkFiles(dir: string, base = dir): string[] {
 export const INSTALL_PATHS = [
   'bin/seyra-maps',
   'infra/compose/runtime.yml',
+  'infra/compose/runtime.relay.yml',
   'infra/compose/jobs.yml',
+  'infra/edge',
   'infra/catalog',
   'infra/valhalla',
   'infra/dependencies.lock.json',
@@ -43,6 +45,7 @@ export const INSTALL_PATHS = [
   'apps/ops/migrations',
   'docs/RUNBOOK.md',
   'docs/MOBILE_INTEGRATION.md',
+  'docs/CLIENT_INTEGRATION.md',
   'docs/LICENSES.md',
   'docs/openapi',
 ];

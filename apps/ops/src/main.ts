@@ -1,7 +1,7 @@
 #!/usr/bin/env node
 import { existsSync, readdirSync } from 'node:fs';
 import { join } from 'node:path';
-import { activate, apiHealth, prune, readPointers, readTransition, recover, rollback, startStack, verifyRelease } from './activate.js';
+import { activate, apiHealth, applyAccess, prune, readPointers, readTransition, recover, restartProxy, rollback, startStack, verifyRelease } from './activate.js';
 import { lifecycleLockState, readOwner, withLifecycleLock, type LockOwner } from './lifecycle-lock.js';
 import { backup, restore } from './backup.js';
 import { bundleExport, bundleLoad, bundleVerify } from './bundle.js';
@@ -10,12 +10,20 @@ import { importDataset } from './importer.js';
 import { layout, managedChild } from './layout.js';
 import { lockedImages, verifyImages } from './lock.js';
 import { readManifest } from './manifest.js';
-import { init, tlsImport, tlsInit } from './setup.js';
+import { init, tlsInit } from './setup.js';
+import { assertServedPair, tlsCsr, tlsImport, tlsRecover, tlsStatus } from './tls.js';
 
 const USAGE = `seyra-maps — offline Map Services release tool (runs inside the seyra/ops image)
 
   init [--bind IP] [--port N] [--access loopback|lan] [--lan-cidrs a/b,c/d] [--server-names "h1 h2"]
-  tls init --names localhost,127.0.0.1[,host.internal]   | tls import --cert FILE --key FILE
+       [--relay-peer IP --relay-bind IP --relay-port N --relay-client-cidrs a/b --relay-server-names "h1"] [--no-relay]
+  access apply                      write runtime.env from the persisted access/relay settings (active release kept)
+  proxy restart                     recreate only the proxy (new certificate or applied access settings)
+  tls csr --names n1,n2 [--replace-pending]      new server key (stays here) + CSR for an external issuer
+  tls import --cert LEAF [--chain FILE] --ca ROOT --names n1,n2 [--key FILE]
+                                    validate the issued certificate, then replace the served pair (journalled)
+  tls status | tls recover          served certificate metadata | finish/undo an interrupted replacement
+  tls init --names localhost,127.0.0.1           TEST ONLY: on-host test CA for synthetic fixtures
   verify-images                     check every locked image is loaded with its locked identity
   import --pbf /abs/path/iran.osm.pbf [--snapshot-timestamp ISO8601]
   activate DATASET_ID               maintenance cutover to a validated release
@@ -77,14 +85,42 @@ async function main(argv: string[]): Promise<number> {
           ...(arg(rest, '--access') ? { accessMode: arg(rest, '--access') as 'loopback' | 'lan' } : {}),
           ...(arg(rest, '--lan-cidrs') !== undefined ? { lanCidrs: arg(rest, '--lan-cidrs')! } : {}),
           ...(arg(rest, '--server-names') ? { serverNames: arg(rest, '--server-names')! } : {}),
+          ...(rest.includes('--no-relay') ? { relayPeer: '', relayBindAddr: '', relayPort: 0, relayClientCidrs: '', relayServerNames: '' } : {}),
+          ...(arg(rest, '--relay-peer') !== undefined ? { relayPeer: arg(rest, '--relay-peer')! } : {}),
+          ...(arg(rest, '--relay-bind') !== undefined ? { relayBindAddr: arg(rest, '--relay-bind')! } : {}),
+          ...(arg(rest, '--relay-port') !== undefined ? { relayPort: Number(arg(rest, '--relay-port')) } : {}),
+          ...(arg(rest, '--relay-client-cidrs') !== undefined ? { relayClientCidrs: arg(rest, '--relay-client-cidrs')! } : {}),
+          ...(arg(rest, '--relay-server-names') !== undefined ? { relayServerNames: arg(rest, '--relay-server-names')! } : {}),
         },
         log,
       ));
       return 0;
-    case 'tls':
+    case 'tls': {
+      const p = { dir: layout().tls };
+      const names = () => (arg(rest, '--names') ?? '').split(',').map((n) => n.trim()).filter(Boolean);
       if (rest[0] === 'init') await tlsInit((arg(rest, '--names') ?? 'localhost,127.0.0.1').split(','), log);
-      else if (rest[0] === 'import') await tlsImport(arg(rest, '--cert')!, arg(rest, '--key')!, log);
-      else throw new Error('tls init | tls import');
+      else if (rest[0] === 'csr') await tlsCsr(p, names(), log, { replacePending: rest.includes('--replace-pending') });
+      else if (rest[0] === 'import') {
+        const cert = arg(rest, '--cert');
+        const ca = arg(rest, '--ca');
+        if (!cert || !ca) throw new Error('tls import needs --cert and --ca (the issuer trust anchor) and --names');
+        const chain = arg(rest, '--chain');
+        const key = arg(rest, '--key');
+        await withLifecycleLock(layout(), 'tls-import', null, () => tlsImport(p, { cert, ca, names: names(), ...(chain ? { chain } : {}), ...(key ? { key } : {}) }, log));
+      } else if (rest[0] === 'status') console.log(JSON.stringify(tlsStatus(p), null, 2));
+      else if (rest[0] === 'recover') log(`[tls] recover: ${tlsRecover(p, log)}`);
+      else throw new Error('tls csr | tls import | tls status | tls recover | tls init (test only)');
+      return 0;
+    }
+    case 'access':
+      if (rest[0] !== 'apply') throw new Error('access apply');
+      await withLifecycleLock(layout(), 'access-apply', null, async () => {
+        applyAccess(layout(), log);
+      });
+      return 0;
+    case 'proxy':
+      if (rest[0] !== 'restart') throw new Error('proxy restart');
+      await withLifecycleLock(layout(), 'proxy-restart', null, () => restartProxy(layout(), log));
       return 0;
     case 'verify-images': {
       const res = await verifyImages(lockedImages(layout().install));
@@ -116,6 +152,7 @@ async function main(argv: string[]): Promise<number> {
         // Image references are tags; refuse to start anything that no longer resolves to the lock.
         const bad = (await verifyImages(lockedImages(l.install))).filter((r) => !r.ok);
         if (bad.length) throw new Error(`refusing to start: ${bad.map((b) => `${b.role} is ${b.observed ?? 'missing'}, locked ${b.expected ?? 'unknown'}`).join('; ')}`);
+        assertServedPair({ dir: l.tls }); // never start the ingress on a half-replaced or mismatched pair
         await startStack(l, log);
       });
       return 0;

@@ -8,7 +8,7 @@ import { run, type RunOptions, type RunResult } from './proc.js';
 export const RUNTIME_PROJECT = 'seyra';
 export const JOBS_PROJECT = 'seyra-jobs';
 
-export function composeFile(l: Layout, name: 'runtime.yml' | 'jobs.yml'): string {
+export function composeFile(l: Layout, name: 'runtime.yml' | 'jobs.yml' | 'runtime.relay.yml'): string {
   return join(l.install, 'infra', 'compose', name);
 }
 
@@ -26,6 +26,11 @@ export function runtimeEnv(l: Layout, s: Settings, images: LockedImage[], datase
     SEYRA_ACCESS_MODE: s.accessMode,
     SEYRA_LAN_ALLOW_CIDRS: s.lanCidrs,
     SEYRA_SERVER_NAMES: s.serverNames,
+    SEYRA_RELAY_PEER: s.relayPeer,
+    SEYRA_RELAY_BIND_ADDR: s.relayBindAddr,
+    SEYRA_RELAY_PORT: s.relayPort ? String(s.relayPort) : '',
+    SEYRA_RELAY_CLIENT_CIDRS: s.relayClientCidrs,
+    SEYRA_RELAY_SERVER_NAMES: s.relayServerNames,
     SEYRA_VALHALLA_THREADS: String(s.valhallaThreads),
     SEYRA_PHOTON_JAVA_OPTS: s.photonJavaOpts,
     SEYRA_TILE_CACHE_MAX: s.tileCacheMax,
@@ -66,9 +71,24 @@ export function assertRuntimeEnvSafe(l: Layout): void {
   validateRuntimeAccess(parseEnv(readFileSync(l.runtimeEnv, 'utf8')));
 }
 
+/** True when the generated runtime.env enables the relay listener. */
+export function relayEnabled(l: Layout): boolean {
+  return existsSync(l.runtimeEnv) && Boolean(parseEnv(readFileSync(l.runtimeEnv, 'utf8')).SEYRA_RELAY_PEER);
+}
+
+/**
+ * Compose files for the operational stack. The relay port mapping lives in its own file, added
+ * only when runtime.env enables a relay, so every invocation (up, port, exec, stop) agrees.
+ */
+export function runtimeComposeFiles(l: Layout): string[] {
+  const files = ['-f', composeFile(l, 'runtime.yml')];
+  if (relayEnabled(l)) files.push('-f', composeFile(l, 'runtime.relay.yml'));
+  return files;
+}
+
 /** docker compose for the operational stack, always using the generated runtime.env. */
 export function composeRuntime(l: Layout, args: string[], opts: RunOptions = {}): Promise<RunResult> {
-  return run('docker', ['compose', '-p', RUNTIME_PROJECT, '-f', composeFile(l, 'runtime.yml'), '--env-file', l.runtimeEnv, ...args], opts);
+  return run('docker', ['compose', '-p', RUNTIME_PROJECT, ...runtimeComposeFiles(l), '--env-file', l.runtimeEnv, ...args], opts);
 }
 
 /** Per-run job variables. Compose interpolates every service in jobs.yml, not only the one being run. */
