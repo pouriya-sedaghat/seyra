@@ -1,11 +1,14 @@
 import { randomUUID } from 'node:crypto';
 import Fastify, { type FastifyInstance, type FastifyReply, type FastifyRequest } from 'fastify';
 import swagger from '@fastify/swagger';
+import swaggerUi from '@fastify/swagger-ui';
 import type { TypeBoxTypeProvider } from '@fastify/type-provider-typebox';
 import { Type } from 'typebox';
 import {
   API_PREFIX,
   CATALOG_VERSION,
+  CapabilitiesSchema,
+  type Capabilities,
   CONTRACTS_VERSION,
   DIRECTIONS,
   ErrorBodySchema,
@@ -41,6 +44,7 @@ import { PoiService, type PoiProvider } from './services/poi.js';
 import { ProximityService, type GeographyDistance } from './services/proximity.js';
 import { RoutingService, validateRouteRequest, type RoutingProvider } from './services/routing.js';
 import { tegolaMapName } from './release.js';
+import { API_DESCRIPTION, API_TAGS, DOCS_PREFIX, SWAGGER_UI_CONFIG, documentRoute } from './api-docs.js';
 
 export interface AppDeps {
   limits: MapLimits;
@@ -88,18 +92,20 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
   // must never silently drop fields.
   app.setSerializerCompiler(() => (data) => JSON.stringify(data));
 
+  // One documentation source: the runtime document at /api/docs/json and the exported
+  // docs/openapi/map-services-v1.json both come from these registered routes (api-docs.ts).
   await app.register(swagger, {
     openapi: {
       openapi: '3.0.3',
-      info: {
-        title: 'Seyra Map Services API',
-        version: CONTRACTS_VERSION,
-        description:
-          'Internal-network map API (phase 1). WGS84 coordinates; distances in metres, durations in seconds. Network-level access control only; Seyra Authentication is a separate future module.',
-      },
+      info: { title: 'Seyra Map Services API', version: CONTRACTS_VERSION, description: API_DESCRIPTION },
       servers: [{ url: '/' }],
+      tags: API_TAGS,
     },
+    transform: documentRoute,
   });
+  // Local Swagger UI assets only; the ingress owns the effective CSP (staticCSP stays off so the
+  // plugin never adds a second, conflicting policy).
+  await app.register(swaggerUi, { routePrefix: DOCS_PREFIX, staticCSP: false, uiConfig: { ...SWAGGER_UI_CONFIG, supportedSubmitMethods: [...SWAGGER_UI_CONFIG.supportedSubmitMethods] } });
 
   app.addHook('onRequest', async (req, reply) => {
     reply.header('x-request-id', req.id);
@@ -186,8 +192,10 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
 
   app.get(`${API_PREFIX}/health`, { schema: { tags: ['health'], response: { 200: ReadinessSchema } } }, async () => deps.health.readiness());
 
-  app.get(`${API_PREFIX}/capabilities`, { schema: { tags: ['map'] } }, async () => {
+  app.get(`${API_PREFIX}/capabilities`, { schema: { tags: ['map'], response: { 200: CapabilitiesSchema } } }, async (): Promise<Capabilities> => {
     const base = `/maps/${datasetId}`;
+    // Mutable copies of the frozen catalogs (identical JSON); the return type ties this object to
+    // the documented CapabilitiesSchema at compile time.
     return {
       api_version: 'v1',
       contracts_version: CONTRACTS_VERSION,
@@ -216,29 +224,29 @@ export async function buildApp(deps: AppDeps): Promise<FastifyInstance> {
         overzoom_note: 'Above the native range clients overzoom; no extra geometry is invented.',
       },
       routing: {
-        profiles: PROFILES,
-        objectives: OBJECTIVES,
-        order_modes: ORDER_MODES,
-        support: routingSupportTable(deps.limits),
-        unsupported: UNSUPPORTED_COMBINATIONS,
+        profiles: [...PROFILES],
+        objectives: [...OBJECTIVES],
+        order_modes: [...ORDER_MODES],
+        support: routingSupportTable(deps.limits).map((c) => ({ ...c, objectives: [...c.objectives], profiles: [...c.profiles] })),
+        unsupported: [...UNSUPPORTED_COMBINATIONS],
         route_optimality: 'not_guaranteed',
         duration_semantics: 'static_estimate',
         optimization: 'held_karp_directed_pair_costs (exact for the modeled pair-cost table only)',
       },
-      proximity: { metrics: METRICS, directions: DIRECTIONS, max_candidates: deps.limits.proximityMaxCandidates, ranking_scope: 'supplied_candidates_only' },
+      proximity: { metrics: [...METRICS], directions: [...DIRECTIONS], max_candidates: deps.limits.proximityMaxCandidates, ranking_scope: 'supplied_candidates_only' },
       geocoding: {
         operations: ['search', 'autocomplete', 'reverse'],
         result_limit: { min: deps.limits.searchMinResults, max: deps.limits.searchMaxResults },
         query_max_code_points: deps.limits.queryMaxCodePoints,
       },
       pois: {
-        presets: POI_PRESETS,
-        selector_allowlist: VALUE_ALLOWLIST,
+        presets: structuredClone(POI_PRESETS) as Capabilities['pois']['presets'],
+        selector_allowlist: Object.fromEntries(Object.entries(VALUE_ALLOWLIST).map(([k, v]) => [k, [...v]])),
         max_bbox_km2: deps.limits.poiMaxBboxKm2,
         max_results: deps.limits.poiMaxResults,
         overpass_timeout_s: deps.limits.overpassTimeoutS,
       },
-      limits: deps.limits,
+      limits: { ...deps.limits },
     };
   });
 

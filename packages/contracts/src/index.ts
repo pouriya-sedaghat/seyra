@@ -5,6 +5,7 @@ export * from './normalize.js';
 export * from './poi-catalog.js';
 export * from './routing-support.js';
 export * from './schemas.js';
+export * from './capabilities.js';
 
 /** Public API version prefix. */
 export const API_PREFIX = '/api/v1/map';
