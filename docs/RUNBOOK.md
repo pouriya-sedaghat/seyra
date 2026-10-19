@@ -68,7 +68,7 @@ export SEYRA_HOME=/srv/seyra               # absolute; all state lives here
 **LAN hosts:** the issuer is managed outside the serving host. It is either the company CA or an operator-controlled development issuer (`infra/tls/dev-issuer.sh`, run on another machine). Both use the same interface:
 
 ```bash
-seyra-maps tls csr --names <lan-address>[,<lan-name>]        # new server key stays in secrets/tls/pending (0400); prints the CSR
+seyra-maps tls csr --names <lan-address>[,<lan-name>]        # new server key stays in secrets/tls/pending (0400); the CSR there is 0444, readable by the operator
 #   ... the issuer signs the CSR for serverAuth, elsewhere ...
 seyra-maps tls import --cert leaf.crt [--chain intermediates.pem] --ca issuer-root.crt --names <lan-address>[,<lan-name>]
 seyra-maps proxy restart                                      # serve the new pair (providers keep running)
@@ -89,7 +89,7 @@ The replacement itself is journalled:
 - The previous set is copied to `secrets/tls/previous-<time>/`: the served file, the split `leaf.crt`/`chain.pem`, the key, the trust anchor and `served.json`.
 - An interruption leaves a journal that makes `start`, `proxy restart` and activation refuse until `seyra-maps tls recover` completes or undoes it. Recovery only completes a set whose certificate and key match; otherwise it restores the verified previous pair, and if neither is valid it refuses and keeps everything for inspection.
 
-Roll back to an earlier certificate with `seyra-maps tls restore --from <SEYRA_HOME>/secrets/tls/previous-<time>`. The backup is validated like an import: key match, names (from its `served.json`, or else its own SAN), purpose and its saved chain to its saved trust anchor. It then goes through the same journalled replacement, followed by `seyra-maps proxy restart`.
+Roll back to an earlier certificate with `seyra-maps tls restore --from <SEYRA_HOME>/secrets/tls/previous-<time>`. The backup is validated like an import: key match, names (from its `served.json`, or else its own SAN), purpose and its saved chain to its saved trust anchor. It then goes through the same journalled replacement, followed by `seyra-maps proxy restart`. The `previous-<time>` directories are root-only (0700); the wrapper passes a `--from` path inside `SEYRA_HOME` through unchanged and the CLI checks it as root, so the non-root operator runs this command as written.
 
 Every TLS command that changes `secrets/tls` (`csr`, `import`, `restore`, `recover`, and the test-only `init`) takes the same lifecycle lock as `start`, `proxy restart` and activation, and checks its preconditions after acquiring it. Two TLS or lifecycle commands never interleave.
 
