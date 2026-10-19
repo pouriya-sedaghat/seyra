@@ -70,7 +70,7 @@ The reviewer's own verifier (`verify-vm2-e7a2175.mjs`, run unchanged) reproduces
 5. every listed checksum matches;
 6. no regular file is unlisted.
 
-The install tree is then replaced through a staged copy: copy, re-verify the copy against `SHA256SUMS`, remove the old tree, move the new one in. Each step is checked, and a failure keeps the old tree and ends the run.
+The install tree is then replaced through a staged copy: copy, re-verify the copy against `SHA256SUMS`, remove the old tree, move the new one in. Each step is checked, and any failure ends the run without bootstrap. A refused bundle or a failed copy or re-verification leaves the old tree untouched. The old tree is removed only after the staged copy verified, so a failure of the final move stops safely but does **not** restore the old install. The replacement is not atomic and has no automatic rollback. *(Wording corrected on 2026-10-19 after the d63f1d9 review; the original sentence overstated it as "a failure keeps the old tree".)*
 
 **Regression** ([`regression-e7a2175.txt`](f2-update-gate/regression-e7a2175.txt) → [`regression-head.txt`](f2-update-gate/regression-head.txt)). It adds 11 refused cases to the original 4, each with a 20 s limit.
 - On `e7a2175`, **33/74 checks fail**:

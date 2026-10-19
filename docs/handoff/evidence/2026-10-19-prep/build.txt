@@ -1,0 +1,14 @@
+> seyra@1.0.0 build
+> npm run build -w packages/contracts && npm run build -w packages/map-assets && npm run build -w apps/api -w apps/ops -w apps/web
+> @seyra/contracts@1.0.0 build
+> tsc -p tsconfig.json
+> @seyra/map-assets@1.0.0 build
+> tsc -p tsconfig.json
+> @seyra/api@1.0.0 build
+> tsc -p tsconfig.json
+> @seyra/ops@1.0.0 build
+> tsc -p tsconfig.json
+> @seyra/web@1.0.0 build
+> tsc -p tsconfig.json --noEmit && vite build
+✓ 410 modules transformed.
+✓ built in 725ms

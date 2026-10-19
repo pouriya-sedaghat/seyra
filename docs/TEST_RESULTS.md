@@ -1,5 +1,19 @@
 # Seyra Map Services — test results (phase 1)
 
+## Client handoff preparation (2026-10-19, brief v0.3)
+
+Code, documentation and focused tests; no image, bundle, live setting or endpoint changed. Record: [`docs/handoff/evidence/2026-10-19-prep/README.md`](handoff/evidence/2026-10-19-prep/README.md). Plan: [`docs/handoff/DEPLOYMENT_PLAN.md`](handoff/DEPLOYMENT_PLAN.md).
+
+| Item | Result |
+| --- | --- |
+| Offline Swagger UI (`/api/docs/`, `/api/docs/json`) and documented OpenAPI | `@fastify/swagger-ui` 5.2.6 pinned and verified. 10 operations with stable ids, summaries, examples and truthful error responses (incl. 413), capabilities schema. Runtime document = export, independent of the dataset; UI local-only, no plugin CSP, no query/remote config, user-triggered requests. Unit/HTTP: PASS |
+| Ingress: shared locations, relay listener, diagnostics block, typed 413 | Exact-image nginx boundary test 100/100 |
+| OPS: relay settings, `access apply`, `proxy restart`, validated `tls csr/import/status/recover` | 41 new unit tests PASS; legacy `tls init` kept as test-only |
+| Web development proxy example | 35/35 against a local HTTPS stand-in |
+| Persian seed runner | 18/18 offline evaluation checks; **live Iran measurement pending** |
+| Unit total | 219 PASS (was 170) |
+| Not run | Image builds/relock/bundle, full-stack suites, browser/Swagger UI check, cutover rehearsal, namespace egress test, Windows/LAN/mobile/load |
+
 ## Boundary follow-up `vm2-2026-10-19-boundary` (review of `e7a2175`)
 
 Separate run identity; the sections below are earlier records and are unchanged. Full record: [`docs/validation/iran/vm2-2026-10-19-boundary/README.md`](validation/iran/vm2-2026-10-19-boundary/README.md). Current lock `c75bb0a`: OPS `sha256:135ef05c…`, data components unchanged. Bundle r6 `SHA256SUMS` `f4cb50a07a7bbaaec026ae41b278b7a42db29dc84e9001cba5f21e48c12f827d`.
