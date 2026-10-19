@@ -1,0 +1,6 @@
+[init] generated secret db_admin_password
+[init] generated secret db_render_import_password
+[init] generated secret db_api_password
+[init] generated secret tile_db_password
+[init] database roles ensured; migrations applied: 001_control
+[tls] issued server certificate for localhost, 127.0.0.1; distribute /home/owner/seyra-gate-lab/home/secrets/tls/ca.crt to clients that must trust it

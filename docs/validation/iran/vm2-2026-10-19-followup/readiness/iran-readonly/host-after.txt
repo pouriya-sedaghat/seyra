@@ -1,0 +1,10 @@
+after: 2026-10-19T05:36:41Z
+seyra-iran-restore Up 16 hours
+seyra-api-1 Up 15 hours (healthy)
+seyra-db-1 Up 16 hours (healthy)
+seyra-overpass-1 Up 15 hours
+seyra-photon-1 Up 15 hours
+seyra-proxy-1 Up 15 hours
+seyra-tegola-1 Up 15 hours
+seyra-valhalla-1 Up 15 hours
+egress COUNT 0

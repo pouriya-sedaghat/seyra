@@ -1,0 +1,21 @@
+PASS wrong-digest: refused (FAIL U1)
+FAIL wrong-digest: no CLI/bootstrap call -- cli bootstrap-load /tmp/seyra-update-gate-wrong-digest-2WU5OO/bundle | cli verify-images | cli status
+FAIL wrong-digest: install tree unchanged -- marker="NEW install tree\n"
+FAIL wrong-digest: BUNDLE not reassigned -- /tmp/seyra-update-gate-wrong-digest-2WU5OO/bundle
+FAIL wrong-digest: run ends (dependent phases skipped) -- rc=0
+FAIL corrupt-payload: refused (FAIL U1) -- result PASS U1 software update: SHA256SUMS digest matches the out-of-band value (ee58598e01f653a21eaabf55b7fe32b6a6e13e6ba7a4792412cfa4d063867481); install tree replaced; all locked images verified
+FAIL corrupt-payload: no CLI/bootstrap call -- cli bootstrap-load /tmp/seyra-update-gate-corrupt-payload-IaIw1y/bundle | cli verify-images | cli status
+FAIL corrupt-payload: install tree unchanged -- marker="NEW install tree\n"
+FAIL corrupt-payload: BUNDLE not reassigned -- /tmp/seyra-update-gate-corrupt-payload-IaIw1y/bundle
+FAIL corrupt-payload: run ends (dependent phases skipped) -- rc=0
+FAIL unlisted-file: refused (FAIL U1) -- result PASS U1 software update: SHA256SUMS digest matches the out-of-band value (ee58598e01f653a21eaabf55b7fe32b6a6e13e6ba7a4792412cfa4d063867481); install tree replaced; all locked images verified
+FAIL unlisted-file: no CLI/bootstrap call -- cli bootstrap-load /tmp/seyra-update-gate-unlisted-file-lKiqo1/bundle | cli verify-images | cli status
+FAIL unlisted-file: install tree unchanged -- marker="NEW install tree\n"
+FAIL unlisted-file: BUNDLE not reassigned -- /tmp/seyra-update-gate-unlisted-file-lKiqo1/bundle
+FAIL unlisted-file: run ends (dependent phases skipped) -- rc=0
+PASS valid: PASS U1
+PASS valid: install tree replaced
+PASS valid: bootstrap-load ran after verification
+PASS valid: BUNDLE now the update
+# harness=/home/owner/seyra-prep/followup/iran-offline-host.82942c1.sh checks=19 failed=14
+exit 1

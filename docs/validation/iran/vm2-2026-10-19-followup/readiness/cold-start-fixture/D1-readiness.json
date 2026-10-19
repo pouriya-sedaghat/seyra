@@ -1,0 +1,238 @@
+{
+ "label": "cold start trial 1 (ds-20251020-9843cf36a06e)",
+ "started_at": "2026-10-19T05:25:18.359Z",
+ "config": {
+  "base": "https://127.0.0.1:8443",
+  "seconds": 150,
+  "sample_ms": 250,
+  "tile_clients": 6,
+  "cancel_ms": [
+   150,
+   1500
+  ],
+  "zooms": [
+   3,
+   12
+  ]
+ },
+ "polls": 587,
+ "ready_codes": {
+  "200": 556,
+  "502": 1,
+  "ERR": 30
+ },
+ "first_ready_at": "2026-10-19T05:25:26.257Z",
+ "not_ready_after_first_ready": 0,
+ "not_ready_events_after_first_ready": [],
+ "provider_latency_ms": {
+  "tiles": {
+   "n": 556,
+   "p50": 13,
+   "p90": 24,
+   "max": 98
+  },
+  "routing": {
+   "n": 556,
+   "p50": 8,
+   "p90": 13,
+   "max": 60
+  },
+  "geocoder": {
+   "n": 556,
+   "p50": 122,
+   "p90": 226,
+   "max": 532
+  },
+  "overpass": {
+   "n": 556,
+   "p50": 89,
+   "p90": 135,
+   "max": 170
+  }
+ },
+ "tiles": {
+  "requested": 480720,
+  "completed": 480720,
+  "cancelled": 0,
+  "by_status": {
+   "200": 480720
+  },
+  "by_zoom": {
+   "3": {
+    "requested": 51332,
+    "completed": 51332,
+    "cancelled": 0,
+    "ms": {
+     "n": 51332,
+     "p50": 1,
+     "p90": 1,
+     "max": 502
+    }
+   },
+   "4": {
+    "requested": 51282,
+    "completed": 51282,
+    "cancelled": 0,
+    "ms": {
+     "n": 51282,
+     "p50": 2,
+     "p90": 2,
+     "max": 73
+    }
+   },
+   "5": {
+    "requested": 51107,
+    "completed": 51107,
+    "cancelled": 0,
+    "ms": {
+     "n": 51107,
+     "p50": 2,
+     "p90": 2,
+     "max": 92
+    }
+   },
+   "6": {
+    "requested": 49867,
+    "completed": 49867,
+    "cancelled": 0,
+    "ms": {
+     "n": 49867,
+     "p50": 2,
+     "p90": 2,
+     "max": 52
+    }
+   },
+   "7": {
+    "requested": 48115,
+    "completed": 48115,
+    "cancelled": 0,
+    "ms": {
+     "n": 48115,
+     "p50": 2,
+     "p90": 2,
+     "max": 68
+    }
+   },
+   "8": {
+    "requested": 43933,
+    "completed": 43933,
+    "cancelled": 0,
+    "ms": {
+     "n": 43933,
+     "p50": 2,
+     "p90": 2,
+     "max": 91
+    }
+   },
+   "9": {
+    "requested": 47890,
+    "completed": 47890,
+    "cancelled": 0,
+    "ms": {
+     "n": 47890,
+     "p50": 2,
+     "p90": 2,
+     "max": 505
+    }
+   },
+   "10": {
+    "requested": 44137,
+    "completed": 44137,
+    "cancelled": 0,
+    "ms": {
+     "n": 44137,
+     "p50": 2,
+     "p90": 2,
+     "max": 65
+    }
+   },
+   "11": {
+    "requested": 46928,
+    "completed": 46928,
+    "cancelled": 0,
+    "ms": {
+     "n": 46928,
+     "p50": 2,
+     "p90": 2,
+     "max": 68
+    }
+   },
+   "12": {
+    "requested": 46129,
+    "completed": 46129,
+    "cancelled": 0,
+    "ms": {
+     "n": 46129,
+     "p50": 2,
+     "p90": 2,
+     "max": 42
+    }
+   }
+  },
+  "clients_started": 6
+ },
+ "timeline": [
+  {
+   "at": "2026-10-19T05:25:18.359Z",
+   "t_s": 0,
+   "ready": "ERR",
+   "ready_error": "ECONNREFUSED",
+   "providers": [
+    {
+     "provider": "health-endpoint",
+     "status": "unreachable",
+     "error": "ECONNREFUSED"
+    }
+   ]
+  },
+  {
+   "at": "2026-10-19T05:25:25.990Z",
+   "t_s": 7.6,
+   "ready": "502",
+   "ready_error": null,
+   "providers": [
+    {
+     "provider": "health-endpoint",
+     "status": "unreachable",
+     "error": "SyntaxError"
+    }
+   ]
+  },
+  {
+   "at": "2026-10-19T05:25:26.257Z",
+   "t_s": 8.3,
+   "ready": "200",
+   "ready_error": null,
+   "providers": [
+    {
+     "provider": "tiles",
+     "status": "ok",
+     "latency_ms": 98,
+     "error": null,
+     "checked_at": "2026-10-19T05:25:26.211Z"
+    },
+    {
+     "provider": "routing",
+     "status": "ok",
+     "latency_ms": 60,
+     "error": null,
+     "checked_at": "2026-10-19T05:25:26.192Z"
+    },
+    {
+     "provider": "geocoder",
+     "status": "ok",
+     "latency_ms": 532,
+     "error": null,
+     "checked_at": "2026-10-19T05:25:26.665Z"
+    },
+    {
+     "provider": "overpass",
+     "status": "ok",
+     "latency_ms": 170,
+     "error": null,
+     "checked_at": "2026-10-19T05:25:26.304Z"
+    }
+   ]
+  }
+ ]
+}

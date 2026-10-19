@@ -1,0 +1,21 @@
+PASS wrong-digest: refused (FAIL U1)
+PASS wrong-digest: no CLI/bootstrap call
+PASS wrong-digest: install tree unchanged
+PASS wrong-digest: BUNDLE not reassigned
+PASS wrong-digest: run ends (dependent phases skipped)
+PASS corrupt-payload: refused (FAIL U1)
+PASS corrupt-payload: no CLI/bootstrap call
+PASS corrupt-payload: install tree unchanged
+PASS corrupt-payload: BUNDLE not reassigned
+PASS corrupt-payload: run ends (dependent phases skipped)
+PASS unlisted-file: refused (FAIL U1)
+PASS unlisted-file: no CLI/bootstrap call
+PASS unlisted-file: install tree unchanged
+PASS unlisted-file: BUNDLE not reassigned
+PASS unlisted-file: run ends (dependent phases skipped)
+PASS valid: PASS U1
+PASS valid: install tree replaced
+PASS valid: bootstrap-load ran after verification
+PASS valid: BUNDLE now the update
+# harness=/home/owner/seyra/tests/validation/iran-offline-host.sh checks=19 failed=0
+exit 0

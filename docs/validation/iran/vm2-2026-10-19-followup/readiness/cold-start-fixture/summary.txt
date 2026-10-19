@@ -1,0 +1,6 @@
+# Seyra real-Iran offline-host validation — 2026-10-19T05:34:11Z
+# harness=/home/owner/seyra-prep/followup/readiness-gate/harness-20261019T052437Z bundle=/home/owner/seyra-gate-lab/transfer/r5 pbf=synthetic-v1.osm.pbf sha256=e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323 dataset_id=ds-20251020-9843cf36a06e
+PASS D1 cold start trial completed: first ready 2026-10-19T05:25:26.257Z; not-ready polls after first ready: 0; {"label":"cold start trial 1 (ds-20251020-9843cf36a06e)","polls":587,"ready_codes":{"200":556,"502":1,"ERR":30},"first_ready_at":"2026-10-19T05:25:26.257Z","not_ready_after_first_ready":0,"tiles_reque
+PASS D2 cold start trial completed: first ready 2026-10-19T05:28:37.673Z; not-ready polls after first ready: 0; {"label":"cold start trial 2 (ds-20251020-9843cf36a06e)","polls":587,"ready_codes":{"200":556,"502":2,"ERR":29},"first_ready_at":"2026-10-19T05:28:37.673Z","not_ready_after_first_ready":0,"tiles_reque
+PASS D3 cold start trial completed: first ready 2026-10-19T05:31:48.942Z; not-ready polls after first ready: 0; {"label":"cold start trial 3 (ds-20251020-9843cf36a06e)","polls":587,"ready_codes":{"200":556,"502":2,"ERR":29},"first_ready_at":"2026-10-19T05:31:48.942Z","not_ready_after_first_ready":0,"tiles_reque
+# failures: 0

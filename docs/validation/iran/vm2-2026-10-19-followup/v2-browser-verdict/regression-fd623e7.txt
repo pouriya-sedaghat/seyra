@@ -1,0 +1,11 @@
+# evaluating browserVerdict (tests/validation/browser-verdict.mjs)
+PASS successful report shape: verdict=PASS expected=PASS {"external_requests":true,"rtl_plugin":true,"failed_requests":true,"console_errors":true,"required_visits":true,"script_completed":true}
+PASS console error: verdict=FAIL expected=FAIL {"external_requests":true,"rtl_plugin":true,"failed_requests":true,"console_errors":false,"required_visits":true,"script_completed":true}
+PASS missing required visit: verdict=FAIL expected=FAIL {"external_requests":true,"rtl_plugin":true,"failed_requests":true,"console_errors":true,"required_visits":false,"script_completed":true}
+PASS declared visits not all recorded: verdict=FAIL expected=FAIL {"external_requests":true,"rtl_plugin":true,"failed_requests":true,"console_errors":true,"required_visits":false,"script_completed":true}
+PASS failed request (503): verdict=FAIL expected=FAIL {"external_requests":true,"rtl_plugin":true,"failed_requests":false,"console_errors":true,"required_visits":true,"script_completed":true}
+PASS external request: verdict=FAIL expected=FAIL {"external_requests":false,"rtl_plugin":true,"failed_requests":true,"console_errors":true,"required_visits":true,"script_completed":true}
+PASS script crashed after recording all visits: verdict=FAIL expected=FAIL {"external_requests":true,"rtl_plugin":true,"failed_requests":true,"console_errors":true,"required_visits":true,"script_completed":false}
+PASS expectedVisits must be declared
+# failures: 0
+exit 0

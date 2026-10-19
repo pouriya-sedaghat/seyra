@@ -1,5 +1,19 @@
 # Seyra Map Services — test results (phase 1)
 
+## Follow-up run `vm2-2026-10-19-followup` (review of `82942c1`)
+
+Separate run identity; the sections below are earlier records and are unchanged. Full record: [`docs/validation/iran/vm2-2026-10-19-followup/README.md`](validation/iran/vm2-2026-10-19-followup/README.md). Current lock `8c27175`: OPS `sha256:7367b56f…`, data components unchanged. Bundle r5 `SHA256SUMS` `d128cce3f691de06c09914c08900bcb9767ff339674cb20ed6f8cc8c18870fde`.
+
+| Item | Result |
+| --- | --- |
+| V1: update gate before install | Fixed. Regression: 14/19 checks fail on `82942c1`, 19/19 now. On a disposable host, wrong-digest and corrupted-payload updates are refused with no install or image change; valid r3→r4 and r4→r5 updates PASS. |
+| V2: browser exit status | Fixed: console errors, declared required visits and script completion count. Regression: 4 bad cases accepted on `82942c1`, 0 now. Read-only Iran audit PASS (504 requests, 0 external, failed or console errors, 6/6 visits). |
+| Capacity admission and within-step sampling | Default `minFreeFactor` 120 (measured peak 95.4× + margin); checked before side effects, counting a replaced failed build. Disposable-host scenarios C1–C5 PASS, including a 3 GiB within-step dip that boundary sampling missed. |
+| Bundle ownership | Fixed: operator-owned `0644`/`0755` output. The non-root operator verifies, copies, tamper-checks (T0–T5) and `bootstrap-load`s without chown. |
+| L14 | Deterministic: prune launched while start holds the lock is refused, and a sequential run now FAILs. r5: PASS. |
+| Unit / integration / security / lifecycle / offline / restore (r5) | 160 / 137 / 28 + 1 note / 15 of 15 / O0–O5 / R1–R7 + R4a: all PASS; 0 outbound packets |
+| Readiness 503 observation | **Open, not reproduced.** 3 fixture cold starts under tile load and a 120 s read-only warm Iran run: 0 not-ready after first ready. The Iran tiles probe reached 4,288 ms of its 5,000 ms timeout (observation only). |
+
 ## Replacement-VM run `vm2-2026-10-18` (owner's VM, real Iran data)
 
 Separate run identity. Everything below this section is the earlier synthetic record, left unchanged except for the Iran row of "Not run / blocked". Its image table is the 2026-10-17 lock; the current lock (`a2d3050`) is listed in the run record. Full record: [`docs/validation/iran/vm2-2026-10-18/README.md`](validation/iran/vm2-2026-10-18/README.md).

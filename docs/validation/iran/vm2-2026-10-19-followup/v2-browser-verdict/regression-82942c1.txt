@@ -1,0 +1,10 @@
+# evaluating the inline predicate of /home/owner/seyra-prep/followup/iran-browser.82942c1.mjs: external.length === 0 && rtlPlugin.length === 0 && failed.length === 0
+PASS successful report shape: verdict=PASS expected=PASS
+FAIL console error: verdict=PASS expected=FAIL
+FAIL missing required visit: verdict=PASS expected=FAIL
+FAIL declared visits not all recorded: verdict=PASS expected=FAIL
+PASS failed request (503): verdict=FAIL expected=FAIL
+PASS external request: verdict=FAIL expected=FAIL
+FAIL script crashed after recording all visits: verdict=PASS expected=FAIL
+# failures: 4
+exit 1

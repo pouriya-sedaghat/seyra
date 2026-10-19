@@ -1,0 +1,2 @@
+# 2026-10-19T04:43:52Z iran-offline-host start phases=[install] pbf=synthetic-v1.osm.pbf sha256=e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323 size=3167
+refusing: container seyra-safety-probe exists and was not created by this lab (/home/owner/seyra-safety-lab); it is left untouched

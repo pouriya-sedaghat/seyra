@@ -1,0 +1,32 @@
+# bundle export via the real wrapper as owner (uid 1000), OPS sha256:489d2a40 (r3, before the fix)
+/home/owner/seyra-prep/followup/bundle-before-ops489:
+total 28
+drwxrwxr-x 4 owner owner 4096 Oct 19 04:41 .
+drwxrwxr-x 3 owner owner 4096 Oct 19 04:41 ..
+-rw-r--r-- 1 root  root  2646 Oct 19 04:41 SHA256SUMS
+-rw-r--r-- 1 root  root  5441 Oct 19 04:41 bundle-manifest.json
+drwxr-xr-x 2 root  root  4096 Oct 19 04:41 images
+drwxr-xr-x 6 root  root  4096 Oct 19 04:41 install
+
+/home/owner/seyra-prep/followup/bundle-before-ops489/images:
+total 1267204
+drwxr-xr-x 2 root  root       4096 Oct 19 04:41 .
+drwxrwxr-x 4 owner owner      4096 Oct 19 04:41 ..
+-rw------- 1 root  root   83226112 Oct 19 04:41 api.tar
+-rw------- 1 root  root  218492416 Oct 19 04:40 db.tar
+-rw------- 1 root  root  412421632 Oct 19 04:41 geocoder_build.tar
+-rw------- 1 root  root  111040000 Oct 19 04:41 ops.tar
+-rw------- 1 root  root   48448512 Oct 19 04:41 osmtools.tar
+-rw------- 1 root  root   45327360 Oct 19 04:40 overpass.tar
+-rw------- 1 root  root  194322944 Oct 19 04:40 photon.tar
+# operator verification:
+sha256sum: images/api.tar: Permission denied
+images/api.tar: FAILED open or read
+sha256sum: images/db.tar: Permission denied
+sha256sum -c rc=141
+# operator copy:
+cp: cannot open '/home/owner/seyra-prep/followup/bundle-before-ops489/images/db.tar' for reading: Permission denied
+cp: cannot open '/home/owner/seyra-prep/followup/bundle-before-ops489/images/tegola.tar' for reading: Permission denied
+cp rc=1
+sha256sum: /home/owner/seyra-prep/followup/bundle-before-ops489/images/ops.tar: Permission denied
+bootstrap-load rc=1 (DOCKER_HOST pointed at a nonexistent socket so no daemon could be touched)

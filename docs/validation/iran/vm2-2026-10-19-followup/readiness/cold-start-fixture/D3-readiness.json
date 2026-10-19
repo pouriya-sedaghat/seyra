@@ -1,0 +1,238 @@
+{
+ "label": "cold start trial 3 (ds-20251020-9843cf36a06e)",
+ "started_at": "2026-10-19T05:31:41.029Z",
+ "config": {
+  "base": "https://127.0.0.1:8443",
+  "seconds": 150,
+  "sample_ms": 250,
+  "tile_clients": 6,
+  "cancel_ms": [
+   150,
+   1500
+  ],
+  "zooms": [
+   3,
+   12
+  ]
+ },
+ "polls": 587,
+ "ready_codes": {
+  "200": 556,
+  "502": 2,
+  "ERR": 29
+ },
+ "first_ready_at": "2026-10-19T05:31:48.942Z",
+ "not_ready_after_first_ready": 0,
+ "not_ready_events_after_first_ready": [],
+ "provider_latency_ms": {
+  "tiles": {
+   "n": 556,
+   "p50": 14,
+   "p90": 25,
+   "max": 94
+  },
+  "routing": {
+   "n": 556,
+   "p50": 8,
+   "p90": 15,
+   "max": 56
+  },
+  "geocoder": {
+   "n": 556,
+   "p50": 111,
+   "p90": 175,
+   "max": 538
+  },
+  "overpass": {
+   "n": 556,
+   "p50": 91,
+   "p90": 135,
+   "max": 145
+  }
+ },
+ "tiles": {
+  "requested": 482500,
+  "completed": 482500,
+  "cancelled": 0,
+  "by_status": {
+   "200": 482500
+  },
+  "by_zoom": {
+   "3": {
+    "requested": 51546,
+    "completed": 51546,
+    "cancelled": 0,
+    "ms": {
+     "n": 51546,
+     "p50": 1,
+     "p90": 1,
+     "max": 28
+    }
+   },
+   "4": {
+    "requested": 51463,
+    "completed": 51463,
+    "cancelled": 0,
+    "ms": {
+     "n": 51463,
+     "p50": 2,
+     "p90": 2,
+     "max": 57
+    }
+   },
+   "5": {
+    "requested": 51275,
+    "completed": 51275,
+    "cancelled": 0,
+    "ms": {
+     "n": 51275,
+     "p50": 2,
+     "p90": 2,
+     "max": 48
+    }
+   },
+   "6": {
+    "requested": 50046,
+    "completed": 50046,
+    "cancelled": 0,
+    "ms": {
+     "n": 50046,
+     "p50": 2,
+     "p90": 2,
+     "max": 52
+    }
+   },
+   "7": {
+    "requested": 48284,
+    "completed": 48284,
+    "cancelled": 0,
+    "ms": {
+     "n": 48284,
+     "p50": 2,
+     "p90": 2,
+     "max": 34
+    }
+   },
+   "8": {
+    "requested": 44118,
+    "completed": 44118,
+    "cancelled": 0,
+    "ms": {
+     "n": 44118,
+     "p50": 2,
+     "p90": 2,
+     "max": 46
+    }
+   },
+   "9": {
+    "requested": 48061,
+    "completed": 48061,
+    "cancelled": 0,
+    "ms": {
+     "n": 48061,
+     "p50": 2,
+     "p90": 2,
+     "max": 31
+    }
+   },
+   "10": {
+    "requested": 44311,
+    "completed": 44311,
+    "cancelled": 0,
+    "ms": {
+     "n": 44311,
+     "p50": 2,
+     "p90": 2,
+     "max": 41
+    }
+   },
+   "11": {
+    "requested": 47102,
+    "completed": 47102,
+    "cancelled": 0,
+    "ms": {
+     "n": 47102,
+     "p50": 2,
+     "p90": 2,
+     "max": 29
+    }
+   },
+   "12": {
+    "requested": 46294,
+    "completed": 46294,
+    "cancelled": 0,
+    "ms": {
+     "n": 46294,
+     "p50": 2,
+     "p90": 2,
+     "max": 48
+    }
+   }
+  },
+  "clients_started": 6
+ },
+ "timeline": [
+  {
+   "at": "2026-10-19T05:31:41.029Z",
+   "t_s": 0,
+   "ready": "ERR",
+   "ready_error": "ECONNREFUSED",
+   "providers": [
+    {
+     "provider": "health-endpoint",
+     "status": "unreachable",
+     "error": "ECONNREFUSED"
+    }
+   ]
+  },
+  {
+   "at": "2026-10-19T05:31:48.419Z",
+   "t_s": 7.4,
+   "ready": "502",
+   "ready_error": null,
+   "providers": [
+    {
+     "provider": "health-endpoint",
+     "status": "unreachable",
+     "error": "SyntaxError"
+    }
+   ]
+  },
+  {
+   "at": "2026-10-19T05:31:48.942Z",
+   "t_s": 8.3,
+   "ready": "200",
+   "ready_error": null,
+   "providers": [
+    {
+     "provider": "tiles",
+     "status": "ok",
+     "latency_ms": 94,
+     "error": null,
+     "checked_at": "2026-10-19T05:31:48.792Z"
+    },
+    {
+     "provider": "routing",
+     "status": "ok",
+     "latency_ms": 56,
+     "error": null,
+     "checked_at": "2026-10-19T05:31:48.771Z"
+    },
+    {
+     "provider": "geocoder",
+     "status": "ok",
+     "latency_ms": 538,
+     "error": null,
+     "checked_at": "2026-10-19T05:31:49.254Z"
+    },
+    {
+     "provider": "overpass",
+     "status": "ok",
+     "latency_ms": 74,
+     "error": null,
+     "checked_at": "2026-10-19T05:31:48.791Z"
+    }
+   ]
+  }
+ ]
+}

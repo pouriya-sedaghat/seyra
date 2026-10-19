@@ -1,0 +1,37 @@
+# bundle export via the real wrapper as owner (uid 1000), OPS sha256:a6e35dce (r4, after the fix); no chown, no root
+/home/owner/seyra-prep/bundle-2026-10-19-vm2-r4:
+total 28
+drwxrwxr-x  4 owner owner 4096 Oct 19 04:42 .
+drwxrwxr-x 25 owner owner 4096 Oct 19 04:42 ..
+-rw-r--r--  1 owner owner 2646 Oct 19 04:42 SHA256SUMS
+-rw-r--r--  1 owner owner 5441 Oct 19 04:42 bundle-manifest.json
+drwxr-xr-x  2 owner owner 4096 Oct 19 04:42 images
+drwxr-xr-x  6 owner owner 4096 Oct 19 04:42 install
+
+/home/owner/seyra-prep/bundle-2026-10-19-vm2-r4/images:
+total 1267212
+drwxr-xr-x 2 owner owner      4096 Oct 19 04:42 .
+drwxrwxr-x 4 owner owner      4096 Oct 19 04:42 ..
+-rw-r--r-- 1 owner owner  83226112 Oct 19 04:42 api.tar
+-rw-r--r-- 1 owner owner 218492416 Oct 19 04:42 db.tar
+-rw-r--r-- 1 owner owner 412421632 Oct 19 04:42 geocoder_build.tar
+-rw-r--r-- 1 owner owner 111045120 Oct 19 04:42 ops.tar
+-rw-r--r-- 1 owner owner  48448512 Oct 19 04:42 osmtools.tar
+-rw-r--r-- 1 owner owner  45327360 Oct 19 04:42 overpass.tar
+-rw-r--r-- 1 owner owner 194322944 Oct 19 04:42 photon.tar
+-rw-r--r-- 1 owner owner  27057152 Oct 19 04:42 proxy.tar
+-rw-r--r-- 1 owner owner  36272640 Oct 19 04:42 tegola.tar
+-rw-r--r-- 1 owner owner 120983040 Oct 19 04:42 valhalla.tar
+
+/home/owner/seyra-prep/bundle-2026-10-19-vm2-r4/install/bin:
+total 12
+drwxr-xr-x 2 owner owner 4096 Oct 19 04:42 .
+drwxr-xr-x 6 owner owner 4096 Oct 19 04:42 ..
+-rwxr-xr-x 1 owner owner 3103 Oct 19 04:42 seyra-maps
+# operator verification:
+f977ab1c94f7ab613955e3445eb0848edcae5500fb0e10ed806248ad90a075ac  SHA256SUMS
+sha256sum -c: all listed files OK
+# operator copy:
+cp -a rc=0
+copy verifies
+# files not owned by the operator: 0; files not world-readable: 0

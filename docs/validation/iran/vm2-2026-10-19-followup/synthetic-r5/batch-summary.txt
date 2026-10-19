@@ -1,0 +1,11 @@
+05:41:25 verify-images rc=0
+05:41:41 start rc=0
+05:41:57 ready=ready
+05:42:09 integration rc=0       Tests  137 passed (137)
+05:42:37 security rc=0 PASS=28 FAIL=0
+05:52:18 lifecycle rc=0 581s 15 PASS 0 FAIL
+05:52:59 stop rc=0
+05:53:59 tamper (as owner) rc=0 6 PASS; bundle copy digest d128cce3f691de06
+06:00:14 offline-host rc=0 375s 6 PASS
+06:10:04 restore-drill rc=0 589s 8 PASS
+06:10:04 DONE
