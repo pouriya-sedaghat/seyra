@@ -1,0 +1,91 @@
+{
+  "schema": "seyra.client-handoff-search-seeds/1",
+  "status": "PROPOSED_ENGINEERING_FIXTURES",
+  "owner_delegated_query_selection": true,
+  "baseline": {
+    "dataset_id": "<ACTIVE_IRAN_DATASET_ID_FROM_LOCAL_ENVIRONMENT>",
+    "pbf_sha256": "<OWNER_INPUT_SHA256_FROM_LOCAL_ENVIRONMENT>",
+    "source_report": "docs/validation/iran/vm2-2026-10-19-boundary/f3-navigation/iran-readonly-run2/report.json"
+  },
+  "scope": "Reusable regression seeds; not a general Iran address-completeness guarantee or production relevance SLA. The Persian Shiraz query is newly proposed; its reference feature was observed with the English query. Validate all proposed variants before claiming PASS. Operational dataset/checksum values are placeholders to be populated locally, not committed to the public planning template. Reference coordinates are public OSM landmarks, not private user positions.",
+  "cases": [
+    {
+      "id": "tehran_azadi",
+      "query_fa": "برج آزادی",
+      "expected_region_fa": "تهران",
+      "suggested_normalization_variants": [
+        "برج آزادي"
+      ],
+      "reference_feature": {
+        "id": "osm:r7814369",
+        "lon": 51.3380605,
+        "lat": 35.6997384
+      },
+      "reference_observed_query": "برج آزادی",
+      "proposed_top_k": 5,
+      "note": "Use feature identity/location, not province text alone; proposed search assertions must be run and recorded for this query and snapshot."
+    },
+    {
+      "id": "isfahan_naqshejahan",
+      "query_fa": "میدان نقش جهان",
+      "expected_region_fa": "اصفهان",
+      "suggested_normalization_variants": [
+        "ميدان نقش جهان"
+      ],
+      "reference_feature": {
+        "id": "osm:r15540548",
+        "lon": 51.6773624,
+        "lat": 32.6581024
+      },
+      "reference_observed_query": "میدان نقش جهان",
+      "proposed_top_k": 5,
+      "note": "Use feature identity/location, not province text alone; proposed search assertions must be run and recorded for this query and snapshot."
+    },
+    {
+      "id": "shiraz_city",
+      "query_fa": "شیراز",
+      "expected_region_fa": "فارس",
+      "suggested_normalization_variants": [
+        "شيراز"
+      ],
+      "reference_feature": {
+        "id": "osm:r8167754",
+        "lon": 52.5378041,
+        "lat": 29.6060218
+      },
+      "reference_observed_query": "Shiraz",
+      "proposed_top_k": 5,
+      "note": "Use feature identity/location, not province text alone; proposed search assertions must be run and recorded for this query and snapshot."
+    },
+    {
+      "id": "bazargan_border",
+      "query_fa": "بازرگان",
+      "expected_region_fa": "آذربایجان غربی",
+      "suggested_normalization_variants": [],
+      "reference_feature": {
+        "id": "osm:n244176127",
+        "lon": 44.3876859,
+        "lat": 39.3886668
+      },
+      "reference_observed_query": "بازرگان",
+      "proposed_top_k": 5,
+      "note": "Use feature identity/location, not province text alone; proposed search assertions must be run and recorded for this query and snapshot."
+    },
+    {
+      "id": "abyaneh_village",
+      "query_fa": "ابیانه",
+      "expected_region_fa": "اصفهان",
+      "suggested_normalization_variants": [
+        "ابيانِه"
+      ],
+      "reference_feature": {
+        "id": "osm:n27369333",
+        "lon": 51.5908576,
+        "lat": 33.5865097
+      },
+      "reference_observed_query": "ابیانه",
+      "proposed_top_k": 5,
+      "note": "Use feature identity/location, not province text alone; proposed search assertions must be run and recorded for this query and snapshot."
+    }
+  ]
+}
