@@ -116,8 +116,8 @@ The not-ready time is **not promised**. The synthetic L4/L5 activations, which r
 
 ## 4. Rollback (any failed step, or on request)
 
-1. `infra/edge/edge.sh <private env> stop`: the LAN path is closed at once.
-2. `init --no-relay --server-names "localhost 127.0.0.1"`, then `access apply`. This happens before the edge is removed, so its former lab address is never trusted for a later container.
+1. `init --no-relay --server-names "localhost 127.0.0.1"`, then `access apply` and `proxy restart`. The inner proxy stops trusting the edge address and the LAN path closes.
+2. `infra/edge/edge.sh <private env> stop`. A stopped container releases its lab address at once and Docker reuses it for the next container, so this comes only after step 1; `edge.sh stop` refuses while the relay upstream still answers.
 3. Certificate: restore the previous set with `tls restore --from <LAB>/home/secrets/tls/previous-<time>`.
    - It is validated like any import: key match, its recorded names (or its own SAN), purpose, and its saved chain to its saved root.
    - It works with the full-chain backups that `tls import` makes.

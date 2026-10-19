@@ -237,11 +237,11 @@ seyra-maps access apply && seyra-maps proxy restart
 - **Settings rules:** a relay requires loopback access mode. Its peer must be one exact non-loopback address outside the client allowlist. Its server names may not contain loopback names.
 - **Egress:** the edge's network namespace gets an egress guard (new connections only to the relay upstream). `tests/offline/namespace-egress.sh` checks the namespaces directly. The old outbound counter treats private destinations as local, so it cannot prove LAN isolation.
 - **Rollback order:**
-  1. `edge.sh stop`;
-  2. `init --no-relay`, then `access apply` and `proxy restart`;
+  1. `init --no-relay`, then `access apply` and `proxy restart`: the inner proxy stops trusting the edge address and the LAN path closes;
+  2. `edge.sh stop`;
   3. `edge.sh remove`.
 
-  Never remove the edge while the inner relay still trusts its former address.
+  A stopped container releases its lab address at once, and Docker gives it to the next container (verified on Docker 29). So the inner relay must stop trusting the address **before** the edge stops. `edge.sh stop` refuses while the relay upstream still answers; `stop --force` is for emergencies only and must be followed at once by step 1.
 
 ### 6.3 Rules for both modes
 

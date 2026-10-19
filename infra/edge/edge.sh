@@ -6,14 +6,20 @@
 #   infra/edge/edge.sh <env-file> up         start the edge, apply its namespace egress guard, attach it
 #                                            to the lab network and print the relay peer address
 #   infra/edge/edge.sh <env-file> status     container, publication, peer address, guard counters
-#   infra/edge/edge.sh <env-file> stop       close the LAN path (the inner relay must then be disabled)
+#   infra/edge/edge.sh <env-file> stop       stop the edge, only once the inner relay trust is gone
+#                                            (its upstream no longer answers); --force: emergency only
 #   infra/edge/edge.sh <env-file> remove     remove the stopped edge and its publish network
+#
+# Rollback order: seyra-maps init --no-relay; access apply; proxy restart (the inner proxy stops
+# trusting the edge address and the LAN path closes), THEN edge.sh stop and remove. A stopped
+# container releases its lab address at once and Docker hands it to the next container, so the
+# inner relay must never trust that address while the edge is stopped.
 #
 # Fail closed: every container/network this script changes must carry its owner label, and the
 # preserved serving host is never modified (it is only the upstream address).
 set -euo pipefail
-envfile="${1:?usage: edge.sh <env-file> check|up|status|stop|remove}"
-cmd="${2:?usage: edge.sh <env-file> check|up|status|stop|remove}"
+envfile="${1:?usage: edge.sh <env-file> check|up|status|stop [--force]|remove}"
+cmd="${2:?usage: edge.sh <env-file> check|up|status|stop [--force]|remove}"
 here="$(cd "$(dirname "$0")" && pwd)"
 # shellcheck disable=SC1090
 set -a; . "$envfile"; set +a
@@ -94,8 +100,19 @@ status() {
 
 stop() {
   owned_container || die "no container $EDGE_NAME with owner $EDGE_OWNER; nothing changed"
+  if [ "${1:-}" != --force ]; then
+    # Interlock: while the inner relay listener still answers, it still trusts this edge's address.
+    local r; r="$(docker run --rm --network "container:$EDGE_NAME" --cap-drop ALL --entrypoint sh "$EDGE_GUARD_IMAGE" -c "nc -w 3 -z $up_ip $up_port; echo rc=\$?" 2>&1)" || true
+    case "$r" in
+      *rc=1) ;;
+      *rc=0) die "the inner relay listener $EDGE_UPSTREAM still answers, so it still trusts this edge's address; stopping would release that address for reuse. First: seyra-maps init --no-relay; access apply; proxy restart. Nothing changed (emergency only: stop --force)";;
+      *) die "could not probe the relay upstream ($r); nothing changed (emergency only: stop --force)";;
+    esac
+  else
+    echo "edge: WARNING --force: if the inner relay still trusts $up_ip, remove that trust now (init --no-relay; access apply; proxy restart)" >&2
+  fi
   docker stop "$EDGE_NAME" >/dev/null
-  echo "edge: stopped; the LAN path is closed. Next: disable the inner relay (seyra-maps init --no-relay; access apply; proxy restart), then edge.sh remove"
+  echo "edge: stopped; the LAN path is closed. Next: edge.sh remove"
 }
 
 remove() {
@@ -108,4 +125,4 @@ remove() {
   echo "edge: removed"
 }
 
-case "$cmd" in check) check;; up) up;; status) status;; stop) stop;; remove) remove;; *) die "unknown command $cmd";; esac
+case "$cmd" in check) check;; up) up;; status) status;; stop) stop "${3:-}";; remove) remove;; *) die "unknown command $cmd";; esac
