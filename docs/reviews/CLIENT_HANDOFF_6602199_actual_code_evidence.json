@@ -1,0 +1,71 @@
+{
+  "node": "v24.19.0",
+  "openssl": "OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)",
+  "scope": "Actual code, temporary certificates, recording Docker stubs; no Docker workloads or live host access",
+  "ownership_test_adapter": "Module unprivileged-test branch selected by process.getuid; sandbox cannot chown to uid 101",
+  "results": [
+    {
+      "id": "H1-wrapper-input-mounts",
+      "defect_reproduced": true,
+      "observed": {
+        "cert_mounted": true,
+        "key_mounted": true,
+        "ca_mounted": false,
+        "chain_mounted": false,
+        "ca_and_chain_still_passed_to_cli": true
+      }
+    },
+    {
+      "id": "H5-ingress-413-contract",
+      "defect_reproduced": true,
+      "observed": {
+        "configured_ingress_413": {
+          "error": {
+            "code": "PAYLOAD_TOO_LARGE",
+            "message": "request body exceeds 64 KiB"
+          }
+        },
+        "openapi_error_required": [
+          "code",
+          "message",
+          "request_id"
+        ],
+        "configured_response_violates_exported_schema": true
+      }
+    },
+    {
+      "id": "H3-egress-failure-exit-status",
+      "defect_reproduced": true,
+      "observed": {
+        "exit_code": 0,
+        "summary": "FAIL nested host: 10 destinations are routable (<TEMP>/namespace-evidence/host-route-get.txt)",
+        "stderr": ""
+      }
+    },
+    {
+      "id": "H2-pending-csr-import-race",
+      "defect_reproduced": true,
+      "observed": {
+        "import_held_kernel_lock": true,
+        "csr_dispatch_calls_without_lifecycle_lock": true,
+        "csr_replacement_succeeded_while_import_locked": true,
+        "import_error": "served certificate <TEMP>/race-tls/server.crt does not match <TEMP>/race-tls/server.key",
+        "served_pair_refused": "a certificate replacement did not finish; run: seyra-maps tls recover",
+        "tls_recover_error": "served certificate <TEMP>/race-tls/server.crt does not match <TEMP>/race-tls/server.key",
+        "previous_cert_changed": true,
+        "previous_key_changed": true,
+        "replacement_journal_retained": true,
+        "recover_dispatch_calls_without_lifecycle_lock": true
+      }
+    },
+    {
+      "id": "H4-chain-backup-rollback",
+      "defect_reproduced": true,
+      "observed": {
+        "valid_chain_imports_succeeded": 2,
+        "backed_up_certificate_count": 2,
+        "rollback_error": "certificate (<TEMP>/renew-tls/previous-2026-10-19T103326165Z/server.crt) must hold exactly one certificate (found 2); pass intermediates with --chain"
+      }
+    }
+  ]
+}
