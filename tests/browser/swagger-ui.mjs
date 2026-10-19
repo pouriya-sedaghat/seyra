@@ -32,6 +32,7 @@ const requests = [];
 const failed = [];
 const aborted = [];
 const consoleErrors = [];
+const expectedConsole = [];
 const opRequests = () => requests.filter((r) => /\/api\/v1\/|\/health\//.test(new URL(r.url).pathname));
 const schemaFor = (path, method, status) => exported.paths[path][method].responses[String(status)].content['application/json'].schema;
 let crash = null;
@@ -50,7 +51,11 @@ try {
     if (r.status() >= 400 && !expected) failed.push({ url: r.url(), status: r.status() });
   });
   page.on('console', (m) => {
-    if (m.type() === 'error' || /Content Security Policy|Refused to/i.test(m.text())) consoleErrors.push(m.text());
+    // Chromium logs every non-2xx resource load; in provider-down mode exactly the documented 503
+    // of the search request is expected (recorded separately, never a CSP or script error).
+    const expected503 = mode === 'provider-down' && /^Failed to load resource: the server responded with a status of 503/.test(m.text()) && (m.location()?.url ?? '').includes('/api/v1/map/search');
+    if (expected503) expectedConsole.push({ text: m.text(), url: m.location()?.url });
+    else if (m.type() === 'error' || /Content Security Policy|Refused to/i.test(m.text())) consoleErrors.push(m.text());
   });
   page.on('pageerror', (e) => consoleErrors.push(`pageerror: ${e.message}`));
 
@@ -106,9 +111,10 @@ step('zero console errors or CSP violations', consoleErrors.length === 0, JSON.s
 step('zero failed requests', failed.length === 0, JSON.stringify(failed.slice(0, 5)));
 step('zero aborted requests', aborted.length === 0, JSON.stringify(aborted.slice(0, 5)));
 step('script completed without a crash', crash === null, crash);
-const required = mode === 'normal' ? 13 : 10; // every step above, so a skipped one fails the run
+const required = mode === 'normal' ? 13 : 10; // every step above, so a skipped one fails the run (the expected-503 step follows)
 step(`all ${required} required steps recorded`, steps.length === required, steps.length);
-const report = { mode, base, requests: requests.length, external, failed, aborted, consoleErrors, crash, steps };
+if (mode === 'provider-down') step('the expected 503 was logged by the browser exactly once for the search request', expectedConsole.length === 1, JSON.stringify(expectedConsole));
+const report = { mode, base, requests: requests.length, external, failed, aborted, consoleErrors, expectedConsole, crash, steps };
 writeFileSync(join(out, `swagger-${mode}.json`), `${JSON.stringify(report, null, 2)}\n`);
 for (const s of steps) console.log(`${s.ok ? 'PASS' : 'FAIL'} ${s.name}${s.ok ? '' : ` -- ${s.detail}`}`);
 const bad = steps.filter((s) => !s.ok).length;
