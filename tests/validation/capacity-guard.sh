@@ -16,6 +16,11 @@
 #    no control-DB event
 # C4 insufficient capacity with a failed build of the same dataset present keeps that build; once
 #    capacity is adequate the import replaces it, counting its bytes as reclaimable
+# C6 (review F1) a failed build holding an 8 GiB SPARSE file, required = free + 4 GiB: refused (only
+#    allocated blocks are credited), build and render DB kept, no new build started
+# C7 (review F1) the same failed build plus 3 GiB of ALLOCATED data, required = free + 2 GiB:
+#    admitted on the conservative estimate, replaced, and the observed free space after the
+#    cleanup is checked before the new build
 # Exits non-zero on any FAIL. The fixture file is only read.
 set -uo pipefail
 : "${LAB:?}" "${HOST:?}" "${PBF:?}" "${OUT:?}"
@@ -52,7 +57,7 @@ cli import --pbf "$PBF" --snapshot-timestamp "$(day 0)" > "$OUT/C1-import.log" 2
 C1="$(release_of "$OUT/C1-import.log")"
 manifest "$C1" > "$OUT/C1-manifest.json" 2>/dev/null
 if [ $rc -eq 0 ] && grep -q '\[import\] capacity: available .* >= required' "$OUT/C1-import.log" \
-  && jq -e '.measurements.capacity_check.ok == true and .measurements.free_space_sampling.interval_s == 5 and (.measurements.steps | all(has("free_bytes_min")))' "$OUT/C1-manifest.json" >/dev/null; then
+  && jq -e '.measurements.capacity_check.admission.ok == true and .measurements.free_space_sampling.interval_s == 5 and (.measurements.steps | all(has("free_bytes_min")))' "$OUT/C1-manifest.json" >/dev/null; then
   result PASS C1 "adequate capacity admitted ($(grep -o 'capacity: .*' "$OUT/C1-import.log" | cut -c11-190)…); manifest records capacity_check, 5 s sampling ($(jq '.measurements.free_space_sampling.samples' "$OUT/C1-manifest.json") samples) and per-step minima$(grep -q 'warning: minFreeFactor' "$OUT/C1-import.log" && echo "; warned that the persisted minFreeFactor $orig_factor is below the reference")"
 else
   result FAIL C1 "rc=$rc release=$C1"
@@ -115,12 +120,48 @@ db_kept="$(render_dbs | grep -c "render_${C4//-/_}")"
 set_setting minFreeBytes "$orig_bytes"
 cli import --pbf "$PBF" --snapshot-timestamp "$(day 3)" > "$OUT/C4-replace.log" 2>&1; rc_rep=$?
 manifest "$C4" > "$OUT/C4-manifest.json" 2>/dev/null
-recl="$(jq -r '.measurements.capacity_check.reclaimable_bytes' "$OUT/C4-manifest.json")"
+recl="$(jq -r '.measurements.capacity_check.admission.reclaimable_bytes' "$OUT/C4-manifest.json")"
 if [ -n "$victim" ] && [ $rc_ref -ne 0 ] && grep -q "the failed build of $C4 was kept" "$OUT/C4-refused.log" && [ "$st" = failed ] && [ "$db_kept" = 1 ] \
   && [ $rc_rep -eq 0 ] && grep -q "replacing failed build of $C4" "$OUT/C4-replace.log" && [ "${recl:-0}" -gt 0 ] && jq -e '.status == "validated"' "$OUT/C4-manifest.json" >/dev/null; then
   result PASS C4 "import of $C4 killed mid-build; with insufficient capacity the next import was refused and the failed build (manifest '$st', render DB) was kept; with adequate capacity it was replaced, counting $recl reclaimable bytes"
 else
   result FAIL C4 "victim=$victim refused_rc=$rc_ref status_after_refusal=$st render_db_kept=$db_kept replace_rc=$rc_rep reclaimable=$recl"
+fi
+
+# ---------------------------------------------------------------- C6/C7 reclaim credit near the boundary
+set_setting minFreeBytes "$orig_bytes"
+cli import --pbf "$PBF" --snapshot-timestamp "$(day 4)" > "$OUT/C6-killed-import.log" 2>&1 &
+kp=$!
+for _ in $(seq 1 1200); do grep -q 'routing-build …' "$OUT/C6-killed-import.log" 2>/dev/null && break; sleep 0.1; done
+victim6="$(D ps --no-trunc --format '{{.ID}} {{.Command}}' | awk '/ import --pbf/ {print $1}' | head -1)"
+[ -n "$victim6" ] && D kill "$victim6" >/dev/null
+wait $kp 2>/dev/null
+C6="$(release_of "$OUT/C6-killed-import.log")"
+rel6="$SEYRA_HOME/releases/$C6"
+# The next import recovers the abandoned lease itself (marks the build failed, stops orphaned jobs).
+in_host truncate -s 8G "$rel6/sparse-store.bin"
+in_host sh -c "du -B1 --apparent-size '$rel6/sparse-store.bin'; du -B1 '$rel6/sparse-store.bin'" > "$OUT/C6-sparse-file.txt" 2>&1
+free6="$(df -B1 --output=avail "$LAB" | tail -1 | tr -d ' ')"
+set_setting minFreeBytes $(( free6 + 4 * 1024 * 1024 * 1024 ))
+dbs6="$(render_dbs)"
+cli import --pbf "$PBF" --snapshot-timestamp "$(day 4)" > "$OUT/C6-refused.log" 2>&1; rc6=$?
+st6="$(manifest "$C6" 2>/dev/null | jq -r '.status')"
+if [ -n "$victim6" ] && [ $rc6 -ne 0 ] && grep -q "nothing was changed (the failed build of $C6 was kept)" "$OUT/C6-refused.log" && [ "$st6" = failed ] \
+  && in_host test -f "$rel6/sparse-store.bin" && [ "$(render_dbs)" = "$dbs6" ] && ! grep -q 'source-copy\|replacing failed build' "$OUT/C6-refused.log"; then
+  result PASS C6 "failed build $C6 with an 8 GiB sparse file (allocated: $(tail -1 "$OUT/C6-sparse-file.txt" | cut -f1) B) and required = free + 4 GiB: refused; build, its sparse file and render DB kept; no new build started ($(grep -o 'reclaim estimate of the failed build: [^;]*' "$OUT/C6-refused.log" | head -1))"
+else
+  result FAIL C6 "victim=$victim6 rc=$rc6 status=$st6"
+fi
+in_host sh -c "dd if=/dev/zero of='$rel6/allocated-store.bin' bs=1M count=3072 status=none && sync"
+free7="$(df -B1 --output=avail "$LAB" | tail -1 | tr -d ' ')"
+set_setting minFreeBytes $(( free7 + 2 * 1024 * 1024 * 1024 ))
+cli import --pbf "$PBF" --snapshot-timestamp "$(day 4)" > "$OUT/C7-import.log" 2>&1; rc7=$?
+manifest "$C6" > "$OUT/C7-manifest.json" 2>/dev/null
+if [ $rc7 -eq 0 ] && grep -q "replacing failed build of $C6" "$OUT/C7-import.log" \
+  && jq -e '.status == "validated" and .measurements.capacity_check.admission.ok and .measurements.capacity_check.after_cleanup.ok and .measurements.capacity_check.reclaim.bytes >= 3221225472 and .measurements.capacity_check.render_db_credit_bytes == 0' "$OUT/C7-manifest.json" >/dev/null; then
+  result PASS C7 "same failed build plus 3 GiB allocated, required = free + 2 GiB: admitted on $(jq '.measurements.capacity_check.reclaim.bytes' "$OUT/C7-manifest.json") B of allocated reclaim (apparent $(jq '.measurements.capacity_check.reclaim.logical_bytes' "$OUT/C7-manifest.json") B not credited, render DB credited 0); after the cleanup the observed free space $(jq '.measurements.capacity_check.after_cleanup.free_bytes' "$OUT/C7-manifest.json") B >= required $(jq '.measurements.capacity_check.after_cleanup.required_bytes' "$OUT/C7-manifest.json") B; rebuilt and validated"
+else
+  result FAIL C7 "rc=$rc7 $(jq -c '.measurements.capacity_check | {a: .admission.ok, r: .reclaim.bytes, after: .after_cleanup.ok}' "$OUT/C7-manifest.json" 2>/dev/null)"
 fi
 
 in_host cp "$settings.capacity-guard.bak" "$settings" && in_host rm -f "$settings.capacity-guard.bak"
