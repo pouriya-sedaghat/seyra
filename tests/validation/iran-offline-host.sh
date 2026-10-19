@@ -214,7 +214,12 @@ drop_host() {
 # import, activation and restarts, image side-loading, backups, restore), so attaching requires a
 # disposable host of this lab; each phase checks again before it starts. Read-only inspection of a
 # preserved host is done outside this harness (see readiness-diag.mjs: --network container:<host>).
-attach_host() { name="$1"; require_lab_host "$name" "attach for phases [$PHASES]"; }
+attach_host() {
+  name="$1"
+  require_lab_host "$name" "attach for phases [$PHASES]"
+  # Egress baseline for this run when it did not create the host (read-only counter query).
+  [ -f "$OUT/.egress-start" ] || { egress_count > "$OUT/.egress-start"; echo "attach" > "$OUT/.egress-start-point"; }
+}
 guard_phase() { require_lab_host "$name" "run phase $1"; }
 
 timed() { # $1 = label, rest = command; appends "label seconds rc" to timings
@@ -256,7 +261,7 @@ if has install; then
   else
     result FAIL I0 "offline host not clean/isolated"
   fi
-  egress_count > "$OUT/.egress-start"
+  egress_count > "$OUT/.egress-start"; echo "install" > "$OUT/.egress-start-point"
   timed bootstrap-load cli bootstrap-load "$BUNDLE" > "$OUT/I1-bootstrap-load.log" 2>&1; rc=$?
   cli verify-images > "$OUT/I1-verify-images.log" 2>&1; rc2=$?
   if [ $rc -eq 0 ] && [ $rc2 -eq 0 ] && grep -q 'identities match the manifest' "$OUT/I1-bootstrap-load.log"; then
@@ -454,10 +459,13 @@ if has backup && [ -n "$DS" ]; then
   fi
   end="$(egress_count)"
   in_host sh -c 'iptables -L SEYRA_EGRESS -v -n -x' > "$OUT/I9-egress-counters-host1.txt" 2>&1
-  if [ "$end" = "$(cat "$OUT/.egress-start" 2>/dev/null)" ]; then
-    result PASS I9 "zero packets to non-local destinations from offline host 1 during install/import/activate/smoke/restart/backup ($(igmp_count) link-local IGMP reports counted separately)"
+  start="$(cat "$OUT/.egress-start" 2>/dev/null)"
+  if [ -z "$start" ]; then
+    result FAIL I9 "no egress baseline was recorded for host 1 in this run (counter now ${end:-unknown})"
+  elif [ "$end" = "$start" ]; then
+    result PASS I9 "zero packets to non-local destinations from offline host 1 since this run's $(cat "$OUT/.egress-start-point" 2>/dev/null || echo install) (counter $start -> $end; $(igmp_count) link-local IGMP reports counted separately)"
   else
-    result FAIL I9 "outbound attempts counted: $(cat "$OUT/.egress-start") -> $end"
+    result FAIL I9 "outbound attempts counted: $start -> $end"
   fi
 fi
 
