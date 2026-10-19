@@ -8,7 +8,7 @@
 //
 //   node tests/client/test-handoff-artifacts.mjs [checkout-root]
 import { createHash } from 'node:crypto';
-import { existsSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync } from 'node:fs';
+import { existsSync, mkdirSync, mkdtempSync, readdirSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, normalize, resolve } from 'node:path';
 import { fileURLToPath, pathToFileURL } from 'node:url';
@@ -66,6 +66,56 @@ if (!existsSync(builder)) {
     check('pack: builds without refusal', false, e.message);
   } finally {
     rmSync(out, { recursive: true, force: true });
+  }
+}
+
+// ---- reused or unclean output (review R2): refuse before any write; never delete unknown files -----
+if (existsSync(builder)) {
+  const { buildClientPack } = await import(pathToFileURL(builder));
+  const tree = (d) => (existsSync(d) ? walk(d, '.').map((f) => `${f}:${createHash('sha256').update(readFileSync(join(d, f))).digest('hex')}`).sort() : []);
+  for (const [label, rel, body] of [
+    ['a stale excluded operator file', 'docs/handoff/DEPLOYMENT_PLAN.md', '# stale operator plan (synthetic test content)\n'],
+    ['an arbitrary unlisted file', 'notes/unrelated.txt', 'operator notes (synthetic)\n'],
+  ]) {
+    const out = mkdtempSync(join(tmpdir(), 'seyra-client-pack-reuse-'));
+    try {
+      mkdirSync(dirname(join(out, rel)), { recursive: true });
+      writeFileSync(join(out, rel), body);
+      const before = tree(out);
+      let refused = null;
+      try {
+        buildClientPack(root, out);
+      } catch (e) {
+        refused = e.message;
+      }
+      check(`reused output with ${label}: builder refuses`, refused !== null, 'builder succeeded');
+      check(`reused output with ${label}: existing contents unchanged, nothing added`, JSON.stringify(tree(out)) === JSON.stringify(before), JSON.stringify(tree(out).slice(0, 4)));
+    } finally {
+      rmSync(out, { recursive: true, force: true });
+    }
+  }
+  // An absent destination is created; the delivered inventory equals the manifest exactly.
+  const parent = mkdtempSync(join(tmpdir(), 'seyra-client-pack-fresh-'));
+  try {
+    const out = join(parent, 'pack');
+    const m = buildClientPack(root, out);
+    const delivered = walk(out, '.').map((f) => f.replace(/^\.\//, '')).filter((f) => f !== 'PACK-MANIFEST.json').sort();
+    check('fresh output: delivered files equal the manifest exactly', JSON.stringify(delivered) === JSON.stringify(Object.keys(m.files).sort()), `${delivered.length} vs ${Object.keys(m.files).length}`);
+    check('fresh output: manifest hashes describe the delivered bytes', delivered.every((f) => createHash('sha256').update(readFileSync(join(out, f))).digest('hex') === m.files[f]));
+    const onDisk = JSON.parse(readFileSync(join(out, 'PACK-MANIFEST.json'), 'utf8'));
+    check('fresh output: PACK-MANIFEST.json on disk equals the returned manifest', JSON.stringify(onDisk) === JSON.stringify(m));
+    // A destination that is a regular file is refused too.
+    const asFile = join(parent, 'is-a-file');
+    writeFileSync(asFile, 'x');
+    let refusedFile = false;
+    try {
+      buildClientPack(root, asFile);
+    } catch {
+      refusedFile = true;
+    }
+    check('output path that is a file: refused and unchanged', refusedFile && readFileSync(asFile, 'utf8') === 'x');
+  } finally {
+    rmSync(parent, { recursive: true, force: true });
   }
 }
 

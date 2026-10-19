@@ -3,6 +3,8 @@
 //
 //   node infra/handoff/build-client-pack.mjs <out-dir>
 //
+// The destination must be new or an empty directory: a reused output is refused before anything is
+// written, and nothing is ever deleted, so stale or unknown files cannot ride along unlisted.
 // The pack is a declared, repository-relative set of files (CLIENT_PACK below), copied with its
 // layout so every relative link keeps working. It is separate from the operational bundle
 // (apps/ops/src/bundle.ts INSTALL_PATHS) and never contains operator material: the deployment
@@ -11,7 +13,7 @@
 // PEM private key. PACK-MANIFEST.json lists every file with its SHA-256 and the source revision.
 import { execFileSync } from 'node:child_process';
 import { createHash } from 'node:crypto';
-import { copyFileSync, existsSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
+import { copyFileSync, existsSync, lstatSync, mkdirSync, readdirSync, readFileSync, statSync, writeFileSync } from 'node:fs';
 import { dirname, join, normalize, relative, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
 
@@ -41,7 +43,21 @@ export function relativeLinks(markdown) {
   return [...markdown.matchAll(/\]\(([^)\s]+)\)/g)].map((m) => m[1]).filter((t) => !/^[a-z]+:/i.test(t) && !t.startsWith('#')).map((t) => t.split('#')[0]).filter(Boolean);
 }
 
+/** The destination must be absent or an empty real directory; checked before anything is written. */
+function assertFreshDestination(out) {
+  let st = null;
+  try {
+    st = lstatSync(out);
+  } catch {
+    return; // absent: created below
+  }
+  if (st.isSymbolicLink() || !st.isDirectory()) throw new Error(`client pack refused: ${out} exists and is not a plain directory; nothing was written`);
+  const existing = readdirSync(out);
+  if (existing.length) throw new Error(`client pack refused: ${out} is not empty (${existing.slice(0, 3).join(', ')}${existing.length > 3 ? ', ...' : ''}); give a new or empty directory. Nothing was written or removed.`);
+}
+
 export function buildClientPack(repo, out) {
+  assertFreshDestination(out);
   const files = [...new Set(CLIENT_PACK.flatMap((rel) => walk(repo, rel)))];
   const problems = [];
   for (const f of files) {
@@ -57,15 +73,23 @@ export function buildClientPack(repo, out) {
   }
   if (problems.length) throw new Error(`client pack refused:\n  ${problems.join('\n  ')}`);
   let revision = 'unknown';
+  let clean = null;
   try {
     revision = execFileSync('git', ['-C', repo, 'rev-parse', 'HEAD'], { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim();
+    // The revision describes the bytes only if the declared files have no uncommitted changes.
+    clean = execFileSync('git', ['-C', repo, 'status', '--porcelain', '--', ...CLIENT_PACK], { stdio: ['ignore', 'pipe', 'ignore'] }).toString().trim() === '';
   } catch {}
-  const manifest = { schema: 'seyra.client-pack/1', source_revision: revision, files: {} };
+  const manifest = { schema: 'seyra.client-pack/1', source_revision: revision, source_tree_clean: clean, files: {} };
+  mkdirSync(out, { recursive: true });
   for (const f of files) {
     mkdirSync(dirname(join(out, f)), { recursive: true });
     copyFileSync(join(repo, f), join(out, f));
-    manifest.files[f] = createHash('sha256').update(readFileSync(join(repo, f))).digest('hex');
+    manifest.files[f] = createHash('sha256').update(readFileSync(join(out, f))).digest('hex'); // the delivered bytes
   }
+  // The delivered inventory must be exactly the manifest (nothing extra, nothing missing).
+  const delivered = walk(out, '.').map((f) => f.replace(/^\.\//, '')).sort();
+  const listed = Object.keys(manifest.files).sort();
+  if (JSON.stringify(delivered) !== JSON.stringify(listed)) throw new Error(`client pack refused: delivered files differ from the manifest in ${out}`);
   writeFileSync(join(out, 'PACK-MANIFEST.json'), `${JSON.stringify(manifest, null, 2)}\n`);
   return manifest;
 }
