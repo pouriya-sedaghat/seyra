@@ -17,7 +17,11 @@ There are no switches to turn any of them off.
 - linux/amd64 host. Ubuntu 24.04 is the reference; the preparation run used a cloud container, not customer hardware.
 - Docker Engine with Compose v2. The preparation environment used Engine 29.8.2 and Compose v5.6.0.
 - bash, coreutils (`sha256sum`), and `jq`/`curl` for checks.
-- Disk: the offline bundle, the owner's PBF, plus import staging. The importer refuses to start unless free space ≥ max(2 GiB, 40 × PBF size). That is a conservative default, not a measurement, and is configurable in `state/settings.json` (`minFreeFactor`, `minFreeBytes`).
+- Disk, on the filesystem that holds `SEYRA_HOME` (all import output goes there: managed source copy, render database under `data/postgres`, Valhalla, the temporary Nominatim database under `work/`, Photon, Overpass and its build-time temporaries, logs). Plan for:
+  - **each import in progress:** about **120 × the PBF size** free. The measured Iran reference (229,845,082-byte PBF, run `vm2-2026-10-18`) used 21.93 GB at its sampled low point, which is 95.4 × the input, during the Overpass build. 120× adds about 25 % margin. That is about 27.6 GB for that extract.
+  - **each retained release:** about 48 × the PBF size (11.1 GB for that extract). `prune` keeps the active and the previous release.
+  - **separately**, if Docker's data root is on another filesystem: the loaded images (about 3.6 GB) and container logs. The import check does not see that filesystem.
+  - These figures come from one extract on one host. Re-measure for a larger extract or a different pipeline.
 - Time: a synchronised clock (TLS validity, log timestamps).
 - Network: none required. The default ingress is `https://127.0.0.1:8443`.
 
@@ -35,6 +39,8 @@ sha256sum --quiet -c SHA256SUMS            # integrity of every archive and inst
 sudo cp -r install /opt/seyra              # install tree: wrapper, compose files, catalog, lock, docs
 /opt/seyra/bin/seyra-maps bootstrap-load /path/to/bundle
 ```
+
+**Who can read the bundle.** `bundle export` gives every file it writes to the owner of the `--out` directory, which the wrapper creates as the operator who runs it. Archives and files are `0644` (executables `0755`) and directories `0755`, so that operator can run the checks above and `bootstrap-load` without root. A bundle holds image archives and install files, never secrets or keys. Copy it with modes preserved. To install under `/opt/seyra`, the `sudo cp` above is the only step that needs root.
 
 `bootstrap-load`:
 1. Verifies the ops image archive and `SHA256SUMS`.
@@ -77,6 +83,15 @@ Steps:
 9. `staging-validation`: the real providers are started against the new stores on the build network; tiles, routing, geocoder and Overpass are probed with data sampled from the release, and each provider's identity is recorded.
 
 `dataset_id = ds-<snapshot date>-<12 hex>`. The hash covers the source checksum, pipeline files and versions, the data-shaping image IDs (DB, osmtools, Valhalla, geocoder-build, Photon, Overpass, Tegola) and the map-asset digest. A release can only be served by those exact images: `activate` refuses otherwise ("re-import required").
+
+Free-space admission (before anything is created or removed):
+- `required = max(minFreeBytes, minFreeFactor × PBF size)`, with defaults of 2 GiB and **120** (`state/settings.json`).
+- `available = free space on SEYRA_HOME's filesystem + the bytes of a failed build of the same dataset_id` (its release directory and render database). That build is only removed after the check passes.
+- If `available < required`, the import stops with both figures and **nothing is changed**; a failed build is kept.
+- `init` writes every setting into `settings.json`. A home initialised before this default changed therefore keeps `minFreeFactor: 40` until you edit it, and every import then logs a warning that the factor is below the measured reference. Raise it, or lower it only after measuring your own extract.
+- The guard is a sizing guard, not a reservation: another process can still fill the disk during an import.
+
+Free-space measurement: the importer samples free space on SEYRA_HOME's filesystem every 5 s and at each step boundary. It records each step's minimum (`steps[].free_bytes_min`), the run's low-water mark with its time (`free_bytes_min_observed`, `free_bytes_min_observed_at`), the sampling settings and the admission figures (`capacity_check`) in the release manifest. A dip shorter than the interval can be missed.
 
 Failure handling:
 - A failed import leaves the release marked `failed`. Re-running the same input replaces that failed build automatically.
@@ -226,9 +241,9 @@ The isolated drill `tests/offline/restore-drill.sh` follows these steps from one
 
 ## 8. Updating software (new bundle)
 
-1. Prepare a new bundle in the preparation environment.
-2. Verify and load it with `bootstrap-load`.
-3. Replace the install tree.
+1. Prepare a new bundle in the preparation environment, and send the digest of its `SHA256SUMS` through the trusted channel.
+2. On the host, **before replacing anything or running a file from the new bundle**, verify it with the tools already installed: compare `sha256sum SHA256SUMS` with the received digest, then run `sha256sum --quiet --strict -c SHA256SUMS` and check that the bundle contains no file missing from `SHA256SUMS`. Stop if any check fails.
+3. Replace the install tree, then run `bootstrap-load` from the new tree.
 
 Then:
 - **API/proxy/ops-only changes:** `seyra-maps start` recreates the changed containers.
