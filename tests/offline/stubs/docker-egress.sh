@@ -8,12 +8,21 @@ case "$1 $2" in
     case "$*" in
       "ip -4 route get "*) d="${@: -1}"
         if [ "$d" = "${HOST_ROUTABLE:-none}" ]; then echo "$d via 198.18.0.1 dev eth0"; exit 0; fi
+        if [ -n "${HOST_SINK_ROUTE:-}" ]; then echo "$d via 198.18.0.250 dev eth0 src 198.18.0.3"; exit 0; fi
         echo "RTNETLINK answers: Network is unreachable" >&2; exit 2 ;;
       "ip -4 route") echo "198.18.0.0/15 dev eth0 proto kernel scope link"; exit 0 ;;
       *ip_forward*) echo 0; exit 0 ;;
+      "ping "*) [ -n "${SINK_PRESENT:-}" ] && exit 0; exit 1 ;;
+      *"nc -w 3 -z"*)
+        dst="$(sed -E 's/.*nc -w 3 -z ([^ ;]+) ([0-9]+).*/\1:\2/' <<<"$*")"
+        [ -n "${HOST_NC_MISSING:-}" ] && { echo "sh: nc: not found"; echo rc=127; exit 0; }
+        if [ "$dst" = "${HOST_CONTROL:-none}" ]; then [ -n "${HOST_CONTROL_DOWN:-}" ] && { echo rc=1; exit 0; }; echo rc=0; exit 0; fi
+        [ "$dst" = "${HOST_SINK_OK:-none}" ] && { echo rc=0; exit 0; }
+        echo "nc: can't connect to remote host: Connection timed out"; echo rc=1; exit 0 ;;
     esac ;;
+  "network inspect") [ -n "${NET_NOT_INTERNAL:-}" ] && { echo false; exit 0; }; echo true; exit 0 ;;
   "container inspect")
-    for a in "$@"; do case "$a" in *IPAddress*) echo 198.18.0.50; exit 0;; *"range $k"*) echo "seyra_edge seyra_offline_lab "; exit 0;; esac; done
+    for a in "$@"; do case "$a" in *IPAddress*) echo 198.18.0.50; exit 0;; *"range $k"*) [ "${@: -1}" = disposable-host ] && { echo "seyra_offline_lab "; exit 0; }; echo "seyra_edge seyra_offline_lab "; exit 0;; esac; done
     exit 0 ;;
   "rm -f") echo "$3" >> "$STUB_REMOVED"; exit 0 ;;
 esac

@@ -12,6 +12,9 @@
 #      (never assigned to any device) and disposable sinks created by this test on the namespace's
 #      own networks. No company device is contacted and nothing is scanned;
 #   3. for the edge: its namespace guard counter must rise, and the one allowed upstream must connect.
+# Lab hosts have a deliberate default route to an absent "sink" address on an --internal network
+# (SINK_GATEWAY); such routes count as isolated only if every host network is internal and the sink
+# does not answer. CONTROLLED_SINKS / HOST_CONTROL add real NEW-connection probes from the host.
 # Allowed ingress replies (ESTABLISHED) are not exercised here; the relay boundary test covers them.
 # The VM's global firewall is never read or changed.
 #
@@ -35,19 +38,49 @@ trap cleanup EXIT
 # --- nested host: no route anywhere outside its internal lab network ------------------------------
 if docker exec "$host" ip -4 route > "$out/host-routes.txt" 2>&1; then pass "nested host: route table read"; else fail "nested host: cannot read the route table ($(tail -1 "$out/host-routes.txt"))"; fi
 if fwd="$(docker exec "$host" cat /proc/sys/net/ipv4/ip_forward 2>&1)"; then echo "$fwd" > "$out/host-ip-forward.txt"; else fail "nested host: cannot read ip_forward ($fwd)"; fi
-routable=0; toolerr=0
+routable=0; sinkrouted=0; toolerr=0
 : > "$out/host-route-get.txt"
 for d in "${probe_dsts[@]}"; do
   r="$(docker exec "$host" ip -4 route get "$d" 2>&1)"; rc=$?
   echo "$d: rc=$rc $r" >> "$out/host-route-get.txt"
   # Unreachable only when ip itself says so (exit 2, "Network is unreachable"). A docker/exec error
-  # or a missing tool is not evidence of isolation.
-  if [ "$rc" -eq 0 ]; then routable=$((routable + 1))
+  # or a missing tool is not evidence of isolation. A route through the lab's deliberate sink
+  # address (SINK_GATEWAY; it exists so attempts can be counted) is judged separately below.
+  if [ "$rc" -eq 0 ]; then
+    if [ -n "${SINK_GATEWAY:-}" ] && grep -q " via $SINK_GATEWAY " <<<"$r "; then sinkrouted=$((sinkrouted + 1)); else routable=$((routable + 1)); fi
   elif ! grep -q 'Network is unreachable' <<<"$r" || grep -qiE 'Error response from daemon|No such container|executable file not found|not found' <<<"$r"; then toolerr=$((toolerr + 1)); fi
 done
 [ "$toolerr" -eq 0 ] || fail "nested host: $toolerr route lookups failed as commands, not as 'unreachable' ($out/host-route-get.txt)"
-[ "$routable" -eq 0 ] && [ "$toolerr" -eq 0 ] && pass "nested host: no route to the approved subnet, other private ranges or public ranges (${#probe_dsts[@]} lookups, no packet sent)"
 [ "$routable" -eq 0 ] || fail "nested host: $routable destinations are routable ($out/host-route-get.txt)"
+if [ "$sinkrouted" -gt 0 ]; then
+  # A sink route isolates only if every network of the host is --internal (no gateway, no NAT) and
+  # the sink address itself does not exist there.
+  hnets="$(docker container inspect -f '{{range $k, $v := .NetworkSettings.Networks}}{{$k}} {{end}}' "$host" 2>&1)" || { fail "nested host: cannot inspect its networks ($hnets)"; hnets=""; }
+  notinternal=""
+  for n in $hnets; do i="$(docker network inspect -f '{{.Internal}}' "$n" 2>&1)"; [ "$i" = true ] || notinternal="$notinternal $n($i)"; done
+  [ -n "$hnets" ] && [ -z "$notinternal" ] || fail "nested host: sink-routed destinations on a network that is not internal:${notinternal:- (none found)}"
+  if docker exec "$host" ping -c 1 -W 1 "$SINK_GATEWAY" >/dev/null 2>&1; then fail "nested host: the sink address $SINK_GATEWAY answers; it must not exist"; sinkok=0; else sinkok=1; fi
+  [ -n "$hnets" ] && [ -z "$notinternal" ] && [ "$sinkok" = 1 ] && pass "nested host: $sinkrouted destinations route only to the absent sink $SINK_GATEWAY on internal network(s) ($hnets)"
+fi
+[ "$routable" -eq 0 ] && [ "$sinkrouted" -eq 0 ] && [ "$toolerr" -eq 0 ] && pass "nested host: no route to the approved subnet, other private ranges or public ranges (${#probe_dsts[@]} lookups, no packet sent)"
+# NEW connections from the host namespace to controlled sinks outside its networks (CONTROLLED_SINKS,
+# "ip:port ...", created by the caller) must fail; HOST_CONTROL (ip:port reachable on the host's own
+# network) must connect, proving the probe path works at all.
+if [ -n "${CONTROLLED_SINKS:-}${HOST_CONTROL:-}" ]; then
+  hprobe() { docker exec "$host" sh -c "nc -w 3 -z ${1%:*} ${1##*:} 2>&1; echo rc=\$?" 2>&1; }
+  if [ -n "${HOST_CONTROL:-}" ]; then
+    r="$(hprobe "$HOST_CONTROL")"; echo "control $HOST_CONTROL: $r" >> "$out/host-connect.txt"
+    case "$r" in *rc=0) pass "nested host: control destination $HOST_CONTROL connects (probe path works)";; *) fail "nested host: control destination $HOST_CONTROL did not connect ($r); probes are not conclusive";; esac
+  fi
+  hc=0; hb=0; ht=0
+  for d in ${CONTROLLED_SINKS:-}; do
+    r="$(hprobe "$d")"; echo "$d: $r" >> "$out/host-connect.txt"
+    case "$r" in *rc=0) hc=$((hc + 1));; *rc=1) hb=$((hb + 1));; *) ht=$((ht + 1));; esac
+  done
+  [ "$hc" -eq 0 ] || fail "nested host: $hc NEW connections to controlled sinks outside its networks succeeded ($out/host-connect.txt)"
+  [ "$ht" -eq 0 ] || fail "nested host: $ht connection probes did not run ($out/host-connect.txt)"
+  [ "$hc" -eq 0 ] && [ "$ht" -eq 0 ] && [ "$hb" -gt 0 ] && pass "nested host: $hb NEW connections to controlled sinks outside its networks refused"
+fi
 
 [ -n "$edge" ] || finish
 [ -n "$upstream" ] && [ -n "$guard_image" ] || { fail "edge mode needs <edge-upstream> and <guard-image>"; finish; }

@@ -52,6 +52,16 @@ run('host + edge, allowed upstream unreachable', { env: { UPSTREAM_DOWN: '1' }, 
 run('host + edge, nc missing in the probe image', { env: { NC_MISSING: '1' }, want: 1 });
 run('host + edge, probe container cannot run', { env: { RUN_FAIL: '1' }, want: 1 });
 run('host + edge, routable host even though the edge is fine', { env: { HOST_ROUTABLE: '172.16.0.1' }, want: 1 });
+// Lab hosts: a deliberate sink default route on an --internal network, plus real host probes.
+const sinkOk = { HOST_SINK_ROUTE: '1', SINK_GATEWAY: '198.18.0.250', CONTROLLED_SINKS: '198.18.10.250:9 10.250.0.10:9', HOST_CONTROL: '198.18.0.60:8443' };
+run('host only, sink route on an internal network, sink absent, probes refused, control connects', { edge: false, env: sinkOk, want: 0 });
+run('host + edge, sink-routed host and a valid edge', { env: sinkOk, want: 0 });
+run('host only, sink route but SINK_GATEWAY not declared (counts as routable)', { edge: false, env: { ...sinkOk, SINK_GATEWAY: '' }, want: 1 });
+run('host only, sink route on a network that is not internal', { edge: false, env: { ...sinkOk, NET_NOT_INTERNAL: '1' }, want: 1 });
+run('host only, the sink address answers', { edge: false, env: { ...sinkOk, SINK_PRESENT: '1' }, want: 1 });
+run('host only, a NEW connection to a controlled sink succeeds', { edge: false, env: { ...sinkOk, HOST_SINK_OK: '10.250.0.10:9' }, want: 1 });
+run('host only, nc missing on the host (tool error)', { edge: false, env: { ...sinkOk, HOST_NC_MISSING: '1' }, want: 1 });
+run('host only, the control destination does not connect', { edge: false, env: { ...sinkOk, HOST_CONTROL_DOWN: '1' }, want: 1 });
 
 for (const r of results) console.log(`${r.ok ? 'PASS' : 'FAIL'} ${r.name}${r.ok ? '' : ` -- ${r.detail.slice(0, 300)}`}`);
 const failed = results.filter((r) => !r.ok).length;
