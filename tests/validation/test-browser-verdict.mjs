@@ -18,6 +18,7 @@ const cases = [
   { name: 'declared visits not all recorded', input: { ...ok, visits: six.slice(0, 4) }, expect: false },
   { name: 'failed request (503)', input: { ...ok, failed: [{ url: 'https://127.0.0.1:8443/health/ready', status: 503 }], visits: six }, expect: false },
   { name: 'external request', input: { ...ok, external: [{ url: 'https://example.com/x' }], visits: six }, expect: false },
+  { name: 'script crashed after recording all visits', input: { ...ok, visits: six, scriptError: 'TimeoutError: locator.click' }, expect: false },
 ];
 
 const old = process.argv[2];
@@ -26,6 +27,7 @@ if (old) {
   const expr = /^const ok = (.+);$/m.exec(readFileSync(old, 'utf8'))?.[1];
   if (!expr) throw new Error(`no inline predicate in ${old}`);
   const fn = new Function('external', 'rtlPlugin', 'failed', 'consoleErrors', 'visits', `return ${expr};`);
+  // The old script had no crash path: a crash exited without a report. Its predicate is applied as is.
   evaluate = (i) => ({ ok: Boolean(fn(i.external, i.rtlPlugin, i.failed, i.consoleErrors, i.visits)) });
   console.log(`# evaluating the inline predicate of ${old}: ${expr}`);
 } else {
