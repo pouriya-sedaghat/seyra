@@ -1,0 +1,20 @@
+PASS bundle: all 14 declared install paths exist
+PASS bundle: every relative link in the install docs resolves inside the install set
+PASS bundle: no install file holds a PEM private key
+PASS bundle: no development issuer tool in the install set
+PASS pack: built from the declared list
+PASS pack: every relative link resolves inside the built pack
+PASS pack: the guide links the dev proxy example and the handoff index, and both are packed
+PASS pack: no operator plan, evidence, edge or issuer tooling
+PASS pack: no PEM private key in any packed file
+PASS pack: manifest hashes equal the packed bytes
+PASS pack: manifest written
+PASS reused output with a stale excluded operator file: builder refuses
+PASS reused output with a stale excluded operator file: existing contents unchanged, nothing added
+PASS reused output with an arbitrary unlisted file: builder refuses
+PASS reused output with an arbitrary unlisted file: existing contents unchanged, nothing added
+PASS fresh output: delivered files equal the manifest exactly
+PASS fresh output: manifest hashes describe the delivered bytes
+PASS fresh output: PACK-MANIFEST.json on disk equals the returned manifest
+PASS output path that is a file: refused and unchanged
+# checkout=<repo> checks=19 failed=0

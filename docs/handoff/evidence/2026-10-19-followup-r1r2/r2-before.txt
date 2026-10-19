@@ -1,0 +1,20 @@
+PASS bundle: all 14 declared install paths exist
+PASS bundle: every relative link in the install docs resolves inside the install set
+PASS bundle: no install file holds a PEM private key
+PASS bundle: no development issuer tool in the install set
+PASS pack: built from the declared list
+PASS pack: every relative link resolves inside the built pack
+PASS pack: the guide links the dev proxy example and the handoff index, and both are packed
+PASS pack: no operator plan, evidence, edge or issuer tooling
+PASS pack: no PEM private key in any packed file
+PASS pack: manifest hashes equal the packed bytes
+PASS pack: manifest written
+FAIL reused output with a stale excluded operator file: builder refuses -- builder succeeded
+FAIL reused output with a stale excluded operator file: existing contents unchanged, nothing added -- ["./PACK-MANIFEST.json:f1c6d4370ed37f4593acedd30cdbeab102c19e191592fe57836e31621233a8e5","./docs/CLIENT_INTEGRATION.md:074ae869b997e4f713a081a38c57dafbba759d10fc139219e5d7d8e0b9e7f4af","./docs/LICENSES.md:349c7be0fc947b9a4b2024eeb25894c6f5763c4f0c31e09c8b9ac9b3d0894022","./docs/MOBILE_INTEGRATION.md
+FAIL reused output with an arbitrary unlisted file: builder refuses -- builder succeeded
+FAIL reused output with an arbitrary unlisted file: existing contents unchanged, nothing added -- ["./PACK-MANIFEST.json:f1c6d4370ed37f4593acedd30cdbeab102c19e191592fe57836e31621233a8e5","./docs/CLIENT_INTEGRATION.md:074ae869b997e4f713a081a38c57dafbba759d10fc139219e5d7d8e0b9e7f4af","./docs/LICENSES.md:349c7be0fc947b9a4b2024eeb25894c6f5763c4f0c31e09c8b9ac9b3d0894022","./docs/MOBILE_INTEGRATION.md
+PASS fresh output: delivered files equal the manifest exactly
+PASS fresh output: manifest hashes describe the delivered bytes
+PASS fresh output: PACK-MANIFEST.json on disk equals the returned manifest
+PASS output path that is a file: refused and unchanged
+# checkout=<scratch>/review-e6a39ab/checkout checks=19 failed=4
