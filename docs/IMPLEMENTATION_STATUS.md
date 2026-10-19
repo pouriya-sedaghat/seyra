@@ -14,6 +14,14 @@ Date: 2026-10-14; updated 2026-10-17 for the corrections to the PR #1 review of 
 
 **Update 2026-10-19, handoff corrections H1–H5** ([evidence](handoff/evidence/2026-10-19-corrective/README.md)). The CLI wrapper exposes every input file read-only. TLS mutations are serialized under the lifecycle lock, imports validate and install an immutable staged snapshot, recovery validates its candidates, and `tls restore` rolls back saved full-chain sets. The egress test fails on any failed assertion. Ingress-generated errors carry `request_id`, matching the strict error schema. The client handoff pack is declared separately from the operational bundle and link-checked. Image builds, rehearsal and deployment remain pending.
 
+**Update 2026-10-19, build and disposable rehearsal `2026-10-19-build-rehearse`** ([evidence](handoff/evidence/2026-10-19-build-rehearse/README.md), [plan](handoff/DEPLOYMENT_PLAN.md)).
+- In an owner-authorized window, the serving installation was paused gracefully and later resumed unchanged.
+- The API, proxy and OPS images were built and relocked; the data components are byte-identical. The next bundle is r8 (`10797ff1…`).
+- Every suite passed on the new images, including Swagger UI in a real browser.
+- A disposable r3 → r8 rehearsal on a synthetic fixture covered the real client source path (Docker DNAT → edge → PROXY listener), the TLS lifecycle, grants and refusals, real namespace egress and rollback, with measured not-ready times of 0.5–2.5 s.
+- Five defects were found and fixed with regressions: an operator-unreadable CSR, an unsafe relay-rollback order, egress test sink routes, the bundle root mode, and a `tls restore` wrapper path.
+- The live LAN cutover, Windows/mobile and load checks are pending. Overpass's slow SIGTERM shutdown and the readiness 503 observation remain open.
+
 ## Scope delivered
 
 | Area | State | Where |

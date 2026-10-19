@@ -1,6 +1,11 @@
 # Client handoff: build, rehearsal, cutover and rollback plan
 
-Status: **plan for review; nothing in it has been executed.** Implementation preparation (code, documentation, focused tests) is committed; image builds, the rehearsal and any change to the serving host wait for the owner's decisions in §5. Values in angle brackets are operator-local; the filled-in copy lives outside Git.
+Status:
+- **Build and disposable rehearsal: done** on 2026-10-19 (run `2026-10-19-build-rehearse`, [evidence](evidence/2026-10-19-build-rehearse/README.md)). The next bundle is **r8**, with `SHA256SUMS` digest `10797ff117c8cddc3271fe3573e236f82979e1d3f14a59a750f1443661e422bd`.
+- **Serving-host cutover: not executed.** The serving host still runs r3 on loopback only. It was paused and resumed for the build window with its own installed CLI, and the new build was not deployed to it.
+- The cutover (§3) waits for the owner's decisions in §5.
+
+Values in angle brackets are operator-local; the filled-in copy lives outside Git.
 
 Placeholders:
 - `<LAB>`: the serving host's lab directory on the VM.
@@ -11,6 +16,7 @@ Placeholders:
 - `<EDGE_LAB_ADDR>`: the edge's address on that network. It is assigned at attach time, because the lab network has no user-configured subnet.
 - `<PORT>`: the published HTTPS port.
 - `<RELAY_PORT>`: the relay listener port.
+- `<R8>`: the r8 bundle directory on transfer media.
 
 Inside the serving host, the CLI runs as `DOCKER_HOST=unix://<LAB>/run/docker.sock SEYRA_HOME=<LAB>/home <LAB>/install/bin/seyra-maps …`. It runs from the VM against the nested daemon, not through the lab harness. The harness refuses every mutating phase on this unlabelled host by design (F4).
 
@@ -18,124 +24,122 @@ Inside the serving host, the CLI runs as `DOCKER_HOST=unix://<LAB>/run/docker.so
 
 | Item | Change | Data identity |
 | --- | --- | --- |
-| API image | Swagger UI plugin (pinned 5.2.6, local assets), documented OpenAPI, capabilities schema | unchanged dataset id |
-| Proxy image | shared location include, optional relay listener (PROXY protocol, exact peer), diagnostics block, typed 413, render script | unchanged |
-| OPS image | relay settings, `access apply`, `proxy restart`, `tls csr/import/status/recover`, publish and pair checks | unchanged |
-| Data images (Tegola, Valhalla, Photon, Overpass, PostGIS, osmtools, geocoder-build) | **none**; must keep their locked ids | dataset `ds-…` and stores unchanged |
-| Bundle | next bundle = these three relocked images, with the data images byte-identical; adds `runtime.relay.yml`, `infra/edge/`, `CLIENT_INTEGRATION.md` | — |
+| API image `sha256:710d5e37…` | Swagger UI plugin (pinned 5.2.6, local assets), documented OpenAPI, capabilities schema | unchanged dataset id |
+| Proxy image `sha256:b953043a…` | shared location include, optional relay listener (PROXY protocol, exact peer), diagnostics block, typed 413, render script | unchanged |
+| OPS image `sha256:8cbabae5…` | relay settings, `access apply`, `proxy restart`, `tls csr/import/status/recover/restore`, publish and pair checks, operator-readable CSR | unchanged |
+| Data images (Tegola, Valhalla, Photon, Overpass, PostGIS, osmtools, geocoder-build) | **none**: their lock entries are byte-identical | dataset `ds-…` and stores unchanged |
+| Bundle r8 | these three images plus byte-identical data images; install tree adds `runtime.relay.yml` and `infra/edge/`, and the fixed wrapper (`--out` 0755, root-only `--from` backups) | — |
 
 No Iran reimport and no PBF access are needed. The original readiness 503 of 18 October stays open.
 
-## 2. Build and rehearsal on safe resources
+## 2. Build and rehearsal (done)
 
-**Inputs:** `infra/prepare/build-images.sh` lines for `api`, `proxy`, `ops` only, from a named commit. Then `node infra/prepare/write-lock.mjs`, and a check that the data image ids in the new lock equal the current lock. Then `seyra-maps bundle export` and the `SHA256SUMS` digest recorded out of band.
+Owner decision 1 was resolved as "this VM, in an authorized window". Details are in the [evidence](evidence/2026-10-19-build-rehearse/README.md).
 
-**Expected cost:**
-- **Measured:** current image sizes are API 358 MB, proxy 99 MB, OPS 420 MB.
-- **Estimated, not measured:**
-  - each build runs `npm ci` plus TypeScript or Vite builds, at about 1–2 vCPU and 1–2 GiB RAM peak;
-  - disk is about 1 GB of new layers plus build cache (the build cache is 9.3 GB today);
-  - the bundle needs about 2.5 GB (all images; data images unchanged).
+- **Window:** the serving installation was stopped gracefully with its own CLI for about 86 min and resumed with all identities unchanged. One heavy workload ran at a time under a 5 s resource supervisor, with no abort.
+- **Builds** of API, proxy and OPS only, from `043993c`:
+  - each build took 14–34 s with ≥ 5.8 GiB available;
+  - `docker build --network host` was required, because forwarded NAT TCP from Docker bridges was blocked that day;
+  - relocked with all seven data entries byte-identical.
+- **Suites on the new images:**
+  - integration 137/137, security 31 + 1 note, exact-image boundary 104/104;
+  - lifecycle 15/15, tamper 6/6, offline host 6/6, restore drill 8/8;
+  - Swagger UI in Chromium, normal and provider-down: all checks pass;
+  - served-asset URL scan: 0 unclassified.
+- **Rehearsal r3 → r8 (synthetic fixture):**
+  - It ran inside a disposable "rehearsal VM" with its own daemon, on internal benchmark-range segments. A client packet followed the real path: LAN address → Docker DNAT → edge → lab network → nested DNAT → PROXY listener, with the client source preserved.
+  - Final result: 28/28.
+  - Attempt 1 on r7 found the `tls restore --from` operator defect (B5), fixed in r8.
 
-**Where (owner decision 1):**
-- **(a) Preferred:** a separate preparation machine. Transfer the bundle; no co-located load.
-- **(b) This VM, inside an agreed window:** builds one at a time, with `tests/validation/watch-serving-host.sh <HOST>` running.
-  - Abort as soon as any threshold is crossed: available memory < 1.5 GiB, swap growth > 512 MiB, or the serving host not ready twice in a row.
-  - On abort, stop the build (`docker kill` of the build container) and wait for recovery. Never restart the serving host.
-  - Earlier co-located workloads did degrade it (boundary run, browser run 1).
-
-**Rehearsal topology:** a disposable synthetic-fixture nested host, labelled for its own lab and created by `iran-offline-host.sh` on the fixture PBF. Plus a disposable edge (`infra/edge/edge.sh` with a rehearsal env file).
-- It publishes only on a disposable test network, never on `<VM_LAN_ADDR>`.
-- A client container on that network stands in for an approved client, and a second one stands in for an outsider.
-- Steps:
-  1. update r6 → next bundle through the strict gate;
-  2. `tls csr` on the host, sign with a throw-away dev issuer, then `tls import`;
-  3. `init` with the relay settings, `access apply`, `start`;
-  4. measure the not-ready window, and which containers were recreated (expected: API and proxy only);
-  5. run the boundary checks end to end through the published edge: approved client, outsider, forged PROXY, direct bypass, spoofed headers, unknown Host, diagnostics, 413, docs and spec;
-  6. run `tests/offline/namespace-egress.sh` for both namespaces;
-  7. run the rollback (§4) and measure it;
-  8. clean up by label.
-
-**Focused regressions already passing without Docker** (corrections H1–H5, run again on the new tree before any build):
-- `tests/wrapper/test-wrapper-inputs.mjs`
-- `tests/ops/test-tls-cli.mjs`
-- `tests/offline/test-namespace-egress.mjs`
-- `tests/security/test-error-contract.mjs`
-- `tests/client/test-handoff-artifacts.mjs`
-
-**Suites to rerun on the new images:**
-- unit, typecheck and integration;
-- `tests/security/check-ingress-roles.sh` (now including AC16.16–AC16.18);
-- `tests/security/test-proxy-boundary.mjs` against the *new* proxy image, extracted with `extract-image-nginx.sh`;
-- lifecycle (OPS changed), tamper, offline host and restore drill;
-- the fixture browser audit;
-- the Swagger UI browser check: zero external requests, zero CSP violations, no request before **Execute**.
-
-The cutover can only be planned against measured numbers after the rehearsal.
-
-## 3. Serving-host cutover (owner decision 2: window and go-ahead)
+## 3. Serving-host cutover: concrete live LAN plan
 
 Preconditions:
-- the rehearsal passed;
-- the new bundle is verified with its digest recorded;
-- a certificate is issued for `<VM_LAN_ADDR>` by the chosen issuer (decision 3);
-- an owner-approved window;
-- the before-state recorded: container id, start time, restarts, inner container ids, egress counter, PBF SHA-256, `runtime.env` hash, `tls status`, readiness.
+1. The owner approved a window (decision 2). The expected not-ready time is a few seconds per step (measured below). Plan for 30 minutes, including verification and the H-01 device check.
+2. A certificate for `<VM_LAN_ADDR>` (plus a DNS name if one exists) is available from the chosen issuer (decision 3), or will be signed in the window from the CSR of step 4.
+3. `<R8>` is on transfer media under `<LAB>/transfer/`, and its `SHA256SUMS` digest has been compared out of band with `10797ff117c8cddc3271fe3573e236f82979e1d3f14a59a750f1443661e422bd`.
+4. An approved test device (Windows, H-01) and its LAN address are known; it has the public root for application-specific trust. A second LAN device outside the approved subnet is available for the edge refusal check.
+5. The private edge env file is filled in (template `infra/edge/edge.env.example`).
 
-1. **Stage (no service change).** Copy the bundle into `<LAB>/transfer/`. Copy `<LAB>/install` to `<LAB>/install.pre-cutover` and `runtime.env` to `runtime.env.pre-cutover`, both kept for rollback.
-2. **Verify, then load.**
-   - Compare the out-of-band digest of `SHA256SUMS`.
-   - Run the strict entry checks (directories and listed regular files only), then `sha256sum --strict -c`.
-   - Replace the install tree through a staged copy and verify it again.
-   - Run `seyra-maps bundle load <bundle>` and `verify-images`: new API, proxy and OPS ids; data ids unchanged.
-   - Tags change; running containers keep their images until recreated.
-3. **Certificate.**
-   - If not done before the window: `tls csr --names <VM_LAN_ADDR>`, then sign off-host (company CA or dev issuer).
-   - Then `tls import --cert … [--chain …] --ca … --names <VM_LAN_ADDR>`, which validates the staged material before replacing and keeps the previous set in a `previous-…` directory (the rollback source for `tls restore`). The leaf, chain and root may be in any directories: the wrapper mounts each input read-only.
-   - The control path keeps working with `--connect-to <VM_LAN_ADDR>:8443:127.0.0.1:8443` once `<VM_LAN_ADDR>` is also among the control server names.
-4. **Edge.** `infra/edge/edge.sh <private env> check`, then `up`.
-   - `up` publishes `<VM_LAN_ADDR>:<PORT>`, applies the namespace egress guard and attaches the edge to the lab network.
-   - It prints `<EDGE_LAB_ADDR>`. Until step 5 completes, approved clients reach a relay with nothing behind it, so connections fail.
-5. **Access.**
-   - Run `init --access loopback --bind 127.0.0.1 --server-names "localhost 127.0.0.1 <VM_LAN_ADDR>" --relay-peer <EDGE_LAB_ADDR> --relay-bind <NESTED_LAB_ADDR> --relay-port <RELAY_PORT> --relay-client-cidrs <APPROVED_CLIENT_CIDR> --relay-server-names "<VM_LAN_ADDR>"`.
-   - Then `access apply`.
-   - Then `start`, which recreates the API (new image) and the proxy (new image, environment and relay port) and checks both publications.
-   - The data providers keep running if the rehearsal confirms it.
-6. **Verify.**
-   - control-path readiness;
+Measured on the synthetic rehearsal (r3 → r8; control-listener readiness sampled every 0.5 s):
+
+| Step | Not ready | Recreated |
+| --- | --- | --- |
+| software cutover (`start`) | 2.1 s | api, proxy |
+| certificate (`proxy restart`) | 0.5 s | proxy |
+| relay on (`proxy restart`) | 0.5 s | proxy |
+
+Provider identities did not change and the data containers were not recreated. The Iran release may need longer for the API's first identity probes after a restart. The time is **not promised**: it is measured again in the window.
+
+0. **Before-state (no change).** Record:
+   - readiness and the dataset;
+   - container ids and start times, on both daemons;
+   - nested image ids and the `runtime.env` hash;
    - `tls status`;
-   - published ports on both daemons;
-   - `namespace-egress.sh` for the serving host and the edge;
-   - egress counter, container ids and PBF SHA-256 against the before-state;
-   - a negative check from a disposable container on a VM bridge (expect a closed connection at the edge).
-   - The owner's Windows check H-01 follows: first an approved device, then the client-address check. A `/32` of that device on both layers proves the address is seen exactly; then restore the approved subnet.
-7. **Record.** Measured not-ready time, recreated containers, and every check, written to a private run directory with sanitized evidence in Git.
+   - the egress counter and the PBF SHA-256.
 
-The not-ready time is **not promised**. The synthetic L4/L5 activations, which recreate everything, measured about 29 s. An API and proxy recreate is expected to be shorter, and must be measured in the rehearsal.
+   Then make a fresh `backup` generation and a verified copy of `secrets/`, and write a private `CUTOVER-IN-PROGRESS` marker that holds the rollback commands of §4.
+1. **Stage.**
+   - Run the strict entry checks on `<R8>`: directories and listed regular files only, plain names, well-formed `SHA256SUMS`, the digest from precondition 3, then `sha256sum --strict -c`, and no unlisted file.
+   - Copy `<LAB>/install` to `<LAB>/install.pre-cutover`, and `runtime.env` to `runtime.env.pre-cutover`.
+2. **Install and load, with no service change.**
+   - Replace `<LAB>/install` through a staged copy that is verified again against `SHA256SUMS`.
+   - Run `bootstrap-load <R8>`, then `verify-images`: new API, proxy and OPS ids; data ids unchanged.
+   - The old stack keeps serving (rehearsal RH3).
+3. **Software cutover:** `start`. It recreates the API and proxy with the new images; loopback access is unchanged.
+   - Check the readiness and provider identities on the recorded dataset.
+   - Check that the data containers keep their ids.
+4. **Certificate.**
+   - Run `tls csr --names <VM_LAN_ADDR>[,<name>]`. The operator reads `<LAB>/home/secrets/tls/pending/server.csr` directly (0444; the key stays 0400).
+   - Have it signed off-host.
+   - Run `tls import --cert <leaf> --chain <intermediates> --ca <root> --names …`, then `proxy restart`.
+   - Check that `tls status` shows the new SAN and fingerprint.
+   - The previous set is kept in `secrets/tls/previous-<time>`; record that path for §4.
+   - Control-path checks keep `Host: localhost` (or `127.0.0.1`) on the ordinary listener and verify the new root, with the LAN name as the TLS identity (rehearsal RR8).
+5. **Edge.** Run `infra/edge/edge.sh <private env> check`, then `up`.
+   - It publishes `<VM_LAN_ADDR>:<PORT>` with the exact locked proxy image and the namespace egress guard, and attaches to the lab network.
+   - It prints `<EDGE_LAB_ADDR>`.
+   - Approved clients reach a relay with nothing behind it until step 6.
+6. **Relay on.**
+   - Run `init --access loopback --bind 127.0.0.1 --server-names "localhost 127.0.0.1" --relay-peer <EDGE_LAB_ADDR> --relay-bind <NESTED_LAB_ADDR> --relay-port <RELAY_PORT> --relay-client-cidrs <APPROVED_CLIENT_CIDR> --relay-server-names "<VM_LAN_ADDR> [<name>]"`.
+   - Then run `access apply` and `proxy restart`.
+7. **Verify on the host.**
+   - control readiness, `tls status`, published ports on both daemons (proxy relay port on `<NESTED_LAB_ADDR>` only; edge on `<VM_LAN_ADDR>:<PORT>` only);
+   - `tests/offline/namespace-egress.sh` for the serving host and the edge, with `SINK_GATEWAY`, `HOST_CONTROL=<EDGE_LAB_ADDR>:8443`, and disposable sinks only on the lab network;
+   - egress counter, container ids and PBF SHA-256 against the before-state.
+   - **Not used:** a "negative check" from a container on another VM Docker bridge. Docker drops that traffic before the edge (verified on this VM), so it proves nothing.
+8. **Verify from the LAN (owner's H-01).**
+   - **Approved device:** it gets readiness 200 on the dataset with the expected certificate, plus docs, a tile and a route.
+   - **Exact address at the inner layer:** rerun the step-6 `init` with `--relay-client-cidrs` set to a `/32` of another address, then `access apply` and `proxy restart`; the device must now get 403 from the relay. Then set the device's own `/32`; it must get 200. This shows the inner proxy sees the device's exact address through PROXY protocol, not the edge's. Restore `<APPROVED_CLIENT_CIDR>` afterwards.
+   - **Refusal at the edge:** a second LAN device outside the approved subnet gets no response. Narrowing the edge allowlist instead would need a new edge container with a new lab address. Edge-layer refusal by exact source address is already shown in the rehearsal (RR5).
+   - This step also proves that forwarded replies leave the VM. Forwarded internet TCP from Docker bridges was blocked on 2026-10-19, so this is not assumed.
+9. **Record and close.** Record the measured times, recreated containers and every check in the private run directory, with sanitized evidence in Git. Clear the marker only after steps 7–8 pass. Any failed safety boundary means the rollback of §4.
 
 ## 4. Rollback (any failed step, or on request)
 
+Rehearsed in this order on r8 (RB0–RB5). The measured not-ready times are 0 s, 0.5 s and 2.5 s.
+
 1. `init --no-relay --server-names "localhost 127.0.0.1"`, then `access apply` and `proxy restart`. The inner proxy stops trusting the edge address and the LAN path closes.
-2. `infra/edge/edge.sh <private env> stop`. A stopped container releases its lab address at once and Docker reuses it for the next container, so this comes only after step 1; `edge.sh stop` refuses while the relay upstream still answers.
-3. Certificate: restore the previous set with `tls restore --from <LAB>/home/secrets/tls/previous-<time>`.
+2. `infra/edge/edge.sh <private env> stop`, then `remove`.
+   - A stopped container releases its lab address at once, and Docker reuses it for the next container. So this step comes only after step 1.
+   - `edge.sh stop` refuses while the relay upstream still answers (rehearsal RB0; attempt 1 showed the same refusal when step 1 had not completed). `stop --force` is for emergencies only and must be followed at once by step 1.
+3. **Certificate:** `tls restore --from <LAB>/home/secrets/tls/previous-<time>`, then `proxy restart`.
    - It is validated like any import: key match, its recorded names (or its own SAN), purpose, and its saved chain to its saved root.
-   - It works with the full-chain backups that `tls import` makes.
    - It is journalled; an interruption is completed or undone by `tls recover`.
-4. Images and install:
+   - Run it **before** step 4, with the r8 tools: the r3 CLI has no `tls restore`, and the r3 wrapper cannot pass a root-only `--from` backup (finding B5).
+4. **Images and install:**
    - restore `<LAB>/install.pre-cutover`;
-   - `bundle load` the bundle the host was installed from (`<LAB>/transfer/<previous bundle>`, read-only), so the tags point at the previous images again;
+   - `bootstrap-load` the bundle the host was installed from (`<LAB>/transfer/<r3>`, read-only), so the tags point at the r3 images again;
    - `verify-images`.
-5. `start`, which recreates the API and proxy with the previous images and loopback-only access. Check readiness, ids and counters against the before-state.
-6. `infra/edge/edge.sh <private env> remove`.
+5. `start`, which recreates the API and proxy with the r3 images and loopback-only access. Check readiness, ids and counters against the before-state.
 
-## 5. Owner decisions needed for the next step
+## 5. Owner decisions needed for the cutover
 
-1. **Safe resources for builds and rehearsal:** a separate preparation machine (preferred), or a window on this VM with the watcher and abort thresholds above.
-2. **Cutover window** on the serving host after a passed rehearsal (date and time, and an accepted not-ready period once measured).
+1. ~~Safe resources for builds and rehearsal~~: done on this VM in an authorized window (§2).
+2. **Cutover window** on the serving host, with the measured not-ready times above accepted as expected, not promised.
 3. **Certificate issuer:**
    - the company CA, if one exists and devices already trust it (preferred);
    - or a development issuer run on a separate operator machine (`infra/tls/dev-issuer.sh`), with device trust installed and later removed as an explicit step.
+4. **H-01 devices:** the approved Windows device, and a second LAN device outside the approved subnet for the edge refusal check (§3 step 8).
 
 ## 6. Trust model: current and proposed
 

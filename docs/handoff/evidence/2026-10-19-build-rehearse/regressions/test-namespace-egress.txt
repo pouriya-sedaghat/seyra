@@ -1,0 +1,22 @@
+PASS host only, isolated: exit 0
+PASS host only, one destination routable: exit non-zero
+PASS host only, docker exec fails (tool error is not isolation): exit non-zero
+PASS host + edge, all checks hold: exit 0
+PASS host + edge valid: only this run's sinks are removed
+PASS host + edge valid: no container other than test sinks is removed
+PASS host + edge, a forbidden connection succeeds: exit non-zero
+PASS host + edge, guard counter missing: exit non-zero
+PASS host + edge, guard counter unchanged: exit non-zero
+PASS host + edge, allowed upstream unreachable: exit non-zero
+PASS host + edge, nc missing in the probe image: exit non-zero
+PASS host + edge, probe container cannot run: exit non-zero
+PASS host + edge, routable host even though the edge is fine: exit non-zero
+PASS host only, sink route on an internal network, sink absent, probes refused, control connects: exit 0
+PASS host + edge, sink-routed host and a valid edge: exit 0
+PASS host only, sink route but SINK_GATEWAY not declared (counts as routable): exit non-zero
+PASS host only, sink route on a network that is not internal: exit non-zero
+PASS host only, the sink address answers: exit non-zero
+PASS host only, a NEW connection to a controlled sink succeeds: exit non-zero
+PASS host only, nc missing on the host (tool error): exit non-zero
+PASS host only, the control destination does not connect: exit non-zero
+# script=<REPO>/tests/offline/namespace-egress.sh checks=21 failed=0

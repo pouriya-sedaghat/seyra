@@ -1,0 +1,83 @@
+{
+  "mode": "normal",
+  "base": "https://127.0.0.1:8443",
+  "requests": 9,
+  "external": [],
+  "failed": [],
+  "aborted": [],
+  "consoleErrors": [],
+  "expectedConsole": [],
+  "crash": null,
+  "steps": [
+    {
+      "name": "docs page answers 200",
+      "ok": true,
+      "detail": "200"
+    },
+    {
+      "name": "the UI renders every documented operation",
+      "ok": true,
+      "detail": "10"
+    },
+    {
+      "name": "no operation request before Execute",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "served /api/docs/json equals the exported specification",
+      "ok": true,
+      "detail": ""
+    },
+    {
+      "name": "GET getCapabilities via Try it out + Execute: 200, exactly one request",
+      "ok": true,
+      "detail": "200 sent=1"
+    },
+    {
+      "name": "POST computeRoute (first body example) via Execute: 200, exactly one request",
+      "ok": true,
+      "detail": "200 sent=1 {\"dataset_id\":\"ds-20261001-9843cf36a06e\",\"provider\":\"valhalla\",\"profile\":\"car\",\"objective\":\"time\",\"order\":\"ordered\",\"rou"
+    },
+    {
+      "name": "the route response validates against its documented 200 schema",
+      "ok": true,
+      "detail": "null"
+    },
+    {
+      "name": "a real 400 error body validates against the strict documented schema",
+      "ok": true,
+      "detail": "400 null"
+    },
+    {
+      "name": "zero external requests (all from the ingress origin)",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "zero console errors or CSP violations",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "zero failed requests",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "zero aborted requests",
+      "ok": true,
+      "detail": "[]"
+    },
+    {
+      "name": "script completed without a crash",
+      "ok": true,
+      "detail": "null"
+    },
+    {
+      "name": "all 13 required steps recorded",
+      "ok": true,
+      "detail": "13"
+    }
+  ]
+}

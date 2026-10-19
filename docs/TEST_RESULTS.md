@@ -1,5 +1,34 @@
 # Seyra Map Services — test results (phase 1)
 
+## Build and disposable rehearsal `2026-10-19-build-rehearse` (from reviewed head `3431e7e`)
+
+Separate run identity; the sections below are earlier records and are unchanged. Record: [`docs/handoff/evidence/2026-10-19-build-rehearse/README.md`](handoff/evidence/2026-10-19-build-rehearse/README.md).
+
+The run used an owner-authorized window on the shared VM. The preserved serving installation was stopped gracefully, then resumed with its own CLI and every identity unchanged. The new build was not deployed to it, and no LAN endpoint was published.
+
+New images, built from `043993c`:
+
+| Image | Id |
+| --- | --- |
+| API | `sha256:710d5e37…` |
+| proxy | `sha256:b953043a…` |
+| OPS | `sha256:8cbabae5…` |
+
+Lock `430f139`; the data components are byte-identical. Bundle **r8** `SHA256SUMS` digest `10797ff117c8cddc3271fe3573e236f82979e1d3f14a59a750f1443661e422bd`.
+
+| Item | Result |
+| --- | --- |
+| Findings fixed, each with a before/after regression | B1 operator-readable CSR; B2 relay trust removed before the edge stops, plus the `edge.sh stop` interlock (Docker reassigns a stopped container's address at once); B3 namespace egress on lab sink routes; B4 bundle root 0755; B5 `tls restore --from` root-only backups for the operator (found by rehearsal attempt 1) |
+| Standalone regressions / unit / build / typecheck | 14 suites all PASS (final tree: see evidence `final-tree.txt`); unit 226 PASS; build and typecheck pass |
+| Integration / security / boundary | 137/137; 31 PASS + 1 NOTE (incl. AC16.16–AC16.18); exact-image boundary 104/104 |
+| Swagger UI in Chromium | normal 14/14 (no external, console, CSP, failed or aborted requests; no request before Execute; GET+POST; strict schemas); provider-down 12/12 (typed 503) |
+| Served-asset URL scan | 88 entries, 0 unclassified |
+| Lifecycle / tamper / offline host / restore drill | 15/15; 6/6; O0–O5; R1–R7 + R4a (r8); 0 outbound packets |
+| Rehearsal r3 → r8 (synthetic, disposable rehearsal VM, real DNAT → edge → PROXY path) | **28/28** (attempt 1 on r7: 4 FAIL, fixed) |
+| Measured not-ready | update `start` 2.1 s (api, proxy recreated); TLS `proxy restart` 0.5 s; relay on 0.5 s; rollback relay off 0 s at 0.5 s sampling, `tls restore` 0.5 s, software 2.5 s; provider identities stable, data containers never recreated |
+| Resources | 5 s supervisor, 0 aborts; min. available 4,491 MiB, peak swap 299 MiB, min. free disk 36.8 GB |
+| Not run | live LAN cutover, Windows H-01, mobile, load, Iran quality acceptance; the 18 October readiness 503 remains open |
+
 ## Client handoff corrections H1–H5 (review of `6602199`)
 
 Record: [`docs/handoff/evidence/2026-10-19-corrective/README.md`](handoff/evidence/2026-10-19-corrective/README.md). All five reviewed defects reproduced on the pinned runtime, and each now has a failing-before/passing-after regression:

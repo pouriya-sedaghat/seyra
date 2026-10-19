@@ -1,0 +1,10 @@
+# Preserved serving installation: authorized maintenance pause (sanitized; private record kept outside Git)
+stop  (installed CLI 'stop' = compose stop -t 40): 2026-10-19T14:32:06Z -> 2026-10-19T14:32:49Z rc=0
+clean stop: PostgreSQL fast shutdown with a shutdown checkpoint ('database system is shut down', exit 0); api, proxy, tegola, valhalla exit 0; photon 143 (SIGTERM, JVM); overpass 137 (killed by Docker after the 40 s stop timeout; its socket dir is a tmpfs and its database is mounted read-only, so no stale state)
+kept running: the outer nested-Docker host container, its daemon, networks and volume (never restarted: same start time and restart count)
+resume (installed CLI 'start', unchanged r3 install and nested images): 2026-10-19T15:57:08Z; start rc=0 at 15:57:25Z; ready at 2026-10-19T15:57:41Z
+service intentionally unavailable: 2026-10-19T14:32:07Z -> 2026-10-19T15:57:41Z (about 85.6 min); this is the maintenance record, not a test outage and not the open 18 October readiness 503
+post-resume verification: readiness 'ready' on the recorded dataset <DATASET>; tiles/routing/geocoder/overpass ok with observed identity == expected; loopback ingress 200; verify-images 10 OK; nested API/proxy/OPS still the r3 images (sha256:ad11e92b..., 07e3eca2..., 489d2a40...): the new build was NOT deployed
+identity comparison with the pre-stop baseline: identical outer daemon id, host container id/image/start time/restart count/label/network/mounts/volume, nested daemon id, nested images, networks and volumes, install tree hash, lock/settings/pointers/runtime.env hashes, TLS listing and fingerprints, egress COUNT (0), PBF SHA-256; differences only in VM memory/load/free disk and the inner containers' uptimes (same container ids: restarted, not recreated)
+isolation after resume: no outside route from the host (example.com unresolvable/unreachable); egress counter unchanged
+marker: RESUME-REQUIRED written before the stop, cleared (renamed RESUME-COMPLETED) only after the verification above

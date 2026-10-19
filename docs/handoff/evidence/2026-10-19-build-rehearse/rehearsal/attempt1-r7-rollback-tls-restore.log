@@ -1,0 +1,3 @@
+[init] database roles ensured; migrations applied: none (up to date)
+[access] runtime.env updated (SEYRA_RELAY_BIND_ADDR, SEYRA_RELAY_CLIENT_CIDRS, SEYRA_RELAY_PEER, SEYRA_RELAY_PORT, SEYRA_RELAY_SERVER_NAMES); previous kept as runtime.env.prev. Apply with: seyra-maps proxy restart
+seyra-maps: --from: <SYNTH>/rehearsal-lab/home/secrets/tls/previous-2026-10-19T153019938Z is not a directory

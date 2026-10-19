@@ -1,0 +1,7 @@
+[
+  {
+    "name": "control: ordinary loopback listener serves readiness without a PROXY header",
+    "ok": true,
+    "detail": "200 "
+  }
+]

@@ -1,0 +1,8 @@
+PASS nested host: route table read
+PASS nested host: 10 destinations route only to the absent sink 172.18.0.250 on internal network(s) (seyra_offline_lab )
+PASS nested host: control destination 172.18.0.3:8443 connects (probe path works)
+PASS nested host: 2 NEW connections to controlled sinks outside its networks refused
+PASS edge: 5 NEW connections (documentation addresses and own-network sinks) refused
+PASS edge: guard drop counter rose by 15 (packets stopped inside the namespace)
+PASS edge: the one allowed upstream 172.18.0.2:8444 connects
+# failures: 0
