@@ -43,9 +43,20 @@ export const ManifestSchema = Type.Object({
     Type.Null(),
   ]),
   measurements: Type.Object({
-    steps: Type.Array(Type.Object({ step: Type.String(), seconds: Type.Number(), bytes: Type.Union([Type.Number(), Type.Null()]) })),
+    steps: Type.Array(
+      Type.Object({
+        step: Type.String(),
+        seconds: Type.Number(),
+        bytes: Type.Union([Type.Number(), Type.Null()]),
+        // Lowest free space seen during the step (timer + boundary samples); absent in older manifests.
+        free_bytes_min: Type.Optional(Type.Union([Type.Number(), Type.Null()])),
+      }),
+    ),
     free_bytes_before: Type.Union([Type.Number(), Type.Null()]),
     free_bytes_min_observed: Type.Union([Type.Number(), Type.Null()]),
+    free_bytes_min_observed_at: Type.Optional(Type.Union([Type.String(), Type.Null()])),
+    free_space_sampling: Type.Optional(Type.Object({ interval_s: Type.Number(), samples: Type.Number(), filesystem_path: Type.String() })),
+    capacity_check: Type.Optional(Type.Unknown()),
   }),
   validation: Type.Object({
     status: Type.Enum(['pending', 'passed', 'failed']),

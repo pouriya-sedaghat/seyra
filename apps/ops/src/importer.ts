@@ -1,7 +1,8 @@
-import { chownSync, copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, statfsSync, writeFileSync, chmodSync, unlinkSync } from 'node:fs';
+import { chownSync, copyFileSync, existsSync, mkdirSync, readFileSync, rmSync, statSync, writeFileSync, chmodSync, unlinkSync } from 'node:fs';
 import { basename, join, resolve } from 'node:path';
 import { CATALOG_VERSION, SEARCH_NORMALIZATION_VERSION } from '@seyra/contracts';
 import { STYLE_VERSION, buildStyle, buildTileJson } from '@seyra/map-assets';
+import { FREE_SPACE_SAMPLE_MS, FreeSpaceMonitor, REFERENCE_MIN_FREE_FACTOR, capacityCheck, describeCapacity, freeBytes, type CapacityCheck } from './capacity.js';
 import { composeJobs, jobsInvocation } from './compose.js';
 import { psql, recordEvent, renderDbName } from './db.js';
 import { PHOTON_EXTRA_TAGS, preprocessDump } from './geocoder-preprocess.js';
@@ -62,11 +63,6 @@ export async function assetsDigest(images: LockedImage[]): Promise<string> {
   return m.assets_sha256;
 }
 
-function freeBytes(path: string): number {
-  const s = statfsSync(path);
-  return Number(s.bavail) * Number(s.bsize);
-}
-
 function chownTree(dir: string, uid: number, gid = uid): void {
   chownSync(dir, uid, gid);
 }
@@ -114,8 +110,20 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
   const lease = await acquireImportLock(l, opts.log);
 
   const steps: Manifest['measurements']['steps'] = [];
-  let minFree = freeBytes(l.home);
-  const freeBefore = minFree;
+  // Free space on SEYRA_HOME's filesystem is sampled every FREE_SPACE_SAMPLE_MS and at every step
+  // boundary, so the low-water mark inside long steps (e.g. the Overpass build) is recorded.
+  const monitor = new FreeSpaceMonitor(() => freeBytes(l.home));
+  const freeBefore = monitor.sample();
+  monitor.start(FREE_SPACE_SAMPLE_MS);
+  let capacity: CapacityCheck | null = null;
+  const measurements = (): Manifest['measurements'] => ({
+    steps,
+    free_bytes_before: freeBefore,
+    free_bytes_min_observed: monitor.minimum(),
+    free_bytes_min_observed_at: monitor.minAt,
+    free_space_sampling: { interval_s: FREE_SPACE_SAMPLE_MS / 1000, samples: monitor.samples, filesystem_path: l.home },
+    ...(capacity ? { capacity_check: capacity } : {}),
+  });
   let manifest: Manifest | null = null;
   let releaseDir = '';
   let current = 'preflight';
@@ -123,11 +131,12 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
     current = name;
     opts.log(`[import] ${name} …`);
     const t0 = Date.now();
+    monitor.beginStep();
     const out = await fn();
-    minFree = Math.min(minFree, freeBytes(l.home));
-    steps.push({ step: name, seconds: (Date.now() - t0) / 1000, bytes: outDir ? duBytes(outDir) : null });
+    const stepMin = monitor.endStep();
+    steps.push({ step: name, seconds: (Date.now() - t0) / 1000, bytes: outDir ? duBytes(outDir) : null, free_bytes_min: stepMin });
     if (manifest) {
-      manifest.measurements = { steps, free_bytes_before: freeBefore, free_bytes_min_observed: minFree };
+      manifest.measurements = measurements();
       writeManifest(releaseDir, manifest);
     }
     return out;
@@ -181,7 +190,7 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
       assets: { assets_sha256: assets, source: 'proxy image /usr/share/seyra/assets/asset-manifest.json' },
       artifacts: {},
       identities: null,
-      measurements: { steps, free_bytes_before: freeBefore, free_bytes_min_observed: minFree },
+      measurements: measurements(),
       validation: { status: 'pending', checks: [] },
       failure: null,
     };
@@ -195,21 +204,34 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
       datasetId,
       async () => {
         setImportTarget(l, lease, datasetId);
+        // A failed build of the same inputs is replaced; anything else is never overwritten.
+        let failedBuild: Manifest | null = null;
         if (existsSync(setupDir)) {
-          // A failed build of the same inputs is replaced; anything else is never overwritten.
           const p = readPointers(l);
           const previous = existsSync(join(setupDir, 'manifest.json')) ? readManifest(setupDir) : null;
           if (previous?.status !== 'failed' || p.active === datasetId || p.previous === datasetId) {
             throw new Error(`release ${datasetId} already exists for these exact inputs (see seyra-maps status)`);
           }
-          opts.log(`[import] replacing failed build of ${datasetId} (failed at ${previous.failure?.step ?? 'unknown'})`);
-          await psql(l, 'postgres', `DROP DATABASE IF EXISTS ${renderDbName(datasetId)} WITH (FORCE);`);
-          rmSync(setupDir, { recursive: true, force: true });
+          failedBuild = previous;
         }
 
-        const needed = Math.max(s.minFreeBytes, s.minFreeFactor * st.size);
-        if (freeBefore < needed) {
-          throw new Error(`insufficient free space: ${freeBefore} bytes available, ${needed} required by the configured check (minFreeFactor=${s.minFreeFactor}); measure and adjust, never delete unrelated data`);
+        // Capacity admission happens before any side effect, including removing a failed build: the
+        // bytes that build would release count as available, but nothing is deleted on refusal.
+        const reclaimable = failedBuild ? duBytes(setupDir) + (await renderDbBytes(l, datasetId)) : 0;
+        capacity = capacityCheck(l.home, monitor.sample(), reclaimable, st.size, s);
+        opts.log(`[import] capacity: ${describeCapacity(capacity)}`);
+        if (s.minFreeFactor < REFERENCE_MIN_FREE_FACTOR) {
+          opts.log(`[import] warning: minFreeFactor ${s.minFreeFactor} is below the measured reference ${REFERENCE_MIN_FREE_FACTOR} (RUNBOOK §3); the import may run out of space`);
+        }
+        if (!capacity.ok) {
+          throw new Error(
+            `insufficient free space on ${l.home}: ${describeCapacity(capacity)}; nothing was changed${failedBuild ? ` (the failed build of ${datasetId} was kept)` : ''}. Add capacity or, after measuring, adjust minFreeFactor/minFreeBytes in state/settings.json; never delete unrelated data`,
+          );
+        }
+        if (failedBuild) {
+          opts.log(`[import] replacing failed build of ${datasetId} (failed at ${failedBuild.failure?.step ?? 'unknown'})`);
+          await psql(l, 'postgres', `DROP DATABASE IF EXISTS ${renderDbName(datasetId)} WITH (FORCE);`);
+          rmSync(setupDir, { recursive: true, force: true });
         }
 
         mkdirSync(join(setupDir, 'source'), { recursive: true });
@@ -379,7 +401,7 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
     if (!validation.ok || !validation.identities) throw new Error(`staging validation failed: ${validation.checks.filter((c) => !c.ok).map((c) => c.name).join(', ')}`);
 
     manifest.status = 'validated';
-    manifest.measurements = { steps, free_bytes_before: freeBefore, free_bytes_min_observed: minFree };
+    manifest.measurements = measurements();
     writeManifest(releaseDir, manifest);
     rmSync(join(releaseDir, '.work'), { recursive: true, force: true });
     await recordEvent(l, datasetId, 'imported', { steps: steps.map((x) => [x.step, x.seconds]) }).catch(() => undefined);
@@ -391,7 +413,7 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
       rmSync(managedChild(l.work, manifest.dataset_id), { recursive: true, force: true });
       manifest.status = 'failed';
       manifest.failure = { step: current, message };
-      manifest.measurements = { steps, free_bytes_before: freeBefore, free_bytes_min_observed: minFree };
+      manifest.measurements = measurements();
       try {
         writeManifest(releaseDir, manifest);
       } catch {
@@ -401,6 +423,14 @@ export async function importDataset(opts: ImportOptions): Promise<string> {
     }
     throw new Error(`import failed at ${current}: ${message}`);
   } finally {
+    monitor.stop();
     releaseImportLock(l, lease);
   }
+}
+
+/** Size of a release's render database, 0 when it does not exist. */
+async function renderDbBytes(l: Layout, datasetId: string): Promise<number> {
+  const out = await psql(l, 'postgres', `SELECT coalesce((SELECT pg_database_size(datname) FROM pg_database WHERE datname = '${renderDbName(datasetId)}'), 0);`);
+  const n = Number(out.trim());
+  return Number.isFinite(n) ? n : 0;
 }

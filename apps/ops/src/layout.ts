@@ -1,6 +1,7 @@
 import { existsSync, mkdirSync, readFileSync, writeFileSync, renameSync, chmodSync } from 'node:fs';
 import { join, resolve, sep } from 'node:path';
 import { isLoopbackIPv4, parseIPv4, parseLanCidrs } from './net.js';
+import { REFERENCE_MIN_FREE_FACTOR } from './capacity.js';
 
 /** On-disk layout under SEYRA_HOME (identical path inside the ops container and on the host). */
 export interface Layout {
@@ -101,7 +102,12 @@ export interface Settings {
   buildThreads: number;
   photonJavaOpts: string;
   tileCacheMax: string;
-  /** Minimum free space before an import, as a multiple of the input size (reference default). */
+  /**
+   * Import admission on SEYRA_HOME's filesystem: required = max(minFreeBytes, minFreeFactor x input
+   * size), compared with free space plus a replaced failed build's bytes (capacity.ts). The default
+   * factor is the measured Iran reference with margin; `init` persists it, so a home initialised
+   * with an older default keeps that value until the operator changes state/settings.json.
+   */
   minFreeFactor: number;
   minFreeBytes: number;
   readinessTimeoutS: number;
@@ -117,7 +123,7 @@ export const DEFAULT_SETTINGS: Settings = {
   buildThreads: 2,
   photonJavaOpts: '-Xms512m -Xmx2g',
   tileCacheMax: '2g',
-  minFreeFactor: 40,
+  minFreeFactor: REFERENCE_MIN_FREE_FACTOR,
   minFreeBytes: 2 * 1024 ** 3,
   readinessTimeoutS: 300,
 };
