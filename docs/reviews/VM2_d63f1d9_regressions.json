@@ -1,0 +1,87 @@
+[
+  {
+    "id": "F1-new",
+    "args": [
+      "node",
+      "tests/validation/test-reclaim-credit.mjs"
+    ],
+    "exit_code": 0,
+    "seconds": 0.256,
+    "stdout": "# checkout=/workspace/scratch/1c57e08e59e6/review-pr1-d63f1d9\n# credit used by importer.ts: reclaimableBytes(setupDir, dev) (allocated blocks, lstat, same device, link-aware)\nPASS sparse 8 GiB file with no allocated blocks: credited 4096 B, free 3758096384 B, required 8053063680 B -> refused (expected refused)\nPASS symlink to a 64 MiB file outside the release: credited 4096 B, free 8019509248 B, required 8053063680 B -> refused (expected refused)\nPASS hard-linked 64 MiB file whose other link survives outside: credited 4096 B, free 8019509248 B, required 8053063680 B -> refused (expected refused)\nPASS ordinary allocated 96 MiB file: credited 100667392 B, free 7985954816 B, required 8053063680 B -> admitted (expected admitted)\n# failures: 0\n",
+    "stderr": ""
+  },
+  {
+    "id": "F1-old",
+    "args": [
+      "node",
+      "tests/validation/test-reclaim-credit.mjs",
+      "/workspace/scratch/1c57e08e59e6/review-pr1-e7a2175"
+    ],
+    "exit_code": 1,
+    "seconds": 0.194,
+    "stdout": "# checkout=/workspace/scratch/1c57e08e59e6/review-pr1-e7a2175\n# credit used by importer.ts: duBytes(setupDir) (logical stat.size, follows symlinks)\nFAIL sparse 8 GiB file with no allocated blocks: credited 8589934592 B, free 3758096384 B, required 8053063680 B -> admitted (expected refused)\nFAIL symlink to a 64 MiB file outside the release: credited 67108864 B, free 8019509248 B, required 8053063680 B -> admitted (expected refused)\nFAIL hard-linked 64 MiB file whose other link survives outside: credited 67108864 B, free 8019509248 B, required 8053063680 B -> admitted (expected refused)\nPASS ordinary allocated 96 MiB file: credited 100663296 B, free 7985954816 B, required 8053063680 B -> admitted (expected admitted)\n# failures: 3\n",
+    "stderr": ""
+  },
+  {
+    "id": "F2-new",
+    "args": [
+      "node",
+      "tests/validation/test-update-gate.mjs"
+    ],
+    "exit_code": 0,
+    "seconds": 0.254,
+    "stdout": "PASS wrong-digest: refused (FAIL U1)\nPASS wrong-digest: no CLI/bootstrap call\nPASS wrong-digest: install tree unchanged\nPASS wrong-digest: BUNDLE not reassigned\nPASS wrong-digest: run ends (dependent phases skipped)\nPASS corrupt-payload: refused (FAIL U1)\nPASS corrupt-payload: no CLI/bootstrap call\nPASS corrupt-payload: install tree unchanged\nPASS corrupt-payload: BUNDLE not reassigned\nPASS corrupt-payload: run ends (dependent phases skipped)\nPASS unlisted-file: refused (FAIL U1)\nPASS unlisted-file: no CLI/bootstrap call\nPASS unlisted-file: install tree unchanged\nPASS unlisted-file: BUNDLE not reassigned\nPASS unlisted-file: run ends (dependent phases skipped)\nPASS unlisted-symlink: refused (FAIL U1)\nPASS unlisted-symlink: no CLI/bootstrap call\nPASS unlisted-symlink: install tree unchanged\nPASS unlisted-symlink: BUNDLE not reassigned\nPASS unlisted-symlink: run ends (dependent phases skipped)\nPASS dangling-symlink: refused (FAIL U1)\nPASS dangling-symlink: no CLI/bootstrap call\nPASS dangling-symlink: install tree unchanged\nPASS dangling-symlink: BUNDLE not reassigned\nPASS dangling-symlink: run ends (dependent phases skipped)\nPASS listed-file-is-symlink: refused (FAIL U1)\nPASS listed-file-is-symlink: no CLI/bootstrap call\nPASS listed-file-is-symlink: install tree unchanged\nPASS listed-file-is-symlink: BUNDLE not reassigned\nPASS listed-file-is-symlink: run ends (dependent phases skipped)\nPASS unlisted-fifo: refused (FAIL U1)\nPASS unlisted-fifo: no CLI/bootstrap call\nPASS unlisted-fifo: install tree unchanged\nPASS unlisted-fifo: BUNDLE not reassigned\nPASS unlisted-fifo: run ends (dependent phases skipped)\nPASS listed-fifo: refused (FAIL U1)\nPASS listed-fifo: no CLI/bootstrap call\nPASS listed-fifo: install tree unchanged\nPASS listed-fifo: BUNDLE not reassigned\nPASS listed-fifo: run ends (dependent phases skipped)\nPASS dotdot-path: refused (FAIL U1)\nPASS dotdot-path: no CLI/bootstrap call\nPASS dotdot-path: install tree unchanged\nPASS dotdot-path: BUNDLE not reassigned\nPASS dotdot-path: run ends (dependent phases skipped)\nPASS absolute-path: refused (FAIL U1)\nPASS absolute-path: no CLI/bootstrap call\nPASS absolute-path: install tree unchanged\nPASS absolute-path: BUNDLE not reassigned\nPASS absolute-path: run ends (dependent phases skipped)\nPASS newline-name: refused (FAIL U1)\nPASS newline-name: no CLI/bootstrap call\nPASS newline-name: install tree unchanged\nPASS newline-name: BUNDLE not reassigned\nPASS newline-name: run ends (dependent phases skipped)\nPASS bundle-root-symlink: refused (FAIL U1)\nPASS bundle-root-symlink: no CLI/bootstrap call\nPASS bundle-root-symlink: install tree unchanged\nPASS bundle-root-symlink: BUNDLE not reassigned\nPASS bundle-root-symlink: run ends (dependent phases skipped)\nPASS sums-symlink: refused (FAIL U1)\nPASS sums-symlink: no CLI/bootstrap call\nPASS sums-symlink: install tree unchanged\nPASS sums-symlink: BUNDLE not reassigned\nPASS sums-symlink: run ends (dependent phases skipped)\nPASS copy-fails: refused (FAIL U1)\nPASS copy-fails: no CLI/bootstrap call\nPASS copy-fails: install tree unchanged\nPASS copy-fails: BUNDLE not reassigned\nPASS copy-fails: run ends (dependent phases skipped)\nPASS valid: PASS U1\nPASS valid: install tree replaced\nPASS valid: bootstrap-load ran after verification\nPASS valid: BUNDLE now the update\n# harness=/workspace/scratch/1c57e08e59e6/review-pr1-d63f1d9/tests/validation/iran-offline-host.sh checks=74 failed=0\n",
+    "stderr": ""
+  },
+  {
+    "id": "F3-new",
+    "args": [
+      "node",
+      "tests/validation/test-browser-navigation.mjs"
+    ],
+    "exit_code": 0,
+    "seconds": 1.569,
+    "stdout": "# checkout=/workspace/scratch/1c57e08e59e6/review-pr1-d63f1d9 helper=browser-navigation.mjs\nPASS rejected result click: visit verdict FAIL (expected FAIL); recorded {\"found\":true,\"reached\":false,\"click_error\":\"locator.click: element is not attached\",\"distance_m\":null}\nPASS click returns but the map does not move (viewport elsewhere): visit verdict FAIL (expected FAIL); recorded {\"found\":true,\"reached\":false,\"click_error\":null,\"distance_m\":421928}\nPASS click moves the map to the wrong place (~9 km off): visit verdict FAIL (expected FAIL); recorded {\"found\":true,\"reached\":false,\"click_error\":null,\"distance_m\":9278}\nPASS valid navigation to the selected feature: visit verdict PASS (expected PASS); recorded {\"found\":true,\"reached\":true,\"click_error\":null,\"distance_m\":0}\nPASS already on the target; the click changes nothing: visit verdict PASS (expected PASS); recorded {\"found\":true,\"reached\":true,\"click_error\":null,\"distance_m\":0}\nPASS client reports no viewport center: visit verdict FAIL (expected FAIL); recorded {\"found\":true,\"reached\":false,\"click_error\":null,\"distance_m\":null}\nPASS console error with six reached visits: verdict FAIL (expected FAIL)\nPASS incomplete visit list (4 of 6): verdict FAIL (expected FAIL)\nPASS script crash after six reached visits: verdict FAIL (expected FAIL)\n# failures: 0\n",
+    "stderr": ""
+  },
+  {
+    "id": "F3-old",
+    "args": [
+      "node",
+      "tests/validation/test-browser-navigation.mjs",
+      "/workspace/scratch/1c57e08e59e6/review-pr1-e7a2175"
+    ],
+    "exit_code": 1,
+    "seconds": 0.058,
+    "stdout": "# checkout=/workspace/scratch/1c57e08e59e6/review-pr1-e7a2175 helper=inline searchAndOpen (iran-browser.mjs)\nFAIL rejected result click: visit verdict PASS (expected FAIL); recorded {\"found\":true,\"click_error\":null,\"distance_m\":null}\nFAIL click returns but the map does not move (viewport elsewhere): visit verdict PASS (expected FAIL); recorded {\"found\":true,\"click_error\":null,\"distance_m\":null}\nFAIL click moves the map to the wrong place (~9 km off): visit verdict PASS (expected FAIL); recorded {\"found\":true,\"click_error\":null,\"distance_m\":null}\nPASS valid navigation to the selected feature: visit verdict PASS (expected PASS); recorded {\"found\":true,\"click_error\":null,\"distance_m\":null}\nPASS already on the target; the click changes nothing: visit verdict PASS (expected PASS); recorded {\"found\":true,\"click_error\":null,\"distance_m\":null}\nFAIL client reports no viewport center: visit verdict PASS (expected FAIL); recorded {\"found\":true,\"click_error\":null,\"distance_m\":null}\nPASS console error with six reached visits: verdict FAIL (expected FAIL)\nPASS incomplete visit list (4 of 6): verdict FAIL (expected FAIL)\nPASS script crash after six reached visits: verdict FAIL (expected FAIL)\n# failures: 4\n",
+    "stderr": ""
+  },
+  {
+    "id": "F3-verdict",
+    "args": [
+      "node",
+      "tests/validation/test-browser-verdict.mjs"
+    ],
+    "exit_code": 0,
+    "seconds": 0.049,
+    "stdout": "# evaluating browserVerdict (tests/validation/browser-verdict.mjs)\nPASS successful report shape: verdict=PASS expected=PASS {\"external_requests\":true,\"rtl_plugin\":true,\"failed_requests\":true,\"console_errors\":true,\"required_visits\":true,\"script_completed\":true}\nPASS console error: verdict=FAIL expected=FAIL {\"external_requests\":true,\"rtl_plugin\":true,\"failed_requests\":true,\"console_errors\":false,\"required_visits\":true,\"script_completed\":true}\nPASS missing required visit: verdict=FAIL expected=FAIL {\"external_requests\":true,\"rtl_plugin\":true,\"failed_requests\":true,\"console_errors\":true,\"required_visits\":false,\"script_completed\":true}\nPASS result card found but navigation not reached: verdict=FAIL expected=FAIL {\"external_requests\":true,\"rtl_plugin\":true,\"failed_requests\":true,\"console_errors\":true,\"required_visits\":false,\"script_completed\":true}\nPASS declared visits not all recorded: verdict=FAIL expected=FAIL {\"external_requests\":true,\"rtl_plugin\":true,\"failed_requests\":true,\"console_errors\":true,\"required_visits\":false,\"script_completed\":true}\nPASS failed request (503): verdict=FAIL expected=FAIL {\"external_requests\":true,\"rtl_plugin\":true,\"failed_requests\":false,\"console_errors\":true,\"required_visits\":true,\"script_completed\":true}\nPASS external request: verdict=FAIL expected=FAIL {\"external_requests\":false,\"rtl_plugin\":true,\"failed_requests\":true,\"console_errors\":true,\"required_visits\":true,\"script_completed\":true}\nPASS script crashed after recording all visits: verdict=FAIL expected=FAIL {\"external_requests\":true,\"rtl_plugin\":true,\"failed_requests\":true,\"console_errors\":true,\"required_visits\":true,\"script_completed\":false}\nPASS expectedVisits must be declared\n# failures: 0\n",
+    "stderr": ""
+  },
+  {
+    "id": "F4-new",
+    "args": [
+      "node",
+      "tests/validation/test-host-guard.mjs"
+    ],
+    "exit_code": 0,
+    "seconds": 0.792,
+    "stdout": "PASS restore on an attached unlabelled host: run stopped (exit 2, REFUSED recorded)\nPASS restore on an attached unlabelled host: no kill/rm/volume rm/run against seyra-guard-preserved\nPASS restore on an attached unlabelled host: no Seyra CLI call\nPASS readiness on an attached unlabelled host: run stopped (exit 2, REFUSED recorded)\nPASS readiness on an attached unlabelled host: no kill/rm/volume rm/run against seyra-guard-preserved\nPASS readiness on an attached unlabelled host: no Seyra CLI call\nPASS update on an attached unlabelled host: run stopped (exit 2, REFUSED recorded)\nPASS update on an attached unlabelled host: no kill/rm/volume rm/run against seyra-guard-preserved\nPASS update on an attached unlabelled host: no Seyra CLI call\nPASS restore on an attached wrong-lab host: run stopped (exit 2, REFUSED recorded)\nPASS restore on an attached wrong-lab host: no kill/rm/volume rm/run against seyra-guard-preserved\nPASS restore on an attached wrong-lab host: no Seyra CLI call\nPASS readiness on an attached wrong-lab host: run stopped (exit 2, REFUSED recorded)\nPASS readiness on an attached wrong-lab host: no kill/rm/volume rm/run against seyra-guard-preserved\nPASS readiness on an attached wrong-lab host: no Seyra CLI call\nPASS update on an attached wrong-lab host: run stopped (exit 2, REFUSED recorded)\nPASS update on an attached wrong-lab host: no kill/rm/volume rm/run against seyra-guard-preserved\nPASS update on an attached wrong-lab host: no Seyra CLI call\nPASS install over an unlabelled leftover volume: run stopped\nPASS install over an unlabelled leftover volume: volume kept\nPASS restore onto a preserved restore target: run stopped\nPASS restore onto a preserved restore target: target untouched\nPASS restore onto a preserved restore target: own host 1 was dropped first\nPASS readiness on the lab's own host: admitted (stop/start issued)\nPASS restore on the lab's own host: host 1 and its volume removed\nPASS restore on the lab's own host: host 2 created with this lab's label\n# harness=/workspace/scratch/1c57e08e59e6/review-pr1-d63f1d9/tests/validation/iran-offline-host.sh checks=26 failed=0\n",
+    "stderr": ""
+  },
+  {
+    "id": "F4-old",
+    "exit_code": 1,
+    "stdout": "FAIL restore on an attached unlabelled host: run stopped (exit 2, REFUSED recorded) -- rc=1\nFAIL restore on an attached unlabelled host: no kill/rm/volume rm/run against seyra-guard-preserved -- docker exec seyra-guard-preserved sh -c docker ps -q | xargs -r docker kill | docker exec seyra-guard-preserved rm -rf /workspace/scratch/1c57e08e59e6/seyra-review-d63f1d9/tmp/seyra-host-guard-Ea64w9/lab/home /workspace/scratch/1c57e08e59e6/seyra-review-d63f1d9/tmp/seyra-host-guard-Ea64w9/lab/instal\nPASS restore on an attached unlabelled host: no Seyra CLI call\nFAIL readiness on an attached unlabelled host: run stopped (exit 2, REFUSED recorded) -- rc=1\nPASS readiness on an attached unlabelled host: no kill/rm/volume rm/run against seyra-guard-preserved\nFAIL readiness on an attached unlabelled host: no Seyra CLI call -- cli stop | cli start\nFAIL update on an attached unlabelled host: run stopped (exit 2, REFUSED recorded) -- rc=1\nPASS update on an attached unlabelled host: no kill/rm/volume rm/run against seyra-guard-preserved\nPASS update on an attached unlabelled host: no Seyra CLI call\nFAIL restore on an attached wrong-lab host: run stopped (exit 2, REFUSED recorded) -- rc=1\nFAIL restore on an attached wrong-lab host: no kill/rm/volume rm/run against seyra-guard-preserved -- docker exec seyra-guard-preserved sh -c docker ps -q | xargs -r docker kill | docker exec seyra-guard-preserved rm -rf /workspace/scratch/1c57e08e59e6/seyra-review-d63f1d9/tmp/seyra-host-guard-MzHAmE/lab/home /workspace/scratch/1c57e08e59e6/seyra-review-d63f1d9/tmp/seyra-host-guard-MzHAmE/lab/instal\nPASS restore on an attached wrong-lab host: no Seyra CLI call\nFAIL readiness on an attached wrong-lab host: run stopped (exit 2, REFUSED recorded) -- rc=1\nPASS readiness on an attached wrong-lab host: no kill/rm/volume rm/run against seyra-guard-preserved\nFAIL readiness on an attached wrong-lab host: no Seyra CLI call -- cli stop | cli start\nFAIL update on an attached wrong-lab host: run stopped (exit 2, REFUSED recorded) -- rc=1\nPASS update on an attached wrong-lab host: no kill/rm/volume rm/run against seyra-guard-preserved\nPASS update on an attached wrong-lab host: no Seyra CLI call\nFAIL install over an unlabelled leftover volume: run stopped -- rc=2\nFAIL install over an unlabelled leftover volume: volume kept -- docker volume rm seyra-guard-new-docker\nFAIL restore onto a preserved restore target: run stopped -- rc=2\nPASS restore onto a preserved restore target: target untouched\nPASS restore onto a preserved restore target: own host 1 was dropped first\nPASS readiness on the lab's own host: admitted (stop/start issued)\nPASS restore on the lab's own host: host 1 and its volume removed\nFAIL restore on the lab's own host: host 2 created with this lab's label -- \n# harness=/workspace/scratch/1c57e08e59e6/review-pr1-e7a2175/tests/validation/iran-offline-host.sh checks=26 failed=14\n",
+    "stderr": ""
+  }
+]
