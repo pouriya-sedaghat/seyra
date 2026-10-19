@@ -42,7 +42,8 @@ if [ -z "${SEYRA_HARNESS_FROZEN:-}" ]; then
   frozen="$OUT/harness-$stamp"
   mkdir -p "$frozen" && cp -a "$src/." "$frozen/" && chmod -R a-w "$frozen"
   {
-    echo "commit: $(git -C "$src" rev-parse HEAD 2>/dev/null || echo unknown)"
+    # A freeze.sh copy has no .git; its revision.txt (three levels up) names the commit.
+    echo "commit: $(git -C "$src" rev-parse HEAD 2>/dev/null || sed -n 's/^commit: //p' "$src/../../../revision.txt" 2>/dev/null | grep . || echo unknown)"
     echo "uncommitted changes under tests/validation: $(git -C "$src" status --porcelain -- . 2>/dev/null | wc -l)"
     echo "frozen copy: $frozen"
     (cd "$frozen" && sha256sum -- *)
