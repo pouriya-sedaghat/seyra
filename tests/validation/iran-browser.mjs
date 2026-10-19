@@ -9,6 +9,7 @@
 import { createRequire } from 'node:module';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { createNavigator } from './browser-navigation.mjs';
 import { browserVerdict, verdictLine } from './browser-verdict.mjs';
 
 const require = createRequire(import.meta.url);
@@ -51,28 +52,11 @@ const setView = async (theme, lang) => {
   await page.locator('header select').nth(0).selectOption(theme);
   await settle(2500);
 };
-// Opens the first result whose card mentions `expect` (an admin area written before the run), so
-// each view shows the intended region; records which rank that was. View bias is turned off once.
-const searchAndOpen = async (q, expect) => {
-  await page.getByRole('textbox').first().fill(q);
-  await page.keyboard.press('Enter');
-  await page.waitForTimeout(2500);
-  const text = (await page.locator('aside').innerText()).slice(0, 300);
-  const items = page.locator('aside li, aside button.result, aside .result');
-  const count = await items.count();
-  let rank = null;
-  for (let i = 0; i < count; i++) {
-    if ((await items.nth(i).innerText()).includes(expect)) {
-      rank = i + 1;
-      await items.nth(i).click().catch(() => undefined);
-      break;
-    }
-  }
-  await settle(4500);
-  // The scale bar shows whether the map actually moved to street level after opening the result.
-  const scale = await page.locator('.maplibregl-ctrl-scale').first().innerText().catch(() => null);
-  return { q, expect, found: rank !== null, rank_of_expected_area: rank, results_listed: count, scale_after_open: scale, panel_text: text };
-};
+// Opens the first result whose card mentions `expect` (an admin area written before the run) and
+// proves the map reached that feature (browser-navigation.mjs): a visit counts only when the
+// viewport center is on the selected feature. Ranks stay exploratory notes.
+const nav = createNavigator(page, { settle });
+const searchAndOpen = (q, expect) => nav.searchAndOpen(q, expect);
 // Zoom out at most `steps` levels; stops at the style's minimum zoom (the control is disabled there).
 const zoomOut = async (steps) => {
   const btn = page.locator('.maplibregl-ctrl-zoom-out');
@@ -96,9 +80,9 @@ await page.waitForSelector('canvas.maplibregl-canvas', { timeout: 60_000 });
 await settle(5000);
 title = await page.title();
 await shot('country-light-fa'); // initial view from the release style (dataset bounds)
-// Search is not biased to the current view, so results do not depend on the previous visit.
-const bias = page.locator('aside input[type=checkbox]').nth(1);
-if (await bias.isChecked().catch(() => false)) await bias.uncheck();
+// Search is neither biased to the current view nor autocompleted, so the result list comes from one
+// submitted search and does not depend on the previous visit.
+await nav.prepare();
 
 // Capital, street level, all four theme/language combinations.
 visits.push({ area: 'Tehran (urban)', ...(await searchAndOpen('برج آزادی', 'تهران')) });
@@ -141,7 +125,8 @@ const external = requests.filter((r) => !r.url.startsWith(origin) && !r.url.star
 const rtlPlugin = requests.filter((r) => /rtl-text|mapbox-gl-rtl|rtl_plugin/i.test(r.url));
 const report = {
   recorded_at: new Date().toISOString(),
-  label: 'EXPLORATORY real-Iran views: screenshots for visual review; the verdict covers requests, console errors and required navigation (not search-quality acceptance)',
+  label: 'EXPLORATORY real-Iran views: screenshots for visual review; the verdict covers requests, console errors, script completion and proven navigation to each selected feature (not search-quality acceptance)',
+  navigation_tolerance_m: nav.toleranceM,
   base,
   title,
   total_requests: requests.length,

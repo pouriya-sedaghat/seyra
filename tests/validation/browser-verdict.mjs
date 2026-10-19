@@ -5,7 +5,8 @@
 //   rtl_plugin          no RTL-text plugin is fetched
 //   failed_requests     no HTTP >= 400 response and no network failure (client aborts excepted)
 //   console_errors      no console error
-//   required_visits     every required navigation step reached its intended area
+//   required_visits     every required visit reached its selected feature (`reached: true`, proven by
+//                       the viewport, see browser-navigation.mjs); a found card alone is not enough
 //   script_completed    the audit script ran to its end (a crash is a FAIL with a report)
 //
 // `required_visits` is a navigation precondition (the screenshot shows the intended area), not a
@@ -16,7 +17,7 @@
 export function browserVerdict({ external = [], rtlPlugin = [], failed = [], consoleErrors = [], visits = [], expectedVisits, scriptError = null }) {
   if (!Number.isInteger(expectedVisits) || expectedVisits < 0) throw new Error('expectedVisits must be declared');
   const required = visits.filter((v) => v.required !== false);
-  const missing = required.filter((v) => !v.found);
+  const missing = required.filter((v) => v.reached !== true);
   for (let i = required.length; i < expectedVisits; i++) missing.push({ area: `declared visit ${i + 1} not recorded` });
   const checks = {
     external_requests: { ok: external.length === 0, count: external.length },

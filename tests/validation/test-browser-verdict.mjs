@@ -10,11 +10,12 @@ import { readFileSync } from 'node:fs';
 import { browserVerdict } from './browser-verdict.mjs';
 
 const ok = { external: [], rtlPlugin: [], failed: [], consoleErrors: [] };
-const six = Array.from({ length: 6 }, (_, i) => ({ area: `area ${i + 1}`, found: true, rank_of_expected_area: 1 }));
+const six = Array.from({ length: 6 }, (_, i) => ({ area: `area ${i + 1}`, found: true, reached: true, rank_of_expected_area: 1 }));
 const cases = [
   { name: 'successful report shape', input: { ...ok, visits: six }, expect: true },
   { name: 'console error', input: { ...ok, consoleErrors: ['Failed to load resource: 503'], visits: six }, expect: false },
-  { name: 'missing required visit', input: { ...ok, visits: six.map((v, i) => (i === 0 ? { ...v, found: false, rank_of_expected_area: null } : v)) }, expect: false },
+  { name: 'missing required visit', input: { ...ok, visits: six.map((v, i) => (i === 0 ? { ...v, found: false, reached: false, rank_of_expected_area: null } : v)) }, expect: false },
+  { name: 'result card found but navigation not reached', input: { ...ok, visits: six.map((v, i) => (i === 0 ? { ...v, found: true, reached: false } : v)) }, expect: false },
   { name: 'declared visits not all recorded', input: { ...ok, visits: six.slice(0, 4) }, expect: false },
   { name: 'failed request (503)', input: { ...ok, failed: [{ url: 'https://127.0.0.1:8443/health/ready', status: 503 }], visits: six }, expect: false },
   { name: 'external request', input: { ...ok, external: [{ url: 'https://example.com/x' }], visits: six }, expect: false },
