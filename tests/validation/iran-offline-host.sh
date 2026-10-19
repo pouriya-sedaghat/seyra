@@ -227,21 +227,40 @@ else
 fi
 
 # >>> update-phase (extracted and exercised by tests/validation/test-update-gate.mjs)
-# Gate for an incoming bundle, using only tools already trusted on the operator host (coreutils);
-# nothing from the incoming bundle runs. Prints the reason; rc 0 only if (1) the SHA256SUMS digest
-# equals the value received out of band, (2) every listed file matches its checksum and (3) the
-# bundle holds no unlisted files.
+# Gate for an incoming bundle, using only tools already trusted on the operator host (coreutils,
+# findutils, grep); nothing from the incoming bundle runs and nothing is dereferenced. Prints the
+# reason; rc 0 only if, in this order:
+#   (1) the bundle path and its SHA256SUMS are real (not symlinked) directory/file;
+#   (2) every entry under the bundle is a directory or a regular file (no symlink, dangling or not,
+#       no FIFO, socket or device) with a plain name ([A-Za-z0-9._-] path components) -- checked
+#       before any payload is read, so nothing can be followed out of the bundle or block a read;
+#   (3) SHA256SUMS is well formed: "<64 hex>  <relative path>" lines with plain components, no
+#       absolute path, no "." or ".." segment, no duplicates;
+#   (4) its digest equals the value received out of band;
+#   (5) every listed file matches its checksum, and (6) no regular file is left unlisted.
 update_gate() { # bundle expected-digest
-  local b="$1" want="$2" got listed present
-  [ -f "$b/SHA256SUMS" ] || { echo "no SHA256SUMS in $b"; return 1; }
+  local b="$1" want="$2" got listed present bad
+  { [ -d "$b" ] && [ ! -L "$b" ]; } || { echo "bundle path $b is not a real directory"; return 1; }
+  { [ -f "$b/SHA256SUMS" ] && [ ! -L "$b/SHA256SUMS" ]; } || { echo "no regular SHA256SUMS file in $b"; return 1; }
+  bad="$(find "$b" -mindepth 1 ! -type d ! -type f -printf '%y:%P\0' | tr '\0' ' ')"
+  [ -z "$bad" ] || { echo "bundle holds entries that are neither directories nor regular files (type:path): $bad"; return 1; }
+  bad="$(find "$b" -mindepth 1 -printf '%P\0' | LC_ALL=C grep -z -c -v -E '^[A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$')"
+  [ "$bad" = 0 ] || { echo "bundle holds $bad entry name(s) outside the plain [A-Za-z0-9._-] character set"; return 1; }
+  [ -s "$b/SHA256SUMS" ] || { echo "SHA256SUMS is empty"; return 1; }
+  bad="$(LC_ALL=C grep -c -v -E '^[0-9a-f]{64}  [A-Za-z0-9._-]+(/[A-Za-z0-9._-]+)*$' "$b/SHA256SUMS")"
+  [ "$bad" = 0 ] || { echo "SHA256SUMS has $bad malformed line(s)"; return 1; }
+  bad="$(sed -E 's/^[0-9a-f]{64}  //' "$b/SHA256SUMS" | LC_ALL=C grep -c -E '(^|/)\.\.?(/|$)')"
+  [ "$bad" = 0 ] || { echo "SHA256SUMS names $bad path(s) with a . or .. segment"; return 1; }
+  bad="$(sed -E 's/^[0-9a-f]{64}  //' "$b/SHA256SUMS" | LC_ALL=C sort | uniq -d | grep -c .)"
+  [ "$bad" = 0 ] || { echo "SHA256SUMS lists $bad path(s) more than once"; return 1; }
   got="$(sha256sum "$b/SHA256SUMS" | cut -d' ' -f1)"
   [ "$got" = "$want" ] || { echo "SHA256SUMS digest $got does not match the out-of-band value $want"; return 1; }
   (cd "$b" && sha256sum --quiet --strict -c SHA256SUMS) > "$OUT/U0-sha256sum-check.txt" 2>&1 \
     || { echo "listed file checksums do not match: $(grep -c . "$OUT/U0-sha256sum-check.txt") line(s) in U0-sha256sum-check.txt"; return 1; }
-  listed="$(sed -E 's/^[0-9a-f]{64}  //' "$b/SHA256SUMS" | sort)"
-  present="$(cd "$b" && find . -type f ! -path ./SHA256SUMS -printf '%P\n' | sort)"
+  listed="$(sed -E 's/^[0-9a-f]{64}  //' "$b/SHA256SUMS" | LC_ALL=C sort)"
+  present="$(cd "$b" && find . -type f ! -path ./SHA256SUMS -printf '%P\n' | LC_ALL=C sort)"
   [ "$listed" = "$present" ] || { echo "bundle files differ from SHA256SUMS: $(comm -3 <(printf '%s\n' "$listed") <(printf '%s\n' "$present") | tr -d '\t' | tr '\n' ' ')"; return 1; }
-  echo "SHA256SUMS digest $got matches the out-of-band value; $(printf '%s\n' "$listed" | grep -c .) listed files verified; no unlisted files"
+  echo "SHA256SUMS digest $got matches the out-of-band value; $(printf '%s\n' "$listed" | grep -c .) listed regular files verified; only directories and listed regular files present"
 }
 if has update; then
   # RUNBOOK §8 software update on the existing offline host: the new bundle arrives on transfer
@@ -256,7 +275,15 @@ if has update; then
     result FAIL U1 "update refused before any install change: $gate"
     finish
   fi
-  in_host rm -rf "$inst" && cp -a "$UPDATE_BUNDLE/install" "$inst"
+  # Replace the install tree via a staged copy: copy, re-verify the copy against SHA256SUMS, then
+  # swap. Every step is checked; a failure leaves the old install tree in place and ends the run.
+  staged="$inst.incoming"
+  in_host rm -rf "$staged" || { result FAIL U1 "could not clear $staged (old install kept)"; finish; }
+  cp -a "$UPDATE_BUNDLE/install" "$staged" || { result FAIL U1 "copying the verified install tree failed (old install kept)"; finish; }
+  (cd "$staged" && sed -n -E 's#^([0-9a-f]{64})  install/#\1  #p' "$UPDATE_BUNDLE/SHA256SUMS" | sha256sum --quiet --strict -c -) > "$OUT/U0-staged-check.txt" 2>&1 \
+    || { in_host rm -rf "$staged"; result FAIL U1 "the staged install copy does not match SHA256SUMS (old install kept)"; finish; }
+  in_host rm -rf "$inst" || { result FAIL U1 "could not remove the old install tree"; finish; }
+  mv "$staged" "$inst" || { result FAIL U1 "could not move the staged install tree into place"; finish; }
   timed update-bootstrap-load cli bootstrap-load "$UPDATE_BUNDLE" > "$OUT/U1-bootstrap-load.log" 2>&1; rc=$?
   cli verify-images > "$OUT/U1-verify-images.log" 2>&1; rc2=$?
   cli status > "$OUT/U1-status.log" 2>&1
