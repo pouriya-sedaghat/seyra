@@ -1,0 +1,41 @@
+{
+  "schema": "seyra.backup/1",
+  "generation": "seyra-backup-20261019T071825353Z-7aa772",
+  "created_at": "2026-10-19T07:18:25.353Z",
+  "pointers": {
+    "active": "ds-20261001-9843cf36a06e",
+    "previous": null
+  },
+  "include_sources": false,
+  "releases": [
+    {
+      "role": "active",
+      "dataset_id": "ds-20261001-9843cf36a06e",
+      "source_filename": "synthetic-v1.osm.pbf",
+      "source_sha256": "e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323",
+      "snapshot_timestamp": "2026-10-01T00:00:00Z",
+      "snapshot_timestamp_source": "pbf_header",
+      "source_file": null
+    }
+  ],
+  "files": [
+    {
+      "path": "manifests.tar.gz",
+      "role": "manifests",
+      "size": 6428,
+      "sha256": "dcbe625df73d05d1e104036757fde51507dbe35763e3ded5c30e9ecdd893fd32"
+    },
+    {
+      "path": "seyra_app.sql",
+      "role": "control-db",
+      "size": 8755,
+      "sha256": "76656ec12debe2007bed9d3b20387fc1a165d2f9bf1123a0c42f77421dce00de"
+    },
+    {
+      "path": "state.tar.gz",
+      "role": "state",
+      "size": 1258,
+      "sha256": "1ad98c6eee8dc266acf37d7551239ccfd1bec1de00a5d59b9825c958c7e3d72c"
+    }
+  ]
+}

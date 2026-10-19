@@ -1,0 +1,10 @@
+# Seyra real-Iran offline-host validation — 2026-10-19T07:24:31Z
+# harness=/home/owner/seyra-prep/boundary/host/f4-valid-restore-2/harness-20261019T072149Z bundle=/home/owner/seyra-bnd-lab/transfer/r6 pbf=synthetic-v1.osm.pbf sha256=e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323 dataset_id=ds-20261001-9843cf36a06e
+PASS I8 backup generation seyra-backup-20261019T072149730Z-069d08 (without --include-sources) and a separate secrets copy
+PASS I9 zero packets to non-local destinations from offline host 1 since this run's attach (counter 0 -> 0; 6 link-local IGMP reports counted separately)
+PASS R2 restore before the secrets are back is refused and starts nothing
+PASS R3 secrets -> init -> restore: control DB events identical; restore names the original input by SHA-256 (e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323)
+PASS R4 rebuilt from the owner's original input without included sources; dataset_id reproduced (ds-20261001-9843cf36a06e)
+PASS R5 restored host serves ds-20261001-9843cf36a06e through the ingress
+PASS R6 zero packets to non-local destinations from offline host 2 during install/restore/rebuild/activate
+# failures: 0

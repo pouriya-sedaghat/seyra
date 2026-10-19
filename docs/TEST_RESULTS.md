@@ -1,5 +1,18 @@
 # Seyra Map Services — test results (phase 1)
 
+## Boundary follow-up `vm2-2026-10-19-boundary` (review of `e7a2175`)
+
+Separate run identity; the sections below are earlier records and are unchanged. Full record: [`docs/validation/iran/vm2-2026-10-19-boundary/README.md`](validation/iran/vm2-2026-10-19-boundary/README.md). Current lock `c75bb0a`: OPS `sha256:135ef05c…`, data components unchanged. Bundle r6 `SHA256SUMS` `f4cb50a07a7bbaaec026ae41b278b7a42db29dc84e9001cba5f21e48c12f827d`.
+
+| Item | Result |
+| --- | --- |
+| F1: reclaim credit for a failed build | Fixed: only allocated, same-device, unlinked-outside blocks count; the render DB counts 0; free space is re-observed after cleanup. Regression: 3 of 4 cases decided wrongly on `e7a2175`, 0 now. Disposable host C1–C7 PASS (C6 sparse 8 GiB refused, C7 allocated admitted, then re-observed). |
+| F2: update-gate entry types | Fixed: only directories and listed regular files with plain names; well-formed `SHA256SUMS`; staged, re-verified install. Regression: 33/74 checks fail on `e7a2175` (accepted symlinks and FIFOs, a blocked gate, an ignored copy failure), 74/74 now. On a disposable host, symlink, listed-symlink and FIFO bundles are refused with no change; valid r5→r6 PASS. |
+| F3: browser navigation | Fixed: a visit passes only when the viewport center reaches the selected feature (≤ 250 m), with click errors kept. Regression: 4 wrong cases accepted on `e7a2175`, 0 now. Read-only Iran audit: run 1 FAIL under VM memory pressure from my disposable hosts (504/503); run 2 PASS (572 requests, 0 external/failed/console, 6/6 reached at 0 m). |
+| F4: attached-host ownership | Fixed: lab-label check on attach, before every mutating phase, and in drop/volume helpers. Regression: 14/26 checks fail on `e7a2175`, 26/26 now. Real unlabelled and wrong-lab dummies refused with identities unchanged. The valid lab-host restore path PASSes (the rerun includes the I9 baseline fix). |
+| Unit / integration / security / lifecycle / tamper / offline / restore (r6) | 170 / 137 / 28 / 15 of 15 / T0–T5 / O0–O5 / R1–R7 + R4a: all PASS; 0 outbound packets |
+| Readiness 503 observation | **Still open, not reproduced.** The new 504/503 in run 1 has an attributable memory-pressure signature that the original lacked. |
+
 ## Follow-up run `vm2-2026-10-19-followup` (review of `82942c1`)
 
 Separate run identity; the sections below are earlier records and are unchanged. Full record: [`docs/validation/iran/vm2-2026-10-19-followup/README.md`](validation/iran/vm2-2026-10-19-followup/README.md). Current lock `8c27175`: OPS `sha256:7367b56f…`, data components unchanged. Bundle r5 `SHA256SUMS` `d128cce3f691de06c09914c08900bcb9767ff339674cb20ed6f8cc8c18870fde`.

@@ -8,6 +8,8 @@ Date: 2026-10-14; updated 2026-10-17 for the corrections to the PR #1 review of 
 
 **Update 2026-10-19, follow-up `vm2-2026-10-19-followup`** ([record](validation/iran/vm2-2026-10-19-followup/README.md)). This closes the review's harness findings V1 (update gate) and V2 (browser verdict) and adds frozen harness execution and a deterministic L14. It also adds a measured, documented import capacity policy, checked before side effects, with within-step free-space sampling, and operator-owned bundle exports. Only OPS was rebuilt (lock `8c27175`, bundle r5 `d128cce3…`), so dataset IDs are unchanged. The readiness 503 observation remains open.
 
+**Update 2026-10-19, boundary follow-up `vm2-2026-10-19-boundary`** ([record](validation/iran/vm2-2026-10-19-boundary/README.md)). This closes the four boundary findings of the review of `e7a2175`. F1: a failed build is credited only for allocated, same-device storage; its render DB counts 0; free space is re-observed after cleanup and before any write. F2: the update gate accepts only directories and listed regular files and installs through a staged, re-verified copy. F3: a browser visit passes only when the map actually reaches the selected feature. F4: lab ownership is checked when the harness attaches a host and before every mutating phase. Each fix has a before/after regression. Only OPS was rebuilt (lock `c75bb0a`, bundle r6 `f4cb50a0…`), so dataset IDs are unchanged and every OPS-affected suite was rerun on r6. The readiness 503 observation remains open.
+
 ## Scope delivered
 
 | Area | State | Where |

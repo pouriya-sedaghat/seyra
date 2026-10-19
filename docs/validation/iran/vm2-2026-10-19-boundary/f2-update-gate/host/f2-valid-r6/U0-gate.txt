@@ -1,0 +1,1 @@
+SHA256SUMS digest f4cb50a07a7bbaaec026ae41b278b7a42db29dc84e9001cba5f21e48c12f827d matches the out-of-band value; 28 listed regular files verified; only directories and listed regular files present

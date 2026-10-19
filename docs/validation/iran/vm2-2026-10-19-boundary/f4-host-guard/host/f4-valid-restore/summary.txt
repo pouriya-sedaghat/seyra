@@ -1,0 +1,16 @@
+# Seyra real-Iran offline-host validation — 2026-10-19T07:21:10Z
+# harness=/home/owner/seyra-prep/boundary/host/f4-valid-restore/harness-20261019T071609Z bundle=/home/owner/seyra-bnd-lab/transfer/r6 pbf=synthetic-v1.osm.pbf sha256=e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323 dataset_id=ds-20261001-9843cf36a06e
+PASS I3a free space 37310160896 B >= import guard 2147483648 B at the managed home
+PASS I3 full Iran import with staging validation: ds-20261001-9843cf36a06e (65 s)
+PASS I4 verify-release ds-20261001-9843cf36a06e
+PASS I5 activated ds-20261001-9843cf36a06e; /health/ready reports it through https://127.0.0.1:8443 with all four providers
+PASS I6 exploratory Iran smoke completed: {"dataset_id":"ds-20261001-9843cf36a06e","ready":200,"search_hit_at_1":0,"search_hit_at_5":0,"search_cases":33,"autocomplete_hit_at_5":0,"autocomplete_cases":6,"reverse_expected_seen":0,"reverse_cases_with_expectation":12,"routing_status_as_expected":1,"routing_cases":14,"routing_distance_in_range":0,"proximity_ok":6,"pois_ok":32,"pois_cases":32,"tiles_ok":27,"tiles_requests":27,"transport_errors":0}
+PASS I7 stop/start: ready again on ds-20261001-9843cf36a06e with the same provider identities
+PASS I8 backup generation seyra-backup-20261019T071825353Z-7aa772 (without --include-sources) and a separate secrets copy
+FAIL I9 outbound attempts counted:  -> 0
+PASS R2 restore before the secrets are back is refused and starts nothing
+PASS R3 secrets -> init -> restore: control DB events identical; restore names the original input by SHA-256 (e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323)
+PASS R4 rebuilt from the owner's original input without included sources; dataset_id reproduced (ds-20261001-9843cf36a06e)
+PASS R5 restored host serves ds-20261001-9843cf36a06e through the ingress
+PASS R6 zero packets to non-local destinations from offline host 2 during install/restore/rebuild/activate
+# failures: 1

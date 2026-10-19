@@ -1,0 +1,13 @@
+# 2026-10-19T07:56:39Z after the r6 batch (read-only)
+seyra-iran-restore id=73fbd9e99585674e3a352223d7076a67b49c85847ce8be7b43df6699c5494897 status=running started=2026-10-18T14:01:28.145046033Z restarts=0 label=<no value>
+seyra-api-1 f5cde7b8c562
+seyra-db-1 d58373421acd
+seyra-overpass-1 5318a1283a71
+seyra-photon-1 df26bd83c6fa
+seyra-proxy-1 381f9379d074
+seyra-tegola-1 89e0cc70447a
+seyra-valhalla-1 851b483e0a7a
+pbf 229845082 bytes mtime=2026-10-18 08:27:58.073389236 +0000
+7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f  /home/owner/iran-261017.osm.pbf
+  egress COUNT 0
+ready probe 07:57:07Z http=200 {"status":"ready","dataset_id":"ds-20261017-2d2c87f31d11","providers":[{"provider":"tiles","status":"ok"},{"provider":"routing","status":"ok"},{"provider":"geocoder","status":"ok"},{"provider":"overpass","status":"ok"}]}

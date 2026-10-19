@@ -1,0 +1,27 @@
+FAIL restore on an attached unlabelled host: run stopped (exit 2, REFUSED recorded) -- rc=1
+FAIL restore on an attached unlabelled host: no kill/rm/volume rm/run against seyra-guard-preserved -- docker exec seyra-guard-preserved sh -c docker ps -q | xargs -r docker kill | docker exec seyra-guard-preserved rm -rf /tmp/seyra-host-guard-NLDShP/lab/home /tmp/seyra-host-guard-NLDShP/lab/install /tmp/seyra-host-guard-NLDShP/lab/work | docker rm -f seyra-guard-preserved | docker volume rm seyra-gu
+PASS restore on an attached unlabelled host: no Seyra CLI call
+FAIL readiness on an attached unlabelled host: run stopped (exit 2, REFUSED recorded) -- rc=1
+PASS readiness on an attached unlabelled host: no kill/rm/volume rm/run against seyra-guard-preserved
+FAIL readiness on an attached unlabelled host: no Seyra CLI call -- cli stop | cli start
+FAIL update on an attached unlabelled host: run stopped (exit 2, REFUSED recorded) -- rc=1
+PASS update on an attached unlabelled host: no kill/rm/volume rm/run against seyra-guard-preserved
+PASS update on an attached unlabelled host: no Seyra CLI call
+FAIL restore on an attached wrong-lab host: run stopped (exit 2, REFUSED recorded) -- rc=1
+FAIL restore on an attached wrong-lab host: no kill/rm/volume rm/run against seyra-guard-preserved -- docker exec seyra-guard-preserved sh -c docker ps -q | xargs -r docker kill | docker exec seyra-guard-preserved rm -rf /tmp/seyra-host-guard-dEujdL/lab/home /tmp/seyra-host-guard-dEujdL/lab/install /tmp/seyra-host-guard-dEujdL/lab/work | docker rm -f seyra-guard-preserved | docker volume rm seyra-gu
+PASS restore on an attached wrong-lab host: no Seyra CLI call
+FAIL readiness on an attached wrong-lab host: run stopped (exit 2, REFUSED recorded) -- rc=1
+PASS readiness on an attached wrong-lab host: no kill/rm/volume rm/run against seyra-guard-preserved
+FAIL readiness on an attached wrong-lab host: no Seyra CLI call -- cli stop | cli start
+FAIL update on an attached wrong-lab host: run stopped (exit 2, REFUSED recorded) -- rc=1
+PASS update on an attached wrong-lab host: no kill/rm/volume rm/run against seyra-guard-preserved
+PASS update on an attached wrong-lab host: no Seyra CLI call
+FAIL install over an unlabelled leftover volume: run stopped -- rc=2
+FAIL install over an unlabelled leftover volume: volume kept -- docker volume rm seyra-guard-new-docker
+FAIL restore onto a preserved restore target: run stopped -- rc=2
+PASS restore onto a preserved restore target: target untouched
+PASS restore onto a preserved restore target: own host 1 was dropped first
+PASS readiness on the lab's own host: admitted (stop/start issued)
+PASS restore on the lab's own host: host 1 and its volume removed
+FAIL restore on the lab's own host: host 2 created with this lab's label -- 
+# harness=/home/owner/seyra-prep/boundary/base-e7a2175/tests/validation/iran-offline-host.sh checks=26 failed=14

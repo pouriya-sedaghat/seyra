@@ -1,0 +1,75 @@
+PASS wrong-digest: refused (FAIL U1)
+PASS wrong-digest: no CLI/bootstrap call
+PASS wrong-digest: install tree unchanged
+PASS wrong-digest: BUNDLE not reassigned
+PASS wrong-digest: run ends (dependent phases skipped)
+PASS corrupt-payload: refused (FAIL U1)
+PASS corrupt-payload: no CLI/bootstrap call
+PASS corrupt-payload: install tree unchanged
+PASS corrupt-payload: BUNDLE not reassigned
+PASS corrupt-payload: run ends (dependent phases skipped)
+PASS unlisted-file: refused (FAIL U1)
+PASS unlisted-file: no CLI/bootstrap call
+PASS unlisted-file: install tree unchanged
+PASS unlisted-file: BUNDLE not reassigned
+PASS unlisted-file: run ends (dependent phases skipped)
+FAIL unlisted-symlink: refused (FAIL U1) -- result PASS U1 software update: SHA256SUMS digest ee58598e01f653a21eaabf55b7fe32b6a6e13e6ba7a4792412cfa4d063867481 matches the out-of-band value; 4 listed files verified; no unlisted files; install tree replaced; all locked images verified
+FAIL unlisted-symlink: no CLI/bootstrap call -- cli bootstrap-load /tmp/seyra-update-gate-unlisted-symlink-Qv98Lt/bundle | cli verify-images | cli status
+FAIL unlisted-symlink: install tree unchanged -- marker="NEW install tree\n"
+FAIL unlisted-symlink: BUNDLE not reassigned -- /tmp/seyra-update-gate-unlisted-symlink-Qv98Lt/bundle
+FAIL unlisted-symlink: run ends (dependent phases skipped) -- rc=0
+FAIL dangling-symlink: refused (FAIL U1) -- result PASS U1 software update: SHA256SUMS digest ee58598e01f653a21eaabf55b7fe32b6a6e13e6ba7a4792412cfa4d063867481 matches the out-of-band value; 4 listed files verified; no unlisted files; install tree replaced; all locked images verified
+FAIL dangling-symlink: no CLI/bootstrap call -- cli bootstrap-load /tmp/seyra-update-gate-dangling-symlink-7VclGe/bundle | cli verify-images | cli status
+FAIL dangling-symlink: install tree unchanged -- marker="NEW install tree\n"
+FAIL dangling-symlink: BUNDLE not reassigned -- /tmp/seyra-update-gate-dangling-symlink-7VclGe/bundle
+FAIL dangling-symlink: run ends (dependent phases skipped) -- rc=0
+PASS listed-file-is-symlink: refused (FAIL U1)
+PASS listed-file-is-symlink: no CLI/bootstrap call
+PASS listed-file-is-symlink: install tree unchanged
+PASS listed-file-is-symlink: BUNDLE not reassigned
+PASS listed-file-is-symlink: run ends (dependent phases skipped)
+FAIL unlisted-fifo: refused (FAIL U1) -- result PASS U1 software update: SHA256SUMS digest ee58598e01f653a21eaabf55b7fe32b6a6e13e6ba7a4792412cfa4d063867481 matches the out-of-band value; 4 listed files verified; no unlisted files; install tree replaced; all locked images verified
+FAIL unlisted-fifo: no CLI/bootstrap call -- cli bootstrap-load /tmp/seyra-update-gate-unlisted-fifo-WD5HHr/bundle | cli verify-images | cli status
+FAIL unlisted-fifo: install tree unchanged -- marker="NEW install tree\n"
+FAIL unlisted-fifo: BUNDLE not reassigned -- /tmp/seyra-update-gate-unlisted-fifo-WD5HHr/bundle
+FAIL unlisted-fifo: run ends (dependent phases skipped) -- rc=0
+FAIL listed-fifo: refused (FAIL U1) -- 
+PASS listed-fifo: no CLI/bootstrap call
+PASS listed-fifo: install tree unchanged
+FAIL listed-fifo: BUNDLE not reassigned -- 
+FAIL listed-fifo: run ends (dependent phases skipped) -- rc=timeout
+PASS dotdot-path: refused (FAIL U1)
+PASS dotdot-path: no CLI/bootstrap call
+PASS dotdot-path: install tree unchanged
+PASS dotdot-path: BUNDLE not reassigned
+PASS dotdot-path: run ends (dependent phases skipped)
+PASS absolute-path: refused (FAIL U1)
+PASS absolute-path: no CLI/bootstrap call
+PASS absolute-path: install tree unchanged
+PASS absolute-path: BUNDLE not reassigned
+PASS absolute-path: run ends (dependent phases skipped)
+PASS newline-name: refused (FAIL U1)
+PASS newline-name: no CLI/bootstrap call
+PASS newline-name: install tree unchanged
+PASS newline-name: BUNDLE not reassigned
+PASS newline-name: run ends (dependent phases skipped)
+FAIL bundle-root-symlink: refused (FAIL U1) -- result PASS U1 software update: SHA256SUMS digest ee58598e01f653a21eaabf55b7fe32b6a6e13e6ba7a4792412cfa4d063867481 matches the out-of-band value; 4 listed files verified; no unlisted files; install tree replaced; all locked images verified
+FAIL bundle-root-symlink: no CLI/bootstrap call -- cli bootstrap-load /tmp/seyra-update-gate-bundle-root-symlink-JpuZwF/bundle-link | cli verify-images | cli status
+FAIL bundle-root-symlink: install tree unchanged -- marker="NEW install tree\n"
+FAIL bundle-root-symlink: BUNDLE not reassigned -- /tmp/seyra-update-gate-bundle-root-symlink-JpuZwF/bundle-link
+FAIL bundle-root-symlink: run ends (dependent phases skipped) -- rc=0
+FAIL sums-symlink: refused (FAIL U1) -- result PASS U1 software update: SHA256SUMS digest ee58598e01f653a21eaabf55b7fe32b6a6e13e6ba7a4792412cfa4d063867481 matches the out-of-band value; 4 listed files verified; no unlisted files; install tree replaced; all locked images verified
+FAIL sums-symlink: no CLI/bootstrap call -- cli bootstrap-load /tmp/seyra-update-gate-sums-symlink-zeFS6R/bundle | cli verify-images | cli status
+FAIL sums-symlink: install tree unchanged -- marker="NEW install tree\n"
+FAIL sums-symlink: BUNDLE not reassigned -- /tmp/seyra-update-gate-sums-symlink-zeFS6R/bundle
+FAIL sums-symlink: run ends (dependent phases skipped) -- rc=0
+FAIL copy-fails: refused (FAIL U1) -- result PASS U1 software update: SHA256SUMS digest ee58598e01f653a21eaabf55b7fe32b6a6e13e6ba7a4792412cfa4d063867481 matches the out-of-band value; 4 listed files verified; no unlisted files; install tree replaced; all locked images verified
+FAIL copy-fails: no CLI/bootstrap call -- cli bootstrap-load /tmp/seyra-update-gate-copy-fails-2N2GRi/bundle | cli verify-images | cli status
+FAIL copy-fails: install tree unchanged -- marker="(missing)"
+FAIL copy-fails: BUNDLE not reassigned -- /tmp/seyra-update-gate-copy-fails-2N2GRi/bundle
+FAIL copy-fails: run ends (dependent phases skipped) -- rc=0
+PASS valid: PASS U1
+PASS valid: install tree replaced
+PASS valid: bootstrap-load ran after verification
+PASS valid: BUNDLE now the update
+# harness=/home/owner/seyra-prep/boundary/base-e7a2175/tests/validation/iran-offline-host.sh checks=74 failed=33

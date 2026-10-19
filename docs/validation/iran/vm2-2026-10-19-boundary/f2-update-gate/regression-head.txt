@@ -1,0 +1,75 @@
+PASS wrong-digest: refused (FAIL U1)
+PASS wrong-digest: no CLI/bootstrap call
+PASS wrong-digest: install tree unchanged
+PASS wrong-digest: BUNDLE not reassigned
+PASS wrong-digest: run ends (dependent phases skipped)
+PASS corrupt-payload: refused (FAIL U1)
+PASS corrupt-payload: no CLI/bootstrap call
+PASS corrupt-payload: install tree unchanged
+PASS corrupt-payload: BUNDLE not reassigned
+PASS corrupt-payload: run ends (dependent phases skipped)
+PASS unlisted-file: refused (FAIL U1)
+PASS unlisted-file: no CLI/bootstrap call
+PASS unlisted-file: install tree unchanged
+PASS unlisted-file: BUNDLE not reassigned
+PASS unlisted-file: run ends (dependent phases skipped)
+PASS unlisted-symlink: refused (FAIL U1)
+PASS unlisted-symlink: no CLI/bootstrap call
+PASS unlisted-symlink: install tree unchanged
+PASS unlisted-symlink: BUNDLE not reassigned
+PASS unlisted-symlink: run ends (dependent phases skipped)
+PASS dangling-symlink: refused (FAIL U1)
+PASS dangling-symlink: no CLI/bootstrap call
+PASS dangling-symlink: install tree unchanged
+PASS dangling-symlink: BUNDLE not reassigned
+PASS dangling-symlink: run ends (dependent phases skipped)
+PASS listed-file-is-symlink: refused (FAIL U1)
+PASS listed-file-is-symlink: no CLI/bootstrap call
+PASS listed-file-is-symlink: install tree unchanged
+PASS listed-file-is-symlink: BUNDLE not reassigned
+PASS listed-file-is-symlink: run ends (dependent phases skipped)
+PASS unlisted-fifo: refused (FAIL U1)
+PASS unlisted-fifo: no CLI/bootstrap call
+PASS unlisted-fifo: install tree unchanged
+PASS unlisted-fifo: BUNDLE not reassigned
+PASS unlisted-fifo: run ends (dependent phases skipped)
+PASS listed-fifo: refused (FAIL U1)
+PASS listed-fifo: no CLI/bootstrap call
+PASS listed-fifo: install tree unchanged
+PASS listed-fifo: BUNDLE not reassigned
+PASS listed-fifo: run ends (dependent phases skipped)
+PASS dotdot-path: refused (FAIL U1)
+PASS dotdot-path: no CLI/bootstrap call
+PASS dotdot-path: install tree unchanged
+PASS dotdot-path: BUNDLE not reassigned
+PASS dotdot-path: run ends (dependent phases skipped)
+PASS absolute-path: refused (FAIL U1)
+PASS absolute-path: no CLI/bootstrap call
+PASS absolute-path: install tree unchanged
+PASS absolute-path: BUNDLE not reassigned
+PASS absolute-path: run ends (dependent phases skipped)
+PASS newline-name: refused (FAIL U1)
+PASS newline-name: no CLI/bootstrap call
+PASS newline-name: install tree unchanged
+PASS newline-name: BUNDLE not reassigned
+PASS newline-name: run ends (dependent phases skipped)
+PASS bundle-root-symlink: refused (FAIL U1)
+PASS bundle-root-symlink: no CLI/bootstrap call
+PASS bundle-root-symlink: install tree unchanged
+PASS bundle-root-symlink: BUNDLE not reassigned
+PASS bundle-root-symlink: run ends (dependent phases skipped)
+PASS sums-symlink: refused (FAIL U1)
+PASS sums-symlink: no CLI/bootstrap call
+PASS sums-symlink: install tree unchanged
+PASS sums-symlink: BUNDLE not reassigned
+PASS sums-symlink: run ends (dependent phases skipped)
+PASS copy-fails: refused (FAIL U1)
+PASS copy-fails: no CLI/bootstrap call
+PASS copy-fails: install tree unchanged
+PASS copy-fails: BUNDLE not reassigned
+PASS copy-fails: run ends (dependent phases skipped)
+PASS valid: PASS U1
+PASS valid: install tree replaced
+PASS valid: bootstrap-load ran after verification
+PASS valid: BUNDLE now the update
+# harness=/home/owner/seyra/tests/validation/iran-offline-host.sh checks=74 failed=0

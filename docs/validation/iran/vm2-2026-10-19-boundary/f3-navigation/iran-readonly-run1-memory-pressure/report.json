@@ -1,0 +1,244 @@
+{
+  "recorded_at": "2026-10-19T07:26:34.821Z",
+  "label": "EXPLORATORY real-Iran views: screenshots for visual review; the verdict covers requests, console errors, script completion and proven navigation to each selected feature (not search-quality acceptance)",
+  "navigation_tolerance_m": 250,
+  "base": "https://127.0.0.1:8443",
+  "title": "سیرا — آزمون سرویس‌های نقشه",
+  "total_requests": 355,
+  "external_requests": [],
+  "rtl_plugin_requests": [],
+  "font_resources": [
+    "/maps/ds-20261017-2d2c87f31d11/fonts/files/Vazirmatn-Bold.woff2",
+    "/maps/ds-20261017-2d2c87f31d11/fonts/files/Vazirmatn-Regular.woff2",
+    "/maps/ds-20261017-2d2c87f31d11/fonts/Vazirmatn Bold/0-255.pbf",
+    "/maps/ds-20261017-2d2c87f31d11/fonts/Vazirmatn Regular/0-255.pbf",
+    "/maps/ds-20261017-2d2c87f31d11/fonts/Vazirmatn Regular/8192-8447.pbf",
+    "/maps/ds-20261017-2d2c87f31d11/fonts/Vazirmatn Regular/256-511.pbf"
+  ],
+  "failed_requests": [
+    {
+      "url": "https://127.0.0.1:8443/api/v1/map/search?q=%D8%A8%D8%B1%D8%AC%20%D8%A2%D8%B2%D8%A7%D8%AF%DB%8C&lang=fa&limit=10&dataset_id=ds-20261017-2d2c87f31d11",
+      "status": 504
+    },
+    {
+      "url": "https://127.0.0.1:8443/api/v1/map/search?q=%D9%85%DB%8C%D8%AF%D8%A7%D9%86%20%D9%86%D9%82%D8%B4%20%D8%AC%D9%87%D8%A7%D9%86&lang=fa&limit=10&dataset_id=ds-20261017-2d2c87f31d11&bias_lon=53.816822150003645&bias_lat=2.842170943040401e-14",
+      "status": 504
+    },
+    {
+      "url": "https://127.0.0.1:8443/api/v1/map/search?q=%D9%85%DB%8C%D8%AF%D8%A7%D9%86%20%D9%86%D9%82%D8%B4%20%D8%AC%D9%87%D8%A7%D9%86&lang=fa&limit=10&dataset_id=ds-20261017-2d2c87f31d11&bias_lon=51.67736239999999&bias_lat=32.65810239999999",
+      "status": 504
+    },
+    {
+      "url": "https://127.0.0.1:8443/api/v1/map/search?q=%D8%A7%D8%A8%DB%8C%D8%A7%D9%86%D9%87&lang=fa&limit=10&dataset_id=ds-20261017-2d2c87f31d11&bias_lon=51.67736239999999&bias_lat=32.65810239999999",
+      "status": 504
+    },
+    {
+      "url": "https://127.0.0.1:8443/api/v1/map/search?q=%D8%A7%D8%A8%DB%8C%D8%A7%D9%86%D9%87&lang=fa&limit=10&dataset_id=ds-20261017-2d2c87f31d11&bias_lon=51.590857599999936&bias_lat=33.58650969999999",
+      "status": 504
+    },
+    {
+      "url": "https://127.0.0.1:8443/health/ready",
+      "status": 503
+    },
+    {
+      "url": "https://127.0.0.1:8443/api/v1/map/search?q=%D8%B2%D8%A7%D9%87%D8%AF%D8%A7%D9%86&lang=fa&limit=10&dataset_id=ds-20261017-2d2c87f31d11&bias_lon=60.86353570000006&bias_lat=29.490687199999982",
+      "status": 503
+    },
+    {
+      "url": "https://127.0.0.1:8443/api/v1/map/search?q=%D8%A8%D8%A7%D8%B2%D8%B1%DA%AF%D8%A7%D9%86&lang=fa&limit=10&dataset_id=ds-20261017-2d2c87f31d11",
+      "status": 503
+    },
+    {
+      "url": "https://127.0.0.1:8443/api/v1/map/search?q=%D8%B2%D8%A7%D9%87%D8%AF%D8%A7%D9%86&lang=fa&limit=10&dataset_id=ds-20261017-2d2c87f31d11&bias_lon=51.59085760000016&bias_lat=33.586509699998544",
+      "status": 504
+    }
+  ],
+  "client_aborted_requests": 59,
+  "tile_requests": 290,
+  "console_errors": [
+    "Failed to load resource: the server responded with a status of 504 (Gateway Timeout)",
+    "Failed to load resource: the server responded with a status of 504 (Gateway Timeout)",
+    "Failed to load resource: the server responded with a status of 504 (Gateway Timeout)",
+    "Failed to load resource: the server responded with a status of 504 (Gateway Timeout)",
+    "Failed to load resource: the server responded with a status of 504 (Gateway Timeout)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 503 (Service Unavailable)",
+    "Failed to load resource: the server responded with a status of 504 (Gateway Timeout)"
+  ],
+  "visits": [
+    {
+      "area": "Tehran (urban)",
+      "q": "برج آزادی",
+      "expect": "تهران",
+      "result_found": false,
+      "rank_of_expected_area": null,
+      "results_listed": 0,
+      "target": null,
+      "click_error": null,
+      "center_after": null,
+      "distance_m": null,
+      "reached": false,
+      "error": null,
+      "scale_after_open": null
+    },
+    {
+      "area": "Isfahan (urban)",
+      "q": "میدان نقش جهان",
+      "expect": "اصفهان",
+      "result_found": true,
+      "rank_of_expected_area": 1,
+      "results_listed": 10,
+      "target": {
+        "id": "osm:r15540548",
+        "lon": 51.6773624,
+        "lat": 32.6581024
+      },
+      "click_error": null,
+      "center_after": {
+        "lon": 51.67736239999999,
+        "lat": 32.65810239999999
+      },
+      "distance_m": 0,
+      "reached": true,
+      "error": null,
+      "scale_after_open": "200 m"
+    },
+    {
+      "area": "Abyaneh (rural)",
+      "q": "ابیانه",
+      "expect": "اصفهان",
+      "result_found": true,
+      "rank_of_expected_area": 1,
+      "results_listed": 10,
+      "target": {
+        "id": "osm:n27369333",
+        "lon": 51.5908576,
+        "lat": 33.5865097
+      },
+      "click_error": null,
+      "center_after": {
+        "lon": 51.590857599999936,
+        "lat": 33.58650969999999
+      },
+      "distance_m": 0,
+      "reached": true,
+      "error": null,
+      "scale_after_open": "100 m"
+    },
+    {
+      "area": "Zahedan (south-east border province)",
+      "q": "زاهدان",
+      "expect": "سیستان",
+      "result_found": true,
+      "rank_of_expected_area": 1,
+      "results_listed": 7,
+      "target": {
+        "id": "osm:r7068962",
+        "lon": 60.8635357,
+        "lat": 29.4906872
+      },
+      "click_error": null,
+      "center_after": {
+        "lon": 60.86353570000006,
+        "lat": 29.490687199999982
+      },
+      "distance_m": 0,
+      "reached": true,
+      "error": null,
+      "scale_after_open": "200 m"
+    },
+    {
+      "area": "Bazargan (north-west border crossing)",
+      "q": "بازرگان",
+      "expect": "آذربایجان",
+      "result_found": false,
+      "rank_of_expected_area": null,
+      "results_listed": 7,
+      "target": null,
+      "click_error": null,
+      "center_after": null,
+      "distance_m": null,
+      "reached": false,
+      "error": null,
+      "scale_after_open": null
+    },
+    {
+      "area": "Shiraz (English query)",
+      "q": "Shiraz",
+      "expect": "Fars",
+      "result_found": true,
+      "rank_of_expected_area": 1,
+      "results_listed": 10,
+      "target": {
+        "id": "osm:r8167754",
+        "lon": 52.5378041,
+        "lat": 29.6060218
+      },
+      "click_error": null,
+      "center_after": {
+        "lon": 52.53780410000002,
+        "lat": 29.606021799999994
+      },
+      "distance_m": 0,
+      "reached": true,
+      "error": null,
+      "scale_after_open": "200 m"
+    }
+  ],
+  "zoom_out_levels": {
+    "tehran_city": 4,
+    "abyaneh_region": 3,
+    "bazargan_region": 3
+  },
+  "script_error": null,
+  "screenshots": [
+    "country-light-fa.jpg",
+    "tehran-azadi-light-fa.jpg",
+    "tehran-azadi-dark-fa.jpg",
+    "tehran-azadi-light-en.jpg",
+    "tehran-azadi-dark-en.jpg",
+    "tehran-city-light-fa.jpg",
+    "isfahan-naqshejahan-light-fa.jpg",
+    "abyaneh-rural-light-fa.jpg",
+    "abyaneh-region-light-fa.jpg",
+    "zahedan-dark-en.jpg",
+    "bazargan-border-light-fa.jpg",
+    "bazargan-region-light-fa.jpg",
+    "shiraz-light-en.jpg"
+  ],
+  "verdict": {
+    "status": "FAIL",
+    "ok": false,
+    "checks": {
+      "external_requests": {
+        "ok": true,
+        "count": 0
+      },
+      "rtl_plugin": {
+        "ok": true,
+        "count": 0
+      },
+      "failed_requests": {
+        "ok": false,
+        "count": 9
+      },
+      "console_errors": {
+        "ok": false,
+        "count": 9
+      },
+      "required_visits": {
+        "ok": false,
+        "required": 6,
+        "missing": [
+          "Tehran (urban)",
+          "Bazargan (north-west border crossing)"
+        ]
+      },
+      "script_completed": {
+        "ok": true,
+        "error": null
+      }
+    }
+  }
+}

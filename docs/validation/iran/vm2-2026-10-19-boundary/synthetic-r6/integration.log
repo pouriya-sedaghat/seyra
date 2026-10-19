@@ -1,0 +1,24 @@
+
+ RUN  v5.0.4 /home/owner/seyra/tests/integration
+
+ ✓ src/routing.it.test.ts (51 tests) 3438ms
+   ✓ optimized order vs independent brute force (AC12) (7)
+     ✓ car / time: Held–Karp order and cost equal the brute-force optimum 410ms
+     ✓ car / distance: Held–Karp order and cost equal the brute-force optimum 513ms
+     ✓ pedestrian / time: Held–Karp order and cost equal the brute-force optimum 482ms
+     ✓ pedestrian / distance: Held–Karp order and cost equal the brute-force optimum 516ms
+     ✓ motorcycle / time: Held–Karp order and cost equal the brute-force optimum 393ms
+     ✓ motorcycle / distance: Held–Karp order and cost equal the brute-force optimum 453ms
+ ✓ src/pois.it.test.ts (26 tests) 1733ms
+   ✓ bounded concurrency (2)
+     ✓ excess simultaneous POI requests get typed OVERLOADED, never an unbounded queue or a crash 1262ms
+ ✓ src/tiles.it.test.ts (13 tests) 1065ms
+ ✓ src/proximity.it.test.ts (13 tests) 548ms
+ ✓ src/geocoder.it.test.ts (34 tests) 1016ms
+
+ Test Files  5 passed (5)
+      Tests  137 passed (137)
+   Start at  07:30:51
+   Duration  8.42s (tests 97%, transform 1%, import 1%)
+
+JSON report written to /home/owner/seyra/docs/evidence/integration/vitest-report.json

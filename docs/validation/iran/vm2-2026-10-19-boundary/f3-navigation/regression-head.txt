@@ -1,0 +1,11 @@
+# checkout=/home/owner/seyra helper=browser-navigation.mjs
+PASS rejected result click: visit verdict FAIL (expected FAIL); recorded {"found":true,"reached":false,"click_error":"locator.click: element is not attached","distance_m":null}
+PASS click returns but the map does not move (viewport elsewhere): visit verdict FAIL (expected FAIL); recorded {"found":true,"reached":false,"click_error":null,"distance_m":421928}
+PASS click moves the map to the wrong place (~9 km off): visit verdict FAIL (expected FAIL); recorded {"found":true,"reached":false,"click_error":null,"distance_m":9278}
+PASS valid navigation to the selected feature: visit verdict PASS (expected PASS); recorded {"found":true,"reached":true,"click_error":null,"distance_m":0}
+PASS already on the target; the click changes nothing: visit verdict PASS (expected PASS); recorded {"found":true,"reached":true,"click_error":null,"distance_m":0}
+PASS client reports no viewport center: visit verdict FAIL (expected FAIL); recorded {"found":true,"reached":false,"click_error":null,"distance_m":null}
+PASS console error with six reached visits: verdict FAIL (expected FAIL)
+PASS incomplete visit list (4 of 6): verdict FAIL (expected FAIL)
+PASS script crash after six reached visits: verdict FAIL (expected FAIL)
+# failures: 0

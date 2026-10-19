@@ -1,0 +1,18 @@
+f2-unlisted-link: rc=1
+  before: 8cd5a41a6ca7d914 ac26f00dd3edfe3e sha256:7367b56f9f33 
+  after:  8cd5a41a6ca7d914 ac26f00dd3edfe3e sha256:7367b56f9f33 
+  install tree / image set / OPS image unchanged
+  == 2026-10-19T07:09:03Z FAIL U1 update refused before any install change: bundle holds entries that are neither directories nor regular files (type:path): l:install/unlisted-link.sql 
+  import-phase files: 0
+f2-listed-symlink: rc=1
+  before: 8cd5a41a6ca7d914 ac26f00dd3edfe3e sha256:7367b56f9f33 
+  after:  8cd5a41a6ca7d914 ac26f00dd3edfe3e sha256:7367b56f9f33 
+  install tree / image set / OPS image unchanged
+  == 2026-10-19T07:09:03Z FAIL U1 update refused before any install change: bundle holds entries that are neither directories nor regular files (type:path): l:install/docs/LICENSES.md 
+  import-phase files: 0
+f2-fifo: rc=1
+  before: 8cd5a41a6ca7d914 ac26f00dd3edfe3e sha256:7367b56f9f33 
+  after:  8cd5a41a6ca7d914 ac26f00dd3edfe3e sha256:7367b56f9f33 
+  install tree / image set / OPS image unchanged
+  == 2026-10-19T07:09:04Z FAIL U1 update refused before any install change: bundle holds entries that are neither directories nor regular files (type:path): p:images/pipe 
+  import-phase files: 0

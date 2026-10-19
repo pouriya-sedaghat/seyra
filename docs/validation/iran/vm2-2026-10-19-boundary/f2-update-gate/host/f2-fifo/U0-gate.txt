@@ -1,0 +1,1 @@
+bundle holds entries that are neither directories nor regular files (type:path): p:images/pipe 
