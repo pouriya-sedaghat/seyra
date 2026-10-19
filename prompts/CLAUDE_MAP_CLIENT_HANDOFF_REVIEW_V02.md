@@ -1,5 +1,7 @@
 # Review-only: Seyra client handoff and offline Swagger — v0.2
 
+**REVIEW COMPLETED — HISTORICAL PROMPT.** Read the stabilized brief v0.3 and `prompts/CLAUDE_MAP_CLIENT_HANDOFF_IMPLEMENT_V03.md` for the next authorized implementation-preparation turn. The instructions below describe the completed review and must not restart it.
+
 Use the existing VM-connected session at `~/seyra`, branch `feat/map-services-v1`. Expected baseline: `d63f1d9310c4a3c51abee3dde832eb36e51b267f`. Verify refs/working tree, preserve newer/local work, keep PR #1 draft and main unchanged.
 
 This replaces the unsent v0.1 prompt. This turn is brief review and read-only preflight: do not implement, install packages/build images, change configuration/access, restart hosts or run load tests. Review feedback comes before a separate implementation prompt.
