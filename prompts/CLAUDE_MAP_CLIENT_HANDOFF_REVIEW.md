@@ -1,4 +1,8 @@
-# Review-only: Seyra client handoff and offline Swagger brief
+# Superseded: use the complete v0.2 review prompt
+
+Do not execute the old prompt below. Read `prompts/CLAUDE_MAP_CLIENT_HANDOFF_REVIEW_V02.md` on this planning branch instead, together with brief v0.2 and the owner's private `APPROVED_CLIENT_CIDR` session input.
+
+The following v0.1 text is historical:
 
 Run in the existing VM-connected Claude Code session and `~/seyra`. Expected implementation baseline is `d63f1d9310c4a3c51abee3dde832eb36e51b267f` on `feat/map-services-v1`, now pushed. Verify local state/refs and preserve all newer/local changes. Keep PR #1 draft and main unchanged.
 
