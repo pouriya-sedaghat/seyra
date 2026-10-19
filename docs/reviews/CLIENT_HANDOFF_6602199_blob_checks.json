@@ -1,0 +1,408 @@
+{
+  "patch_sha256": "ae23ca98ab1225f8e48c2da60c737372454281cbd6ec83d6f5a106e54014e666",
+  "head": "66021999bb8ca2268327ed872b1744e94df43da9",
+  "checks": [
+    {
+      "path": "apps/api/package.json",
+      "expected_blob": "56ec4f2fa5c45f1c3ebb8c7384efa843bfae0d0d",
+      "actual_blob": "56ec4f2fa5c45f1c3ebb8c7384efa843bfae0d0d",
+      "match": true
+    },
+    {
+      "path": "apps/api/src/api-docs.ts",
+      "expected_blob": "db1376cf84d6039e0d62a072fb5d7d5e2346a714",
+      "actual_blob": "db1376cf84d6039e0d62a072fb5d7d5e2346a714",
+      "match": true
+    },
+    {
+      "path": "apps/api/src/app.ts",
+      "expected_blob": "778559dc8528ec11eec90f79c11e7a44de67e49d",
+      "actual_blob": "778559dc8528ec11eec90f79c11e7a44de67e49d",
+      "match": true
+    },
+    {
+      "path": "apps/api/src/docs.test.ts",
+      "expected_blob": "2bd87148a5f3b297f52aa0ca3316a1aa6a61380b",
+      "actual_blob": "2bd87148a5f3b297f52aa0ca3316a1aa6a61380b",
+      "match": true
+    },
+    {
+      "path": "docs/openapi/map-services-v1.json",
+      "expected_blob": "276bed77db6be2d401b446043d463b094211a4c7",
+      "actual_blob": "276bed77db6be2d401b446043d463b094211a4c7",
+      "match": true
+    },
+    {
+      "path": "package-lock.json",
+      "expected_blob": "f19f8558b63af8f90e7255a9e29dd9baca8621a1",
+      "actual_blob": "f19f8558b63af8f90e7255a9e29dd9baca8621a1",
+      "match": true
+    },
+    {
+      "path": "packages/contracts/src/capabilities.ts",
+      "expected_blob": "7458e618efc61624175b9464689ce05932f31f8c",
+      "actual_blob": "7458e618efc61624175b9464689ce05932f31f8c",
+      "match": true
+    },
+    {
+      "path": "packages/contracts/src/index.ts",
+      "expected_blob": "078ffc835a72f0c1e111ae38a78a5e46bf3a186c",
+      "actual_blob": "078ffc835a72f0c1e111ae38a78a5e46bf3a186c",
+      "match": true
+    },
+    {
+      "path": "infra/images/proxy/Dockerfile",
+      "expected_blob": "c97a6642ad078ff265463adc4690c6cd0e529018",
+      "actual_blob": "c97a6642ad078ff265463adc4690c6cd0e529018",
+      "match": true
+    },
+    {
+      "path": "infra/images/proxy/entrypoint.sh",
+      "expected_blob": "4e01ca03174c064341f0abbdc33232e41aff9a83",
+      "actual_blob": "4e01ca03174c064341f0abbdc33232e41aff9a83",
+      "match": true
+    },
+    {
+      "path": "infra/images/proxy/locations.conf.template",
+      "expected_blob": "798ad31cfe947c6e30384869bb49fae72739d9e7",
+      "actual_blob": "798ad31cfe947c6e30384869bb49fae72739d9e7",
+      "match": true
+    },
+    {
+      "path": "infra/images/proxy/nginx.conf.template",
+      "expected_blob": "80273772b9ea62f865782d50a6c3fa5c0d752104",
+      "actual_blob": "80273772b9ea62f865782d50a6c3fa5c0d752104",
+      "match": true
+    },
+    {
+      "path": "infra/images/proxy/render.sh",
+      "expected_blob": "decb7757548f3fc37a5cd16f2a53d155fd0c8fb9",
+      "actual_blob": "decb7757548f3fc37a5cd16f2a53d155fd0c8fb9",
+      "match": true
+    },
+    {
+      "path": "tests/security/check-ingress-roles.sh",
+      "expected_blob": "21c044d35bd065368506d3170db09dc9132e39c0",
+      "actual_blob": "21c044d35bd065368506d3170db09dc9132e39c0",
+      "match": true
+    },
+    {
+      "path": "tests/security/extract-image-nginx.sh",
+      "expected_blob": "fbde66a8394dab8518110c9c3f1bd86a630ad36b",
+      "actual_blob": "fbde66a8394dab8518110c9c3f1bd86a630ad36b",
+      "match": true
+    },
+    {
+      "path": "tests/security/scan-external-urls.sh",
+      "expected_blob": "b1a54d4a47bef9f94ecffab1384814b54cdf3c4e",
+      "actual_blob": "b1a54d4a47bef9f94ecffab1384814b54cdf3c4e",
+      "match": true
+    },
+    {
+      "path": "tests/security/test-proxy-boundary.mjs",
+      "expected_blob": "cf475d73b730523d68c6787f2959c1bbc8dffc15",
+      "actual_blob": "cf475d73b730523d68c6787f2959c1bbc8dffc15",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/activate.ts",
+      "expected_blob": "bd58fbfd635233b61d25d48c289fa6f688de108d",
+      "actual_blob": "bd58fbfd635233b61d25d48c289fa6f688de108d",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/bundle.ts",
+      "expected_blob": "7374f25a697dc5c1e7dca4f742764f45344e2ca3",
+      "actual_blob": "7374f25a697dc5c1e7dca4f742764f45344e2ca3",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/compose.ts",
+      "expected_blob": "1a7251dbc921889f5de016e512f517d89b4b8d0d",
+      "actual_blob": "1a7251dbc921889f5de016e512f517d89b4b8d0d",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/layout.ts",
+      "expected_blob": "afe968a8166b85e0ed560528a82a082e0c7409fb",
+      "actual_blob": "afe968a8166b85e0ed560528a82a082e0c7409fb",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/main.ts",
+      "expected_blob": "1667a5586f2e1ae1180778bc8d732b6f3a570ddb",
+      "actual_blob": "1667a5586f2e1ae1180778bc8d732b6f3a570ddb",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/net.ts",
+      "expected_blob": "c4cb34ff8e06bcc6eec82cfea447dcffb557b9b1",
+      "actual_blob": "c4cb34ff8e06bcc6eec82cfea447dcffb557b9b1",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/relay-access.test.ts",
+      "expected_blob": "d0bee349789a66476ea9ec21465b75d3f0f9f2e3",
+      "actual_blob": "d0bee349789a66476ea9ec21465b75d3f0f9f2e3",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/setup.ts",
+      "expected_blob": "b0548e4df82d3949dcc002ffb0fec417fdaae6ed",
+      "actual_blob": "b0548e4df82d3949dcc002ffb0fec417fdaae6ed",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/tls.test.ts",
+      "expected_blob": "9db6d3d7b3d29b3fc112bf4ddd73d23fef63fd34",
+      "actual_blob": "9db6d3d7b3d29b3fc112bf4ddd73d23fef63fd34",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/tls.ts",
+      "expected_blob": "79a23c30eff0f122e7c56f0b01bfafb79994c07b",
+      "actual_blob": "79a23c30eff0f122e7c56f0b01bfafb79994c07b",
+      "match": true
+    },
+    {
+      "path": "infra/compose/runtime.relay.yml",
+      "expected_blob": "6713ba97d28fd753b846c448af305871146d7e38",
+      "actual_blob": "6713ba97d28fd753b846c448af305871146d7e38",
+      "match": true
+    },
+    {
+      "path": "infra/compose/runtime.yml",
+      "expected_blob": "c579e0444078d19f1f7189a676bcb43f4bcde621",
+      "actual_blob": "c579e0444078d19f1f7189a676bcb43f4bcde621",
+      "match": true
+    },
+    {
+      "path": "infra/edge/edge.conf.template",
+      "expected_blob": "92f69f3167894b740bae6e142b60f17b7e03b792",
+      "actual_blob": "92f69f3167894b740bae6e142b60f17b7e03b792",
+      "match": true
+    },
+    {
+      "path": "infra/edge/edge.env.example",
+      "expected_blob": "14635acec727a556ac88eb7a71be9a71d688decf",
+      "actual_blob": "14635acec727a556ac88eb7a71be9a71d688decf",
+      "match": true
+    },
+    {
+      "path": "infra/edge/edge.sh",
+      "expected_blob": "a495dc9b953d1ba93e177d87d81fea9011afa7a2",
+      "actual_blob": "a495dc9b953d1ba93e177d87d81fea9011afa7a2",
+      "match": true
+    },
+    {
+      "path": "infra/edge/render-edge.sh",
+      "expected_blob": "7c014e43c5add28c5a090ce22f2a025960e803d8",
+      "actual_blob": "7c014e43c5add28c5a090ce22f2a025960e803d8",
+      "match": true
+    },
+    {
+      "path": "infra/tls/dev-issuer.sh",
+      "expected_blob": "1ed9453ae6fafb74bc01800739449ff3e46546bc",
+      "actual_blob": "1ed9453ae6fafb74bc01800739449ff3e46546bc",
+      "match": true
+    },
+    {
+      "path": "tests/offline/namespace-egress.sh",
+      "expected_blob": "44f79cb28aa2c0280be160f42c0daa899f3f1498",
+      "actual_blob": "44f79cb28aa2c0280be160f42c0daa899f3f1498",
+      "match": true
+    },
+    {
+      "path": "tests/validation/watch-serving-host.sh",
+      "expected_blob": "d2db99c9cada7e3236ea25c08fe7b56671e33552",
+      "actual_blob": "d2db99c9cada7e3236ea25c08fe7b56671e33552",
+      "match": true
+    },
+    {
+      "path": "docs/CLIENT_INTEGRATION.md",
+      "expected_blob": "4881dd532b53eee4eb556dafaae083e2cf854a93",
+      "actual_blob": "4881dd532b53eee4eb556dafaae083e2cf854a93",
+      "match": true
+    },
+    {
+      "path": "docs/MOBILE_INTEGRATION.md",
+      "expected_blob": "875945f280abef43f1a9ddb3e5044834ef2f5067",
+      "actual_blob": "875945f280abef43f1a9ddb3e5044834ef2f5067",
+      "match": true
+    },
+    {
+      "path": "docs/RUNBOOK.md",
+      "expected_blob": "2235d062797ed0f1958d2026ac7a7d21b1733ba2",
+      "actual_blob": "2235d062797ed0f1958d2026ac7a7d21b1733ba2",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/DEPLOYMENT_PLAN.md",
+      "expected_blob": "a7dd65f8ee7af6b87def9cafa9939a51eadba5a8",
+      "actual_blob": "a7dd65f8ee7af6b87def9cafa9939a51eadba5a8",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/README.md",
+      "expected_blob": "e76d2fb83f36bdf8a62e6c5f67a524ea3c323cea",
+      "actual_blob": "e76d2fb83f36bdf8a62e6c5f67a524ea3c323cea",
+      "match": true
+    },
+    {
+      "path": "examples/web-dev-proxy/README.md",
+      "expected_blob": "0ca9f15021267a75360989389b7627df34b254e5",
+      "actual_blob": "0ca9f15021267a75360989389b7627df34b254e5",
+      "match": true
+    },
+    {
+      "path": "examples/web-dev-proxy/dev-proxy.example.json",
+      "expected_blob": "b07cbb2dc6002031056fff2039cf8b6d034b8561",
+      "actual_blob": "b07cbb2dc6002031056fff2039cf8b6d034b8561",
+      "match": true
+    },
+    {
+      "path": "examples/web-dev-proxy/seyra-dev-proxy.mjs",
+      "expected_blob": "0e0812c9dc20ad7a23d7997481e577dcf58f5757",
+      "actual_blob": "0e0812c9dc20ad7a23d7997481e577dcf58f5757",
+      "match": true
+    },
+    {
+      "path": "tests/client/test-dev-proxy.mjs",
+      "expected_blob": "acdaa7ba2b684bdb90ec7749fff4aa675ddc6da8",
+      "actual_blob": "acdaa7ba2b684bdb90ec7749fff4aa675ddc6da8",
+      "match": true
+    },
+    {
+      "path": "tests/validation/search-seeds.json",
+      "expected_blob": "c8442e61a13ef198d1f07eeb1364c07bd61d1195",
+      "actual_blob": "c8442e61a13ef198d1f07eeb1364c07bd61d1195",
+      "match": true
+    },
+    {
+      "path": "tests/validation/search-seeds.mjs",
+      "expected_blob": "7ff65be3bc5e66f732097d2cd05bb27762e075b2",
+      "actual_blob": "7ff65be3bc5e66f732097d2cd05bb27762e075b2",
+      "match": true
+    },
+    {
+      "path": "tests/validation/test-search-seeds.mjs",
+      "expected_blob": "ce596ea15564077ccc46934fe8eee3f8734d31cb",
+      "actual_blob": "ce596ea15564077ccc46934fe8eee3f8734d31cb",
+      "match": true
+    },
+    {
+      "path": "docs/IMPLEMENTATION_STATUS.md",
+      "expected_blob": "2ff47b66528acdea6ffae40dcf205b2683136850",
+      "actual_blob": "2ff47b66528acdea6ffae40dcf205b2683136850",
+      "match": true
+    },
+    {
+      "path": "docs/TEST_RESULTS.md",
+      "expected_blob": "cd3407e03505d08f17c5f4f7d05965ee9e7b281c",
+      "actual_blob": "cd3407e03505d08f17c5f4f7d05965ee9e7b281c",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/README.md",
+      "expected_blob": "8b477d6d04cf253da1aa7a4235c361919a7be09b",
+      "actual_blob": "8b477d6d04cf253da1aa7a4235c361919a7be09b",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/build.txt",
+      "expected_blob": "9999fb2bc94ea52360510b22a24cc0c522e0962e",
+      "actual_blob": "9999fb2bc94ea52360510b22a24cc0c522e0962e",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/external-urls.txt",
+      "expected_blob": "10305698c69ea140ff959c53262b120d1bb9c0f0",
+      "actual_blob": "10305698c69ea140ff959c53262b120d1bb9c0f0",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/proxy-image-id.txt",
+      "expected_blob": "d72b4713ced68e0fb21c5fe6dc0e001f1286b7de",
+      "actual_blob": "d72b4713ced68e0fb21c5fe6dc0e001f1286b7de",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/proxy-image-nginx-V.txt",
+      "expected_blob": "30a6357ea462c3507d34a47379b7572659012a69",
+      "actual_blob": "30a6357ea462c3507d34a47379b7572659012a69",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/swagger-ui-pin.txt",
+      "expected_blob": "75932e03be94f9886ba207028f6aecb56dd9b889",
+      "actual_blob": "75932e03be94f9886ba207028f6aecb56dd9b889",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-browser-navigation.txt",
+      "expected_blob": "526477823c09416f1db6e330597cc323972c2308",
+      "actual_blob": "526477823c09416f1db6e330597cc323972c2308",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-browser-verdict.txt",
+      "expected_blob": "417c253c621bbd6922f83b29432d80165b54ee22",
+      "actual_blob": "417c253c621bbd6922f83b29432d80165b54ee22",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-dev-proxy.txt",
+      "expected_blob": "9f67a03e0a2bbf5a123b26e5d3e865e59b6c4149",
+      "actual_blob": "9f67a03e0a2bbf5a123b26e5d3e865e59b6c4149",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-host-guard.txt",
+      "expected_blob": "d264a2d079bbe94c07fa97ef3aab899d8dc61a42",
+      "actual_blob": "d264a2d079bbe94c07fa97ef3aab899d8dc61a42",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-proxy-boundary.txt",
+      "expected_blob": "97bf8be8c76abee3096d8180f47c3df7f9698e2d",
+      "actual_blob": "97bf8be8c76abee3096d8180f47c3df7f9698e2d",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-reclaim-credit.txt",
+      "expected_blob": "02ad326f7e65b0f742838cdcd7ef293583395f17",
+      "actual_blob": "02ad326f7e65b0f742838cdcd7ef293583395f17",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-search-seeds.txt",
+      "expected_blob": "7f60ab1adc6166053b2ac52f29134a57d43be2f2",
+      "actual_blob": "7f60ab1adc6166053b2ac52f29134a57d43be2f2",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-update-gate.txt",
+      "expected_blob": "38090b9137f460075bea987bada19ddb64222bac",
+      "actual_blob": "38090b9137f460075bea987bada19ddb64222bac",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/typecheck.txt",
+      "expected_blob": "340e137b93bf10a9d661521b387b6ca6a15ce30e",
+      "actual_blob": "340e137b93bf10a9d661521b387b6ca6a15ce30e",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/unit-summary.txt",
+      "expected_blob": "03f3bbc2f5a50477d6e55160d8cf6ff7e4a62374",
+      "actual_blob": "03f3bbc2f5a50477d6e55160d8cf6ff7e4a62374",
+      "match": true
+    },
+    {
+      "path": "docs/validation/iran/vm2-2026-10-19-boundary/README.md",
+      "expected_blob": "a9fd10865bfb8cb6994ae085cfad1a860c4d96f9",
+      "actual_blob": "a9fd10865bfb8cb6994ae085cfad1a860c4d96f9",
+      "match": true
+    }
+  ]
+}
