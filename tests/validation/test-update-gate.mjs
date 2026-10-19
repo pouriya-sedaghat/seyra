@@ -32,6 +32,7 @@ work="$1"; UPDATE_BUNDLE="$work/bundle"; UPDATE_SUMS_DIGEST="$2"
 OUT="$work/out"; inst="$work/install"; audit="$work/audit"; BUNDLE="$work/old-bundle"
 mkdir -p "$OUT"
 has() { [ "$1" = update ]; }
+guard_phase() { :; } # lab ownership is exercised by test-host-guard.mjs
 in_host() { printf 'in_host %s\n' "$*" >> "$audit"; [ "$1" = rm ] && "$@"; return 0; }
 cli() { printf 'cli %s\n' "$*" >> "$audit"; case "$1" in bootstrap-load) echo 'identities match the manifest';; verify-images) echo OK;; esac; }
 timed() { shift; "$@"; }

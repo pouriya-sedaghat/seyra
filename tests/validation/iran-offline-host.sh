@@ -122,20 +122,56 @@ start_sampler() { # $1 = file
 stop_sampler() { [ -n "$sampler_pid" ] && kill "$sampler_pid" 2>/dev/null; wait "$sampler_pid" 2>/dev/null; sampler_pid=""; }
 trap 'stop_sampler' EXIT
 
+# ---- lab ownership (fail closed; review F4) ----------------------------------------------------
+# This harness changes a container only if it is a disposable host of THIS lab: label
+# seyra.validation.lab == $LAB (set by new_host). A volume is removed only if it is the
+# /var/lib/docker volume "<name>-docker" of such a verified host and no other container uses it, or,
+# with no container left, if it carries this lab's label. Anything else (an operator's preserved
+# host, another lab's host, an unlabelled volume) stops the run before any change. Nothing here
+# labels, restarts or recreates a host it does not own.
+host_label() { docker container inspect -f '{{ index .Config.Labels "seyra.validation.lab" }}' "$1" 2>/dev/null; }
+host_volume() { docker container inspect -f '{{range .Mounts}}{{if eq .Destination "/var/lib/docker"}}{{.Name}}{{end}}{{end}}' "$1" 2>/dev/null; }
+refuse_host() { # reason
+  echo "refusing: $1; nothing was changed" >&2
+  echo "== $(ts) REFUSED $1" >> "$OUT/progress.log"
+  exit 2
+}
+require_lab_host() { # name action
+  docker container inspect "$1" >/dev/null 2>&1 || refuse_host "cannot $2: container $1 does not exist"
+  [ "$(host_label "$1")" = "$LAB" ] || refuse_host "cannot $2: container $1 is not a disposable host of this lab ($LAB)"
+}
+# Volume of a verified lab host, safe to remove once that host is gone.
+owned_host_volume() { # name -> volume name on stdout, or refuse
+  local v users
+  v="$(host_volume "$1")"
+  [ "$v" = "$1-docker" ] || refuse_host "host $1 does not use its own volume $1-docker at /var/lib/docker (found '${v:-none}')"
+  users="$(docker ps -a -q --filter "volume=$v" | grep -c .)"
+  [ "$users" = 1 ] || refuse_host "volume $v is used by $users containers"
+  echo "$v"
+}
+# A leftover volume with no container: removable only if labelled for this lab.
+remove_orphan_volume() { # volume
+  docker volume inspect "$1" >/dev/null 2>&1 || return 0
+  [ "$(docker volume inspect -f '{{ index .Labels "seyra.validation.lab" }}' "$1" 2>/dev/null)" = "$LAB" ] \
+    || refuse_host "volume $1 exists without a container and is not labelled for this lab ($LAB)"
+  docker volume rm "$1" >/dev/null || refuse_host "could not remove volume $1"
+}
+
 new_host() { # $1 = container name; a fresh, empty offline daemon
   name="$1"
   if docker container inspect "$name" >/dev/null 2>&1; then
-    if [ "$(docker container inspect -f '{{ index .Config.Labels "seyra.validation.lab" }}' "$name")" != "$LAB" ]; then
-      echo "refusing: container $name exists and was not created by this lab ($LAB); it is left untouched" >&2
-      exit 2
-    fi
-    docker rm -f "$name" >/dev/null 2>&1
+    require_lab_host "$name" "replace the offline host"
+    vol="$(owned_host_volume "$name")" || exit 2
+    docker rm -f "$name" >/dev/null || refuse_host "could not remove container $name"
+    docker volume rm "$vol" >/dev/null || refuse_host "could not remove volume $vol"
+  else
+    remove_orphan_volume "$name-docker"
   fi
-  docker volume rm "$name-docker" >/dev/null 2>&1
   [ ! -e "$SEYRA_HOME" ] && [ ! -e "$inst" ] || { echo "refusing: $SEYRA_HOME or $inst already exists (use drop_host)" >&2; exit 2; }
   docker network inspect "$net" >/dev/null 2>&1 || docker network create --internal "$net" >/dev/null
   mkdir -p "$sock_dir" "$SEYRA_HOME"
   # Same absolute paths inside and outside, so the wrapper's bind mounts resolve on the offline host.
+  docker volume create --label "seyra.validation.lab=$LAB" "$name-docker" >/dev/null || refuse_host "could not create volume $name-docker"
   docker run -d --privileged --name "$name" --label "seyra.validation.lab=$LAB" --network "$net" --pull never \
     -v "$LAB:$LAB" -v "$BUNDLE:$BUNDLE:ro" -v "$PBF:$PBF:ro" -v "$name-docker:/var/lib/docker" \
     "$DIND_IMAGE" dockerd -H unix:///var/run/docker.sock -H "unix://$sock_dir/docker.sock" --group "$(id -g)" --tls=false >/dev/null
@@ -165,13 +201,21 @@ new_host() { # $1 = container name; a fresh, empty offline daemon
 }
 # Remove the offline host and everything it owned (as root, from inside it), keeping backups.
 drop_host() {
+  local vol
+  require_lab_host "$name" "remove the offline host"
+  vol="$(owned_host_volume "$name")" || exit 2
   in_host sh -c 'docker ps -q | xargs -r docker kill' >/dev/null 2>&1
   in_host rm -rf "$SEYRA_HOME" "$inst" "$work" 2>/dev/null
-  docker rm -f "$name" >/dev/null 2>&1
-  docker volume rm "$name-docker" >/dev/null 2>&1
+  docker rm -f "$name" >/dev/null || refuse_host "could not remove container $name"
+  docker volume rm "$vol" >/dev/null || refuse_host "could not remove volume $vol"
   rm -rf "$sock_dir"
 }
-attach_host() { name="$1"; } # continue a phase against an existing host
+# Continue phases against an existing host. Every phase of this harness changes the host (update,
+# import, activation and restarts, image side-loading, backups, restore), so attaching requires a
+# disposable host of this lab; each phase checks again before it starts. Read-only inspection of a
+# preserved host is done outside this harness (see readiness-diag.mjs: --network container:<host>).
+attach_host() { name="$1"; require_lab_host "$name" "attach for phases [$PHASES]"; }
+guard_phase() { require_lab_host "$name" "run phase $1"; }
 
 timed() { # $1 = label, rest = command; appends "label seconds rc" to timings
   local t0 rc; t0=$(date +%s)
@@ -263,6 +307,7 @@ update_gate() { # bundle expected-digest
   echo "SHA256SUMS digest $got matches the out-of-band value; $(printf '%s\n' "$listed" | grep -c .) listed regular files verified; only directories and listed regular files present"
 }
 if has update; then
+  guard_phase update
   # RUNBOOK §8 software update on the existing offline host: the new bundle arrives on transfer
   # media (a directory under $LAB, visible inside the host). Verification comes first; a refused
   # bundle changes nothing (no install files, no wrapper run, no image load, BUNDLE unchanged) and
@@ -297,6 +342,7 @@ if has update; then
 fi
 # <<< update-phase
 if has import; then
+  guard_phase import
   free0="$(free_b)"; guard="$(guard_b)"
   echo "pre-import free_bytes=$free0 guard_bytes=$guard (max(2 GiB, 40 x $(stat -c %s "$PBF")))" > "$OUT/I3-capacity.txt"
   df -B1 -T "$LAB" >> "$OUT/I3-capacity.txt"; D system df >> "$OUT/I3-capacity.txt" 2>&1
@@ -319,6 +365,7 @@ fi
 DS="$(cat "$OUT/.dataset_id" 2>/dev/null)"
 
 if has serve && [ -n "$DS" ]; then
+  guard_phase serve
   timed verify-release cli verify-release "$DS" > "$OUT/I4-verify-release.log" 2>&1; rc=$?
   if [ $rc -eq 0 ]; then result PASS I4 "verify-release $DS"; else result FAIL I4 "rc=$rc"; fi
   start_sampler "$OUT/I5-activate-samples.txt"
@@ -350,6 +397,7 @@ if has serve && [ -n "$DS" ]; then
 fi
 
 if has browser && [ -n "$DS" ]; then
+  guard_phase browser
   # Test tooling only: the Playwright image is side-loaded from the VM's daemon over the Docker
   # socket (no network), and the browser runs in the offline host's network namespace.
   : "${PLAYWRIGHT_IMAGE:?}" "${PLAYWRIGHT_DIR:?}"
@@ -366,6 +414,7 @@ if has browser && [ -n "$DS" ]; then
 fi
 
 if has readiness && [ -n "$DS" ]; then
+  guard_phase readiness
   # Cold-start readiness trials (unresolved 503 observation): stop, then start while the bounded
   # diagnostic polls readiness/provider health from the first second and a browser-like client
   # requests uncached tiles and cancels part of them. Disposable hosts only: this restarts the stack.
@@ -389,6 +438,7 @@ if has readiness && [ -n "$DS" ]; then
 fi
 
 if has backup && [ -n "$DS" ]; then
+  guard_phase backup
   in_host rm -rf "$bk" "$sbk"
   timed backup cli backup --out "$bk" > "$OUT/I8-backup.log" 2>&1; rc=$?
   in_host cp -a "$SEYRA_HOME/secrets" "$sbk"   # the operator's separate secrets backup (root inside the host)
@@ -413,6 +463,7 @@ fi
 
 # ============================================================== host 2: restore from the original input
 if has restore && [ -n "$DS" ]; then
+  guard_phase restore
   drop_host   # the first machine is gone; only the backup root and the secrets copy remain
   new_host "$HOST2_NAME"
   e2="$(egress_count)"
