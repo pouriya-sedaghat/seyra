@@ -64,6 +64,9 @@ export function createNavigator(page, { settle, toleranceM = NAV_TOLERANCE_M, ti
   async function searchAndOpen(q, expect) {
     const visit = { q, expect, result_found: false, rank_of_expected_area: null, results_listed: 0, target: null, click_error: null, center_after: null, distance_m: null, reached: false, error: null, scale_after_open: null };
     try {
+      // Re-assert the preconditions every visit: the client remounts its search panel (resetting
+      // autocomplete and bias to on) e.g. when it falls back to its error view during an outage.
+      await prepare();
       const results = await submitSearch(q);
       const list = cards();
       const count = await list.count();
