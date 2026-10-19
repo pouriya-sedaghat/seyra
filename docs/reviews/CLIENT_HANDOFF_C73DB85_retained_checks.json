@@ -1,0 +1,169 @@
+{
+  "node": "v24.19.0",
+  "openssl": "3.0.13",
+  "full_workspace_build": false,
+  "docker_or_live_vm": false,
+  "existing_standalone_checks_passed": 327,
+  "suite_counts": {
+    "wrapper": 64,
+    "edge_stop": 4,
+    "namespace_egress": 21,
+    "handoff_pack": 19,
+    "dev_proxy": 35,
+    "update_gate": 74,
+    "host_guard": 26,
+    "reclaim_credit": 4,
+    "browser_navigation": 9,
+    "browser_verdict": 9,
+    "search_seeds": 18,
+    "actual_tls_cli_via_layout_adapter": 20,
+    "actual_tls_recover_via_layout_adapter": 24
+  },
+  "error_contract": {
+    "status": "NOT RUN: missing ajv in this reconstruction",
+    "checks": 10
+  },
+  "tls_adapter": "Actual source transformed by Node; minimal layout/entry point; explicit non-root ownership branch selected because sandbox cannot chown to service UID. Real temporary PKI and kernel flock; no whole-app or Docker test.",
+  "suite_details": [
+    {
+      "script": "tests/security/test-edge-stop.mjs",
+      "rc": 0,
+      "tail": [
+        "PASS upstream refuses (relay trust removed): edge stopped",
+        "PASS --force (emergency): stopped without the probe, with a warning",
+        "# edge stop interlock: 4/4 passed"
+      ]
+    },
+    {
+      "script": "tests/offline/test-namespace-egress.mjs",
+      "rc": 0,
+      "tail": [
+        "PASS host only, nc missing on the host (tool error): exit non-zero",
+        "PASS host only, the control destination does not connect: exit non-zero",
+        "# script=<REVIEWED>/tests/offline/namespace-egress.sh checks=21 failed=0"
+      ]
+    },
+    {
+      "script": "tests/client/test-handoff-artifacts.mjs",
+      "rc": 0,
+      "tail": [
+        "PASS fresh output: PACK-MANIFEST.json on disk equals the returned manifest",
+        "PASS output path that is a file: refused and unchanged",
+        "# checkout=<REVIEWED> checks=19 failed=0"
+      ]
+    },
+    {
+      "script": "tests/client/test-dev-proxy.mjs",
+      "rc": 0,
+      "tail": [
+        "PASS wrong CA: 502 and no upstream request completed",
+        "PASS client disconnect cancels the upstream request",
+        "# checks=35 failed=0"
+      ]
+    },
+    {
+      "script": "tests/security/test-error-contract.mjs",
+      "rc": 1,
+      "tail": [
+        "}",
+        "",
+        "Node.js v24.19.0"
+      ]
+    },
+    {
+      "script": "tests/validation/test-update-gate.mjs",
+      "rc": 0,
+      "tail": [
+        "PASS valid: bootstrap-load ran after verification",
+        "PASS valid: BUNDLE now the update",
+        "# harness=<REVIEWED>/tests/validation/iran-offline-host.sh checks=74 failed=0"
+      ]
+    },
+    {
+      "script": "tests/validation/test-host-guard.mjs",
+      "rc": 0,
+      "tail": [
+        "PASS restore on the lab's own host: host 1 and its volume removed",
+        "PASS restore on the lab's own host: host 2 created with this lab's label",
+        "# harness=<REVIEWED>/tests/validation/iran-offline-host.sh checks=26 failed=0"
+      ]
+    },
+    {
+      "script": "tests/validation/test-reclaim-credit.mjs",
+      "rc": 0,
+      "tail": [
+        "PASS hard-linked 64 MiB file whose other link survives outside: credited 4096 B, free 8019509248 B, required 8053063680 B -> refused (expected refused)",
+        "PASS ordinary allocated 96 MiB file: credited 100667392 B, free 7985954816 B, required 8053063680 B -> admitted (expected admitted)",
+        "# failures: 0"
+      ]
+    },
+    {
+      "script": "tests/validation/test-browser-navigation.mjs",
+      "rc": 0,
+      "tail": [
+        "PASS incomplete visit list (4 of 6): verdict FAIL (expected FAIL)",
+        "PASS script crash after six reached visits: verdict FAIL (expected FAIL)",
+        "# failures: 0"
+      ]
+    },
+    {
+      "script": "tests/validation/test-browser-verdict.mjs",
+      "rc": 0,
+      "tail": [
+        "PASS script crashed after recording all visits: verdict=FAIL expected=FAIL {\"external_requests\":true,\"rtl_plugin\":true,\"failed_requests\":true,\"console_errors\":true,\"required_visits\":true,\"script_completed\":false}",
+        "PASS expectedVisits must be declared",
+        "# failures: 0"
+      ]
+    },
+    {
+      "script": "tests/validation/test-search-seeds.mjs",
+      "rc": 0,
+      "tail": [
+        "PASS a different active dataset is SNAPSHOT_CHANGED",
+        "PASS the bound dataset is accepted",
+        "# checks=18 failed=0"
+      ]
+    },
+    {
+      "script": "tests/wrapper/test-wrapper-inputs.mjs",
+      "rc": 0,
+      "tail": [
+        "PASS --from outside SEYRA_HOME, operator directory it cannot enter: refused before Docker",
+        "PASS --from outside SEYRA_HOME, missing directory: refused before Docker",
+        "# wrapper=<REVIEWED>/bin/seyra-maps checks=64 failed=0"
+      ]
+    }
+  ],
+  "tls_counts": [
+    {
+      "label": "R1-before",
+      "exit_code": 1,
+      "checks": 24,
+      "failed": 15
+    },
+    {
+      "label": "R2-before",
+      "exit_code": 1,
+      "checks": 19,
+      "failed": 4
+    },
+    {
+      "label": "R1-after",
+      "exit_code": 0,
+      "checks": 24,
+      "failed": 0
+    },
+    {
+      "label": "H2-H4-retained",
+      "exit_code": 0,
+      "checks": 20,
+      "failed": 0
+    },
+    {
+      "label": "R2-after",
+      "exit_code": 0,
+      "checks": 19,
+      "failed": 0
+    }
+  ]
+}
