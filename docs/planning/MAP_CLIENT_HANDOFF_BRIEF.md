@@ -1,10 +1,10 @@
 # Seyra Map Services: client handoff, Swagger and owner validation
 
-Version: **0.2 — REQUIREMENTS/ARCHITECTURE REVIEW DRAFT**
+Version: **0.3 — IMPLEMENTATION SCOPE STABILIZED; LIVE ACTIVATION PENDING**
 Date: 2026-10-19
 Baseline: `d63f1d9310c4a3c51abee3dde832eb36e51b267f`, `feat/map-services-v1`, PR #1 draft.
 
-This is an extension of the current Map Services phase, not intake for Authentication, Relations, SOS or mobile implementation. The owner's workflow is requirements → study/design → Claude Code reads a brief and gives feedback → stabilize the brief → issue a separate English implementation prompt. The present task is the brief review, not implementation or deployment.
+This is an extension of the current Map Services phase, not intake for Authentication, Relations, SOS or mobile implementation. The owner's workflow is requirements → study/design → Claude Code reads a brief and gives feedback → stabilize the brief → issue a separate English implementation prompt. Claude's v0.2 review has been received. Sections 1–6 retain the requirements and proposal context; section 7 resolves that review and controls the next implementation turn. Implementation preparation is authorized by the accompanying prompt; live activation is not.
 
 ## 1. New confirmed requirements [C]
 
@@ -126,3 +126,55 @@ Official upstream documentation checked on 2026-10-19 (not a release pin):
 - https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS — browser origin/preflight behavior; an IP-subnet allowlist does not replace browser origin policy.
 
 Claude must validate behavior against the exact selected releases and the built proxy/UI. Reading upstream main docs is not evidence that the final offline deployment/browser path works.
+
+## 7. Review resolution and next implementation boundary
+
+### 7.1 Accepted changes
+
+- Complete all public operations with summaries, stable unique operation IDs, descriptions/examples, capabilities responses and actual typed error shapes, including 413. Generate the exported and runtime specification from the same source. Describe proxy-served binary/map assets in a separate contract section rather than inventing JSON API endpoints.
+- Use the existing `/api/` ingress for `/api/docs/` and `/api/docs/json`. Keep Nginx responsible for the effective CSP; verify the plugin does not silently add a conflicting policy. Block ingress access to the hidden diagnostics route, including path variants, without claiming that omission from OpenAPI protects it.
+- A 5.x Swagger UI plugin is the documented compatible line for the inspected Fastify/swagger majors. Version 5.2.6 is Claude's candidate, not an independently established latest-release assertion. Verify and pin the actual package, release source, integrity and local asset behavior before using it; do not select 6.x solely because it is newer.
+- Prepare a small optional TCP relay for the nested-host topology, while retaining direct LAN deployment as a separate topology. No Iran reimport or second full stack is needed merely for Swagger preparation. Relay use remains conditional on the namespace/source-address tests below.
+- Implement a web development example that proxies both `/api/` and `/maps/`, verifies upstream TLS, and rewrites exactly the configured Seyra origin to the development page origin for every map resource type. Cover absolute style/TileJSON URLs and reject unrelated targets. Never trust a forwarded Host to generate arbitrary URLs.
+- Correct the boundary README: successful incoming-bundle verification and a safe stop do not imply restoration of the old install after every filesystem move failure. Do not claim an atomic install replacement or rollback that the implementation does not provide.
+- Split independent Arabic-yeh and diacritic seed variants; add isolated kaf and ZWNJ coverage with measured reference results. Run the new Persian Shiraz query before calling it validated. A changed snapshot or OSM ID produces a reviewable diff/failure, never an automatic fixture rewrite.
+
+### 7.2 TLS decision: external issuer and validated certificate import
+
+Prepare CSR/validated certificate import and explicit renewal/replacement using an issuer managed outside the serving host. It may be the company's CA or an operator-controlled test issuer; its private key must not enter serving containers, the serving TLS directory, ordinary service backups, image layers, bundles or Git. Only the server leaf key, server chain and public trust material belong on the server. Do not replace/delete any existing live certificate or CA key during development.
+
+Do not make a globally installed "IP-restricted root" the default security guarantee. RFC 6818 §4 leaves processing of extra trust-anchor information implementation-dependent; RFC 5280 name constraints apply by name form, so permitting one IP does not by itself constrain DNS identities. A root extension plus an OpenSSL test is insufficient evidence for all Windows browsers, Android and iOS. If constraints are used as defense in depth, specify the entire chain/name policy and test allowed IP, a different IP, an unrelated DNS identity and an unexpected intermediate on each actual selected client. Mark unexecuted client checks pending.
+
+Prefer an existing managed company CA where available. Prepare application/tool-specific development trust where supported. Installing new system-wide trust on Windows or any developer device is a separate operator decision at handoff, with an explicit trust/removal procedure. Do not install trust, create a production issuer, bypass hostname validation or use insecure TLS flags in this turn. Retain legacy synthetic-fixture compatibility without presenting its on-host test CA as the LAN provisioning design.
+
+Certificate validation must precede replacement: leaf/key match, expected SAN, validity, server authentication purpose and chain/trust inputs. Failed validation must preserve the previous usable pair. Prepare a deliberate renewal/import operation with recoverable file handling; do not use `init` to rotate an issuer implicitly. No public ACME/OCSP/AIA fetch may become an operational requirement; document the managed offline certificate/revocation policy.
+
+### 7.3 Relay identity and local control path
+
+PROXY protocol conveys claimed source metadata, not peer authentication. The edge must construct that metadata from its actual accepted TCP peer, not accept it as client authority. The inner relay listener must require PROXY protocol and independently restrict its actual socket peer to the one configured relay. Only after that check may it enforce the approved client subnet using the conveyed address. `set_real_ip_from` alone is not a substitute for the peer access restriction. Test an untrusted peer forging an approved address, a missing/malformed header, and spoofed HTTP forwarding headers.
+
+Keep the ordinary loopback TLS path used by CLI/readiness/recovery usable without a PROXY header. Use a distinct, properly isolated listener/control path if necessary; prove it cannot become a LAN bypass. Do not solve self-access failures by adding a Docker bridge, gateway or unrelated private range to the client allowlist. Verify required modules and configuration in the exact locked Nginx image; HTTP PROXY acceptance does not establish that the stream relay module is available/loaded.
+
+Observe real source addresses through the outer Docker, relay and nested proxy before activation. If source NAT hides a LAN client, do not widen access to make a synthetic test pass. Unknown Host must still fail and providers/DB remain private. Test the edge and inner access boundaries separately and end to end.
+
+### 7.4 Isolation and evidence
+
+The old outbound counter excludes private destination ranges. It cannot prove that a newly connected namespace cannot initiate corporate-LAN traffic. Prepare namespace-specific egress tests against controlled lab destinations, including private ranges, without scanning company devices or changing global VM firewall policy. Distinguish allowed ingress replies from newly initiated connections. Record which namespace/path each test covers.
+
+Keep operational addresses, approved subnet, serving-host identifiers, dataset/checksum bindings and certificate metadata in private local operator output; public templates use placeholders. Read-only VM observations in Claude's report are reported observations, not checks independently executed by this reviewer. Also, an older-base review branch does not inherently delete descendant changes when merged; the reason to read it without merging is to keep review artifacts separate from implementation.
+
+### 7.5 Execution order
+
+1. Implement the API/docs/shared contract, development examples, seed runner, proxy/OPS/relay configuration and focused regression tests on the existing feature branch. No live configuration changes. Low-footprint unit/HTTP/schema/temporary-certificate tests may run without another service stack.
+2. Produce reviewed changes plus a precise build/rehearsal plan: affected image inputs, expected memory/CPU/disk, isolated test topology, failure/cleanup commands and readiness monitoring. Keep builds/rehearsal pending where safe resources are unavailable. No new Docker service/browser workload or full-stack rehearsal on the shared VM is authorized by this prompt.
+3. Build/relock API, proxy and OPS only on agreed safe resources; prove data image identities and dataset inputs unchanged. Assemble the next bundle only after those identities are verified. Do not call an unbuilt bundle r7 verified. Re-run affected suites and a disposable cutover rehearsal when the resource boundary is resolved.
+4. Return a concrete serving-host cutover/rollback plan and measured outage, then request the owner's final deployment/trust decision. "About a minute" is an estimate until rehearsed. Do not activate the relay, publish a LAN port, change a live certificate/settings, restart/recreate live services or install device trust beforehand.
+5. Actual Windows/LAN/mobile checks follow deployment; staged load characterization remains separately pending. The original readiness incident stays open.
+
+Additional primary references checked on 2026-10-19:
+
+- https://www.rfc-editor.org/rfc/rfc6818.html — §4 updates RFC 5280 §6.2 concerning trust-anchor information.
+- https://www.rfc-editor.org/rfc/rfc5280.html — §4.2.1.10 and §6, name-form constraints and path processing.
+- https://nginx.org/en/docs/http/ngx_http_realip_module.html — trusted peers and replacement of the reported client address.
+- https://nginx.org/en/docs/stream/ngx_stream_proxy_module.html — emitting PROXY protocol toward an upstream.
+- https://docs.nginx.com/nginx/admin-guide/load-balancer/using-proxy-protocol/ — listener/module requirements and original-versus-rewritten address variables.
