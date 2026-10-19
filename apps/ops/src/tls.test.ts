@@ -149,17 +149,17 @@ describe('replacement of the served pair', () => {
     expect(() => assertServedPair(p())).toThrow(/did not finish/);
     expect(() => assertNoTlsReplacement(p())).toThrow(/tls recover/);
     await expect(tlsImport(p(), { cert: good.cert, ca: f('root.crt'), key: good.key, names: NAMES }, () => {})).rejects.toThrow(/did not finish/);
-    expect(tlsRecover(p(), () => {})).toBe('completed');
+    expect(await tlsRecover(p(), () => {})).toBe('completed');
     expect(() => assertServedPair(p())).not.toThrow();
     expect(sha(join(dir, 'server.key'))).toBe(sha(good.key));
-    expect(tlsRecover(p(), () => {})).toBe('none');
+    expect(await tlsRecover(p(), () => {})).toBe('none');
   });
 
   it('an interruption with a damaged staging area is undone from the backup', async () => {
     const before = served();
     await tlsImport(p(), { cert: good.cert, chain: f('intermediate.crt'), ca: f('root.crt'), key: good.key, names: NAMES, crashAfter: 'key' }, () => {});
     rmSync(join(dir, 'next', 'server.crt')); // the staged certificate is gone
-    expect(tlsRecover(p(), () => {})).toBe('restored');
+    expect(await tlsRecover(p(), () => {})).toBe('restored');
     expect(served()).toEqual(before);
     expect(() => assertServedPair(p())).not.toThrow();
   });
@@ -201,7 +201,7 @@ describe('restore of a full-chain backup (review H4)', () => {
     // Interrupted after the first rename, then recovered: the backup set is in place.
     await tlsRestore(p(), { from: backup, crashAfter: 'key' }, () => {});
     expect(() => assertServedPair(p())).toThrow(/did not finish/);
-    expect(tlsRecover(p(), () => {})).toBe('completed');
+    expect(await tlsRecover(p(), () => {})).toBe('completed');
     expect(served()).toEqual(first);
     expect(() => assertServedPair(p())).not.toThrow();
   });

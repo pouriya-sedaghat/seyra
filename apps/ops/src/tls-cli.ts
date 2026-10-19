@@ -46,7 +46,7 @@ export async function tlsCommand(l: Pick<Layout, 'tls' | 'lifecycleLock' | 'tran
       return 0;
     }
     case 'recover':
-      await locked('tls-recover', async () => log(`[tls] recover: ${tlsRecover(p, log)}`));
+      await locked('tls-recover', async () => log(`[tls] recover: ${await tlsRecover(p, log, ossl)}`));
       return 0;
     default:
       throw new Error('tls csr | tls import | tls restore | tls status | tls recover | tls init (test only)');

@@ -178,12 +178,17 @@ export async function tlsCsr(p: TlsPaths, namesIn: string[], log: (m: string) =>
 }
 
 interface Journal {
-  schema: 'seyra.tls-replace/2';
+  schema: 'seyra.tls-replace/3';
   started_at: string;
   previous: { cert_sha256: string; key_sha256: string } | null;
   next: { cert_sha256: string; key_sha256: string; trust_sha256: string; meta_sha256: string };
   backup: string | null;
+  /** SHA-256 of every file of the backup set as written (null: the file did not exist). */
+  backup_files?: Record<string, string | null>;
 }
+
+/** Files that make up a served set in secrets/tls and in a backup. */
+const SET_FILES = [TLS_FILES.cert, TLS_FILES.key, TLS_FILES.trust, 'served.json'] as const;
 
 const fileSha = (path: string) => (existsSync(path) ? sha256(readFileSync(path)) : null);
 const META = 'served.json';
@@ -263,11 +268,12 @@ export async function tlsImport(
     const previous = existsSync(cur.cert) && existsSync(cur.key) ? { cert_sha256: fileSha(cur.cert)!, key_sha256: fileSha(cur.key)! } : null;
     const backup = backupCurrent(p);
     const journal: Journal = {
-      schema: 'seyra.tls-replace/2',
+      schema: 'seyra.tls-replace/3',
       started_at: new Date().toISOString(),
       previous,
       next: { cert_sha256: fileSha(st.served)!, key_sha256: fileSha(st.key)!, trust_sha256: fileSha(st.trust)!, meta_sha256: fileSha(st.meta)! },
       backup,
+      ...(backup ? { backup_files: Object.fromEntries(SET_FILES.map((f) => [f, fileSha(join(backup, f))])) } : {}),
     };
     writeFileSync(join(p.dir, JOURNAL), `${JSON.stringify(journal, null, 2)}\n`, { mode: 0o600 });
     renameSync(st.key, cur.key);
@@ -347,14 +353,64 @@ function checkPair(p: TlsPaths): void {
 }
 
 /**
- * Finish or undo an interrupted replacement (runs under the lifecycle lock). Matching journal
- * hashes alone are not trusted: the completed set must also be a matching certificate/key pair.
- *  - completable and consistent -> complete it;
- *  - otherwise, a backup whose certificate and key match -> restore it;
- *  - neither -> refuse and keep the journal and every file as they are (still recoverable by hand
- *    or by a later import after `tls recover` is retried with a valid backup).
+ * Validate a complete fallback set staged in `dir` (copies of a backup, never active files):
+ *  - the certificate, key and trust anchor are all present (metadata too, where it existed);
+ *  - for journals that recorded the backup's file hashes (seyra.tls-replace/3), every file equals
+ *    that record, so the set is exactly the one that was active before the replacement;
+ *  - for older journals without that record (compatibility), integrity cannot be proven, so the
+ *    set must pass the full checks below on its own;
+ *  - certificate and key match, and the certificate chain verifies to the set's own trust anchor
+ *    for server use and for every name the set serves (its metadata names, or else its SAN).
+ *    Expiry is not a reason to refuse the previously active set (-no_check_time).
+ * Returns null when valid, otherwise the reason.
  */
-export function tlsRecover(p: TlsPaths, log: (m: string) => void): 'none' | 'completed' | 'restored' {
+async function invalidFallback(dir: string, record: Record<string, string | null> | undefined, openssl: string): Promise<string | null> {
+  for (const f of [TLS_FILES.cert, TLS_FILES.key, TLS_FILES.trust]) if (!existsSync(join(dir, f))) return `backup lacks ${f}`;
+  if (record) {
+    for (const f of SET_FILES) {
+      if (!(f in record)) return `journal records no hash for ${f}`;
+      if (fileSha(join(dir, f)) !== record[f]) return `backup ${f} differs from the set recorded in the journal`;
+    }
+  }
+  if (!pairOk(join(dir, TLS_FILES.cert), join(dir, TLS_FILES.key))) return 'backup certificate and key do not match';
+  let anchors: X509Certificate[];
+  try {
+    anchors = certsOf(join(dir, TLS_FILES.trust), 'backup trust anchor');
+  } catch (e) {
+    return e instanceof Error ? e.message : String(e);
+  }
+  if (anchors.some((a) => !a.ca)) return 'backup trust anchor is not a CA certificate';
+  const leafPem = pemBlocks(readFileSync(join(dir, TLS_FILES.cert), 'utf8')).find((b) => b.type === 'CERTIFICATE')!.pem;
+  const leaf = new X509Certificate(leafPem);
+  let names = sanOf(leaf).map((e) => e.replace(/^(DNS|IP):/, ''));
+  if (existsSync(join(dir, META))) {
+    try {
+      const m = JSON.parse(readFileSync(join(dir, META), 'utf8')) as { names?: unknown; sha256_fingerprint?: unknown };
+      if (!Array.isArray(m.names) || !m.names.length || !m.names.every((n) => typeof n === 'string')) return 'backup metadata has no names';
+      if (m.sha256_fingerprint !== undefined && m.sha256_fingerprint !== leaf.fingerprint256) return 'backup metadata describes another certificate';
+      names = m.names as string[];
+    } catch {
+      return 'backup metadata is not valid JSON';
+    }
+  }
+  if (!names.length) return 'backup certificate names nothing';
+  for (const n of names) {
+    const r = await run(openssl, ['verify', '-no_check_time', '-purpose', 'sslserver', '-CAfile', join(dir, TLS_FILES.trust), '-untrusted', join(dir, TLS_FILES.cert), isIP(n) ? '-verify_ip' : '-verify_hostname', n, join(dir, TLS_FILES.cert)], { allowFailure: true });
+    if (r.code !== 0) return `backup chain does not verify to its trust anchor for ${n}: ${(r.stdout + r.stderr).trim().split('\n').slice(-1)[0] ?? ''}`;
+  }
+  return null;
+}
+
+/**
+ * Finish or undo an interrupted replacement (runs under the lifecycle lock).
+ *  - Completion: every new file must be found staged or in place with the hash the journal
+ *    recorded after validation, and the certificate/key must match; then the staged files move in.
+ *  - Fallback: the backup is copied into a private staging directory and validated there as a
+ *    complete set (invalidFallback) BEFORE any active file changes; only then do the staged copies
+ *    replace the active files and metadata.
+ *  - Neither: refuse, leaving the journal and every active file unchanged.
+ */
+export async function tlsRecover(p: TlsPaths, log: (m: string) => void, opts: { openssl?: string } = {}): Promise<'none' | 'completed' | 'restored'> {
   const jp = join(p.dir, JOURNAL);
   if (!existsSync(jp)) return 'none';
   const j = JSON.parse(readFileSync(jp, 'utf8')) as Journal;
@@ -370,36 +426,40 @@ export function tlsRecover(p: TlsPaths, log: (m: string) => void): 'none' | 'com
   const where = want.map(([f, h]) => [f, h && fileSha(join(next, f)) === h ? join(next, f) : h && fileSha(cur(f)) === h ? cur(f) : null] as const);
   const keyAt = where.find(([f]) => f === TLS_FILES.key)?.[1];
   const certAt = where.find(([f]) => f === TLS_FILES.cert)?.[1];
-  const completable = where.every(([, at]) => at !== null) && !!keyAt && !!certAt && pairOk(certAt, keyAt);
-  if (completable) {
+  if (where.every(([, at]) => at !== null) && !!keyAt && !!certAt && pairOk(certAt, keyAt)) {
     for (const [f, at] of where) if (at === join(next, f)) renameSync(at, cur(f));
-    if (pairOk(cur(TLS_FILES.cert), cur(TLS_FILES.key))) {
-      rmSync(next, { recursive: true, force: true });
-      rmSync(jp);
-      log('[tls] interrupted replacement completed; the new pair is in place');
-      return 'completed';
-    }
+    rmSync(next, { recursive: true, force: true });
+    rmSync(jp);
+    log('[tls] interrupted replacement completed; the new set is in place');
+    return 'completed';
   }
   const b = j.backup;
-  if (b && existsSync(b) && pairOk(join(b, TLS_FILES.cert), join(b, TLS_FILES.key))) {
-    for (const f of [TLS_FILES.cert, TLS_FILES.key, TLS_FILES.trust, META]) {
-      if (!existsSync(join(b, f))) {
-        if (f === META) rmSync(cur(f), { force: true });
-        continue;
+  let reason = 'no backup was recorded';
+  if (b && existsSync(b)) {
+    const staging = join(p.dir, 'recover-staging');
+    rmSync(staging, { recursive: true, force: true });
+    mkdirSync(staging, { mode: 0o700 });
+    try {
+      for (const f of SET_FILES) if (existsSync(join(b, f))) copyFileSync(join(b, f), join(staging, f));
+      const invalid = await invalidFallback(staging, j.backup_files, opts.openssl ?? 'openssl');
+      if (!invalid) {
+        setKeyOwner(join(staging, TLS_FILES.key));
+        for (const f of SET_FILES) {
+          if (existsSync(join(staging, f))) renameSync(join(staging, f), cur(f));
+          else rmSync(cur(f), { force: true }); // the restored set had no such file (e.g. legacy metadata)
+        }
+        checkPair(p);
+        rmSync(next, { recursive: true, force: true });
+        rmSync(jp);
+        log(`[tls] interrupted replacement undone; previous set restored from ${b}`);
+        return 'restored';
       }
-      const tmp = `${cur(f)}.restore`;
-      copyFileSync(join(b, f), tmp);
-      if (f === TLS_FILES.key) setKeyOwner(tmp);
-      renameSync(tmp, cur(f));
+      reason = `backup ${b} is not a valid complete set: ${invalid}`;
+    } finally {
+      rmSync(staging, { recursive: true, force: true });
     }
-    if (pairOk(cur(TLS_FILES.cert), cur(TLS_FILES.key))) {
-      rmSync(next, { recursive: true, force: true });
-      rmSync(jp);
-      log(`[tls] interrupted replacement undone; previous pair restored from ${b}`);
-      return 'restored';
-    }
-  }
-  throw new Error(`cannot recover: neither the new set nor the backup (${b ?? 'none'}) is a matching certificate/key pair; the journal and all files were kept. Import a valid certificate after inspecting ${p.dir}.`);
+  } else if (b) reason = `backup ${b} is missing`;
+  throw new Error(`cannot recover: the new set is incomplete or inconsistent and ${reason}; the journal and all active files were kept. Inspect ${p.dir}, then import a valid certificate or restore a verified backup.`);
 }
 
 /** Public metadata of the served certificate (no key material). */
