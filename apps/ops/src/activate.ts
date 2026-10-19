@@ -1,7 +1,7 @@
 import { copyFileSync, existsSync, mkdirSync, readFileSync, readdirSync, renameSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { assertRuntimeEnvSafe, composeRuntime, parseEnv, runtimeEnv, writeRuntimeEnv, NO_RELEASE } from './compose.js';
-import { assertNoTlsReplacement, assertServedPair } from './tls.js';
+import { assertServedPair } from './tls.js';
 import { importLeaseState, recoverInterrupted } from './import-lock.js';
 import { readOwner, withLifecycleLock } from './lifecycle-lock.js';
 import { psql, recordEvent, renderDbName } from './db.js';
@@ -260,12 +260,15 @@ async function restorePrevious(l: Layout, from: string, timeoutS: number, pollMs
 
 export async function activate(datasetId: string, opts: ActivateOptions): Promise<void> {
   const l = layout();
-  assertNoTlsReplacement({ dir: l.tls }); // refuse before anything changes; recovery paths never check
   await withLifecycleLock(l, opts.reason ?? 'activate', datasetId, () => activateLocked(l, datasetId, opts));
 }
 
 async function activateLocked(l: Layout, datasetId: string, opts: ActivateOptions): Promise<void> {
   if (readTransition(l)) throw new Error('an earlier activation/rollback did not finish; run: seyra-maps recover');
+  // Evaluated under the lifecycle lock, before anything changes: never activate onto an unfinished
+  // or mismatched certificate replacement (a TLS command could have finished just before we got
+  // the lock). Recovery paths (restorePrevious, recover) do not check, so they can always run.
+  assertServedPair({ dir: l.tls });
   const s = readSettings(l);
   const timeoutS = opts.readinessTimeoutS ?? s.readinessTimeoutS;
   const pollMs = opts.pollMs ?? 3000;

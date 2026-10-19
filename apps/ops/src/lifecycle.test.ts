@@ -3,11 +3,11 @@
 // real temporary SEYRA_HOME with genuine release fixtures (checksums made by the production helpers,
 // so the real verifyRelease runs). Only the Docker/SQL boundary is replaced by a small simulated
 // stack; cross-process cases use a real second OS process as the lock owner.
-import { spawn, spawnSync, type ChildProcess } from 'node:child_process';
-import { existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { execFileSync, spawn, spawnSync, type ChildProcess } from 'node:child_process';
+import { copyFileSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { hostname, tmpdir } from 'node:os';
 import { join } from 'node:path';
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
+import { afterAll, afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 interface Sim {
   running: string | null;
@@ -96,6 +96,16 @@ const { PHOTON_OPENSEARCH_SETTINGS } = await import('./photon-config.js');
 type L = ReturnType<typeof layout>;
 let home = '';
 let l: L;
+// Activation checks the served TLS pair under the lifecycle lock; every fixture home gets a real,
+// matching temporary certificate/key (test-only material, generated once).
+const tlsFixture = mkdtempSync(join(tmpdir(), 'seyra-lifecycle-tls-'));
+execFileSync('openssl', ['req', '-x509', '-newkey', 'ec', '-pkeyopt', 'ec_paramgen_curve:prime256v1', '-nodes', '-keyout', join(tlsFixture, 'server.key'), '-out', join(tlsFixture, 'server.crt'), '-days', '2', '-subj', '/CN=localhost', '-addext', 'subjectAltName=DNS:localhost,IP:127.0.0.1'], { stdio: 'ignore' });
+afterAll(() => rmSync(tlsFixture, { recursive: true, force: true }));
+function installTlsFixture(): void {
+  mkdirSync(l.tls, { recursive: true });
+  for (const f of ['server.crt', 'server.key']) copyFileSync(join(tlsFixture, f), join(l.tls, f));
+  copyFileSync(join(tlsFixture, 'server.crt'), join(l.tls, 'ca.crt'));
+}
 const fast = { log: () => undefined, readinessTimeoutS: 0.4, pollMs: 10 };
 const children: ChildProcess[] = [];
 
@@ -203,6 +213,7 @@ beforeEach(() => {
   process.env.SEYRA_INSTALL_DIR = join(home, 'install');
   l = layout();
   ensureDirs(l);
+  installTlsFixture();
   Object.assign(sim, { running: null, failUp: 0, unhealthy: new Set(), upCalls: 0, drops: [], markers: new Map(), portHeld: false, proxyUnpublished: false, proxyRecreates: 0, upDelayMs: 0 });
 });
 afterEach(async () => {
@@ -210,6 +221,24 @@ afterEach(async () => {
   rmSync(home, { recursive: true, force: true });
   delete process.env.SEYRA_HOME;
   delete process.env.SEYRA_INSTALL_DIR;
+});
+
+describe('TLS precondition under the lifecycle lock (review H2)', () => {
+  it('activation refuses, before changing anything, when a certificate replacement is unfinished', async () => {
+    await activeA();
+    writeFileSync(join(l.tls, 'replace.json'), '{}');
+    const before = readFileSync(l.pointersFile, 'utf8');
+    await expect(activate('ds-b', fast)).rejects.toThrow(/certificate replacement did not finish/);
+    expect(readFileSync(l.pointersFile, 'utf8')).toBe(before);
+    expect(existsSync(l.transitionFile)).toBe(false);
+  });
+  it('activation refuses a mismatched served pair', async () => {
+    await activeA();
+    execFileSync('openssl', ['genpkey', '-algorithm', 'EC', '-pkeyopt', 'ec_paramgen_curve:prime256v1', '-out', join(l.tls, 'other.key')], { stdio: 'ignore' });
+    copyFileSync(join(l.tls, 'other.key'), join(l.tls, 'server.key'));
+    await expect(activate('ds-b', fast)).rejects.toThrow(/does not match/);
+    expect(existsSync(l.transitionFile)).toBe(false);
+  });
 });
 
 describe('activation recovery (review R2)', () => {

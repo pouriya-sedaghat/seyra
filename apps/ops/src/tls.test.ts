@@ -5,7 +5,7 @@ import { tmpdir } from 'node:os';
 import { dirname, join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { afterAll, beforeEach, describe, expect, it } from 'vitest';
-import { assertNoTlsReplacement, assertServedPair, MAX_LEAF_DAYS, tlsCsr, tlsImport, tlsRecover, tlsStatus, validateProposedCertificate } from './tls.js';
+import { assertNoTlsReplacement, assertServedPair, MAX_LEAF_DAYS, tlsCsr, tlsImport, tlsRecover, tlsRestore, tlsStatus, validateProposedCertificate } from './tls.js';
 
 // Temporary synthetic issuer hierarchy (test only; documentation-range names and addresses).
 const w = mkdtempSync(join(tmpdir(), 'seyra-tls-test-'));
@@ -185,5 +185,41 @@ describe('operator development issuer (infra/tls/dev-issuer.sh) uses the same pr
     expect(() => execFileSync('bash', [script, 'init', issuer], { env: { ...env, SEYRA_HOME: '/srv/seyra' }, stdio: 'pipe' })).toThrow();
     execFileSync('bash', [script, 'init', issuer], { env });
     expect(() => execFileSync('bash', [script, 'sign', issuer, f('good.csr'), '--names', '*.example.test'], { env, stdio: 'pipe' })).toThrow();
+  });
+});
+
+describe('restore of a full-chain backup (review H4)', () => {
+  it('restores a leaf + intermediate backup byte for byte, also after an interruption', async () => {
+    await tlsImport(p(), { cert: good.cert, chain: f('intermediate.crt'), ca: f('root.crt'), key: good.key, names: NAMES }, () => {});
+    const first = served();
+    const renewed = leaf('renewed');
+    const logs: string[] = [];
+    await tlsImport(p(), { cert: renewed.cert, chain: f('intermediate.crt'), ca: f('root.crt'), key: renewed.key, names: NAMES }, (m) => logs.push(m));
+    const backup = logs.join('\n').match(/previous pair kept in (\S+)/)![1]!;
+    expect(readFileSync(join(backup, 'server.crt'), 'utf8').match(/BEGIN CERTIFICATE/g)).toHaveLength(2);
+    expect(readFileSync(join(backup, 'chain.pem'), 'utf8').match(/BEGIN CERTIFICATE/g)).toHaveLength(1);
+    // Interrupted after the first rename, then recovered: the backup set is in place.
+    await tlsRestore(p(), { from: backup, crashAfter: 'key' }, () => {});
+    expect(() => assertServedPair(p())).toThrow(/did not finish/);
+    expect(tlsRecover(p(), () => {})).toBe('completed');
+    expect(served()).toEqual(first);
+    expect(() => assertServedPair(p())).not.toThrow();
+  });
+
+  it('derives the expected names of a legacy backup from its own SAN and still validates the chain', async () => {
+    // The legacy fixture pair (single leaf, own test CA) becomes the first backup.
+    const legacy = served();
+    const logs: string[] = [];
+    await tlsImport(p(), { cert: good.cert, chain: f('intermediate.crt'), ca: f('root.crt'), key: good.key, names: NAMES }, (m) => logs.push(m));
+    const backup = logs.join('\n').match(/previous pair kept in (\S+)/)![1]!;
+    await tlsRestore(p(), { from: backup }, () => {});
+    expect(served()).toEqual(legacy);
+    // A backup whose trust anchor does not verify its chain is refused; the served set stays.
+    const bad = join(dir, 'previous-bad-anchor');
+    mkdirSync(bad);
+    for (const x of ['server.crt', 'server.key']) writeFileSync(join(bad, x), readFileSync(join(dir, x)));
+    writeFileSync(join(bad, 'ca.crt'), readFileSync(f('other-root.crt')));
+    await expect(tlsRestore(p(), { from: bad }, () => {})).rejects.toThrow(/chain verification/);
+    expect(served()).toEqual(legacy);
   });
 });
