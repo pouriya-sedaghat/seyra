@@ -1,0 +1,48 @@
+{
+  "reviewed_base": "e7a2175149824f7cba92e47382c464607248f609",
+  "reviewed_head": "d63f1d9310c4a3c51abee3dde832eb36e51b267f",
+  "node": "v24.19.0",
+  "checks": [
+    {
+      "id": "sparse-and-db-credit-refusal",
+      "result": "PASS",
+      "detail": "The real admission function refuses an 8 GiB sparse store plus 128 GiB logical DB without cleanup; failed data is kept."
+    },
+    {
+      "id": "outside-links",
+      "result": "PASS",
+      "detail": "Actual lstat-based estimator does not credit either outside symlink targets or data with a surviving outside hard link."
+    },
+    {
+      "id": "inside-hardlink-dedup",
+      "result": "PASS",
+      "detail": "An internal hard-link pair earns one allocation rather than two logical lengths."
+    },
+    {
+      "id": "authorized-cleanup-order",
+      "result": "PASS",
+      "detail": "An allocated-store admission invokes cleanup and then checks observed free space; unavailable DB size is informative only."
+    },
+    {
+      "id": "post-cleanup-shortfall",
+      "result": "PASS",
+      "detail": "A shortfall after authorized cleanup is explicitly reported and does not return permission to begin new import writes."
+    },
+    {
+      "id": "new-import-boundary",
+      "result": "PASS",
+      "detail": "Without a failed build the actual admission function honors the exact free-space boundary."
+    },
+    {
+      "id": "original-F2-counterexample-closed",
+      "result": "PASS",
+      "detail": "The same unlisted dangling-link fixture is installed/bootstrap-called by e7a2175 but refused before those actions by d63f1d9."
+    }
+  ],
+  "source_sha256": {
+    "capacity": "405e65b5c8b629088dec66d954d0302379c53617e7fe8800429842f654e344ce",
+    "importer": "8a482d7070468e7e882e57856c0a0eda39e7658d1f3bb7b2e0439be30a1d702a",
+    "harness": "ce583c7f16edc59731c27abf1bbec4fd5ec655af446377e43208eec6c56d1097"
+  },
+  "limitations": "Actual functions/blocks with controlled filesystem and external boundaries, not a full importer/Docker/Photon/PBF/browser rerun. Reviewer Node is 24.19.0, not pinned 24.21.0."
+}
