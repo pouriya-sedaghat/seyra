@@ -140,7 +140,7 @@ C6="$(release_of "$OUT/C6-killed-import.log")"
 rel6="$SEYRA_HOME/releases/$C6"
 # The next import recovers the abandoned lease itself (marks the build failed, stops orphaned jobs).
 in_host truncate -s 8G "$rel6/sparse-store.bin"
-in_host sh -c "du -B1 --apparent-size '$rel6/sparse-store.bin'; du -B1 '$rel6/sparse-store.bin'" > "$OUT/C6-sparse-file.txt" 2>&1
+in_host stat -c 'apparent=%s allocated_blocks=%b block_size=%B' "$rel6/sparse-store.bin" > "$OUT/C6-sparse-file.txt" 2>&1
 free6="$(df -B1 --output=avail "$LAB" | tail -1 | tr -d ' ')"
 set_setting minFreeBytes $(( free6 + 4 * 1024 * 1024 * 1024 ))
 dbs6="$(render_dbs)"
@@ -148,7 +148,7 @@ cli import --pbf "$PBF" --snapshot-timestamp "$(day 4)" > "$OUT/C6-refused.log" 
 st6="$(manifest "$C6" 2>/dev/null | jq -r '.status')"
 if [ -n "$victim6" ] && [ $rc6 -ne 0 ] && grep -q "nothing was changed (the failed build of $C6 was kept)" "$OUT/C6-refused.log" && [ "$st6" = failed ] \
   && in_host test -f "$rel6/sparse-store.bin" && [ "$(render_dbs)" = "$dbs6" ] && ! grep -q 'source-copy\|replacing failed build' "$OUT/C6-refused.log"; then
-  result PASS C6 "failed build $C6 with an 8 GiB sparse file (allocated: $(tail -1 "$OUT/C6-sparse-file.txt" | cut -f1) B) and required = free + 4 GiB: refused; build, its sparse file and render DB kept; no new build started ($(grep -o 'reclaim estimate of the failed build: [^;]*' "$OUT/C6-refused.log" | head -1))"
+  result PASS C6 "failed build $C6 with an 8 GiB sparse file ($(cat "$OUT/C6-sparse-file.txt")) and required = free + 4 GiB: refused; build, its sparse file and render DB kept; no new build started ($(grep -o 'reclaim estimate of the failed build: [^;]*' "$OUT/C6-refused.log" | head -1))"
 else
   result FAIL C6 "victim=$victim6 rc=$rc6 status=$st6"
 fi
