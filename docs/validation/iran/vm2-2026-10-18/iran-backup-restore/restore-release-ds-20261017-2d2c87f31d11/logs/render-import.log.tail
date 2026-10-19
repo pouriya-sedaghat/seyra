@@ -1,0 +1,69 @@
+
+$ docker compose -p seyra-jobs -f /opt/seyra-install/infra/compose/jobs.yml run --rm --no-deps -T render-import
+ Container seyra-jobs-render-import-run-570cc3d6a825 Creating 
+ Container seyra-jobs-render-import-run-570cc3d6a825 Created 
+2026-10-18 14:03:06  osm2pgsql version 2.3.1
+2026-10-18 14:03:06  Database version: 17.5 (Debian 17.5-1.pgdg110+1)
+2026-10-18 14:03:06  PostGIS version: 3.5
+2026-10-18 14:03:06  Initializing properties table '"render"."osm2pgsql_properties"'.
+2026-10-18 14:03:06  Storing properties to table '"render"."osm2pgsql_properties"'.
+Processing: Node(2740k 2740.0k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(5840k 2920.0k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(7390k 2463.3k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(9260k 2315.0k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(11010k 2202.0k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(12570k 2095.0k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(14360k 2051.4k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(16160k 2020.0k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(17660k 1962.2k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(19140k 1914.0k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(20610k 1873.6k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(21770k 1814.2k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(23460k 1804.6k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(25050k 1789.3k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(26680k 1778.7k/s) Way(0k 0.00k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1k 1.00k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(30k 30.00k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(100k 50.00k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(152k 50.67k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(214k 53.50k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(270k 54.00k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(341k 56.83k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(405k 57.86k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(471k 58.88k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(530k 58.89k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(591k 59.10k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(642k 58.36k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(696k 58.00k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(726k 55.85k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(783k 55.93k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(834k 55.60k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(878k 54.88k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(928k 54.59k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(996k 55.33k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1037k 54.58k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1063k 53.15k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1090k 51.90k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1117k 50.77k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1160k 50.43k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1205k 50.21k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1241k 49.64k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1304k 50.15k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1365k 50.56k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1436k 51.29k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1494k 51.52k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1565k 52.17k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1621k 52.29k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1647k 51.47k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1682k 50.97k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1743k 51.26k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1785k 51.00k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1841k 51.14k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1895k 51.22k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(1964k 51.68k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2064k 52.92k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2125k 53.12k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2189k 53.39k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2251k 53.60k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2299k 53.47k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2348k 53.36k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2408k 53.51k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2463k 53.54k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2500k 53.19k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2548k 53.08k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2609k 53.24k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2667k 53.34k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2739k 53.71k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2799k 53.83k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2857k 53.91k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2919k 54.06k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(2986k 54.29k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(3041k 54.30k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(3086k 54.14k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(3124k 53.86k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(3162k 53.59k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(3197k 53.28k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(3232k 52.98k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(3266k 52.68k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(3303k 52.43k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(3341k 52.20k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(3372k 51.88k/s) Relation(0 0.0/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(10 10.0/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(20 20.0/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(50 25.0/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(440 146.7/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(1640 410.0/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(3280 656.0/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(9040 1506.7/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(15050 2150.0/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(20510 2563.8/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(29230 3247.8/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(38090 3809.0/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(49260 4478.2/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(61200 5100.0/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(71920 5532.3/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(78930 5637.9/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(82460 4581.1/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(84220 4432.6/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(85840 4292.0/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(90280 4299.0/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(91480 4158.2/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(93530 4066.5/s)Processing: Node(27001k 1421.1k/s) Way(3396k 49.22k/s) Relation(96100 4004.2/s)                                                                                          2026-10-18 14:04:59  Reading input files done in 113s (1m 53s).
+2026-10-18 14:04:59    Processed 27001241 nodes in 19s - 1421k/s
+2026-10-18 14:04:59    Processed 3396283 ways in 69s (1m 9s) - 49k/s
+2026-10-18 14:04:59    Processed 99075 relations in 25s - 4k/s
+2026-10-18 14:04:59  No marked nodes or ways (Skipping stage 2).
+2026-10-18 14:04:59  Dropping table 'planet_osm_nodes'
+2026-10-18 14:05:00  Table 'planet_osm_nodes' dropped in 1s
+2026-10-18 14:05:00  Dropping table 'planet_osm_ways'
+2026-10-18 14:05:00  Table 'planet_osm_ways' dropped in 0s
+2026-10-18 14:05:00  Dropping table 'planet_osm_rels'
+2026-10-18 14:05:00  Table 'planet_osm_rels' dropped in 0s
+2026-10-18 14:05:00  Done postprocessing on table 'planet_osm_nodes' in 0s
+2026-10-18 14:05:00  Done postprocessing on table 'planet_osm_ways' in 0s
+2026-10-18 14:05:00  Done postprocessing on table 'planet_osm_rels' in 0s
+2026-10-18 14:05:00  Clustering table 'places' by geometry...
+2026-10-18 14:05:01  Clustering table 'boundaries' by geometry...
+2026-10-18 14:05:01  Creating index on table 'places' ("geom")...
+2026-10-18 14:05:01  Creating index on table 'places' ("min_zoom")...
+2026-10-18 14:05:01  Analyzing table 'places'...
+2026-10-18 14:05:02  Creating index on table 'boundaries' ("geom")...
+2026-10-18 14:05:02  Creating index on table 'boundaries' ("min_zoom")...
+2026-10-18 14:05:02  Analyzing table 'boundaries'...
+2026-10-18 14:05:02  All postprocessing on table 'places' done in 1s.
+2026-10-18 14:05:02  Clustering table 'water' by geometry...
+2026-10-18 14:05:02  All postprocessing on table 'boundaries' done in 1s.
+2026-10-18 14:05:02  Clustering table 'waterways' by geometry...
+2026-10-18 14:05:02  Creating index on table 'water' ("geom")...
+2026-10-18 14:05:02  Creating index on table 'water' ("min_zoom")...
+2026-10-18 14:05:02  Analyzing table 'water'...
+2026-10-18 14:05:02  All postprocessing on table 'water' done in 0s.
+2026-10-18 14:05:02  Clustering table 'landcover' by geometry...
+2026-10-18 14:05:03  Creating index on table 'waterways' ("geom")...
+2026-10-18 14:05:03  Creating index on table 'waterways' ("min_zoom")...
+2026-10-18 14:05:03  Analyzing table 'waterways'...
+2026-10-18 14:05:03  All postprocessing on table 'waterways' done in 1s.
+2026-10-18 14:05:03  Clustering table 'transport' by geometry...
+2026-10-18 14:05:03  Creating index on table 'landcover' ("geom")...
+2026-10-18 14:05:03  Creating index on table 'landcover' ("min_zoom")...
+2026-10-18 14:05:04  Analyzing table 'landcover'...
+2026-10-18 14:05:04  All postprocessing on table 'landcover' done in 1s.
+2026-10-18 14:05:04  Clustering table 'buildings' by geometry...
+2026-10-18 14:05:31  Creating index on table 'buildings' ("geom")...
+2026-10-18 14:05:37  Creating index on table 'buildings' ("min_zoom")...
+2026-10-18 14:05:38  Analyzing table 'buildings'...
+2026-10-18 14:05:38  Clustering table 'pois' by geometry...
+2026-10-18 14:05:46  Creating index on table 'pois' ("geom")...
+2026-10-18 14:05:47  Creating index on table 'pois' ("min_zoom")...
+2026-10-18 14:05:47  Analyzing table 'pois'...
+2026-10-18 14:05:48  Clustering table 'uncatalogued' by geometry...
+2026-10-18 14:05:55  No indexes to create on table 'uncatalogued'.
+2026-10-18 14:05:55  Analyzing table 'uncatalogued'...
+2026-10-18 14:06:04  Creating index on table 'transport' ("geom")...
+2026-10-18 14:06:10  Creating index on table 'transport' ("min_zoom")...
+2026-10-18 14:06:11  Analyzing table 'transport'...
+2026-10-18 14:06:11  All postprocessing on table 'transport' done in 67s (1m 7s).
+2026-10-18 14:06:11  All postprocessing on table 'buildings' done in 34s.
+2026-10-18 14:06:11  All postprocessing on table 'pois' done in 9s.
+2026-10-18 14:06:11  All postprocessing on table 'uncatalogued' done in 7s.
+2026-10-18 14:06:11  Storing properties to table '"render"."osm2pgsql_properties"'.
+2026-10-18 14:06:11  osm2pgsql took 185s (3m 5s) overall.
