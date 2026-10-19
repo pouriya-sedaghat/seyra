@@ -70,14 +70,20 @@ async function poll() {
 
 const tiles = { requested: 0, completed: 0, cancelled: 0, by_status: {}, by_zoom: {} };
 async function tileClient(seed) {
-  let caps;
-  try {
-    caps = await (await fetch(`${base}/api/v1/map/capabilities`)).json();
-  } catch {
-    return; // not up yet: the poller records that
+  // During a cold start the API is not up yet: keep asking (like a client that reloads) until it is.
+  let caps = null;
+  while (!caps?.map?.tiles && Date.now() < end) {
+    try {
+      const r = await fetch(`${base}/api/v1/map/capabilities`, { signal: AbortSignal.timeout(5000) });
+      caps = r.ok ? await r.json() : null;
+    } catch {
+      caps = null;
+    }
+    if (!caps?.map?.tiles) await new Promise((res) => setTimeout(res, 500));
   }
   const tpl = caps?.map?.tiles;
   if (!tpl) return;
+  tiles.clients_started = (tiles.clients_started ?? 0) + 1;
   let tj = null;
   try {
     tj = await (await fetch(`${base}${caps.map.tilejson}`)).json();
