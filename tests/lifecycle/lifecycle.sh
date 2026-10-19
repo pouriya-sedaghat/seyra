@@ -11,7 +11,7 @@
 # L9 prune during a live import / L10 prune during activation / L11 competing rollback and
 #    activate (review R3, real concurrent processes) / L12 prune after the transitions
 # L13 activation's container killed holding the lock mid-transition; recover/prune/activate race
-# L14 stop's container killed holding the lock; start/prune race (review R3 follow-up)
+# L14 stop's container killed holding the lock; start takes it over, prune launched while start holds it is refused
 #
 # Requires: NODE_BIN (Node for the port squatter), SNAPSHOT_TS (B) and SNAPSHOT_TS_L9 (C) not
 # already imported.
@@ -273,8 +273,10 @@ else
   result FAIL L13 "killed=$killed recover=$rc_r prune=$rc_p activate=$rc_a ready=$(ready_ds) active=$(active) journal=$([ -e "$SEYRA_HOME/state/transition.json" ] && echo yes || echo no)"
 fi
 
-# L14: a stop's ops container killed while holding the lock (no transition); start and prune then
-# race for it. Each either runs or is refused as busy (never both inside); a final start serves A.
+# L14: a stop's ops container killed while holding the lock (no transition). `start` takes the lock
+# over; `prune` is launched only once `start` is observed holding it, so the two overlap by
+# construction and prune must be refused as busy. If start had already released the lock before
+# prune asked for it, the overlap was not demonstrated and the case FAILs instead of passing.
 ow="$(owners_start "$ev/L14-owners.txt")"
 "$cli" stop > "$ev/L14-killed-stop.log" 2>&1 &
 ks=$!
@@ -282,17 +284,21 @@ killed2="$(kill_lock_holder stop)"
 wait $ks 2>/dev/null
 "$cli" status > "$ev/L14-status-after-kill.log" 2>&1
 "$cli" start > "$ev/L14-start.log" 2>&1 & s1=$!
+held=""
+for _ in $(seq 1 600); do [ "$(jq -r '.op // empty' "$lock" 2>/dev/null)" = start ] && { held="$(jq -r '.host' "$lock")"; break; }; sleep 0.1; done
 "$cli" prune > "$ev/L14-prune.log" 2>&1 & s2=$!
-wait $s1; rc_s=$?; wait $s2; rc_p=$?
+wait $s2; rc_p=$?; wait $s1; rc_s=$?
 "$cli" start > "$ev/L14-final-start.log" 2>&1; rc_f=$?
 wait_ready "$A" 300
 owners_stop "$ow" "$ev/L14-owners.txt"
-ok_or_busy() { [ "$1" -eq 0 ] || grep -q "another lifecycle operation is running" "$2"; }
-if [ -n "$killed2" ] && grep -q "lifecycle lock: free (record of stop" "$ev/L14-status-after-kill.log" && ok_or_busy $rc_s "$ev/L14-start.log" && ok_or_busy $rc_p "$ev/L14-prune.log" \
-   && { [ $rc_s -eq 0 ] || [ $rc_p -eq 0 ]; } && [ $rc_f -eq 0 ] && [ "$(ready_ds)" = "$A" ] && [ "$(active)" = "$A" ] && [ "$(previous)" = "$B" ] && [ ! -s "$lock" ]; then
-  result PASS L14 "stop's ops container $killed2 killed while holding the lock: the next commands took it over at once (start rc=$rc_s, prune rc=$rc_p; a refusal is 'another lifecycle operation is running'); A ready after start, no owner left"
+if [ -n "$killed2" ] && grep -q "lifecycle lock: free (record of stop" "$ev/L14-status-after-kill.log" && [ -n "$held" ] && [ $rc_s -eq 0 ] \
+   && [ $rc_p -ne 0 ] && grep -q "another lifecycle operation is running: start" "$ev/L14-prune.log" \
+   && [ $rc_f -eq 0 ] && [ "$(ready_ds)" = "$A" ] && [ "$(active)" = "$A" ] && [ "$(previous)" = "$B" ] && [ ! -s "$lock" ]; then
+  result PASS L14 "stop's ops container $killed2 killed while holding the lock: start took the lock over at once (holder $held); prune, launched while start held it, was refused ('another lifecycle operation is running: start'); A ready after start, no owner left"
+elif [ -n "$held" ] && [ $rc_p -eq 0 ]; then
+  result FAIL L14 "overlap not demonstrated: prune ran (rc=0) although it was launched while start ($held) held the lock; start=$rc_s"
 else
-  result FAIL L14 "killed=$killed2 start=$rc_s prune=$rc_p final_start=$rc_f ready=$(ready_ds)"
+  result FAIL L14 "killed=$killed2 start_held=${held:-never observed} start=$rc_s prune=$rc_p final_start=$rc_f ready=$(ready_ds)"
 fi
 
 cp "$ev/.settings.bak" "$settings" && rm -f "$ev/.settings.bak" "$ev/.squat-ready"

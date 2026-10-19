@@ -9,6 +9,7 @@
 import { createRequire } from 'node:module';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { browserVerdict, verdictLine } from './browser-verdict.mjs';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE ?? 'playwright');
@@ -122,7 +123,7 @@ const external = requests.filter((r) => !r.url.startsWith(origin) && !r.url.star
 const rtlPlugin = requests.filter((r) => /rtl-text|mapbox-gl-rtl|rtl_plugin/i.test(r.url));
 const report = {
   recorded_at: new Date().toISOString(),
-  label: 'EXPLORATORY real-Iran views (screenshots for visual review; request audit asserted)',
+  label: 'EXPLORATORY real-Iran views: screenshots for visual review; the verdict covers requests, console errors and required navigation (not search-quality acceptance)',
   base,
   title,
   total_requests: requests.length,
@@ -136,7 +137,9 @@ const report = {
   visits,
   screenshots: shots,
 };
+// Every visit above is required: its screenshot is only meaningful if the intended area opened.
+const verdict = browserVerdict({ external, rtlPlugin, failed, consoleErrors, visits, expectedVisits: 6 });
+report.verdict = verdict;
 writeFileSync(join(out, 'report.json'), `${JSON.stringify(report, null, 2)}\n`);
-const ok = external.length === 0 && rtlPlugin.length === 0 && failed.length === 0;
-console.log(`${ok ? 'PASS' : 'FAIL'} requests=${requests.length} external=${external.length} rtl_plugin=${rtlPlugin.length} failed=${failed.length} console_errors=${consoleErrors.length} visits_found=${visits.filter((v) => v.found).length}/${visits.length}`);
-process.exit(ok ? 0 : 1);
+console.log(`${verdictLine(verdict)} requests=${requests.length}`);
+process.exit(verdict.ok ? 0 : 1);

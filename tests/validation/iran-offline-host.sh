@@ -15,8 +15,19 @@
 #   OUT=/abs/evidence-dir [PHASES="install import serve backup restore"] tests/validation/iran-offline-host.sh
 #
 # Phases: install | update (UPDATE_BUNDLE under $LAB + UPDATE_SUMS_DIGEST: RUNBOOK §8 on the existing
-# host) | import | serve | browser (PLAYWRIGHT_IMAGE, PLAYWRIGHT_DIR) | backup | restore. Phases
-# without `install` attach to the existing host `seyra-iran-host`.
+# host) | import | serve | browser (PLAYWRIGHT_IMAGE, PLAYWRIGHT_DIR) | readiness (cold-start trials;
+# READINESS_TRIALS/SECONDS/CLIENTS) | backup | restore. Phases
+# without `install` attach to the existing host $HOST1_NAME (default seyra-iran-host); the restore
+# target is $HOST2_NAME (default seyra-iran-restore).
+#
+# Host safety: an existing container is replaced only if it carries this lab's label
+# (seyra.validation.lab=$LAB); any other container with that name (e.g. an operator's preserved
+# host) makes the run stop instead.
+#
+# Frozen execution: the harness never runs from the working tree. It copies tests/validation into
+# $OUT/harness-<UTC stamp>/ (read-only), records the commit, dirty state and file hashes in
+# $OUT/harness-<stamp>.revision, and re-executes that copy. Editing the repository during a run
+# cannot change the running script.
 #
 # Evidence (sanitized: no secrets, no data stores) goes to $OUT. Exits non-zero on any FAIL.
 set -uo pipefail
@@ -25,6 +36,22 @@ PHASES="${PHASES:-install import serve backup restore}"
 SAMPLE_S="${SAMPLE_S:-10}"
 repo="${SEYRA_REPO:-$(cd "$(dirname "$0")/../.." && pwd)}"
 mkdir -p "$OUT" "$LAB"
+if [ -z "${SEYRA_HARNESS_FROZEN:-}" ]; then
+  src="$(cd "$(dirname "$0")" && pwd)"
+  stamp="$(date -u +%Y%m%dT%H%M%SZ)"
+  frozen="$OUT/harness-$stamp"
+  mkdir -p "$frozen" && cp -a "$src/." "$frozen/" && chmod -R a-w "$frozen"
+  {
+    echo "commit: $(git -C "$src" rev-parse HEAD 2>/dev/null || echo unknown)"
+    echo "uncommitted changes under tests/validation: $(git -C "$src" status --porcelain -- . 2>/dev/null | wc -l)"
+    echo "frozen copy: $frozen"
+    (cd "$frozen" && sha256sum -- *)
+  } > "$OUT/harness-$stamp.revision"
+  exec env SEYRA_HARNESS_FROZEN="$frozen" SEYRA_REPO="$repo" bash "$frozen/$(basename "$0")"
+fi
+hdir="$SEYRA_HARNESS_FROZEN"
+HOST1_NAME="${HOST1_NAME:-seyra-iran-host}"
+HOST2_NAME="${HOST2_NAME:-seyra-iran-restore}"
 net=seyra_offline_lab
 sock_dir="$LAB/run"
 export SEYRA_HOME="$LAB/home"
@@ -36,6 +63,18 @@ summary=()
 fails=0
 name=""
 ts() { date -u +%FT%TZ; }
+# Write the run summary and end the run (also used to stop after a failed gate).
+finish() {
+  stop_sampler 2>/dev/null
+  {
+    echo "# Seyra real-Iran offline-host validation — $(ts)"
+    echo "# harness=${SEYRA_HARNESS_FROZEN:-} bundle=$BUNDLE pbf=$(basename "$PBF") sha256=${src_sha:-} dataset_id=${DS:-}"
+    printf '%s\n' "${summary[@]}"
+    echo "# failures: $fails"
+  } >> "$OUT/summary.txt"
+  tail -n $(( ${#summary[@]} + 3 )) "$OUT/summary.txt"
+  exit $((fails > 0))
+}
 result() { summary+=("$1 $2 $3"); echo "== $(ts) $1 $2 $3" | tee -a "$OUT/progress.log"; [ "$1" = PASS ] || [ "$1" = NOTE ] || fails=$((fails + 1)); }
 D() { DOCKER_HOST="unix://$sock_dir/docker.sock" docker "$@"; }
 cli() { DOCKER_HOST="unix://$sock_dir/docker.sock" "$inst/bin/seyra-maps" "$@"; }
@@ -51,7 +90,15 @@ ready_ds() { in_node -e "fetch('https://127.0.0.1:8443/health/ready').then(r=>r.
 health_json() { in_node -e "fetch('https://127.0.0.1:8443/api/v1/map/health').then(r=>r.text()).then(t=>console.log(t),e=>console.log('{}'))" 2>/dev/null; }
 q() { D exec -i "$(D ps -q --filter label=com.docker.compose.project=seyra --filter label=com.docker.compose.service=db)" psql -X -q -At -U seyra_admin -d seyra_app -c "$1"; }
 free_b() { df -B1 --output=avail "$LAB" | tail -1 | tr -d ' '; }
-guard_b() { local s; s="$(stat -c %s "$PBF")"; echo $(( s * 40 > 2147483648 ? s * 40 : 2147483648 )); }
+# Pre-check with the host's configured guard (the importer enforces it again, counting a replaced
+# failed build); falls back to the product defaults (120 x input, 2 GiB floor).
+guard_b() {
+  local s f b
+  s="$(stat -c %s "$PBF")"
+  f="$(in_host cat "$SEYRA_HOME/state/settings.json" 2>/dev/null | jq -r '.minFreeFactor // 120')"
+  b="$(in_host cat "$SEYRA_HOME/state/settings.json" 2>/dev/null | jq -r '.minFreeBytes // 2147483648')"
+  awk -v s="$s" -v f="${f:-120}" -v b="${b:-2147483648}" 'BEGIN { r = s * f; if (r < b) r = b; printf "%.0f\n", (r == int(r) ? r : int(r) + 1) }'
+}
 
 # Resource sampler: outer view (VM filesystem, memory, the offline-host container's total CPU/RAM)
 # and inner view (each product/job container inside the offline host), every $SAMPLE_S seconds.
@@ -73,13 +120,19 @@ trap 'stop_sampler' EXIT
 
 new_host() { # $1 = container name; a fresh, empty offline daemon
   name="$1"
-  docker rm -f "$name" >/dev/null 2>&1
+  if docker container inspect "$name" >/dev/null 2>&1; then
+    if [ "$(docker container inspect -f '{{ index .Config.Labels "seyra.validation.lab" }}' "$name")" != "$LAB" ]; then
+      echo "refusing: container $name exists and was not created by this lab ($LAB); it is left untouched" >&2
+      exit 2
+    fi
+    docker rm -f "$name" >/dev/null 2>&1
+  fi
   docker volume rm "$name-docker" >/dev/null 2>&1
   [ ! -e "$SEYRA_HOME" ] && [ ! -e "$inst" ] || { echo "refusing: $SEYRA_HOME or $inst already exists (use drop_host)" >&2; exit 2; }
   docker network inspect "$net" >/dev/null 2>&1 || docker network create --internal "$net" >/dev/null
   mkdir -p "$sock_dir" "$SEYRA_HOME"
   # Same absolute paths inside and outside, so the wrapper's bind mounts resolve on the offline host.
-  docker run -d --privileged --name "$name" --network "$net" --pull never \
+  docker run -d --privileged --name "$name" --label "seyra.validation.lab=$LAB" --network "$net" --pull never \
     -v "$LAB:$LAB" -v "$BUNDLE:$BUNDLE:ro" -v "$PBF:$PBF:ro" -v "$name-docker:/var/lib/docker" \
     "$DIND_IMAGE" dockerd -H unix:///var/run/docker.sock -H "unix://$sock_dir/docker.sock" --group "$(id -g)" --tls=false >/dev/null
   # The shared socket belongs to the operator's group, so the non-root wrapper can reach it.
@@ -149,7 +202,7 @@ echo "# $(ts) iran-offline-host start phases=[$PHASES] pbf=$(basename "$PBF") sh
 
 # ============================================================== host 1: install, import, serve
 if has install; then
-  new_host seyra-iran-host
+  new_host "$HOST1_NAME"
   if D info >/dev/null 2>&1 && [ "$(D images -q | wc -l)" = 0 ] && ! in_host wget -q -T 3 -O /dev/null http://example.com/ 2>/dev/null; then
     result PASS I0 "offline host has no images and no outside route (probe to example.com failed)"
   else
@@ -166,28 +219,52 @@ if has install; then
   { timed init cli init && timed tls-init cli tls init --names localhost,127.0.0.1; } > "$OUT/I2-init.log" 2>&1; rc=$?
   if [ $rc -eq 0 ]; then result PASS I2 "init (loopback 127.0.0.1:8443) and internal TLS CA/certificate"; else result FAIL I2 "rc=$rc"; fi
 else
-  attach_host seyra-iran-host
+  attach_host "$HOST1_NAME"
 fi
 
+# >>> update-phase (extracted and exercised by tests/validation/test-update-gate.mjs)
+# Gate for an incoming bundle, using only tools already trusted on the operator host (coreutils);
+# nothing from the incoming bundle runs. Prints the reason; rc 0 only if (1) the SHA256SUMS digest
+# equals the value received out of band, (2) every listed file matches its checksum and (3) the
+# bundle holds no unlisted files.
+update_gate() { # bundle expected-digest
+  local b="$1" want="$2" got listed present
+  [ -f "$b/SHA256SUMS" ] || { echo "no SHA256SUMS in $b"; return 1; }
+  got="$(sha256sum "$b/SHA256SUMS" | cut -d' ' -f1)"
+  [ "$got" = "$want" ] || { echo "SHA256SUMS digest $got does not match the out-of-band value $want"; return 1; }
+  (cd "$b" && sha256sum --quiet --strict -c SHA256SUMS) > "$OUT/U0-sha256sum-check.txt" 2>&1 \
+    || { echo "listed file checksums do not match: $(grep -c . "$OUT/U0-sha256sum-check.txt") line(s) in U0-sha256sum-check.txt"; return 1; }
+  listed="$(sed -E 's/^[0-9a-f]{64}  //' "$b/SHA256SUMS" | sort)"
+  present="$(cd "$b" && find . -type f ! -path ./SHA256SUMS -printf '%P\n' | sort)"
+  [ "$listed" = "$present" ] || { echo "bundle files differ from SHA256SUMS: $(comm -3 <(printf '%s\n' "$listed") <(printf '%s\n' "$present") | tr -d '\t' | tr '\n' ' ')"; return 1; }
+  echo "SHA256SUMS digest $got matches the out-of-band value; $(printf '%s\n' "$listed" | grep -c .) listed files verified; no unlisted files"
+}
 if has update; then
   # RUNBOOK §8 software update on the existing offline host: the new bundle arrives on transfer
-  # media (a directory under $LAB, visible inside the host), its SHA256SUMS digest is compared
-  # with the value received out of band, the install tree is replaced and the images are loaded.
+  # media (a directory under $LAB, visible inside the host). Verification comes first; a refused
+  # bundle changes nothing (no install files, no wrapper run, no image load, BUNDLE unchanged) and
+  # ends the run, so dependent phases are skipped.
   : "${UPDATE_BUNDLE:?}" "${UPDATE_SUMS_DIGEST:?}"
   [ -f "$OUT/.egress-start" ] || egress_count > "$OUT/.egress-start"
-  got="$(sha256sum "$UPDATE_BUNDLE/SHA256SUMS" | cut -d' ' -f1)"
+  gate="$(update_gate "$UPDATE_BUNDLE" "$UPDATE_SUMS_DIGEST")"; grc=$?
+  echo "$gate" > "$OUT/U0-gate.txt"
+  if [ $grc -ne 0 ]; then
+    result FAIL U1 "update refused before any install change: $gate"
+    finish
+  fi
   in_host rm -rf "$inst" && cp -a "$UPDATE_BUNDLE/install" "$inst"
   timed update-bootstrap-load cli bootstrap-load "$UPDATE_BUNDLE" > "$OUT/U1-bootstrap-load.log" 2>&1; rc=$?
   cli verify-images > "$OUT/U1-verify-images.log" 2>&1; rc2=$?
   cli status > "$OUT/U1-status.log" 2>&1
-  if [ "$got" = "$UPDATE_SUMS_DIGEST" ] && [ $rc -eq 0 ] && [ $rc2 -eq 0 ] && grep -q 'identities match the manifest' "$OUT/U1-bootstrap-load.log"; then
-    result PASS U1 "software update: SHA256SUMS digest matches the out-of-band value ($got); install tree replaced; all locked images verified"
+  if [ $rc -eq 0 ] && [ $rc2 -eq 0 ] && grep -q 'identities match the manifest' "$OUT/U1-bootstrap-load.log"; then
+    result PASS U1 "software update: $gate; install tree replaced; all locked images verified"
   else
-    result FAIL U1 "digest=$got expected=$UPDATE_SUMS_DIGEST bootstrap=$rc verify=$rc2"
+    result FAIL U1 "verified bundle failed to load: bootstrap=$rc verify=$rc2"
+    finish
   fi
   BUNDLE="$UPDATE_BUNDLE"   # later phases (a restore target) install from the updated bundle
 fi
-
+# <<< update-phase
 if has import; then
   free0="$(free_b)"; guard="$(guard_b)"
   echo "pre-import free_bytes=$free0 guard_bytes=$guard (max(2 GiB, 40 x $(stat -c %s "$PBF")))" > "$OUT/I3-capacity.txt"
@@ -220,7 +297,7 @@ if has serve && [ -n "$DS" ]; then
   health_json > "$OUT/I5-health.json"
   if [ $rc -eq 0 ] && [ "$r" = "$DS" ]; then result PASS I5 "activated $DS; /health/ready reports it through https://127.0.0.1:8443 with all four providers"; else result FAIL I5 "activate=$rc ready=$r"; fi
   # Sequential exploratory smoke on real Iran geography (script and output inside the lab).
-  mkdir -p "$work"; cp "$repo/tests/validation/iran-smoke.mjs" "$work/"
+  mkdir -p "$work"; cp "$hdir/iran-smoke.mjs" "$work/"
   start_sampler "$OUT/I6-smoke-samples.txt"
   D run --rm --network host --pull never -v "$SEYRA_HOME/secrets/tls/ca.crt:/ca.crt:ro" -e NODE_EXTRA_CA_CERTS=/ca.crt \
     -v "$work:$work" --entrypoint node "$(ops_ref)" "$work/iran-smoke.mjs" https://127.0.0.1:8443 "$work/iran-smoke.json" > "$OUT/I6-smoke.log" 2>&1; rc=$?
@@ -248,13 +325,36 @@ if has browser && [ -n "$DS" ]; then
   if ! D image inspect "$PLAYWRIGHT_IMAGE" >/dev/null 2>&1; then
     timed playwright-sideload sh -c "docker save '$PLAYWRIGHT_IMAGE' | DOCKER_HOST='unix://$sock_dir/docker.sock' docker load -q" > "$OUT/B0-sideload.log" 2>&1
   fi
-  mkdir -p "$work/browser"; cp "$repo/tests/validation/iran-browser.mjs" "$work/"; rm -rf "$work/pw"; cp -a "$PLAYWRIGHT_DIR" "$work/pw"
+  mkdir -p "$work/browser"; cp "$hdir/iran-browser.mjs" "$hdir/browser-verdict.mjs" "$work/"; rm -rf "$work/pw"; cp -a "$PLAYWRIGHT_DIR" "$work/pw"
   start_sampler "$OUT/B1-browser-samples.txt"
   D run --rm --init --network host --shm-size 1g --pull never -v "$work:$work" -e PLAYWRIGHT_MODULE="$work/pw/node_modules/playwright" \
     "$PLAYWRIGHT_IMAGE" node "$work/iran-browser.mjs" https://127.0.0.1:8443 "$work/browser" > "$OUT/B1-browser.log" 2>&1; rc=$?
   stop_sampler
   mkdir -p "$OUT/browser"; cp "$work/browser/"* "$OUT/browser/" 2>/dev/null
   if [ $rc -eq 0 ]; then result PASS B1 "real-Iran web client views: $(tail -1 "$OUT/B1-browser.log")"; else result FAIL B1 "rc=$rc $(tail -1 "$OUT/B1-browser.log")"; fi
+fi
+
+if has readiness && [ -n "$DS" ]; then
+  # Cold-start readiness trials (unresolved 503 observation): stop, then start while the bounded
+  # diagnostic polls readiness/provider health from the first second and a browser-like client
+  # requests uncached tiles and cancels part of them. Disposable hosts only: this restarts the stack.
+  mkdir -p "$work"; cp "$hdir/readiness-diag.mjs" "$work/"
+  for t in $(seq 1 "${READINESS_TRIALS:-3}"); do
+    cli stop > "$OUT/D$t-stop.log" 2>&1
+    cli start > "$OUT/D$t-start.log" 2>&1 & sp=$!
+    D run --rm --network host --pull never -v "$SEYRA_HOME/secrets/tls/ca.crt:/ca.crt:ro" -e NODE_EXTRA_CA_CERTS=/ca.crt -v "$work:$work" \
+      --entrypoint node "$(ops_ref)" "$work/readiness-diag.mjs" --base https://127.0.0.1:8443 --seconds "${READINESS_SECONDS:-150}" \
+      --tile-clients "${READINESS_CLIENTS:-6}" --out "$work/D$t-readiness.json" --label "cold start trial $t ($DS)" > "$OUT/D$t-readiness.log" 2>&1; drc=$?
+    wait $sp; src=$?
+    cp "$work/D$t-readiness.json" "$OUT/" 2>/dev/null
+    flaps="$(jq -r '.not_ready_after_first_ready // "?"' "$OUT/D$t-readiness.json" 2>/dev/null)"
+    if [ $src -eq 0 ] && [ $drc -eq 0 ] && [ -s "$OUT/D$t-readiness.json" ]; then
+      result PASS "D$t" "cold start trial completed: first ready $(jq -r '.first_ready_at' "$OUT/D$t-readiness.json"); not-ready polls after first ready: $flaps; $(tail -1 "$OUT/D$t-readiness.log" | cut -c1-200)"
+      [ "$flaps" = 0 ] || result NOTE "D$t" "readiness left 200 after first ready ($flaps polls); see D$t-readiness.json not_ready_events_after_first_ready"
+    else
+      result FAIL "D$t" "start=$src diagnostic=$drc"
+    fi
+  done
 fi
 
 if has backup && [ -n "$DS" ]; then
@@ -283,7 +383,7 @@ fi
 # ============================================================== host 2: restore from the original input
 if has restore && [ -n "$DS" ]; then
   drop_host   # the first machine is gone; only the backup root and the secrets copy remain
-  new_host seyra-iran-restore
+  new_host "$HOST2_NAME"
   e2="$(egress_count)"
   timed restore-bootstrap-load cli bootstrap-load "$BUNDLE" > "$OUT/R1-install.log" 2>&1; rc=$?
   cli restore --from "$bk" > "$OUT/R2-restore-without-secrets.log" 2>&1; rc_ns=$?
@@ -313,11 +413,4 @@ if has restore && [ -n "$DS" ]; then
   if [ "$e2" = "$e2_end" ]; then result PASS R6 "zero packets to non-local destinations from offline host 2 during install/restore/rebuild/activate"; else result FAIL R6 "counter $e2 -> $e2_end"; fi
 fi
 
-{
-  echo "# Seyra real-Iran offline-host validation — $(ts)"
-  echo "# bundle=$BUNDLE pbf=$(basename "$PBF") sha256=$src_sha dataset_id=${DS:-}"
-  printf '%s\n' "${summary[@]}"
-  echo "# failures: $fails"
-} >> "$OUT/summary.txt"
-tail -n $(( ${#summary[@]} + 3 )) "$OUT/summary.txt"
-exit $((fails > 0))
+finish

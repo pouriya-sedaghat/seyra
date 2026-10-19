@@ -10,6 +10,7 @@
 import { createRequire } from 'node:module';
 import { mkdirSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { browserVerdict, verdictLine } from '../validation/browser-verdict.mjs';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE ?? 'playwright');
@@ -108,7 +109,10 @@ const report = {
   views,
   screenshots: ['search-light-fa.jpg', 'lam-alef-light-fa.jpg', 'light-fa.jpg', 'light-en.jpg', 'dark-fa.jpg', 'dark-en.jpg'],
 };
+// Console errors count too (they were recorded but not part of the exit status before).
+const verdict = browserVerdict({ external, rtlPlugin, failed, consoleErrors, visits: [], expectedVisits: 0 });
+report.verdict = verdict;
 writeFileSync(join(out, 'report.json'), `${JSON.stringify(report, null, 2)}\n`);
-const ok = external.length === 0 && rtlPlugin.length === 0 && failed.length === 0;
+const ok = verdict.ok;
 console.log(`${ok ? 'PASS' : 'FAIL'} requests=${requests.length} external=${external.length} rtl_plugin=${rtlPlugin.length} failed=${failed.length} console_errors=${consoleErrors.length}`);
 process.exit(ok ? 0 : 1);
