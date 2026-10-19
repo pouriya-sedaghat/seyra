@@ -31,7 +31,12 @@ function walkFiles(dir: string, base = dir): string[] {
   return out;
 }
 
-/** Install files copied into <bundle>/install with their repository-relative layout. */
+/**
+ * Install files copied into <bundle>/install with their repository-relative layout: what the
+ * operator needs on the host. Developer material (the client integration guide, examples, seeds)
+ * is the separate client handoff pack (infra/handoff/build-client-pack.mjs); links inside these
+ * files must resolve within this set (tests/client/test-handoff-artifacts.mjs).
+ */
 export const INSTALL_PATHS = [
   'bin/seyra-maps',
   'infra/compose/runtime.yml',
@@ -45,7 +50,6 @@ export const INSTALL_PATHS = [
   'apps/ops/migrations',
   'docs/RUNBOOK.md',
   'docs/MOBILE_INTEGRATION.md',
-  'docs/CLIENT_INTEGRATION.md',
   'docs/LICENSES.md',
   'docs/openapi',
 ];

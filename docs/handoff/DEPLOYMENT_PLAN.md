@@ -57,6 +57,13 @@ No Iran reimport and no PBF access are needed. The original readiness 503 of 18 
   7. run the rollback (§4) and measure it;
   8. clean up by label.
 
+**Focused regressions already passing without Docker** (corrections H1–H5, run again on the new tree before any build):
+- `tests/wrapper/test-wrapper-inputs.mjs`
+- `tests/ops/test-tls-cli.mjs`
+- `tests/offline/test-namespace-egress.mjs`
+- `tests/security/test-error-contract.mjs`
+- `tests/client/test-handoff-artifacts.mjs`
+
 **Suites to rerun on the new images:**
 - unit, typecheck and integration;
 - `tests/security/check-ingress-roles.sh` (now including AC16.16–AC16.18);
@@ -85,7 +92,7 @@ Preconditions:
    - Tags change; running containers keep their images until recreated.
 3. **Certificate.**
    - If not done before the window: `tls csr --names <VM_LAN_ADDR>`, then sign off-host (company CA or dev issuer).
-   - Then `tls import --cert … [--chain …] --ca … --names <VM_LAN_ADDR>`, which validates everything before replacing and keeps the previous pair in a `previous-…` directory.
+   - Then `tls import --cert … [--chain …] --ca … --names <VM_LAN_ADDR>`, which validates the staged material before replacing and keeps the previous set in a `previous-…` directory (the rollback source for `tls restore`). The leaf, chain and root may be in any directories: the wrapper mounts each input read-only.
    - The control path keeps working with `--connect-to <VM_LAN_ADDR>:8443:127.0.0.1:8443` once `<VM_LAN_ADDR>` is also among the control server names.
 4. **Edge.** `infra/edge/edge.sh <private env> check`, then `up`.
    - `up` publishes `<VM_LAN_ADDR>:<PORT>`, applies the namespace egress guard and attaches the edge to the lab network.
@@ -111,9 +118,10 @@ The not-ready time is **not promised**. The synthetic L4/L5 activations, which r
 
 1. `infra/edge/edge.sh <private env> stop`: the LAN path is closed at once.
 2. `init --no-relay --server-names "localhost 127.0.0.1"`, then `access apply`. This happens before the edge is removed, so its former lab address is never trusted for a later container.
-3. Certificate:
-   - restore the previous pair with `tls import --cert <LAB>/home/secrets/tls/previous-…/server.crt --key …/server.key --ca …/ca.crt --names localhost,127.0.0.1`. It is validated like any import.
-   - an interrupted import is completed or undone by `tls recover`.
+3. Certificate: restore the previous set with `tls restore --from <LAB>/home/secrets/tls/previous-<time>`.
+   - It is validated like any import: key match, its recorded names (or its own SAN), purpose, and its saved chain to its saved root.
+   - It works with the full-chain backups that `tls import` makes.
+   - It is journalled; an interruption is completed or undone by `tls recover`.
 4. Images and install:
    - restore `<LAB>/install.pre-cutover`;
    - `bundle load` the bundle the host was installed from (`<LAB>/transfer/<previous bundle>`, read-only), so the tags point at the previous images again;

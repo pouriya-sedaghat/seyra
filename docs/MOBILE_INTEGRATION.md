@@ -2,7 +2,7 @@
 
 Status: contract and fixtures for the future mobile client. **No mobile SDK or application was built or executed in phase 1.** MapLibre Native rendering of these styles is untested, and native client behaviour is pending validation.
 
-The full schema is in `docs/openapi/map-services-v1.json` (OpenAPI 3, generated from the running API's own validation schemas). The same document is served at `/api/docs/json`, with an offline Swagger UI at `/api/docs/`. Sample request/response pairs captured from the live fixture stack are in `docs/mobile-fixtures/`. The shared web/mobile guide, covering errors, retries, dataset changes, native HTTP versus WebView and the Windows checks, is [`CLIENT_INTEGRATION.md`](CLIENT_INTEGRATION.md).
+The full schema is in `docs/openapi/map-services-v1.json` (OpenAPI 3, generated from the running API's own validation schemas). The same document is served at `/api/docs/json`, with an offline Swagger UI at `/api/docs/`. Sample request/response pairs captured from the live fixture stack are in `docs/mobile-fixtures/`. The shared web/mobile guide, covering errors, retries, dataset changes, native HTTP versus WebView and the Windows checks, is `docs/CLIENT_INTEGRATION.md` in the client handoff pack.
 
 ## Base URL and TLS
 
@@ -22,7 +22,7 @@ The full schema is in `docs/openapi/map-services-v1.json` (OpenAPI 3, generated 
 | Languages | `fa` and `en`. Display-name fallback: fa → `name:fa`, `name`, `name:en`; en → `name:en`, `name`, `name:fa`. Names are original OSM text; render them as plain text, never as HTML. |
 | Durations | Static estimates (`duration_semantics: "static_estimate"`); no live traffic, no departure time. |
 | Route optimality | `route_optimality: "not_guaranteed"`. Optimized visit order is exact only for the modeled directed pair-cost table (`optimization.method = held_karp_directed_pair_costs`), not globally optimal. |
-| Dataset version | Every response carries `dataset_id`. A client may send `dataset_id` to require that exact release; a different active release returns `409 DATASET_MISMATCH`. |
+| Dataset version | Operation results, `/capabilities` and the health documents carry `dataset_id` (liveness and ingress-generated errors do not). A client may send `dataset_id` to require that exact release; a different active release returns `409 DATASET_MISMATCH`. |
 | Request IDs | Every error has `error.request_id` for support correlation. No request content is logged server-side. |
 
 ## Endpoints (prefix `/api/v1/map`)

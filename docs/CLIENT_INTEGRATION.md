@@ -59,13 +59,13 @@ See also: [`MOBILE_INTEGRATION.md`](MOBILE_INTEGRATION.md) (mobile contract deta
 ## 4. Readiness, availability and dataset changes
 
 - **Readiness is not availability.** `/health/ready` is a point-in-time check of all four capabilities. A ready check can be followed by a failing operation, and the docs and capabilities load while a provider is down. Always handle the typed error of each call.
-- **Dataset releases change.** Every response carries `dataset_id`.
+- **Dataset releases change.** Operation results, `/capabilities` and the health/readiness documents carry `dataset_id`, and so do most API error envelopes. Liveness and ingress-generated errors do not.
   - Sending `dataset_id` requires that exact active release; a different active release returns **409 `DATASET_MISMATCH`**. Map asset paths of an inactive release return **404 `DATASET_MISMATCH`**.
   - On either one, reload `/capabilities`, then the style (MapLibre `setStyle`), then retry the request once.
 
 ## 5. Errors, timeouts, cancellation and retries
 
-API errors share one envelope: `{ "error": { "code", "message", "request_id", "provider"?, "details"?, "dataset_id"? } }`. Ingress-generated JSON errors (404/409-style map asset errors, tile 503, 413) use the same envelope without `request_id`; 403 (outside the allowlist) and 421 (unknown Host) are not JSON.
+API errors share one envelope: `{ "error": { "code", "message", "request_id", "provider"?, "details"?, "dataset_id"? } }`. Ingress-generated JSON errors (map asset 404s, tile 503, 413) use the same envelope; their `request_id` is the ingress request id, recorded in the proxy access log, and they have no `dataset_id`. 403 (outside the allowlist) and 421 (unknown Host) are not JSON.
 
 | Status | Codes | Client action |
 | --- | --- | --- |
@@ -112,7 +112,7 @@ API errors share one envelope: `{ "error": { "code", "message", "request_id", "p
 TypeScript fetch helpers (illustrative, not executed against the LAN endpoint):
 
 ```ts
-type SeyraError = { error: { code: string; message: string; request_id?: string; dataset_id?: string } };
+type SeyraError = { error: { code: string; message: string; request_id: string; dataset_id?: string } };
 
 async function seyra<T>(path: string, init: RequestInit & { timeoutMs: number }, signal?: AbortSignal): Promise<T> {
   const timeout = AbortSignal.timeout(init.timeoutMs);

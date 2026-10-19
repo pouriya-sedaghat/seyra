@@ -73,6 +73,7 @@ seyra-maps tls csr --names <lan-address>[,<lan-name>]        # new server key st
 seyra-maps tls import --cert leaf.crt [--chain intermediates.pem] --ca issuer-root.crt --names <lan-address>[,<lan-name>]
 seyra-maps proxy restart                                      # serve the new pair (providers keep running)
 seyra-maps tls status                                         # public metadata only: subject, SAN, validity, fingerprint
+seyra-maps tls restore --from <SEYRA_HOME>/secrets/tls/previous-<time>   # validated rollback to a saved set
 ```
 
 `tls import` validates everything before it changes a file, and a failed validation keeps the previous pair. It checks:
@@ -83,7 +84,18 @@ seyra-maps tls status                                         # public metadata 
 - the chain verifies to the given root for every name;
 - no input file carries a private key other than the server key.
 
-The replacement itself is journalled. The previous pair is copied to `secrets/tls/previous-<time>/`, and an interruption leaves a journal that makes `start` and activation refuse until `seyra-maps tls recover` completes or undoes it. Only the leaf key, the served chain and the public root are stored. No OCSP, CRL or AIA fetch is required at run time: revocation is handled by short-lived leaves and re-issue.
+The replacement itself is journalled:
+- Every input is read once into a private staging directory, and validation and installation use only those staged bytes, so changing an input file afterwards cannot change what is installed.
+- The previous set is copied to `secrets/tls/previous-<time>/`: the served file, the split `leaf.crt`/`chain.pem`, the key, the trust anchor and `served.json`.
+- An interruption leaves a journal that makes `start`, `proxy restart` and activation refuse until `seyra-maps tls recover` completes or undoes it. Recovery only completes a set whose certificate and key match; otherwise it restores the verified previous pair, and if neither is valid it refuses and keeps everything for inspection.
+
+Roll back to an earlier certificate with `seyra-maps tls restore --from <SEYRA_HOME>/secrets/tls/previous-<time>`. The backup is validated like an import: key match, names (from its `served.json`, or else its own SAN), purpose and its saved chain to its saved trust anchor. It then goes through the same journalled replacement, followed by `seyra-maps proxy restart`.
+
+Every TLS command that changes `secrets/tls` (`csr`, `import`, `restore`, `recover`, and the test-only `init`) takes the same lifecycle lock as `start`, `proxy restart` and activation, and checks its preconditions after acquiring it. Two TLS or lifecycle commands never interleave.
+
+The host wrapper checks every input file argument (`--cert`, `--key`, `--ca`, `--chain`, `--pbf`) before Docker runs: the argument must be present and name an existing readable regular file. Relative paths resolve against the current directory, and each file is mounted read-only at its own path, so inputs may live in any directories. Files inside `SEYRA_HOME` (for example the pending key or a backup) need no extra mount.
+
+Only the leaf key, the served chain and the public root are stored. No OCSP, CRL or AIA fetch is required at run time: revocation is handled by short-lived leaves and re-issue.
 
 ## 3. Import an owner-supplied OSM extract
 

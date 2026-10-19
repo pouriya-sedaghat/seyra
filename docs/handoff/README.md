@@ -1,5 +1,7 @@
 # Client handoff index
 
+This file is the index of the **client handoff pack**: the declared set in `infra/handoff/build-client-pack.mjs`, built with `node infra/handoff/build-client-pack.mjs <out-dir>` and checked for links and key material. It is separate from the operational bundle. Operator material, such as `docs/handoff/DEPLOYMENT_PLAN.md`, evidence and the edge/issuer tooling, stays in the repository and is never part of the pack.
+
 For the owner to pass to the web and mobile developers once the LAN endpoint is live. Nothing here is sent to anyone automatically. Operational values (address, port, subnet, certificate fingerprints, dataset bindings) are given privately by the owner and are not in this repository.
 
 | For | Read | Status |
@@ -9,7 +11,6 @@ For the owner to pass to the web and mobile developers once the LAN endpoint is 
 | Web developer | §7 of the guide, and [`../../examples/web-dev-proxy/`](../../examples/web-dev-proxy/README.md) (local development proxy for `/api/` and `/maps/`) | Prepared; tested against a local stand-in only |
 | Mobile developer | §8 of the guide, and [`../MOBILE_INTEGRATION.md`](../MOBILE_INTEGRATION.md) with recorded fixture pairs in [`../mobile-fixtures/`](../mobile-fixtures/README.md) | Prepared; no SDK executed |
 | Owner (Windows) | §9 of the guide: `curl.exe` checks over trusted HTTPS | Pending the live endpoint (H-01) |
-| Owner / operator | [`DEPLOYMENT_PLAN.md`](DEPLOYMENT_PLAN.md): build, rehearsal, cutover and rollback for the serving host | Plan for review; nothing executed |
 
 What the developers need from the owner, privately:
 1. the base URL `https://<SEYRA_HOST>:<PORT>`;
