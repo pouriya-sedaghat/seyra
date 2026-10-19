@@ -1,0 +1,673 @@
+{
+  "base": "d63f1d9310c4a3c51abee3dde832eb36e51b267f",
+  "head": "3431e7e7330acb0e1184fd4d9c3204ab7f480ee7",
+  "commits": [
+    "323ab49e1a2317f1070c27c4b5e6307c92c6b425",
+    "06fc7d3c95ee72fa12473e01fc14eada7a24aaa0",
+    "e84f47aa05dd7ccce8b1bf6fb36f67b97ecafc33",
+    "d053d73ca2b2356d61b00806c84ef8a4ad65e2f5",
+    "703f0f46a2b27e03b58eec9a47c715fd7c1ecbbe",
+    "d58e05b6518c52e86d807d71ee17a6676740918f",
+    "66021999bb8ca2268327ed872b1744e94df43da9",
+    "59a46b358859a7bd4b28dfa4540e53a1da3b1a50",
+    "dc4fde937b5f912efd47e45186731b58c2fd9be4",
+    "dcad4f86ec77b0e0451443b5d072af5cd3d11b55",
+    "9ea09af38da51408cb6ee14e3a0e984d4d19d19a",
+    "3a97e921b10a60b66f9d2252b03f160f19240251",
+    "c7fd7cc0fa74130c1bca7e7b01b75221495f4d7f",
+    "e6a39abbd311c08abcfdd044b8b30ed89c1956e3",
+    "419cee8c611e50da56a4a24a5ea1f36bfae7b1f2",
+    "8f84a2e2fe44e770158187dc3106990028f31330",
+    "3431e7e7330acb0e1184fd4d9c3204ab7f480ee7"
+  ],
+  "checks": [
+    {
+      "path": "apps/api/package.json",
+      "expected_blob": "9ecceeb7ab278d5a92ce4170fbc8961827234b8f",
+      "actual_blob": "9ecceeb7ab278d5a92ce4170fbc8961827234b8f",
+      "match": true
+    },
+    {
+      "path": "apps/api/src/api-docs.ts",
+      "expected_blob": "6ecd6500e62eac8a210398185cd48a099cd5fb85",
+      "actual_blob": "6ecd6500e62eac8a210398185cd48a099cd5fb85",
+      "match": true
+    },
+    {
+      "path": "apps/api/src/app.ts",
+      "expected_blob": "778559dc8528ec11eec90f79c11e7a44de67e49d",
+      "actual_blob": "778559dc8528ec11eec90f79c11e7a44de67e49d",
+      "match": true
+    },
+    {
+      "path": "apps/api/src/docs.test.ts",
+      "expected_blob": "549405ed99e685f1ca68478e99bddb06bad07550",
+      "actual_blob": "549405ed99e685f1ca68478e99bddb06bad07550",
+      "match": true
+    },
+    {
+      "path": "docs/openapi/map-services-v1.json",
+      "expected_blob": "54c76b6ffc3b15b6ab8d0af66aa3a75cc0a754cc",
+      "actual_blob": "54c76b6ffc3b15b6ab8d0af66aa3a75cc0a754cc",
+      "match": true
+    },
+    {
+      "path": "package-lock.json",
+      "expected_blob": "c505ce659cbe69cb37ddd3306e7e4f2e0460a172",
+      "actual_blob": "c505ce659cbe69cb37ddd3306e7e4f2e0460a172",
+      "match": true
+    },
+    {
+      "path": "packages/contracts/src/capabilities.ts",
+      "expected_blob": "7458e618efc61624175b9464689ce05932f31f8c",
+      "actual_blob": "7458e618efc61624175b9464689ce05932f31f8c",
+      "match": true
+    },
+    {
+      "path": "packages/contracts/src/index.ts",
+      "expected_blob": "078ffc835a72f0c1e111ae38a78a5e46bf3a186c",
+      "actual_blob": "078ffc835a72f0c1e111ae38a78a5e46bf3a186c",
+      "match": true
+    },
+    {
+      "path": "infra/images/proxy/Dockerfile",
+      "expected_blob": "c97a6642ad078ff265463adc4690c6cd0e529018",
+      "actual_blob": "c97a6642ad078ff265463adc4690c6cd0e529018",
+      "match": true
+    },
+    {
+      "path": "infra/images/proxy/entrypoint.sh",
+      "expected_blob": "4e01ca03174c064341f0abbdc33232e41aff9a83",
+      "actual_blob": "4e01ca03174c064341f0abbdc33232e41aff9a83",
+      "match": true
+    },
+    {
+      "path": "infra/images/proxy/locations.conf.template",
+      "expected_blob": "5df3f9b7a324935acd5a8076e417b5b2d0d24545",
+      "actual_blob": "5df3f9b7a324935acd5a8076e417b5b2d0d24545",
+      "match": true
+    },
+    {
+      "path": "infra/images/proxy/nginx.conf.template",
+      "expected_blob": "542a821897fe3401b1170f603407316d1e8df6d9",
+      "actual_blob": "542a821897fe3401b1170f603407316d1e8df6d9",
+      "match": true
+    },
+    {
+      "path": "infra/images/proxy/render.sh",
+      "expected_blob": "decb7757548f3fc37a5cd16f2a53d155fd0c8fb9",
+      "actual_blob": "decb7757548f3fc37a5cd16f2a53d155fd0c8fb9",
+      "match": true
+    },
+    {
+      "path": "tests/security/check-ingress-roles.sh",
+      "expected_blob": "21c044d35bd065368506d3170db09dc9132e39c0",
+      "actual_blob": "21c044d35bd065368506d3170db09dc9132e39c0",
+      "match": true
+    },
+    {
+      "path": "tests/security/extract-image-nginx.sh",
+      "expected_blob": "fbde66a8394dab8518110c9c3f1bd86a630ad36b",
+      "actual_blob": "fbde66a8394dab8518110c9c3f1bd86a630ad36b",
+      "match": true
+    },
+    {
+      "path": "tests/security/scan-external-urls.sh",
+      "expected_blob": "b1a54d4a47bef9f94ecffab1384814b54cdf3c4e",
+      "actual_blob": "b1a54d4a47bef9f94ecffab1384814b54cdf3c4e",
+      "match": true
+    },
+    {
+      "path": "tests/security/test-proxy-boundary.mjs",
+      "expected_blob": "e810eaca9d9f175cb1eb34521d8f96071c862730",
+      "actual_blob": "e810eaca9d9f175cb1eb34521d8f96071c862730",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/activate.ts",
+      "expected_blob": "b71a67223d55b9aaaee94eef1d65d73c9292aa45",
+      "actual_blob": "b71a67223d55b9aaaee94eef1d65d73c9292aa45",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/bundle.ts",
+      "expected_blob": "c3487459231659b6c133b5dae8e40deb2bc53166",
+      "actual_blob": "c3487459231659b6c133b5dae8e40deb2bc53166",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/compose.ts",
+      "expected_blob": "1a7251dbc921889f5de016e512f517d89b4b8d0d",
+      "actual_blob": "1a7251dbc921889f5de016e512f517d89b4b8d0d",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/layout.ts",
+      "expected_blob": "afe968a8166b85e0ed560528a82a082e0c7409fb",
+      "actual_blob": "afe968a8166b85e0ed560528a82a082e0c7409fb",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/main.ts",
+      "expected_blob": "b19311f2ae6a40083d447fe559091ed1f0c78a2c",
+      "actual_blob": "b19311f2ae6a40083d447fe559091ed1f0c78a2c",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/net.ts",
+      "expected_blob": "c4cb34ff8e06bcc6eec82cfea447dcffb557b9b1",
+      "actual_blob": "c4cb34ff8e06bcc6eec82cfea447dcffb557b9b1",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/relay-access.test.ts",
+      "expected_blob": "d0bee349789a66476ea9ec21465b75d3f0f9f2e3",
+      "actual_blob": "d0bee349789a66476ea9ec21465b75d3f0f9f2e3",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/setup.ts",
+      "expected_blob": "b0548e4df82d3949dcc002ffb0fec417fdaae6ed",
+      "actual_blob": "b0548e4df82d3949dcc002ffb0fec417fdaae6ed",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/tls.test.ts",
+      "expected_blob": "b8375bbc785d9e3cd3038de1b0f237dd922b7352",
+      "actual_blob": "b8375bbc785d9e3cd3038de1b0f237dd922b7352",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/tls.ts",
+      "expected_blob": "777669b6dfd1cf2540ecea362e3f78c83461b7cf",
+      "actual_blob": "777669b6dfd1cf2540ecea362e3f78c83461b7cf",
+      "match": true
+    },
+    {
+      "path": "infra/compose/runtime.relay.yml",
+      "expected_blob": "6713ba97d28fd753b846c448af305871146d7e38",
+      "actual_blob": "6713ba97d28fd753b846c448af305871146d7e38",
+      "match": true
+    },
+    {
+      "path": "infra/compose/runtime.yml",
+      "expected_blob": "c579e0444078d19f1f7189a676bcb43f4bcde621",
+      "actual_blob": "c579e0444078d19f1f7189a676bcb43f4bcde621",
+      "match": true
+    },
+    {
+      "path": "infra/edge/edge.conf.template",
+      "expected_blob": "92f69f3167894b740bae6e142b60f17b7e03b792",
+      "actual_blob": "92f69f3167894b740bae6e142b60f17b7e03b792",
+      "match": true
+    },
+    {
+      "path": "infra/edge/edge.env.example",
+      "expected_blob": "14635acec727a556ac88eb7a71be9a71d688decf",
+      "actual_blob": "14635acec727a556ac88eb7a71be9a71d688decf",
+      "match": true
+    },
+    {
+      "path": "infra/edge/edge.sh",
+      "expected_blob": "a495dc9b953d1ba93e177d87d81fea9011afa7a2",
+      "actual_blob": "a495dc9b953d1ba93e177d87d81fea9011afa7a2",
+      "match": true
+    },
+    {
+      "path": "infra/edge/render-edge.sh",
+      "expected_blob": "7c014e43c5add28c5a090ce22f2a025960e803d8",
+      "actual_blob": "7c014e43c5add28c5a090ce22f2a025960e803d8",
+      "match": true
+    },
+    {
+      "path": "infra/tls/dev-issuer.sh",
+      "expected_blob": "1ed9453ae6fafb74bc01800739449ff3e46546bc",
+      "actual_blob": "1ed9453ae6fafb74bc01800739449ff3e46546bc",
+      "match": true
+    },
+    {
+      "path": "tests/offline/namespace-egress.sh",
+      "expected_blob": "ca14473eec6ef6652a4184219b4f1cc39064b5e5",
+      "actual_blob": "ca14473eec6ef6652a4184219b4f1cc39064b5e5",
+      "match": true
+    },
+    {
+      "path": "tests/validation/watch-serving-host.sh",
+      "expected_blob": "d2db99c9cada7e3236ea25c08fe7b56671e33552",
+      "actual_blob": "d2db99c9cada7e3236ea25c08fe7b56671e33552",
+      "match": true
+    },
+    {
+      "path": "docs/CLIENT_INTEGRATION.md",
+      "expected_blob": "4e9114eb43f986ac9d2faf718a69a8de8c632235",
+      "actual_blob": "4e9114eb43f986ac9d2faf718a69a8de8c632235",
+      "match": true
+    },
+    {
+      "path": "docs/MOBILE_INTEGRATION.md",
+      "expected_blob": "ce2a875c82e0e18dc4a354fb3d74f32275f4c9fc",
+      "actual_blob": "ce2a875c82e0e18dc4a354fb3d74f32275f4c9fc",
+      "match": true
+    },
+    {
+      "path": "docs/RUNBOOK.md",
+      "expected_blob": "1c8b0b37eaa08994112915ed346538b288e0d32b",
+      "actual_blob": "1c8b0b37eaa08994112915ed346538b288e0d32b",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/DEPLOYMENT_PLAN.md",
+      "expected_blob": "bd8e9946e80d3c3264c594f6034c8977723df8f1",
+      "actual_blob": "bd8e9946e80d3c3264c594f6034c8977723df8f1",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/README.md",
+      "expected_blob": "d5b74bd7ecc0fc7e537691145136ab3ed2c204c0",
+      "actual_blob": "d5b74bd7ecc0fc7e537691145136ab3ed2c204c0",
+      "match": true
+    },
+    {
+      "path": "examples/web-dev-proxy/README.md",
+      "expected_blob": "0ca9f15021267a75360989389b7627df34b254e5",
+      "actual_blob": "0ca9f15021267a75360989389b7627df34b254e5",
+      "match": true
+    },
+    {
+      "path": "examples/web-dev-proxy/dev-proxy.example.json",
+      "expected_blob": "b07cbb2dc6002031056fff2039cf8b6d034b8561",
+      "actual_blob": "b07cbb2dc6002031056fff2039cf8b6d034b8561",
+      "match": true
+    },
+    {
+      "path": "examples/web-dev-proxy/seyra-dev-proxy.mjs",
+      "expected_blob": "0e0812c9dc20ad7a23d7997481e577dcf58f5757",
+      "actual_blob": "0e0812c9dc20ad7a23d7997481e577dcf58f5757",
+      "match": true
+    },
+    {
+      "path": "tests/client/test-dev-proxy.mjs",
+      "expected_blob": "acdaa7ba2b684bdb90ec7749fff4aa675ddc6da8",
+      "actual_blob": "acdaa7ba2b684bdb90ec7749fff4aa675ddc6da8",
+      "match": true
+    },
+    {
+      "path": "tests/validation/search-seeds.json",
+      "expected_blob": "c8442e61a13ef198d1f07eeb1364c07bd61d1195",
+      "actual_blob": "c8442e61a13ef198d1f07eeb1364c07bd61d1195",
+      "match": true
+    },
+    {
+      "path": "tests/validation/search-seeds.mjs",
+      "expected_blob": "7ff65be3bc5e66f732097d2cd05bb27762e075b2",
+      "actual_blob": "7ff65be3bc5e66f732097d2cd05bb27762e075b2",
+      "match": true
+    },
+    {
+      "path": "tests/validation/test-search-seeds.mjs",
+      "expected_blob": "ce596ea15564077ccc46934fe8eee3f8734d31cb",
+      "actual_blob": "ce596ea15564077ccc46934fe8eee3f8734d31cb",
+      "match": true
+    },
+    {
+      "path": "docs/IMPLEMENTATION_STATUS.md",
+      "expected_blob": "c5f053c767d56ecc264178ede5fb51a953402378",
+      "actual_blob": "c5f053c767d56ecc264178ede5fb51a953402378",
+      "match": true
+    },
+    {
+      "path": "docs/TEST_RESULTS.md",
+      "expected_blob": "96f7ff4074b5ac8dc87100abe29d352ce1ee7285",
+      "actual_blob": "96f7ff4074b5ac8dc87100abe29d352ce1ee7285",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/README.md",
+      "expected_blob": "8b477d6d04cf253da1aa7a4235c361919a7be09b",
+      "actual_blob": "8b477d6d04cf253da1aa7a4235c361919a7be09b",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/build.txt",
+      "expected_blob": "9999fb2bc94ea52360510b22a24cc0c522e0962e",
+      "actual_blob": "9999fb2bc94ea52360510b22a24cc0c522e0962e",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/external-urls.txt",
+      "expected_blob": "10305698c69ea140ff959c53262b120d1bb9c0f0",
+      "actual_blob": "10305698c69ea140ff959c53262b120d1bb9c0f0",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/proxy-image-id.txt",
+      "expected_blob": "d72b4713ced68e0fb21c5fe6dc0e001f1286b7de",
+      "actual_blob": "d72b4713ced68e0fb21c5fe6dc0e001f1286b7de",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/proxy-image-nginx-V.txt",
+      "expected_blob": "30a6357ea462c3507d34a47379b7572659012a69",
+      "actual_blob": "30a6357ea462c3507d34a47379b7572659012a69",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/swagger-ui-pin.txt",
+      "expected_blob": "75932e03be94f9886ba207028f6aecb56dd9b889",
+      "actual_blob": "75932e03be94f9886ba207028f6aecb56dd9b889",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-browser-navigation.txt",
+      "expected_blob": "526477823c09416f1db6e330597cc323972c2308",
+      "actual_blob": "526477823c09416f1db6e330597cc323972c2308",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-browser-verdict.txt",
+      "expected_blob": "417c253c621bbd6922f83b29432d80165b54ee22",
+      "actual_blob": "417c253c621bbd6922f83b29432d80165b54ee22",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-dev-proxy.txt",
+      "expected_blob": "9f67a03e0a2bbf5a123b26e5d3e865e59b6c4149",
+      "actual_blob": "9f67a03e0a2bbf5a123b26e5d3e865e59b6c4149",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-host-guard.txt",
+      "expected_blob": "d264a2d079bbe94c07fa97ef3aab899d8dc61a42",
+      "actual_blob": "d264a2d079bbe94c07fa97ef3aab899d8dc61a42",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-proxy-boundary.txt",
+      "expected_blob": "97bf8be8c76abee3096d8180f47c3df7f9698e2d",
+      "actual_blob": "97bf8be8c76abee3096d8180f47c3df7f9698e2d",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-reclaim-credit.txt",
+      "expected_blob": "02ad326f7e65b0f742838cdcd7ef293583395f17",
+      "actual_blob": "02ad326f7e65b0f742838cdcd7ef293583395f17",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-search-seeds.txt",
+      "expected_blob": "7f60ab1adc6166053b2ac52f29134a57d43be2f2",
+      "actual_blob": "7f60ab1adc6166053b2ac52f29134a57d43be2f2",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/test-update-gate.txt",
+      "expected_blob": "38090b9137f460075bea987bada19ddb64222bac",
+      "actual_blob": "38090b9137f460075bea987bada19ddb64222bac",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/typecheck.txt",
+      "expected_blob": "340e137b93bf10a9d661521b387b6ca6a15ce30e",
+      "actual_blob": "340e137b93bf10a9d661521b387b6ca6a15ce30e",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-prep/unit-summary.txt",
+      "expected_blob": "03f3bbc2f5a50477d6e55160d8cf6ff7e4a62374",
+      "actual_blob": "03f3bbc2f5a50477d6e55160d8cf6ff7e4a62374",
+      "match": true
+    },
+    {
+      "path": "docs/validation/iran/vm2-2026-10-19-boundary/README.md",
+      "expected_blob": "a9fd10865bfb8cb6994ae085cfad1a860c4d96f9",
+      "actual_blob": "a9fd10865bfb8cb6994ae085cfad1a860c4d96f9",
+      "match": true
+    },
+    {
+      "path": "bin/seyra-maps",
+      "expected_blob": "c5625e261444c8011b423df3ea6fa68ea50b0b73",
+      "actual_blob": "c5625e261444c8011b423df3ea6fa68ea50b0b73",
+      "match": true
+    },
+    {
+      "path": "tests/wrapper/test-wrapper-inputs.mjs",
+      "expected_blob": "3e9ee1d081954df3c9bc12b582de78f8ddd75508",
+      "actual_blob": "3e9ee1d081954df3c9bc12b582de78f8ddd75508",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/lifecycle.test.ts",
+      "expected_blob": "58f47fba6e22aedae85732b267bb63cb5b3162a4",
+      "actual_blob": "58f47fba6e22aedae85732b267bb63cb5b3162a4",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/tls-cli.ts",
+      "expected_blob": "e28b99469c047b87257150553fd3c4469ed56d3c",
+      "actual_blob": "e28b99469c047b87257150553fd3c4469ed56d3c",
+      "match": true
+    },
+    {
+      "path": "tests/ops/test-tls-cli.mjs",
+      "expected_blob": "d7138bd09f4350721b45c900156eb8a28858df20",
+      "actual_blob": "d7138bd09f4350721b45c900156eb8a28858df20",
+      "match": true
+    },
+    {
+      "path": "tests/offline/stubs/docker-egress.sh",
+      "expected_blob": "bc5c7cd5f0d5ff1d960ffe5b6709b00a50d634e2",
+      "actual_blob": "bc5c7cd5f0d5ff1d960ffe5b6709b00a50d634e2",
+      "match": true
+    },
+    {
+      "path": "tests/offline/test-namespace-egress.mjs",
+      "expected_blob": "264be3d350fb74f5914db0603035e65da499d837",
+      "actual_blob": "264be3d350fb74f5914db0603035e65da499d837",
+      "match": true
+    },
+    {
+      "path": "tests/security/test-error-contract.mjs",
+      "expected_blob": "3bc9209644ded5b2ab02c48cdd69382365cea498",
+      "actual_blob": "3bc9209644ded5b2ab02c48cdd69382365cea498",
+      "match": true
+    },
+    {
+      "path": "infra/handoff/build-client-pack.mjs",
+      "expected_blob": "f2cf03c57653a0e35aaa6d61ad76ff2518470c55",
+      "actual_blob": "f2cf03c57653a0e35aaa6d61ad76ff2518470c55",
+      "match": true
+    },
+    {
+      "path": "tests/client/test-handoff-artifacts.mjs",
+      "expected_blob": "26a41328a606ebb232e3dddc2c39af4548af2fa4",
+      "actual_blob": "26a41328a606ebb232e3dddc2c39af4548af2fa4",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/README.md",
+      "expected_blob": "1c41ae0d2db65932a78fce335de4a21ea42d68c9",
+      "actual_blob": "1c41ae0d2db65932a78fce335de4a21ea42d68c9",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/build.txt",
+      "expected_blob": "7241e5676548b73be32c14a6b2c508e53b831cc7",
+      "actual_blob": "7241e5676548b73be32c14a6b2c508e53b831cc7",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/regressions/h1-after.txt",
+      "expected_blob": "34f5135195bf3784360e1f4013bbde4faa128fb8",
+      "actual_blob": "34f5135195bf3784360e1f4013bbde4faa128fb8",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/regressions/h1-before.txt",
+      "expected_blob": "c7ae1cecf15895dfc742bfcffa88a2f7d3900401",
+      "actual_blob": "c7ae1cecf15895dfc742bfcffa88a2f7d3900401",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/regressions/h2h4-after.txt",
+      "expected_blob": "cd570a8f3dda4a22ee3258f2cb9cc0530c5fe7f7",
+      "actual_blob": "cd570a8f3dda4a22ee3258f2cb9cc0530c5fe7f7",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/regressions/h2h4-before.txt",
+      "expected_blob": "557674628af7af6fdc1963fcd486d93e724374b2",
+      "actual_blob": "557674628af7af6fdc1963fcd486d93e724374b2",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/regressions/h3-after.txt",
+      "expected_blob": "597dd18820302df58c1c54f16ce2cf171ffe7e8d",
+      "actual_blob": "597dd18820302df58c1c54f16ce2cf171ffe7e8d",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/regressions/h3-before.txt",
+      "expected_blob": "df8659627af3cac12096774ddd1a1103413baea2",
+      "actual_blob": "df8659627af3cac12096774ddd1a1103413baea2",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/regressions/h5-after.txt",
+      "expected_blob": "5d8a6f939647a79bd1850ecf4254f09a6c8344f3",
+      "actual_blob": "5d8a6f939647a79bd1850ecf4254f09a6c8344f3",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/regressions/h5-before.txt",
+      "expected_blob": "f88870e9e9d98c313f08015d14033d1f7aad6337",
+      "actual_blob": "f88870e9e9d98c313f08015d14033d1f7aad6337",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/regressions/pack-after.txt",
+      "expected_blob": "95987510948555fbe511c22f2bfa3744783a67d9",
+      "actual_blob": "95987510948555fbe511c22f2bfa3744783a67d9",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/regressions/pack-before.txt",
+      "expected_blob": "d7f537ed4a6af3f78cf41eef5ac914252f46ce27",
+      "actual_blob": "d7f537ed4a6af3f78cf41eef5ac914252f46ce27",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/reviewer-verifier-after-corrections.json",
+      "expected_blob": "4983cc995b875a8be357c516424214d73ffbd6e8",
+      "actual_blob": "4983cc995b875a8be357c516424214d73ffbd6e8",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/reviewer-verifier-at-6602199.json",
+      "expected_blob": "f3bd3a4e5d07ca9dfed6dba4c5725c2be913619e",
+      "actual_blob": "f3bd3a4e5d07ca9dfed6dba4c5725c2be913619e",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/standalone/test-browser-navigation.txt",
+      "expected_blob": "12e137dace3c08f06ab035bfa5d06e5c7a206891",
+      "actual_blob": "12e137dace3c08f06ab035bfa5d06e5c7a206891",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/standalone/test-browser-verdict.txt",
+      "expected_blob": "417c253c621bbd6922f83b29432d80165b54ee22",
+      "actual_blob": "417c253c621bbd6922f83b29432d80165b54ee22",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/standalone/test-dev-proxy.txt",
+      "expected_blob": "9f67a03e0a2bbf5a123b26e5d3e865e59b6c4149",
+      "actual_blob": "9f67a03e0a2bbf5a123b26e5d3e865e59b6c4149",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/standalone/test-host-guard.txt",
+      "expected_blob": "1291afecf5c25be5a974c6011947c32ced89ec69",
+      "actual_blob": "1291afecf5c25be5a974c6011947c32ced89ec69",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/standalone/test-proxy-boundary.txt",
+      "expected_blob": "3a4901483c487602370398e4fa8b503a9b201ca8",
+      "actual_blob": "3a4901483c487602370398e4fa8b503a9b201ca8",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/standalone/test-reclaim-credit.txt",
+      "expected_blob": "cc8d83bf8782128dff8ac0c0a9875ecdc3d3faca",
+      "actual_blob": "cc8d83bf8782128dff8ac0c0a9875ecdc3d3faca",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/standalone/test-search-seeds.txt",
+      "expected_blob": "7f60ab1adc6166053b2ac52f29134a57d43be2f2",
+      "actual_blob": "7f60ab1adc6166053b2ac52f29134a57d43be2f2",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/standalone/test-update-gate.txt",
+      "expected_blob": "fbbb346862ab2ad7cb8f0fd508c0180c29103ae6",
+      "actual_blob": "fbbb346862ab2ad7cb8f0fd508c0180c29103ae6",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/typecheck.txt",
+      "expected_blob": "340e137b93bf10a9d661521b387b6ca6a15ce30e",
+      "actual_blob": "340e137b93bf10a9d661521b387b6ca6a15ce30e",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-corrective/unit-summary.txt",
+      "expected_blob": "a79a08009e2f60b4246886fb36bea4fb2757516e",
+      "actual_blob": "a79a08009e2f60b4246886fb36bea4fb2757516e",
+      "match": true
+    },
+    {
+      "path": "tests/ops/test-tls-recover.mjs",
+      "expected_blob": "8a1333dde5debdf4969fc2f67fef7dc08e674a6c",
+      "actual_blob": "8a1333dde5debdf4969fc2f67fef7dc08e674a6c",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-followup-r1r2/README.md",
+      "expected_blob": "9f00899f71c404adea90620eb733206500f10893",
+      "actual_blob": "9f00899f71c404adea90620eb733206500f10893",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-followup-r1r2/r1-after.txt",
+      "expected_blob": "11ca31cc14eb66c10499d88aea4c7d37935f0938",
+      "actual_blob": "11ca31cc14eb66c10499d88aea4c7d37935f0938",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-followup-r1r2/r1-before.txt",
+      "expected_blob": "61d1320366f93c9457dec1a7760490859d47628c",
+      "actual_blob": "61d1320366f93c9457dec1a7760490859d47628c",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-followup-r1r2/r2-after.txt",
+      "expected_blob": "51e55db653f9ce2a0fb2424af56ed7b777af6ce2",
+      "actual_blob": "51e55db653f9ce2a0fb2424af56ed7b777af6ce2",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-followup-r1r2/r2-before.txt",
+      "expected_blob": "36e76207ecf049b520f27b9f7162a30c8db7ca42",
+      "actual_blob": "36e76207ecf049b520f27b9f7162a30c8db7ca42",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-followup-r1r2/reviewer-verifier-at-e6a39ab.json",
+      "expected_blob": "4e566ea778ef9453930e9f671b89f8f6f056c03b",
+      "actual_blob": "4e566ea778ef9453930e9f671b89f8f6f056c03b",
+      "match": true
+    }
+  ]
+}
