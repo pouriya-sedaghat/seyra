@@ -1,6 +1,6 @@
 # Seyra Map Services: client handoff, Swagger and owner validation
 
-Version: **0.1 — REQUIREMENTS/ARCHITECTURE REVIEW DRAFT**
+Version: **0.2 — REQUIREMENTS/ARCHITECTURE REVIEW DRAFT**
 Date: 2026-10-19
 Baseline: `d63f1d9310c4a3c51abee3dde832eb36e51b267f`, `feat/map-services-v1`, PR #1 draft.
 
@@ -9,10 +9,12 @@ This is an extension of the current Map Services phase, not intake for Authentic
 ## 1. New confirmed requirements [C]
 
 - **C-H1:** The owner will initially test the web client from their Windows computer.
-- **C-H2:** The client technical lead needs access to the map services for client development. Sharing the existing web test client with them is useful. Prepare the handoff; do not contact/send messages or invitations to that person.
+- **C-H2:** Two different developers are building web and mobile clients in parallel. Both need the same map API/asset contracts. Prepare separate web/mobile quickstarts and shared test-client/Swagger access; do not contact or send messages to either developer.
 - **C-H3:** Provide Swagger so the technical lead can discover supported features. The proposed delivery is an interactive local Swagger UI, described below.
 - **C-H4:** Target concurrent users remain unknown. Measure/characterize capacity; do not invent a production user count, SLA or pass threshold.
 - **C-H5:** The owner delegates selection of real Persian search examples to us. Select and record reproducible engineering fixtures; do not pretend this is a general completeness/relevance guarantee.
+- **C-H6:** The VM's hypervisor network adapter is bridged onto the corporate private LAN and reachable by company devices. This is not Docker host networking and does not authorize exposing provider ports.
+- **C-H7:** The owner has approved one corporate IPv4 subnet, provided in private session instructions as `APPROVED_CLIENT_CIDR`. Keep it in operator-local configuration and use placeholders in public templates. This allowlist choice is resolved; do not ask again or broaden it to other private ranges.
 - All existing constraints remain: Node/TypeScript, PostgreSQL/PostGIS, all four map capabilities mandatory, online preparation allowed, zero external operational dependency, private providers, HTTPS, exact image/package identities, English Claude prompts and feature-branch work.
 
 ## 2. Inspected baseline [V]
@@ -40,21 +42,25 @@ At the exact baseline above:
 - Ship all JS/CSS/fonts/spec assets locally in the offline bundle/images. Disable online validation explicitly, remote spec/config selection and query-string configuration overrides. Do not include active Petstore/CDN/telemetry calls or OAuth discovery. Relative same-origin server paths must work through the tested LAN/tunnel URL.
 - Keep CSP deliberate and tested; avoid globally weakening it for the docs. Verify redirects, trailing slash, local initializer/static assets and HTTPS host/port handling. A docs page should remain useful during a provider outage while Try it out shows real typed errors.
 
-### 3.2 Access from Windows and for the technical lead
+### 3.2 Corporate LAN access for Windows, web and mobile development
 
-Two distinct delivery needs must be covered: owner browsing and a usable private API endpoint for the technical lead. Network specifics below are unresolved, so do not activate LAN bindings or invent an allowlist.
+LAN access and the approved client subnet are confirmed. Derive the actual VM endpoint and safe serving path read-only; do not activate it during the review-only turn.
 
-- Inspect the actual VM/Docker namespace topology first. Present a verified private access design: a stable internal endpoint (or a tested private forwarding method), hostnames/IPs, certificate SANs, public CA certificate and approved clients. Preserve provider/database isolation and existing fail-closed access checks.
+- Inspect the VM/Docker namespaces and derive a LAN endpoint using the observed VM address or an existing internal name, with matching certificate SANs and public CA trust. Do not assume internal DNS exists. Preserve private providers/DBs and fail-closed checks.
 - Keep the original PBF and the preserved Iran validation host intact. Adding Swagger or access may require different images/maintenance; describe the exact cutover/resource plan before touching the preserved host. Do not restart/recreate it or run another full stack beside it merely to create a demo URL.
-- One HTTPS ingress should serve the web test client, API, Swagger and map assets. Do not expose Tegola/Valhalla/Photon/Overpass/PostgreSQL directly. No public Internet publication, wildcard LAN access or disabled certificate checks.
+- One HTTPS ingress serves the test client, API, Swagger and assets for both developers. Enforce the exact approved subnet and deny other sources. No direct provider/DB ports, broader subnet grant, public publication or disabled TLS checks.
+- Verify the client address visible through the real Docker/forwarding path. Trust forwarded-client headers only from explicit trusted hops; test spoofed headers. Do not widen the approved subnet to Docker bridge ranges to make tests pass.
 - Give Windows browser/CA trust and CLI setup steps verified against the selected endpoint. Share the **public CA certificate only**, never private keys, passwords or broad administrative access. Avoid requiring the technical lead to be a Docker administrator just to call map APIs.
-- If the technical lead's web client uses another origin, use a documented exact-origin CORS policy (or a same-origin development proxy) after origins are supplied. Browser API calls and `/maps/` assets must both work. No reflection/wildcard, no `null` origin grant, no credentials/cookies introduced before Auth intake. If CORS is implemented, explicitly handle JSON POST preflight, error responses, necessary exposed headers and Origin/cache variation in one coherent boundary. Native clients do not obtain identity from CORS; network access remains the boundary.
+- **Initial web design [P]:** a documented development proxy while the exact browser origin is unknown. Cover `/api/` and `/maps/`, verified upstream TLS, absolute URLs in styles/TileJSON, and glyph/font/sprite/tile requests. Proxying the API alone may leave assets cross-origin. Do not guess a port, disable browser security or use insecure upstream certificate bypasses.
+- If direct browser cross-origin use is needed later, grant only supplied exact scheme/host/port origins, with correct preflight/errors/exposed headers/cache variation. A subnet is not a browser origin; CORS is not authentication. No wildcard/reflection, `null` origin grant or new cookies/credentials. Hosted Swagger/test-client same-origin use needs no permissive CORS policy.
+- **Mobile design [P]:** the same LAN API/style base and contracts, with platform-appropriate CA trust, timeouts/cancellation/backoff and dataset handling. Distinguish native HTTP from WebView/hybrid browser contexts. Do not assume a platform/framework, build a mobile app, or claim SDK/Persian-rendering tests were executed. Missing SDK details do not block backend/docs work.
 - Actual private endpoint/client configuration should stay in operator configuration, not be hardcoded into public source/examples. Provide sanitized templates in Git.
 
 ### 3.3 Client handoff pack
 
 Prepare `docs/CLIENT_INTEGRATION.md` (or a clearly named equivalent) and a small handoff index containing:
 
+- one common API/asset contract and separate web/mobile quickstarts for the two developers, without divergent backends or an unrequested account/role system;
 - actual provisioned API/web/Swagger/spec links once verified, and private access prerequisites;
 - a quickstart: trust CA → readiness → capabilities → load a light/dark fa/en style → search → route/proximity/POI;
 - copyable PowerShell `curl.exe` and TypeScript fetch examples with named lon/lat, metres/seconds, timeouts/cancellation and backoff;
@@ -63,7 +69,7 @@ Prepare `docs/CLIENT_INTEGRATION.md` (or a clearly named equivalent) and a small
 - MapLibre style/font/attribution guidance and the current untested mobile SDK boundary;
 - public API/asset inventory and explicit exclusions. Future Auth/Relations/SOS require separate intake.
 
-No messages or credentials are sent to the technical lead by this task. The owner receives the prepared handoff.
+No messages or credentials are sent to either developer by this task. The owner receives the prepared handoff.
 
 ### 3.4 Selected Persian search seeds
 
@@ -90,20 +96,20 @@ Suggested initial engineering assertion: expected feature in top 5, with identit
 - Do not run load tests against the preserved host or alongside it on the same constrained VM. Full measurement needs separate resource capacity or an explicit owner-agreed maintenance/test window with a concrete restoration plan. Until then, record it as pending; Swagger/docs and fixture verification can progress.
 - The original unexplained readiness 503 stays open. New workload-induced errors must be retained separately. No SLA or production capacity assertion from a short experiment.
 
-## 4. Open deployment inputs [U]
+## 4. Resolved choices and remaining deployment details
 
-These block activation/configuration of shared access, not the brief review or offline Swagger development:
+Resolved: corporate bridged-LAN access, approved subnet in private session input, two client developers, common contracts, Swagger, delegated fixture selection and unknown production concurrency. Do not repeat those intake questions.
 
-1. Is the technical lead on the same reachable private LAN as the VM, or do they need an existing private tunnel/VPN arrangement? Owner/lead client IPs or explicitly approved narrow CIDRs are needed. Discover the VM address read-only and keep actual addresses in operator-local configuration; do not infer deployment settings from old transfer logs.
-2. Will their web client run at a separate browser origin? Obtain exact scheme/host/port origins, or choose a documented same-origin development proxy. Do not assume a development port or allow all localhost ports.
-3. Confirm the final endpoint name/IP/certificate trust and an activation/resource window after the read-only topology preflight. User count and performance targets are still unknown; characterize rather than fabricate them.
+1. Discover the current endpoint/namespaces/ports and certificate/trust plan read-only; keep operator values local. Absence of the actual CIDR from Git is deliberate, not missing authorization.
+2. Exact web origin and mobile SDK remain unspecified. Use the initial proxy design and generic mobile contract; ask framework/origin details only when they materially affect a concrete integration step. Do not block shared backend/docs for them.
+3. Determine activation/resource impact and any maintenance window for the preserved host. This review-only turn authorizes no restart or heavy load. User count/SLA remain unknown.
 
 ## 5. Acceptance proposal
 
 - **H-01:** A private Windows client loads web/Swagger/spec and runs representative GET/POST examples over trusted HTTPS, using the provided endpoint. Record manual owner steps separately from headless tests.
 - **H-02:** All Swagger assets/spec/Try-it-out requests stay internal; no online validator/CDN/remote config/RTL plugin. Wrong-origin/spec override attempts do not change the intended target. Spec downloads and runtime schema agree.
 - **H-03:** Swagger shows meaningful supported operations, bodies, response shapes, errors and asset guidance; invalid/unsupported API requests still fail honestly. Docs loading does not imply providers are ready.
-- **H-04:** Shared access fails closed without the operator's allowlist/certificate settings; only the approved HTTPS ingress is reachable. Providers/DB/admin remain private. Approved and unapproved client/origin cases are tested appropriately.
+- **H-04:** The exact privately supplied subnet is enforced at the verified HTTPS ingress; other sources are denied and providers/DB/admin remain private. Test client-address/forwarder trust and web-proxy/mobile-style HTTP requests over trusted TLS. Any direct CORS grants use exact browser origins.
 - **H-05:** Client examples/selected search fixtures are run against their declared data; scripts check actual navigation and preserve failed runs. Exact-target/normalization expectations are measured, not asserted without results.
 - **H-06:** No raw PBF/store changes or heavy load/restarts of the preserved host. Updated images/bundle are verified offline and only affected components are relocked; map-data identities stay unchanged unless an explicit data-path change is reviewed. No full Iran reimport merely for docs.
 - **H-07:** Handoff files, remaining mobile/quality/load constraints and the accurate draft PR description are up to date. No merge/main change or new module implementation.
@@ -117,5 +123,6 @@ Official upstream documentation checked on 2026-10-19 (not a release pin):
 - https://github.com/fastify/fastify-swagger-ui — compatibility table lists Swagger UI plugin 5.x with Fastify 5.x and swagger 9.x; describes local static assets, prefix/CSP behavior and disabled-by-default online validator in this plugin.
 - https://swagger.io/docs/open-source-tools/swagger-ui/usage/configuration/ — documents UI configuration precedence, query overrides, validator settings and user-triggered request behavior. Explicitly disable online validation despite library-default differences.
 - https://github.com/fastify/fastify-cors — exact origin/preflight configuration reference if a browser cross-origin path is actually required. Library selection and policy placement are still review decisions.
+- https://developer.mozilla.org/en-US/docs/Web/HTTP/Guides/CORS — browser origin/preflight behavior; an IP-subnet allowlist does not replace browser origin policy.
 
 Claude must validate behavior against the exact selected releases and the built proxy/UI. Reading upstream main docs is not evidence that the final offline deployment/browser path works.
