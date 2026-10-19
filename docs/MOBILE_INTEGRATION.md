@@ -2,12 +2,13 @@
 
 Status: contract and fixtures for the future mobile client. **No mobile SDK or application was built or executed in phase 1.** MapLibre Native rendering of these styles is untested, and native client behaviour is pending validation.
 
-The full schema is in `docs/openapi/map-services-v1.json` (OpenAPI 3, generated from the running API's own validation schemas). Sample request/response pairs captured from the live fixture stack are in `docs/mobile-fixtures/`.
+The full schema is in `docs/openapi/map-services-v1.json` (OpenAPI 3, generated from the running API's own validation schemas). The same document is served at `/api/docs/json`, with an offline Swagger UI at `/api/docs/`. Sample request/response pairs captured from the live fixture stack are in `docs/mobile-fixtures/`. The shared web/mobile guide, covering errors, retries, dataset changes, native HTTP versus WebView and the Windows checks, is [`CLIENT_INTEGRATION.md`](CLIENT_INTEGRATION.md).
 
 ## Base URL and TLS
 
 - **Base URL:** `https://<host>:<port>`. The default is `https://127.0.0.1:8443`, which is loopback only. For shared or LAN testing the operator configures a LAN name/IP, a CIDR allowlist and a matching certificate (RUNBOOK §6).
-- **TLS:** the server presents a certificate from the organisation's internal CA. The mobile app must trust that CA explicitly: bundle the CA certificate in the app's network-security configuration, or pin its public key. Do not disable certificate validation. TLS 1.2+ only.
+- **TLS:** the server presents a certificate from an issuer managed outside the server: the company CA, or the operator's development issuer. The owner supplies the issuer's **public** certificate. The mobile app must trust that CA explicitly: bundle the CA certificate in the app's network-security configuration, or pin its public key. Do not disable certificate or hostname validation. TLS 1.2+ only. Server certificates are at most 825 days, with serverAuth and the exact LAN name or address in the SAN.
+- **Native HTTP versus WebView:** native HTTP stacks are not subject to CORS. A WebView or hybrid shell is a browser context: load content from the Seyra origin or keep calls on the native side. `file://` and `null` origins will never be granted.
 - **Host header:** requests for an unknown Host name are rejected with HTTP 421. Use one of the configured server names.
 - **No authentication in phase 1:** access control is network level only. The future Authentication module will add identity; do not build a client-side substitute.
 - **Not exposed:** providers, databases and provider update/admin endpoints are never reachable through the ingress. The client knows only the fixed paths below.

@@ -1,0 +1,19 @@
+# Client handoff index
+
+For the owner to pass to the web and mobile developers once the LAN endpoint is live. Nothing here is sent to anyone automatically. Operational values (address, port, subnet, certificate fingerprints, dataset bindings) are given privately by the owner and are not in this repository.
+
+| For | Read | Status |
+| --- | --- | --- |
+| Both developers | [`../CLIENT_INTEGRATION.md`](../CLIENT_INTEGRATION.md): one shared API/asset contract, errors, retries, dataset changes, map styles | Prepared |
+| Both developers | Swagger UI `/api/docs/` and `/api/docs/json` on the Seyra origin (same content as [`../openapi/map-services-v1.json`](../openapi/map-services-v1.json)) | Code ready; not yet served on the LAN |
+| Web developer | §7 of the guide, and [`../../examples/web-dev-proxy/`](../../examples/web-dev-proxy/README.md) (local development proxy for `/api/` and `/maps/`) | Prepared; tested against a local stand-in only |
+| Mobile developer | §8 of the guide, and [`../MOBILE_INTEGRATION.md`](../MOBILE_INTEGRATION.md) with recorded fixture pairs in [`../mobile-fixtures/`](../mobile-fixtures/README.md) | Prepared; no SDK executed |
+| Owner (Windows) | §9 of the guide: `curl.exe` checks over trusted HTTPS | Pending the live endpoint (H-01) |
+| Owner / operator | [`DEPLOYMENT_PLAN.md`](DEPLOYMENT_PLAN.md): build, rehearsal, cutover and rollback for the serving host | Plan for review; nothing executed |
+
+What the developers need from the owner, privately:
+1. the base URL `https://<SEYRA_HOST>:<PORT>`;
+2. the issuing CA's **public** certificate (never a private key);
+3. confirmation that their device is in the approved subnet.
+
+Not included: accounts or credentials (there is no Authentication in phase 1), provider or admin access, and Authentication, Relations or SOS, which need their own intake.

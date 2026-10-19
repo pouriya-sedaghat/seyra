@@ -53,7 +53,7 @@ A tampered or corrupted archive stops the install (evidence AC18).
 export SEYRA_HOME=/srv/seyra               # absolute; all state lives here
 /opt/seyra/bin/seyra-maps verify-images    # every locked image present with its locked ID
 /opt/seyra/bin/seyra-maps init             # directories, secrets, internal networks, DB roles, migrations
-/opt/seyra/bin/seyra-maps tls init --names localhost,127.0.0.1[,maps.internal]
+/opt/seyra/bin/seyra-maps tls init --names localhost,127.0.0.1    # TEST ONLY (synthetic fixtures); see below for LAN hosts
 ```
 
 `init` defaults to loopback-only access (`--bind 127.0.0.1 --port 8443`).
@@ -61,7 +61,29 @@ export SEYRA_HOME=/srv/seyra               # absolute; all state lives here
 - It creates the internal networks `seyra_backend` and `seyra_build` (no outside route).
 - It creates the roles `seyra_api` (control data, read-only), `seyra_tile_reader` (map render databases, read-only) and `seyra_render_import` (one release's render DB, only until it is frozen).
 
-`tls init` creates an internal CA and a server certificate. Clients must trust `secrets/tls/ca.crt`. To use certificates from your own internal CA instead: `seyra-maps tls import --cert server.crt --key server.key`.
+### TLS certificates
+
+**Test only:** `tls init` creates an on-host test CA and a server certificate for the synthetic fixture flows; clients of such a host trust `secrets/tls/ca.crt`. Its CA private key stays in `secrets/tls`, so it is **not** the provisioning design for LAN clients.
+
+**LAN hosts:** the issuer is managed outside the serving host. It is either the company CA or an operator-controlled development issuer (`infra/tls/dev-issuer.sh`, run on another machine). Both use the same interface:
+
+```bash
+seyra-maps tls csr --names <lan-address>[,<lan-name>]        # new server key stays in secrets/tls/pending (0400); prints the CSR
+#   ... the issuer signs the CSR for serverAuth, elsewhere ...
+seyra-maps tls import --cert leaf.crt [--chain intermediates.pem] --ca issuer-root.crt --names <lan-address>[,<lan-name>]
+seyra-maps proxy restart                                      # serve the new pair (providers keep running)
+seyra-maps tls status                                         # public metadata only: subject, SAN, validity, fingerprint
+```
+
+`tls import` validates everything before it changes a file, and a failed validation keeps the previous pair. It checks:
+- the key matches the leaf;
+- every `--names` entry is in the SAN (no wildcards);
+- the certificate is currently valid and valid for at most 825 days in total;
+- it is not a CA certificate, and it has serverAuth and digitalSignature;
+- the chain verifies to the given root for every name;
+- no input file carries a private key other than the server key.
+
+The replacement itself is journalled. The previous pair is copied to `secrets/tls/previous-<time>/`, and an interruption leaves a journal that makes `start` and activation refuse until `seyra-maps tls recover` completes or undoes it. Only the leaf key, the served chain and the public root are stored. No OCSP, CRL or AIA fetch is required at run time: revocation is handled by short-lived leaves and re-issue.
 
 ## 3. Import an owner-supplied OSM extract
 
@@ -163,13 +185,53 @@ A long `import` also holds a lease, `state/import.lock`, which names the release
 
 ## 6. LAN access for shared testing
 
-Loopback is the default. LAN access needs an explicit allowlist and a certificate valid for the LAN name:
+Loopback is the default. Every LAN path needs an explicit allowlist and a certificate for the LAN name (§2, *TLS certificates*). Every path (web client, Swagger, API, map assets) sits behind the same access boundary. Client integration: `docs/CLIENT_INTEGRATION.md`.
+
+### 6.1 Direct LAN mode (Seyra runs on the host's own Docker daemon)
 
 ```bash
-seyra-maps tls init --names maps.internal,10.20.0.15     # or tls import
+seyra-maps tls csr --names 10.20.0.15   # then tls import the issued certificate
 seyra-maps init --access lan --bind 10.20.0.15 --lan-cidrs 10.20.0.0/24 --server-names "maps.internal 10.20.0.15"
 seyra-maps start
 ```
+
+Docker's published-port NAT normally keeps the client source address, so nginx checks the real client against the allowlist. Confirm this with a real LAN client before relying on it. Connections that originate on the host itself take a different path and cannot stand in for a LAN client test.
+
+`init` persists the settings, but `runtime.env` is written only by the first `init` and by activations. On an install that is already running, apply changed access settings deliberately:
+
+```bash
+seyra-maps access apply      # rewrites only access/relay keys for the active release; keeps runtime.env.prev
+seyra-maps proxy restart     # recreates only the proxy and checks every expected publication
+```
+
+### 6.2 Relay mode (Seyra inside a nested Docker host)
+
+When the stack runs inside a nested host on an internal network, the host's LAN address cannot be bound inside the inner daemon. A small layer-4 relay (`infra/edge/`, operator commands in `infra/edge/edge.sh`, settings in an operator-local copy of `infra/edge/edge.env.example`) publishes the LAN port and forwards TCP to a separate relay listener of the proxy:
+
+```bash
+seyra-maps init --access loopback --bind 127.0.0.1 --server-names "localhost 127.0.0.1 <lan-address>" \
+  --relay-peer <edge address on the lab network> --relay-bind <nested host lab address> --relay-port <relay port> \
+  --relay-client-cidrs <approved client subnet> --relay-server-names "<lan-address>"
+seyra-maps access apply && seyra-maps proxy restart
+```
+
+- **Edge:** sends a PROXY protocol header built from its actual TCP peer, and allows only the approved subnet. It holds no TLS key and logs no addresses.
+- **Inner relay listener** (container port 8444, added by `runtime.relay.yml` only when a relay is configured):
+  - requires PROXY protocol;
+  - accepts only the configured relay as its actual socket peer (403 otherwise);
+  - only then checks the conveyed client address against the approved subnet.
+  - HTTP forwarding headers are never trusted, and unknown Host names get 421.
+- **Ordinary listener:** stays the loopback-only local control path for CLI, readiness and recovery calls, with no PROXY header and no LAN exposure.
+- **Settings rules:** a relay requires loopback access mode. Its peer must be one exact non-loopback address outside the client allowlist. Its server names may not contain loopback names.
+- **Egress:** the edge's network namespace gets an egress guard (new connections only to the relay upstream). `tests/offline/namespace-egress.sh` checks the namespaces directly. The old outbound counter treats private destinations as local, so it cannot prove LAN isolation.
+- **Rollback order:**
+  1. `edge.sh stop`;
+  2. `init --no-relay`, then `access apply` and `proxy restart`;
+  3. `edge.sh remove`.
+
+  Never remove the edge while the inner relay still trusts its former address.
+
+### 6.3 Rules for both modes
 
 Access settings are validated by `init` before anything is saved, again before every start, and independently by the proxy entrypoint:
 - **Loopback mode** requires a bind address in `127.0.0.0/8` and no CIDRs.
@@ -178,6 +240,8 @@ Access settings are validated by `init` before anything is saved, again before e
 - LAN mode without CIDRs fails closed: the proxy refuses to start (evidence AC16.9).
 - Clients outside the CIDRs get 403 (evidence AC16.10).
 - Unknown Host names get 421.
+- The hidden diagnostics route (`/api/v1/map/diagnostics` and its normalized or encoded variants) is blocked at the ingress. Operators use `seyra-maps status`.
+- Bodies over 64 KiB get a typed 413 `PAYLOAD_TOO_LARGE` from the ingress.
 - This is network access control only, not user authentication; Authentication is a separate future module.
 - Do not change the host firewall for Seyra tests.
 
@@ -255,6 +319,8 @@ Then:
 - `GET /health/ready` (via the proxy) returns 200 only when all four providers and the control DB answer with the active release's identities; otherwise it returns 503.
 - `GET /api/v1/map/health` returns the same details without a 503.
 - `seyra-maps status` shows releases, pointers and live readiness.
+- Swagger UI `/api/docs/` and the specification `/api/docs/json` are served by the API through the same ingress and access rules; they load while a provider is down.
+- The API's internal diagnostics route is not reachable through the ingress (blocked, including path variants).
 - Logs: `docker logs seyra-api-1` and `seyra-proxy-1`. Both are redacted: no query strings, coordinates or bodies are logged (evidence AC17.11).
 
 ## 10. Preparation environment (Internet-connected; not the operational host)
