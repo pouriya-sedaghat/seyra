@@ -9,7 +9,7 @@
 // a read-only mount); no read-only mount sits at or under SEYRA_HOME; no mount target repeats; and a
 // missing input or argument stops before Docker is called at all.
 import { spawnSync } from 'node:child_process';
-import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
+import { chmodSync, existsSync, mkdirSync, mkdtempSync, readFileSync, rmSync, statSync, writeFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { dirname, join, resolve } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -101,6 +101,14 @@ run('missing-ca-file', { args: ['tls', 'import', '--cert', sep.cert, '--ca', joi
 run('missing-ca-directory', { args: ['tls', 'import', '--cert', sep.cert, '--ca', join(w, 'no-such-dir', 'root.crt'), '--names', 'x.test'], expectDocker: false });
 run('missing-chain-argument', { args: ['tls', 'import', '--cert', sep.cert, '--ca', sep.ca, '--chain'], expectDocker: false });
 run('directory-instead-of-file', { args: ['tls', 'import', '--cert', join(w, 'received'), '--ca', sep.ca, '--names', 'x.test'], expectDocker: false });
+// 9. A new --out directory is 0755 even under a group-writable umask (bundle export, backup).
+{
+  const outDir = join(w, 'exports', 'bundle-new');
+  const log = join(w, 'out-mode.argv');
+  const r = spawnSync('bash', ['-c', 'umask 0002; exec bash "$0" "$@"', wrapper, 'bundle', 'export', '--out', outDir], { env: { ...process.env, PATH: `${bin}:${process.env.PATH}`, SEYRA_HOME: join(w, 'home-out-mode'), WRAPPER_DOCKER_LOG: log }, encoding: 'utf8' });
+  const mode = existsSync(outDir) ? (statSync(outDir).mode & 0o777).toString(8) : 'absent';
+  check('new --out directory is 0755 under umask 0002', r.status === 0 && mode === '755', `rc=${r.status} mode=${mode} ${r.stderr.trim()}`);
+}
 
 for (const r of results) console.log(`${r.ok ? 'PASS' : 'FAIL'} ${r.name}${r.ok ? '' : ` -- ${r.detail.slice(0, 300)}`}`);
 const failed = results.filter((r) => !r.ok).length;

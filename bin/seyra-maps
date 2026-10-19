@@ -66,7 +66,9 @@ for ((i = 0; i < ${#args[@]}; i++)); do
       args[$((i + 1))]="$d"; inside_home "$d" || mounts+=(-v "$d:$d:ro"); i=$((i + 1)) ;;
     --out)
       [ $((i + 1)) -lt ${#args[@]} ] || die "--out needs a directory"
-      mkdir -p "${args[$((i + 1))]}"
+      # A new output directory is 0755 whatever the operator's umask (bundles and backups are read
+      # by other operators; nobody else may add files).
+      [ -d "${args[$((i + 1))]}" ] || mkdir -p -m 0755 "${args[$((i + 1))]}"
       d="$(cd "${args[$((i + 1))]}" && pwd)"; args[$((i + 1))]="$d"; inside_home "$d" || mounts+=(-v "$d:$d"); i=$((i + 1)) ;;
   esac
 done
