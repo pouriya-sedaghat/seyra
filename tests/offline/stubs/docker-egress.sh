@@ -7,9 +7,9 @@ case "$1 $2" in
     if [ -n "${HOST_EXEC_FAIL:-}" ]; then echo "Error response from daemon: No such container: x" >&2; exit 1; fi
     case "$*" in
       "ip -4 route get "*) d="${@: -1}"
-        if [ "$d" = "${HOST_ROUTABLE:-none}" ]; then echo "$d via 172.22.0.1 dev eth0"; exit 0; fi
+        if [ "$d" = "${HOST_ROUTABLE:-none}" ]; then echo "$d via 198.18.0.1 dev eth0"; exit 0; fi
         echo "RTNETLINK answers: Network is unreachable" >&2; exit 2 ;;
-      "ip -4 route") echo "172.22.0.0/16 dev eth0 proto kernel scope link"; exit 0 ;;
+      "ip -4 route") echo "198.18.0.0/15 dev eth0 proto kernel scope link"; exit 0 ;;
       *ip_forward*) echo 0; exit 0 ;;
     esac ;;
   "container inspect")
