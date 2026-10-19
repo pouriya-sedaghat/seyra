@@ -1,0 +1,78 @@
+{
+  "patch_sha256": "32085226b1c0dfe703a82383941fd8730b6bef19857287b552c98b3364443729",
+  "head": "3431e7e7330acb0e1184fd4d9c3204ab7f480ee7",
+  "checks": [
+    {
+      "path": "apps/ops/src/tls-cli.ts",
+      "expected_blob": "e28b99469c047b87257150553fd3c4469ed56d3c",
+      "actual_blob": "e28b99469c047b87257150553fd3c4469ed56d3c",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/tls.test.ts",
+      "expected_blob": "b8375bbc785d9e3cd3038de1b0f237dd922b7352",
+      "actual_blob": "b8375bbc785d9e3cd3038de1b0f237dd922b7352",
+      "match": true
+    },
+    {
+      "path": "apps/ops/src/tls.ts",
+      "expected_blob": "777669b6dfd1cf2540ecea362e3f78c83461b7cf",
+      "actual_blob": "777669b6dfd1cf2540ecea362e3f78c83461b7cf",
+      "match": true
+    },
+    {
+      "path": "tests/ops/test-tls-recover.mjs",
+      "expected_blob": "8a1333dde5debdf4969fc2f67fef7dc08e674a6c",
+      "actual_blob": "8a1333dde5debdf4969fc2f67fef7dc08e674a6c",
+      "match": true
+    },
+    {
+      "path": "infra/handoff/build-client-pack.mjs",
+      "expected_blob": "f2cf03c57653a0e35aaa6d61ad76ff2518470c55",
+      "actual_blob": "f2cf03c57653a0e35aaa6d61ad76ff2518470c55",
+      "match": true
+    },
+    {
+      "path": "tests/client/test-handoff-artifacts.mjs",
+      "expected_blob": "26a41328a606ebb232e3dddc2c39af4548af2fa4",
+      "actual_blob": "26a41328a606ebb232e3dddc2c39af4548af2fa4",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-followup-r1r2/README.md",
+      "expected_blob": "9f00899f71c404adea90620eb733206500f10893",
+      "actual_blob": "9f00899f71c404adea90620eb733206500f10893",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-followup-r1r2/r1-after.txt",
+      "expected_blob": "11ca31cc14eb66c10499d88aea4c7d37935f0938",
+      "actual_blob": "11ca31cc14eb66c10499d88aea4c7d37935f0938",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-followup-r1r2/r1-before.txt",
+      "expected_blob": "61d1320366f93c9457dec1a7760490859d47628c",
+      "actual_blob": "61d1320366f93c9457dec1a7760490859d47628c",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-followup-r1r2/r2-after.txt",
+      "expected_blob": "51e55db653f9ce2a0fb2424af56ed7b777af6ce2",
+      "actual_blob": "51e55db653f9ce2a0fb2424af56ed7b777af6ce2",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-followup-r1r2/r2-before.txt",
+      "expected_blob": "36e76207ecf049b520f27b9f7162a30c8db7ca42",
+      "actual_blob": "36e76207ecf049b520f27b9f7162a30c8db7ca42",
+      "match": true
+    },
+    {
+      "path": "docs/handoff/evidence/2026-10-19-followup-r1r2/reviewer-verifier-at-e6a39ab.json",
+      "expected_blob": "4e566ea778ef9453930e9f671b89f8f6f056c03b",
+      "actual_blob": "4e566ea778ef9453930e9f671b89f8f6f056c03b",
+      "match": true
+    }
+  ]
+}
