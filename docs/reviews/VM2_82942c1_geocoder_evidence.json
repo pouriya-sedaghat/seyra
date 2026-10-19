@@ -1,0 +1,62 @@
+{
+  "reported_head": "82942c1296e638c8715c021fee49aeb7c540a703",
+  "base": "9f0d7925eef0d43fc157cdd64b557b962df457a6",
+  "node": "v24.19.0",
+  "checks": [
+    {
+      "id": "baseline-array-defect",
+      "result": "PASS",
+      "detail": "The actual old module crashes on the reported array shape."
+    },
+    {
+      "id": "baseline-symbol-defect",
+      "result": "PASS",
+      "detail": "The actual old module emits both reported invalid normalized synonym terms."
+    },
+    {
+      "id": "text-values",
+      "result": "PASS",
+      "detail": "Only strings and direct string array elements are collected; malformed components are ignored."
+    },
+    {
+      "id": "array-fix-preserves-display",
+      "result": "PASS",
+      "detail": "Array addresses survive unchanged, their strings contribute synonyms, and original display name/house number are retained."
+    },
+    {
+      "id": "symbol-fix",
+      "result": "PASS",
+      "detail": "Both reported offending entries disappear; useful Persian synonyms and original display text remain."
+    },
+    {
+      "id": "mixed-stream-marker",
+      "result": "PASS",
+      "detail": "Multiple places, mixed runtime address elements, digit synonyms and release provenance/marker pass through correctly."
+    },
+    {
+      "id": "compatibility-0",
+      "result": "PASS",
+      "detail": "Byte-identical transformed JSONL and equal synonyms/stats for a previously supported fixture."
+    },
+    {
+      "id": "compatibility-1",
+      "result": "PASS",
+      "detail": "Byte-identical transformed JSONL and equal synonyms/stats for a previously supported fixture."
+    },
+    {
+      "id": "compatibility-2",
+      "result": "PASS",
+      "detail": "Byte-identical transformed JSONL and equal synonyms/stats for a previously supported fixture."
+    },
+    {
+      "id": "compatibility-3",
+      "result": "PASS",
+      "detail": "Byte-identical transformed JSONL and equal synonyms/stats for a previously supported fixture."
+    }
+  ],
+  "source_sha256": {
+    "geocoder_preprocess": "8054c622ea04233032dbaeeac27dae6767ba58f2f9268aa7ddb90d15100ce998",
+    "normalization": "0527dd9f0092363aae83b663fb1b475ea8badfd42b2b075e3e213fab731d0b58"
+  },
+  "limitations": "Targeted actual-code checks only; real Photon analyzer, full PBF and full Docker suites not run by reviewer."
+}
