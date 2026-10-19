@@ -1,0 +1,33 @@
+{
+  "node": "v24.19.0",
+  "results": [
+    {
+      "id": "update-current",
+      "exit_code": 0,
+      "stdout": "PASS wrong-digest: refused (FAIL U1)\nPASS wrong-digest: no CLI/bootstrap call\nPASS wrong-digest: install tree unchanged\nPASS wrong-digest: BUNDLE not reassigned\nPASS wrong-digest: run ends (dependent phases skipped)\nPASS corrupt-payload: refused (FAIL U1)\nPASS corrupt-payload: no CLI/bootstrap call\nPASS corrupt-payload: install tree unchanged\nPASS corrupt-payload: BUNDLE not reassigned\nPASS corrupt-payload: run ends (dependent phases skipped)\nPASS unlisted-file: refused (FAIL U1)\nPASS unlisted-file: no CLI/bootstrap call\nPASS unlisted-file: install tree unchanged\nPASS unlisted-file: BUNDLE not reassigned\nPASS unlisted-file: run ends (dependent phases skipped)\nPASS valid: PASS U1\nPASS valid: install tree replaced\nPASS valid: bootstrap-load ran after verification\nPASS valid: BUNDLE now the update\n# harness=/workspace/scratch/1c57e08e59e6/review-pr1-e7a2175/tests/validation/iran-offline-host.sh checks=19 failed=0\n",
+      "stderr": ""
+    },
+    {
+      "id": "update-base",
+      "exit_code": 1,
+      "stdout": "PASS wrong-digest: refused (FAIL U1)\nFAIL wrong-digest: no CLI/bootstrap call -- cli bootstrap-load /workspace/scratch/1c57e08e59e6/seyra-review-e7a2175/tmp/seyra-update-gate-wrong-digest-zncif0/bundle | cli verify-images | cli status\nFAIL wrong-digest: install tree unchanged -- marker=\"NEW install tree\\n\"\nFAIL wrong-digest: BUNDLE not reassigned -- /workspace/scratch/1c57e08e59e6/seyra-review-e7a2175/tmp/seyra-update-gate-wrong-digest-zncif0/bundle\nFAIL wrong-digest: run ends (dependent phases skipped) -- rc=0\nFAIL corrupt-payload: refused (FAIL U1) -- result PASS U1 software update: SHA256SUMS digest matches the out-of-band value (ee58598e01f653a21eaabf55b7fe32b6a6e13e6ba7a4792412cfa4d063867481); install tree replaced; all locked images verified\nFAIL corrupt-payload: no CLI/bootstrap call -- cli bootstrap-load /workspace/scratch/1c57e08e59e6/seyra-review-e7a2175/tmp/seyra-update-gate-corrupt-payload-fnq6ti/bundle | cli verify-images | cli status\nFAIL corrupt-payload: install tree unchanged -- marker=\"NEW install tree\\n\"\nFAIL corrupt-payload: BUNDLE not reassigned -- /workspace/scratch/1c57e08e59e6/seyra-review-e7a2175/tmp/seyra-update-gate-corrupt-payload-fnq6ti/bundle\nFAIL corrupt-payload: run ends (dependent phases skipped) -- rc=0\nFAIL unlisted-file: refused (FAIL U1) -- result PASS U1 software update: SHA256SUMS digest matches the out-of-band value (ee58598e01f653a21eaabf55b7fe32b6a6e13e6ba7a4792412cfa4d063867481); install tree replaced; all locked images verified\nFAIL unlisted-file: no CLI/bootstrap call -- cli bootstrap-load /workspace/scratch/1c57e08e59e6/seyra-review-e7a2175/tmp/seyra-update-gate-unlisted-file-KJsEYD/bundle | cli verify-images | cli status\nFAIL unlisted-file: install tree unchanged -- marker=\"NEW install tree\\n\"\nFAIL unlisted-file: BUNDLE not reassigned -- /workspace/scratch/1c57e08e59e6/seyra-review-e7a2175/tmp/seyra-update-gate-unlisted-file-KJsEYD/bundle\nFAIL unlisted-file: run ends (dependent phases skipped) -- rc=0\nPASS valid: PASS U1\nPASS valid: install tree replaced\nPASS valid: bootstrap-load ran after verification\nPASS valid: BUNDLE now the update\n# harness=/workspace/scratch/1c57e08e59e6/review-pr1-82942c1/tests/validation/iran-offline-host.sh checks=19 failed=14\n",
+      "stderr": ""
+    },
+    {
+      "id": "browser-current",
+      "exit_code": 0,
+      "stdout": "# evaluating browserVerdict (tests/validation/browser-verdict.mjs)\nPASS successful report shape: verdict=PASS expected=PASS {\"external_requests\":true,\"rtl_plugin\":true,\"failed_requests\":true,\"console_errors\":true,\"required_visits\":true,\"script_completed\":true}\nPASS console error: verdict=FAIL expected=FAIL {\"external_requests\":true,\"rtl_plugin\":true,\"failed_requests\":true,\"console_errors\":false,\"required_visits\":true,\"script_completed\":true}\nPASS missing required visit: verdict=FAIL expected=FAIL {\"external_requests\":true,\"rtl_plugin\":true,\"failed_requests\":true,\"console_errors\":true,\"required_visits\":false,\"script_completed\":true}\nPASS declared visits not all recorded: verdict=FAIL expected=FAIL {\"external_requests\":true,\"rtl_plugin\":true,\"failed_requests\":true,\"console_errors\":true,\"required_visits\":false,\"script_completed\":true}\nPASS failed request (503): verdict=FAIL expected=FAIL {\"external_requests\":true,\"rtl_plugin\":true,\"failed_requests\":false,\"console_errors\":true,\"required_visits\":true,\"script_completed\":true}\nPASS external request: verdict=FAIL expected=FAIL {\"external_requests\":false,\"rtl_plugin\":true,\"failed_requests\":true,\"console_errors\":true,\"required_visits\":true,\"script_completed\":true}\nPASS script crashed after recording all visits: verdict=FAIL expected=FAIL {\"external_requests\":true,\"rtl_plugin\":true,\"failed_requests\":true,\"console_errors\":true,\"required_visits\":true,\"script_completed\":false}\nPASS expectedVisits must be declared\n# failures: 0\n",
+      "stderr": ""
+    },
+    {
+      "id": "browser-base",
+      "exit_code": 1,
+      "stdout": "# evaluating the inline predicate of /workspace/scratch/1c57e08e59e6/review-pr1-82942c1/tests/validation/iran-browser.mjs: external.length === 0 && rtlPlugin.length === 0 && failed.length === 0\nPASS successful report shape: verdict=PASS expected=PASS\nFAIL console error: verdict=PASS expected=FAIL\nFAIL missing required visit: verdict=PASS expected=FAIL\nFAIL declared visits not all recorded: verdict=PASS expected=FAIL\nPASS failed request (503): verdict=FAIL expected=FAIL\nPASS external request: verdict=FAIL expected=FAIL\nFAIL script crashed after recording all visits: verdict=PASS expected=FAIL\n# failures: 4\n",
+      "stderr": ""
+    }
+  ],
+  "blob_checks": {
+    "files": 200,
+    "mismatches": []
+  }
+}
