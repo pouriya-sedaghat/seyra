@@ -64,6 +64,9 @@ summary=()
 fails=0
 name=""
 ts() { date -u +%FT%TZ; }
+# Copy harness files from the frozen (read-only) copy into the lab: `install` replaces an existing,
+# possibly read-only, earlier copy; a failed copy stops the run instead of running a stale script.
+stage() { install -m 0644 "$@" "$work/" || { echo "cannot stage $* into $work" >&2; exit 2; }; }
 # Write the run summary and end the run (also used to stop after a failed gate).
 finish() {
   stop_sampler 2>/dev/null
@@ -298,7 +301,7 @@ if has serve && [ -n "$DS" ]; then
   health_json > "$OUT/I5-health.json"
   if [ $rc -eq 0 ] && [ "$r" = "$DS" ]; then result PASS I5 "activated $DS; /health/ready reports it through https://127.0.0.1:8443 with all four providers"; else result FAIL I5 "activate=$rc ready=$r"; fi
   # Sequential exploratory smoke on real Iran geography (script and output inside the lab).
-  mkdir -p "$work"; cp "$hdir/iran-smoke.mjs" "$work/"
+  mkdir -p "$work"; stage "$hdir/iran-smoke.mjs"
   start_sampler "$OUT/I6-smoke-samples.txt"
   D run --rm --network host --pull never -v "$SEYRA_HOME/secrets/tls/ca.crt:/ca.crt:ro" -e NODE_EXTRA_CA_CERTS=/ca.crt \
     -v "$work:$work" --entrypoint node "$(ops_ref)" "$work/iran-smoke.mjs" https://127.0.0.1:8443 "$work/iran-smoke.json" > "$OUT/I6-smoke.log" 2>&1; rc=$?
@@ -326,7 +329,7 @@ if has browser && [ -n "$DS" ]; then
   if ! D image inspect "$PLAYWRIGHT_IMAGE" >/dev/null 2>&1; then
     timed playwright-sideload sh -c "docker save '$PLAYWRIGHT_IMAGE' | DOCKER_HOST='unix://$sock_dir/docker.sock' docker load -q" > "$OUT/B0-sideload.log" 2>&1
   fi
-  mkdir -p "$work/browser"; cp "$hdir/iran-browser.mjs" "$hdir/browser-verdict.mjs" "$work/"; rm -rf "$work/pw"; cp -a "$PLAYWRIGHT_DIR" "$work/pw"
+  mkdir -p "$work/browser"; stage "$hdir/iran-browser.mjs" "$hdir/browser-verdict.mjs"; rm -rf "$work/pw"; cp -a "$PLAYWRIGHT_DIR" "$work/pw"
   start_sampler "$OUT/B1-browser-samples.txt"
   D run --rm --init --network host --shm-size 1g --pull never -v "$work:$work" -e PLAYWRIGHT_MODULE="$work/pw/node_modules/playwright" \
     "$PLAYWRIGHT_IMAGE" node "$work/iran-browser.mjs" https://127.0.0.1:8443 "$work/browser" > "$OUT/B1-browser.log" 2>&1; rc=$?
@@ -339,7 +342,7 @@ if has readiness && [ -n "$DS" ]; then
   # Cold-start readiness trials (unresolved 503 observation): stop, then start while the bounded
   # diagnostic polls readiness/provider health from the first second and a browser-like client
   # requests uncached tiles and cancels part of them. Disposable hosts only: this restarts the stack.
-  mkdir -p "$work"; cp "$hdir/readiness-diag.mjs" "$work/"
+  mkdir -p "$work"; stage "$hdir/readiness-diag.mjs"
   for t in $(seq 1 "${READINESS_TRIALS:-3}"); do
     cli stop > "$OUT/D$t-stop.log" 2>&1
     cli start > "$OUT/D$t-start.log" 2>&1 & sp=$!
