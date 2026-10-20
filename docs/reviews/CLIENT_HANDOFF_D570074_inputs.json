@@ -1,0 +1,9 @@
+{
+  "image_related_present_files_unchanged": 77,
+  "lock_sha256": "ff5292828920225cdc9b8a0992c59ec54ce46a0a91022207fbd0da0a4c4f1bae",
+  "wrapper_unchanged": true,
+  "patch_image_input_changes": false,
+  "new_bundle_digest": "50ade03079c11dbef7a13dabcc9a2a5bac716c024fe0107db0be5c70e57e82bf",
+  "owner_final_regression_total": 403,
+  "scope": "Reconstructed source and submitted evidence; no inspection of actual image archives or VM."
+}
