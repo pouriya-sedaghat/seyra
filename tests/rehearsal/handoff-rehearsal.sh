@@ -70,6 +70,27 @@ secret_cat() { docker exec "$HOST" cat "$1"; }
 fp_file() { docker exec "$HOST" openssl x509 -in "$1" -noout -fingerprint -sha256 | cut -d= -f2; }
 echo "# $(ts) rehearsal start phases=[$PHASES] frozen=$F" >> "$OUT/summary.txt"
 
+# Ownership preflight for the rehearsal VM's /var/lib/docker volume (review c73db85 R1), on the
+# outer daemon's explicit endpoint. `docker volume create` returns an existing volume of the same
+# name without error, so creating proves nothing: an absent volume is created with this lab's label
+# and inspected again; an existing one must already be this lab's (local driver) and unused. An
+# unlabelled, foreign or in-use volume, and any inspect/create/list error other than "no such
+# volume" (uncertain state), is refused before the privileged VM could mount it. Prints the state.
+prepare_vm_volume() {
+  local out rc users vstate
+  out="$(O volume inspect -f '{{.Name}}|{{.Driver}}|{{index .Labels "seyra.validation.lab"}}' "$VMVOL" 2>&1)"; rc=$?
+  if [ $rc -ne 0 ]; then
+    grep -qi 'no such volume' <<<"$out" || { echo "cannot establish whether volume $VMVOL exists ($out)"; return 1; }
+    out="$(O volume create --label "$LABEL" "$VMVOL" 2>&1)" || { echo "cannot create volume $VMVOL ($out)"; return 1; }
+    vstate="created"
+  else vstate="existing"; fi
+  out="$(O volume inspect -f '{{.Name}}|{{.Driver}}|{{index .Labels "seyra.validation.lab"}}' "$VMVOL" 2>&1)" || { echo "cannot inspect volume $VMVOL after it was found/created ($out)"; return 1; }
+  [ "$out" = "$VMVOL|local|$LAB" ] || { echo "volume $VMVOL ($vstate) is not this lab's: $out"; return 1; }
+  users="$(O ps -a -q --filter "volume=$VMVOL" 2>&1)" || { echo "cannot list the users of volume $VMVOL ($users)"; return 1; }
+  [ -z "$users" ] || { echo "volume $VMVOL is in use by container(s) $(echo $users)"; return 1; }
+  echo "volume $VMVOL $vstate, labelled for this lab, unused"
+}
+
 # The rehearsal VM's daemon must be the one this lab created (never the outer daemon, never the
 # serving host's nested daemon).
 vm_guard() {
@@ -124,7 +145,8 @@ if has vm; then
     else O network create --internal --label "$LABEL" --subnet "$2" -o com.docker.network.bridge.inhibit_ipv4=true "$1" >/dev/null || { result FAIL RV1 "cannot create $1"; finish; }; fi
   done
   O container inspect "$VM" >/dev/null 2>&1 && { result FAIL RV1 "$VM already exists; remove it deliberately (cleanup phase) first"; finish; }
-  O volume create --label "$LABEL" "$VMVOL" >/dev/null
+  vstate="$(prepare_vm_volume)" || { result FAIL RV0 "rehearsal VM volume refused before any mount: $vstate"; finish; }
+  echo "$vstate" > "$OUT/rv0-volume.txt"
   mkdir -p "$VMRUN"
   O run -d --privileged --name "$VM" --label "$LABEL" --network "$CLIENTS" --ip "$VM_LAN" --pull never \
     -v "$VMVOL:/var/lib/docker" -v "$LAB:$LAB" -v "$OUT:$OUT" -v "$OLD_BUNDLE:$OLD_BUNDLE:ro" -v "$FIXTURE:$FIXTURE:ro" -v "$NODE_MODULES:$NODE_MODULES:ro" \
@@ -143,7 +165,9 @@ if has vm; then
     result PASS RV1 "rehearsal VM on internal no-gateway networks only (no default route; outer VM routing table unchanged); images loaded by identity"
   else result FAIL RV1 "rehearsal VM isolation or image identity check failed ($OUT/rv1-vm.txt)"; finish; fi
 fi
-vm_guard
+# Every phase except a cleanup-only run works through the rehearsal VM's daemon and the lab host.
+needs_vm=0; for ph in vm install gate update tls relay egress rollback; do has "$ph" && needs_vm=1; done
+[ "$needs_vm" = 1 ] && vm_guard
 
 if has install; then
   ( BUNDLE="$OLD_BUNDLE" PBF="$FIXTURE" LAB="$LAB" DIND_IMAGE="$DIND_IMAGE" OUT="$OUT/p1-host" PHASES="install import" \
@@ -155,7 +179,8 @@ if has install; then
   r="$(node_in_host fetch-health | jq -r '.status')"
   if [ "$r" = ready ]; then result PASS RH1b "activated $(ds); ready through the ordinary loopback listener"; touch "$OUT/.expect-ready"; else result FAIL RH1b "not ready after activation ($r)"; finish; fi
 fi
-own "$HOST" || { result FAIL RH0 "$HOST is not a host of this lab; refusing"; finish; }
+needs_host=0; for ph in install gate update tls relay egress rollback; do has "$ph" && needs_host=1; done
+[ "$needs_host" = 1 ] && { own "$HOST" || { result FAIL RH0 "$HOST is not a host of this lab; refusing"; finish; }; }
 
 if has gate; then
   # A tampered copy of the NEW bundle: one extra unlisted symlink (payloads hard-linked, unchanged).
@@ -273,6 +298,8 @@ EDGE_PUBLISH_PORT=$EDGE_PORT
 EDGE_CLIENT_CIDRS=$APPROVED
 EDGE_UPSTREAM=$hip:$RELAY_PORT
 EDGE_LAB_NETWORK=$NET
+EDGE_INNER_DOCKER_HOST=$sock
+EDGE_INNER_HOME=$SEYRA_HOME
 EDGE_PUBLISH_NETWORK=seyra_rh_edge
 EDGE_CONF_DIR=$LAB/edge
 EOF
@@ -318,33 +345,69 @@ if has egress; then
     bash "$F/tests/offline/namespace-egress.sh" "$OUT/egress" "$HOST" seyra-rh-edge "$hip:$RELAY_PORT" "$GUARD_IMAGE" > "$OUT/egress.log" 2>&1; rc=$?
   # The outer sinks are reachable from the rehearsal VM itself, so a refusal from its namespaces is
   # the namespace's own doing, not a missing segment.
-  vm_reach="$(O exec "$VM" sh -c 'nc -w 3 -z 198.18.10.250 9; echo rc=$?; nc -w 3 -z 10.250.0.10 9; echo rc=$?' | paste -sd' ')"
-  for s in "${sinks[@]}"; do O rm -f "$s" >/dev/null 2>&1; done
-  [ $rc -eq 0 ] && result PASS RE1 "namespace egress (host + edge; route lookups, documentation addresses, own-network and outer controlled sinks, guard counter, allowed upstream): $(grep -c ^PASS "$OUT/egress/summary.txt") checks; sinks from the rehearsal VM itself: $vm_reach" || result FAIL RE1 "$(grep ^FAIL "$OUT/egress/summary.txt" | head -3 | tr '\n' ' ')"
+  vm_reach="$(O exec "$VM" sh -c 'nc -w 3 -z 198.18.10.250 9; echo rc=$?; nc -w 3 -z 10.250.0.10 9; echo rc=$?' 2>&1 | paste -sd' ')"
+  sinks_rm=0; for s in "${sinks[@]}"; do O rm -f "$s" >/dev/null 2>&1 || sinks_rm=$((sinks_rm + 1)); done
+  [ $rc -eq 0 ] && result PASS RE1 "namespace egress (host + edge; route lookups, sink evidence, documentation addresses, own-network and outer controlled sinks, guard counter, allowed upstream): $(grep -c ^PASS "$OUT/egress/summary.txt") checks" || result FAIL RE1 "$(grep ^FAIL "$OUT/egress/summary.txt" | head -3 | tr '\n' ' ')"
+  # The refusals above count only if the same sinks are reachable from the rehearsal VM itself.
+  [ "${#sinks[@]}" = 2 ] && [ "$vm_reach" = "rc=0 rc=0" ] && [ "$sinks_rm" = 0 ] && result PASS RE2 "both controlled sinks were started, reachable from the rehearsal VM itself ($vm_reach) and removed" \
+    || result FAIL RE2 "controlled sinks: started=${#sinks[@]}/2 reach='$vm_reach' removal_failures=$sinks_rm"
 fi
 
 if has rollback; then
   b1="$(cat "$OUT/.backup-fixture")"
-  # RB0: the edge interlock refuses to stop while the inner relay still trusts the edge address.
-  bash "$F/infra/edge/edge.sh" "$LAB/edge.env" stop > "$OUT/rb0-edge-stop-refused.log" 2>&1; rc=$?
-  if [ $rc -eq 2 ] && grep -q 'still answers' "$OUT/rb0-edge-stop-refused.log" && [ "$(docker container inspect -f '{{.State.Running}}' seyra-rh-edge)" = true ]; then
-    result PASS RB0 "edge.sh stop refused while the relay upstream still answered (edge kept running, address still held)"
-  else result FAIL RB0 "rc=$rc running=$(docker container inspect -f '{{.State.Running}}' seyra-rh-edge 2>/dev/null)"; fi
-  # RB1: relay trust removed and the proxy restarted BEFORE the edge stops (DEPLOYMENT_PLAN §4.1).
-  rollback_relay() { cli init --no-relay --server-names "localhost 127.0.0.1" && cli access apply && cli proxy restart; }
-  transition t4-rollback-relay rollback_relay; rc=$?
+  edge_running() { docker container inspect -f '{{.State.Running}}' seyra-rh-edge 2>/dev/null; }
+  # Relay trust as persisted and applied, read successfully (an unreadable file is never "absent").
+  relay_state() { # -> "settings=<peer> runtime=<peer> running=<peer> published=<0|1>" or "unreadable: ..."
+    local st rt env pid pub
+    st="$(jq -er '.relayPeer // ""' "$SEYRA_HOME/state/settings.json" 2>&1)" || { echo "unreadable: settings.json ($st)"; return 1; }
+    rt="$(docker exec "$HOST" cat "$SEYRA_HOME/state/runtime.env" 2>&1)" || { echo "unreadable: state/runtime.env ($rt)"; return 1; }
+    grep -q '^SEYRA_DATASET_ID=' <<<"$rt" || { echo "unreadable: state/runtime.env has no SEYRA_DATASET_ID"; return 1; }
+    rt="$(sed -n 's/^SEYRA_RELAY_PEER=//p' <<<"$rt" | tr -d '"')"
+    pid="$(D ps -q --filter label=com.docker.compose.project=seyra --filter label=com.docker.compose.service=proxy 2>&1)" || { echo "unreadable: proxy ($pid)"; return 1; }
+    env="$(D container inspect -f '{{range .Config.Env}}{{println .}}{{end}}' "$pid" 2>&1)" || { echo "unreadable: proxy env"; return 1; }
+    env="$(sed -n 's/^SEYRA_RELAY_PEER=//p' <<<"$env")"
+    pub="$(D container inspect -f '{{json .HostConfig.PortBindings}}' "$pid" 2>&1)" || { echo "unreadable: proxy ports"; return 1; }
+    echo "settings=$st runtime=$rt running=$env published=$(grep -c '"8444/tcp"' <<<"$pub")"
+  }
+  edge_stop() { bash "$F/infra/edge/edge.sh" "$LAB/edge.env" stop > "$OUT/$1.log" 2>&1; }
+  # RB0: trust configured and applied, proxy running: ordinary stop refused.
+  edge_stop rb0-edge-stop-refused; rc=$?
+  if [ $rc -eq 2 ] && grep -q 'refusing to stop' "$OUT/rb0-edge-stop-refused.log" && [ "$(edge_running)" = true ]; then
+    result PASS RB0 "edge.sh stop refused while settings and the running proxy still trusted the edge address (edge kept running, address held)"
+  else result FAIL RB0 "rc=$rc running=$(edge_running)"; fi
+  # RB0a (review R2 case): the proxy stopped with the trust still configured. The relay port is
+  # closed, which proved nothing: stop must still be refused. The same proxy container is then
+  # started again (an intentional test outage, measured as a transition).
+  pxy="$(D ps -q --filter label=com.docker.compose.project=seyra --filter label=com.docker.compose.service=proxy)"
+  proxy_down_check() {
+    D stop -t 10 "$pxy" >/dev/null || return 1
+    edge_stop rb0a-edge-stop-proxy-down; local r=$?
+    echo "edge_stop_rc=$r" > "$OUT/rb0a.rc"
+    D start "$pxy" >/dev/null; }
+  transition t4a-proxy-down-refusal proxy_down_check; rc=$?
+  line="$(tline t4a-proxy-down-refusal)"
+  if [ $rc -eq 0 ] && grep -q 'edge_stop_rc=2' "$OUT/rb0a.rc" && grep -q 'not plainly running' "$OUT/rb0a-edge-stop-proxy-down.log" && [ "$(edge_running)" = true ] && grep -q 'final=200' <<<"$line"; then
+    result PASS RB0a "proxy stopped with the trust still configured (relay port closed): edge stop refused, edge kept; proxy started again; $line"
+  else result FAIL RB0a "rc=$rc $(cat "$OUT/rb0a.rc" 2>/dev/null) running=$(edge_running) $line"; fi
+  # RB0b: trust removed from settings and runtime.env but not yet applied (proxy not restarted).
+  cli init --no-relay --server-names "localhost 127.0.0.1" > "$OUT/t4-init-no-relay.log" 2>&1 && cli access apply >> "$OUT/t4-init-no-relay.log" 2>&1; rc=$?
+  edge_stop rb0b-edge-stop-not-applied; src=$?
+  if [ $rc -eq 0 ] && [ $src -eq 2 ] && grep -q 'running proxy still trusts' "$OUT/rb0b-edge-stop-not-applied.log" && [ "$(edge_running)" = true ]; then
+    result PASS RB0b "trust removed from settings/runtime.env but not applied (proxy not restarted): edge stop refused, edge kept"
+  else result FAIL RB0b "init/apply rc=$rc stop rc=$src running=$(edge_running)"; fi
+  # RB1: apply (proxy restart) while the edge still holds its address (DEPLOYMENT_PLAN §4.1).
+  transition t4-rollback-relay cli proxy restart; rc=$?
   line="$(tline t4-rollback-relay)"
-  peer="$(secret_cat "$SEYRA_HOME/runtime.env" 2>/dev/null | grep -c '^SEYRA_RELAY_PEER=.')"
-  pub="$(D port "$(D ps -q --filter label=com.docker.compose.service=proxy)" 2>/dev/null | grep -c 8444)"
-  edge_running="$(docker container inspect -f '{{.State.Running}}' seyra-rh-edge 2>/dev/null)"
-  if [ $rc -eq 0 ] && [ "$peer" = 0 ] && [ "$pub" = 0 ] && [ "$edge_running" = true ] && grep -q 'final=200' <<<"$line"; then
-    result PASS RB1 "relay trust removed and relay port unpublished while the edge still held its address; $line"
-  else result FAIL RB1 "rc=$rc peer_lines=$peer relay_published=$pub edge_running=$edge_running $line"; fi
+  state="$(relay_state)"; srs=$?
+  echo "$state" > "$OUT/rb1-relay-state.txt"
+  if [ $rc -eq 0 ] && [ $srs -eq 0 ] && [ "$state" = "settings= runtime= running= published=0" ] && [ "$(edge_running)" = true ] && grep -q 'final=200' <<<"$line"; then
+    result PASS RB1 "relay trust removed from settings, state/runtime.env and the running proxy, relay port unpublished, all read successfully, while the edge still held its address; $line"
+  else result FAIL RB1 "rc=$rc state_read=$srs [$state] edge_running=$(edge_running) $line"; fi
   runc docker closed "$NET" "" closed; rc=$?
   [ $rc -eq 0 ] && result PASS RB2 "after the relay rollback the relay listener answers nobody on the lab network" || result FAIL RB2 "$(fl closed)"
-  # RB3: only now the edge stops (interlock satisfied) and is removed.
-  bash "$F/infra/edge/edge.sh" "$LAB/edge.env" stop > "$OUT/rb3-edge-stop.log" 2>&1 && bash "$F/infra/edge/edge.sh" "$LAB/edge.env" remove > "$OUT/rb3-edge-remove.log" 2>&1; rc=$?
-  if [ $rc -eq 0 ] && ! docker container inspect seyra-rh-edge >/dev/null 2>&1; then result PASS RB3 "edge stopped (interlock satisfied) and removed after the relay trust was withdrawn"; else result FAIL RB3 "edge stop/remove rc=$rc"; fi
+  # RB3: now the evidence holds; the edge stops and is removed.
+  edge_stop rb3-edge-stop && bash "$F/infra/edge/edge.sh" "$LAB/edge.env" remove > "$OUT/rb3-edge-remove.log" 2>&1; rc=$?
+  if [ $rc -eq 0 ] && grep -q 'relay trust for .* removed' "$OUT/rb3-edge-stop.log" && ! docker container inspect seyra-rh-edge >/dev/null 2>&1; then result PASS RB3 "edge stopped on positive trust-removal evidence ($(sed -n 's/^edge: relay trust for [^ ]* removed: //p' "$OUT/rb3-edge-stop.log" | cut -c1-120)) and removed"; else result FAIL RB3 "edge stop/remove rc=$rc"; fi
   # RB4: certificate rollback with tls restore from the fixture backup (root-only previous-* dir).
   rollback_tls() { cli tls restore --from "$b1" && cli proxy restart; }
   transition t5-rollback-tls rollback_tls; rc=$?
@@ -370,19 +433,50 @@ fi
 
 if has cleanup; then
   rm -f "$OUT/.expect-ready"
-  if o_owned_ctr "$VM"; then
+  # Retention policy: $OUT (evidence, including the frozen harness copy) is always kept; nothing else
+  # of this lab is. Every required removal, the final inventory and the outer route comparison count
+  # in the verdict (review c73db85 R4). Objects that are not positively this lab's are never removed;
+  # they are reported. The VM's firewall and routing are never changed to make this pass.
+  : > "$OUT/cleanup-failures.txt"; : > "$OUT/cleanup-notes.txt"
+  cfail() { echo "$1" | tee -a "$OUT/cleanup-failures.txt" >/dev/null; }
+  cnote() { echo "$1" >> "$OUT/cleanup-notes.txt"; }
+  out="$(O container inspect -f '{{index .Config.Labels "seyra.validation.lab"}}' "$VM" 2>&1)"; rc=$?
+  if [ $rc -eq 0 ] && [ "$out" = "$LAB" ]; then
     if own "$HOST" 2>/dev/null; then
-      docker exec "$HOST" sh -c "docker ps -q | xargs -r docker stop -t 20 >/dev/null; rm -rf '$SEYRA_HOME' '$inst' '$inst.rollback' '$inst.incoming' '$LAB/work' '$LAB/transfer' '$LAB/backup' '$LAB/secrets-backup'" > "$OUT/rc1-inner.log" 2>&1
+      docker exec "$HOST" sh -c "docker ps -q | xargs -r docker stop -t 20 >/dev/null; rm -rf '$SEYRA_HOME' '$inst' '$inst.rollback' '$inst.incoming' '$LAB/work' '$LAB/transfer' '$LAB/backup' '$LAB/secrets-backup'" > "$OUT/rc1-inner.log" 2>&1 \
+        || cfail "inner removal on $HOST failed (rc1-inner.log)"
     fi
-    O rm -f "$VM" >/dev/null
-  fi
-  for c in $(O ps -aq --filter "label=$LABEL"); do O rm -f "$c" >/dev/null 2>&1; done
-  o_owned volume "$VMVOL" && O volume rm "$VMVOL" >/dev/null
-  for n in "$CLIENTS" "$OUTSIDE" "$PRIVATE"; do o_owned network "$n" && O network rm "$n" >/dev/null; done
-  for p in run vm-run pki edge edge.env relay-client.json relay-client-far.json; do rm -rf "${LAB:?}/$p"; done
-  rmdir "$LAB" 2>/dev/null
-  ip -4 route > "$OUT/vm-routes-final.txt"
-  left="$(O ps -aq --filter "label=$LABEL" | wc -l) containers, $(O network ls -q --filter "label=$LABEL" | wc -l) networks, $(O volume ls -q --filter "label=$LABEL" | wc -l) volumes, lab dir $([ -e "$LAB" ] && echo present || echo removed)"
-  result NOTE RC1 "cleanup of this lab's objects; remaining: $left; VM routing table $(cmp -s "$OUT/vm-routes-before.txt" "$OUT/vm-routes-final.txt" && echo unchanged || echo CHANGED)"
+    out="$(O rm -f "$VM" 2>&1)" || cfail "removing $VM failed ($out)"
+  elif [ $rc -eq 0 ]; then cnote "$VM exists but is not this lab's (label '$out'); left untouched"
+  elif ! grep -qi 'no such' <<<"$out"; then cfail "cannot inspect $VM ($out)"; fi
+  if ids="$(O ps -aq --filter "label=$LABEL" 2>&1)"; then
+    for c in $ids; do out="$(O rm -f "$c" 2>&1)" || cfail "removing container $c failed ($out)"; done
+  else cfail "cannot list this lab's containers ($ids)"; fi
+  out="$(O volume inspect -f '{{index .Labels "seyra.validation.lab"}}' "$VMVOL" 2>&1)"; rc=$?
+  if [ $rc -eq 0 ] && [ "$out" = "$LAB" ]; then out="$(O volume rm "$VMVOL" 2>&1)" || cfail "removing volume $VMVOL failed ($out)"
+  elif [ $rc -eq 0 ]; then cnote "volume $VMVOL is not this lab's (label '$out'); left untouched"
+  elif ! grep -qi 'no such volume' <<<"$out"; then cfail "cannot inspect volume $VMVOL ($out)"; fi
+  for n in "$CLIENTS" "$OUTSIDE" "$PRIVATE"; do
+    out="$(O network inspect -f '{{index .Labels "seyra.validation.lab"}}' "$n" 2>&1)"; rc=$?
+    if [ $rc -eq 0 ] && [ "$out" = "$LAB" ]; then out="$(O network rm "$n" 2>&1)" || cfail "removing network $n failed ($out)"
+    elif [ $rc -eq 0 ]; then cnote "network $n is not this lab's (label '$out'); left untouched"
+    elif ! grep -qi 'not found\|no such' <<<"$out"; then cfail "cannot inspect network $n ($out)"; fi
+  done
+  for p in run vm-run pki edge edge.env relay-client.json relay-client-far.json; do out="$(rm -rf "${LAB:?}/$p" 2>&1)" || cfail "removing $LAB/$p failed ($out)"; done
+  if [ -e "$LAB" ]; then out="$(rmdir "$LAB" 2>&1)" || cfail "lab directory not removed ($out; left: $(ls -A "$LAB" 2>&1 | head -5 | paste -sd' '))"; fi
+  # Final inventory of this lab's objects (each query must succeed and be empty).
+  for kind in "ps -aq" "network ls -q" "volume ls -q"; do
+    out="$(O $kind --filter "label=$LABEL" 2>&1)" || { cfail "inventory '$kind' failed ($out)"; continue; }
+    [ -z "$out" ] || cfail "remaining $kind objects of this lab: $(echo $out)"
+  done
+  if out="$(ip -4 route 2>&1)"; then
+    echo "$out" > "$OUT/vm-routes-final.txt"
+    if [ -s "$OUT/vm-routes-before.txt" ]; then cmp -s "$OUT/vm-routes-before.txt" "$OUT/vm-routes-final.txt" || cfail "the outer VM routing table CHANGED (vm-routes-before.txt vs vm-routes-final.txt)"
+    else cfail "no outer route baseline (vm-routes-before.txt) to compare"; fi
+  else cfail "cannot read the outer VM routing table ($out)"; fi
+  nf="$(grep -c . "$OUT/cleanup-failures.txt")"
+  notes="$( [ -s "$OUT/cleanup-notes.txt" ] && echo "; preserved non-lab objects: $(paste -sd';' "$OUT/cleanup-notes.txt")")"
+  if [ "$nf" = 0 ]; then result PASS RC1 "cleanup: every owned object removed; inventory empty (containers, networks, volumes); lab directory removed; outer routes unchanged; evidence kept in OUT$notes"
+  else result FAIL RC1 "cleanup: $nf failure(s): $(head -3 "$OUT/cleanup-failures.txt" | paste -sd';')$notes"; fi
 fi
 finish
