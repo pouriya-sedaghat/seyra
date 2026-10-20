@@ -2,9 +2,10 @@
 //
 //   PLAYWRIGHT_MODULE=… AJV_MODULE=… node tests/browser/swagger-ui.mjs <base> <outDir> <exported-spec.json> [normal|provider-down]
 //
-// normal: the docs page and every asset load from the ingress origin only (zero external requests),
-//   with zero console errors / CSP violations / failed or aborted requests; no operation request is
-//   sent before Execute; the served /api/docs/json equals the exported specification; GET
+// normal: the docs page and every asset load from the ingress origin only (zero external requests,
+//   compared by exact origin), with zero console errors / CSP violations / failed or aborted
+//   requests; no operation request is sent before Execute (at load, while an operation is opened, or
+//   at Try it out); the served /api/docs/json equals the exported specification; GET
 //   (getCapabilities) and POST (computeRoute, first body example) execute exactly one request each
 //   through Try it out + Execute; a real API error body validates against its documented schema.
 // provider-down (the caller has stopped the geocoder provider): the docs still load and render the
@@ -15,6 +16,7 @@
 import { createRequire } from 'node:module';
 import { mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join, resolve } from 'node:path';
+import { isExternal, tryOutAndExecute } from './swagger-checks.mjs';
 
 const require = createRequire(import.meta.url);
 const { chromium } = require(process.env.PLAYWRIGHT_MODULE ?? 'playwright');
@@ -70,16 +72,9 @@ try {
   step('served /api/docs/json equals the exported specification', JSON.stringify(served) === JSON.stringify(exported));
 
   const execute = async (tag, operationId, path, method) => {
-    const block = page.locator(`#operations-${tag}-${operationId}`);
-    await block.locator('.opblock-summary').first().click();
-    await block.locator('button.try-out__btn').click();
-    const before = opRequests().length;
-    const responded = page.waitForResponse((r) => new URL(r.url()).pathname === path && r.request().method() === method.toUpperCase(), { timeout: 60_000 });
-    await block.locator('button.execute').click();
-    const r = await responded;
-    await page.waitForTimeout(500);
-    const sent = opRequests().slice(before).filter((x) => new URL(x.url).pathname === path);
-    return { status: r.status(), body: await r.json().catch(() => null), sent: sent.length };
+    const x = await tryOutAndExecute(page, opRequests, { tag, operationId, path, method });
+    step(`no operation request while opening ${operationId} or at Try it out (only Execute sends)`, x.beforeExecute.length === 0, JSON.stringify(x.beforeExecute));
+    return x;
   };
 
   if (mode === 'normal') {
@@ -105,13 +100,13 @@ try {
   await browser.close();
 }
 
-const external = requests.filter((r) => !r.url.startsWith(origin) && !r.url.startsWith('data:') && !r.url.startsWith('blob:'));
+const external = requests.filter((r) => isExternal(r.url, origin)); // exact origin (scheme, host, port), not a string prefix
 step('zero external requests (all from the ingress origin)', external.length === 0, JSON.stringify(external.slice(0, 5)));
 step('zero console errors or CSP violations', consoleErrors.length === 0, JSON.stringify(consoleErrors.slice(0, 5)));
 step('zero failed requests', failed.length === 0, JSON.stringify(failed.slice(0, 5)));
 step('zero aborted requests', aborted.length === 0, JSON.stringify(aborted.slice(0, 5)));
 step('script completed without a crash', crash === null, crash);
-const required = mode === 'normal' ? 13 : 10; // every step above, so a skipped one fails the run (the expected-503 step follows)
+const required = mode === 'normal' ? 15 : 11; // every step above, so a skipped one fails the run (the expected-503 step follows)
 step(`all ${required} required steps recorded`, steps.length === required, steps.length);
 if (mode === 'provider-down') step('the expected 503 was logged by the browser exactly once for the search request', expectedConsole.length === 1, JSON.stringify(expectedConsole));
 const report = { mode, base, requests: requests.length, external, failed, aborted, consoleErrors, expectedConsole, crash, steps };
