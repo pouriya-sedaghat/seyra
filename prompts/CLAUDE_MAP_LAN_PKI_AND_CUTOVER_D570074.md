@@ -94,7 +94,25 @@ Use a real outside-subnet client for an edge refusal if available. **Do not requ
 
 Do not fake source IPs, assign corporate interface aliases or scan devices. Real H-01 results and the unavailable outside-subnet physical check must remain distinguishable. The two client developers' SDKs are untested until actually run.
 
-## 8. Rollback and completion
+## 8. Developer onboarding is an explicit handoff requirement
+
+The owner specifically asks whether both developers can use the services and whether CA installation is needed. Explain the distinction accurately: a private CA is a supported approach with initial trust configuration, not a guarantee that an unknown framework or map SDK has already passed. Trust installed on the owner's Windows account does not propagate to developers, phones, simulators or containers. Do not declare either developer onboarded without their actual client results.
+
+Prepare one private client packet containing the actual HTTPS base URL, public root in PEM/DER, independently verifiable root SHA-256 fingerprint, public validity/renewal information, Swagger/spec links, the existing client pack and short trust installation/removal instructions. Include only public certificates; no issuer/server private keys, issuer CLI, operator recovery material or automatic installer. Public intermediates may accompany troubleshooting material, but the server must serve the intermediate chain correctly. Neither developer needs to operate a CA or sign certificates. The owner distributes the packet; do not contact them or install anything on their devices.
+
+- Web browser: provide per-user trust instructions for the actual OS/browser, including company-policy limitations and exact removal. Test the hosted client and Swagger on the owner's real browser with normal certificate verification. Do not assume all browsers use the same trust store.
+- Local web development: include the reviewed loopback dev-proxy quickstart with an explicit CA file for its HTTPS upstream. Browser trust alone is not evidence of Node/runtime trust. Keep the same-origin API and map-resource path; test style, TileJSON, tiles, sprites and fonts, not just one JSON endpoint. Treat origin/CORS failures separately from TLS failures; do not add wildcard origins to bypass integration work.
+- Android: document trusting the specific public root in the development app's network configuration, preferably development-only resources/configuration where appropriate. Installing a user CA on the device alone is not sufficient for many modern app targets. Check the actual networking library and map SDK; framework-specific network stacks may need their own trust configuration.
+- iOS: document the manual public-root profile and explicit SSL full-trust steps for a test device if that route is selected, including removal. Alternatively document a correctly validated app-specific trust approach only when supported by the actual stack. Never replace normal chain/name validation with unconditional acceptance.
+- Both mobile platforms: a phone/simulator must reach the VM with an actual allowed source address; emulator routing, platform permissions and CA trust are separate checks. Use current official platform and SDK documentation when preparing exact snippets. If the framework, OS versions or devices are unknown, give clearly labelled platform guidance and a short checklist for the developer; do not invent a tested Flutter/React Native/native configuration or block VM preparation waiting for it.
+
+Never use disabled TLS verification, permissive certificate callbacks or browser warning bypass as onboarding instructions. Trust the root rather than pinning the short-lived server leaf by default, and explain that leaf renewal normally needs no trust reinstall while the root is unchanged. Keep any development-specific trust out of an unrelated public production release.
+
+The handoff checklist must distinguish: (a) VM service/TLS boundary verified; (b) owner's Windows browser and CLI verified; (c) local web dev-proxy end-to-end status; (d) each mobile SDK/device status. For a real client check, cover verified TLS, readiness/capabilities, one search and actual map resources/rendering with the expected dataset. Mark unavailable developer/SDK checks NOT RUN with the exact remaining step. Their absence does not prevent a safe VM cutover after its own gates pass, but it prevents a claim that web/mobile integration is complete. No additional generic approval question is needed.
+
+Primary platform references: https://developer.android.com/privacy-and-security/security-config and https://support.apple.com/en-us/102390. Verify the documentation for the actual pinned Node runtime and selected SDK before supplying runtime-specific commands.
+
+## 9. Rollback and completion
 
 On a failed safety boundary, persistent readiness/resource issue or active-window expiry without verified completion, prioritize the rehearsed rollback: remove inner relay trust, apply and restart/verify the proxy **before** stopping/removing the edge. Use r9's positive-evidence stop; do not turn emergency force into a workaround. If trust removal cannot be verified, preserve the edge's address and close access without releasing that reservation while diagnosing.
 
