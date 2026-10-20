@@ -143,7 +143,11 @@ stop() {
   owned_container || die "no container $EDGE_NAME with owner $EDGE_OWNER; nothing changed"
   local running addr why
   running="$(docker container inspect -f '{{.State.Running}}' "$EDGE_NAME" 2>&1)" || die "cannot inspect $EDGE_NAME ($running); nothing changed"
-  [ "$running" = true ] || { echo "edge: $EDGE_NAME is not running; nothing to stop"; return 0; }
+  case "$running" in
+    true) ;;
+    false) echo "edge: $EDGE_NAME is not running; nothing to stop"; return 0 ;;
+    *) die "cannot establish whether $EDGE_NAME is running ('$running'); nothing changed" ;;
+  esac
   if [ "${1:-}" != --force ]; then
     addr="$(docker container inspect -f "{{with index .NetworkSettings.Networks \"$EDGE_LAB_NETWORK\"}}{{.IPAddress}}{{end}}" "$EDGE_NAME" 2>&1)" || die "cannot read the edge's address on $EDGE_LAB_NETWORK ($addr); nothing changed"
     [ -n "$addr" ] || die "the edge has no address on $EDGE_LAB_NETWORK; nothing changed"

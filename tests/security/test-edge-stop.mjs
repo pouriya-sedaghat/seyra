@@ -109,6 +109,7 @@ stop('relay moved to another peer everywhere (this address no longer trusted)', 
 const f = stop('--force (emergency) with the trust still configured', { ...trusted, extra: ['--force'], want: 'stop' });
 check('--force prints the residual-risk warning', /WARNING --force/.test(f.stderr), f.stderr.trim());
 stop('edge already stopped', { ...removed, stub: { ...removed.stub, STUB_EDGE_RUNNING: 'false' }, want: 'noop' });
+stop("edge run state unrecognized (inspection answered something else)", { ...trusted, stub: { ...trusted.stub, STUB_EDGE_RUNNING: 'test-owner' }, want: 'refuse' });
 
 for (const c of results) console.log(`${c.ok ? 'PASS' : 'FAIL'} ${c.name}${c.ok ? '' : ` -- ${c.detail}`}`);
 const failed = results.filter((c) => !c.ok).length;
