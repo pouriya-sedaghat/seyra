@@ -13,8 +13,10 @@
 #      own networks. No company device is contacted and nothing is scanned;
 #   3. for the edge: its namespace guard counter must rise, and the one allowed upstream must connect.
 # Lab hosts have a deliberate default route to an absent "sink" address on an --internal network
-# (SINK_GATEWAY); such routes count as isolated only if every host network is internal and the sink
-# does not answer. CONTROLLED_SINKS / HOST_CONTROL add real NEW-connection probes from the host.
+# (SINK_GATEWAY); such routes count as isolated only with positive evidence that nothing holds that
+# address (internal networks, Docker's address inventory, failed link-layer resolution after a
+# bounded probe); ICMP silence alone is not evidence. CONTROLLED_SINKS / HOST_CONTROL add real
+# NEW-connection probes from the host.
 # Allowed ingress replies (ESTABLISHED) are not exercised here; the relay boundary test covers them.
 # The VM's global firewall is never read or changed.
 #
@@ -53,14 +55,35 @@ done
 [ "$toolerr" -eq 0 ] || fail "nested host: $toolerr route lookups failed as commands, not as 'unreachable' ($out/host-route-get.txt)"
 [ "$routable" -eq 0 ] || fail "nested host: $routable destinations are routable ($out/host-route-get.txt)"
 if [ "$sinkrouted" -gt 0 ]; then
-  # A sink route isolates only if every network of the host is --internal (no gateway, no NAT) and
-  # the sink address itself does not exist there.
-  hnets="$(docker container inspect -f '{{range $k, $v := .NetworkSettings.Networks}}{{$k}} {{end}}' "$host" 2>&1)" || { fail "nested host: cannot inspect its networks ($hnets)"; hnets=""; }
+  # A sink route isolates only with positive evidence that nothing holds the sink address:
+  #  (a) every network of the host is --internal (no gateway route out, no NAT);
+  #  (b) Docker's address inventory of those networks lists no container and no gateway with it;
+  #  (c) a bounded probe from the host namespace ends in failed link-layer resolution of the address
+  #      (neighbour state FAILED/INCOMPLETE, no lladdr). ICMP silence alone is never taken as
+  #      absence: ping only triggers the resolution, and it must have run (exit 0 or 1).
+  # Every inspect, exec, daemon or tool error, and an empty (inconclusive) result, fails the check.
+  sinkok=1
+  hnets="$(docker container inspect -f '{{range $k, $v := .NetworkSettings.Networks}}{{$k}} {{end}}' "$host" 2>&1)" || { fail "nested host: cannot inspect its networks ($hnets)"; hnets=""; sinkok=0; }
+  [ -n "$hnets" ] || { [ "$sinkok" = 0 ] || fail "nested host: no networks found"; sinkok=0; }
   notinternal=""
-  for n in $hnets; do i="$(docker network inspect -f '{{.Internal}}' "$n" 2>&1)"; [ "$i" = true ] || notinternal="$notinternal $n($i)"; done
-  [ -n "$hnets" ] && [ -z "$notinternal" ] || fail "nested host: sink-routed destinations on a network that is not internal:${notinternal:- (none found)}"
-  if docker exec "$host" ping -c 1 -W 1 "$SINK_GATEWAY" >/dev/null 2>&1; then fail "nested host: the sink address $SINK_GATEWAY answers; it must not exist"; sinkok=0; else sinkok=1; fi
-  [ -n "$hnets" ] && [ -z "$notinternal" ] && [ "$sinkok" = 1 ] && pass "nested host: $sinkrouted destinations route only to the absent sink $SINK_GATEWAY on internal network(s) ($hnets)"
+  for n in $hnets; do
+    i="$(docker network inspect -f '{{.Internal}}' "$n" 2>&1)"; [ "$i" = true ] || notinternal="$notinternal $n($i)"
+    inv="$(docker network inspect -f '{{range .IPAM.Config}}gw={{.Gateway}} {{end}}{{range .Containers}}{{.IPv4Address}} {{end}}' "$n" 2>&1)" \
+      || { fail "nested host: cannot read the address inventory of $n ($inv)"; sinkok=0; continue; }
+    echo "$n: $inv" >> "$out/host-sink-inventory.txt"
+    if grep -qE "(^|[ =])${SINK_GATEWAY//./\\.}(/[0-9]+)?( |$)" <<<"$inv"; then fail "nested host: the sink address $SINK_GATEWAY is assigned on $n"; sinkok=0; fi
+  done
+  [ -z "$notinternal" ] || { fail "nested host: sink-routed destinations on a network that is not internal:$notinternal"; sinkok=0; }
+  probe="$(docker exec "$host" sh -c "ping -c 2 -W 2 $SINK_GATEWAY >/dev/null 2>&1; echo ping_rc=\$?; for t in 1 2 3 4 5; do nb=\$(ip -4 neigh show $SINK_GATEWAY); case \"\$nb\" in *FAILED*) break;; esac; sleep 1; done; echo \"neigh=\$nb\"; ip -4 neigh show $SINK_GATEWAY >/dev/null; echo neigh_rc=\$?" 2>&1)"; prc=$?
+  echo "$probe" > "$out/host-sink-probe.txt"
+  ping_rc="$(sed -n 's/^ping_rc=//p' <<<"$probe")"; neigh="$(sed -n 's/^neigh=//p' <<<"$probe")"; neigh_rc="$(sed -n 's/^neigh_rc=//p' <<<"$probe")"
+  if [ "$prc" -ne 0 ] || [ -z "$ping_rc" ] || [ "$neigh_rc" != 0 ]; then fail "nested host: the sink probe did not run (exec rc=$prc ping_rc=${ping_rc:-none} neigh_rc=${neigh_rc:-none}): inconclusive"; sinkok=0
+  elif [ "$ping_rc" = 0 ]; then fail "nested host: the sink address $SINK_GATEWAY answers; it must not exist"; sinkok=0
+  elif [ "$ping_rc" != 1 ]; then fail "nested host: the sink probe tool failed (ping exit $ping_rc): inconclusive"; sinkok=0
+  elif grep -q 'lladdr' <<<"$neigh"; then fail "nested host: $SINK_GATEWAY resolves at the link layer ($neigh), so something holds it"; sinkok=0
+  elif ! grep -qE 'FAILED|INCOMPLETE' <<<"$neigh"; then fail "nested host: no neighbour resolution result for $SINK_GATEWAY ('$neigh'): inconclusive"; sinkok=0
+  fi
+  [ "$sinkok" = 1 ] && pass "nested host: $sinkrouted destinations route only to the sink $SINK_GATEWAY, which nothing holds (internal network(s): $hnets; not in Docker's address inventory; link-layer resolution: ${neigh##* })"
 fi
 [ "$routable" -eq 0 ] && [ "$sinkrouted" -eq 0 ] && [ "$toolerr" -eq 0 ] && pass "nested host: no route to the approved subnet, other private ranges or public ranges (${#probe_dsts[@]} lookups, no packet sent)"
 # NEW connections from the host namespace to controlled sinks outside its networks (CONTROLLED_SINKS,

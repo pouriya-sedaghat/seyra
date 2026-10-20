@@ -59,6 +59,15 @@ run('host + edge, sink-routed host and a valid edge', { env: sinkOk, want: 0 });
 run('host only, sink route but SINK_GATEWAY not declared (counts as routable)', { edge: false, env: { ...sinkOk, SINK_GATEWAY: '' }, want: 1 });
 run('host only, sink route on a network that is not internal', { edge: false, env: { ...sinkOk, NET_NOT_INTERNAL: '1' }, want: 1 });
 run('host only, the sink address answers', { edge: false, env: { ...sinkOk, SINK_PRESENT: '1' }, want: 1 });
+// Review c73db85 R3: only positive evidence proves the sink absent; tool errors are failures.
+run('host only, ping missing in the host (exit 127)', { edge: false, env: { ...sinkOk, PING_MISSING: '1' }, want: 1 });
+run('host only, the sink probe exec fails (daemon error)', { edge: false, env: { ...sinkOk, SINK_PROBE_EXEC_FAIL: '1' }, want: 1 });
+run('host only, the sink is silent to ICMP but resolves at the link layer', { edge: false, env: { ...sinkOk, NEIGH_LLADDR: '1' }, want: 1 });
+run('host only, no neighbour resolution result (inconclusive)', { edge: false, env: { ...sinkOk, NEIGH_EMPTY: '1' }, want: 1 });
+run('host only, ip neigh fails', { edge: false, env: { ...sinkOk, NEIGH_ERROR: '1' }, want: 1 });
+run("host only, Docker's inventory lists the sink address", { edge: false, env: { ...sinkOk, SINK_IN_INVENTORY: '1' }, want: 1 });
+run("host only, Docker's address inventory cannot be read", { edge: false, env: { ...sinkOk, NET_INVENTORY_FAIL: '1' }, want: 1 });
+run('host only, network Internal flag cannot be read', { edge: false, env: { ...sinkOk, NET_INTERNAL_FAIL: '1' }, want: 1 });
 run('host only, a NEW connection to a controlled sink succeeds', { edge: false, env: { ...sinkOk, HOST_SINK_OK: '10.250.0.10:9' }, want: 1 });
 run('host only, nc missing on the host (tool error)', { edge: false, env: { ...sinkOk, HOST_NC_MISSING: '1' }, want: 1 });
 run('host only, the control destination does not connect', { edge: false, env: { ...sinkOk, HOST_CONTROL_DOWN: '1' }, want: 1 });
