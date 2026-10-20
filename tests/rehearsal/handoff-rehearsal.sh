@@ -379,16 +379,16 @@ if has rollback; then
   # closed, which proved nothing: stop must still be refused. The same proxy container is then
   # started again (an intentional test outage, measured as a transition).
   pxy="$(D ps -q --filter label=com.docker.compose.project=seyra --filter label=com.docker.compose.service=proxy)"
-  proxy_down_check() {
+  proxy_down_check() { # label: stop the proxy, attempt an ordinary edge stop, start the same proxy again
     D stop -t 10 "$pxy" >/dev/null || return 1
-    edge_stop rb0a-edge-stop-proxy-down; local r=$?
-    echo "edge_stop_rc=$r" > "$OUT/rb0a.rc"
+    echo "proxy_state=$(D container inspect -f '{{.State.Status}}' "$pxy")" > "$OUT/$1.rc"
+    edge_stop "$1"; echo "edge_stop_rc=$?" >> "$OUT/$1.rc"
     D start "$pxy" >/dev/null; }
-  transition t4a-proxy-down-refusal proxy_down_check; rc=$?
+  transition t4a-proxy-down-refusal proxy_down_check rb0a-edge-stop-proxy-down; rc=$?
   line="$(tline t4a-proxy-down-refusal)"
-  if [ $rc -eq 0 ] && grep -q 'edge_stop_rc=2' "$OUT/rb0a.rc" && grep -q 'not plainly running' "$OUT/rb0a-edge-stop-proxy-down.log" && [ "$(edge_running)" = true ] && grep -q 'final=200' <<<"$line"; then
-    result PASS RB0a "proxy stopped with the trust still configured (relay port closed): edge stop refused, edge kept; proxy started again; $line"
-  else result FAIL RB0a "rc=$rc $(cat "$OUT/rb0a.rc" 2>/dev/null) running=$(edge_running) $line"; fi
+  if [ $rc -eq 0 ] && grep -q 'proxy_state=exited' "$OUT/rb0a-edge-stop-proxy-down.rc" && grep -q 'edge_stop_rc=2' "$OUT/rb0a-edge-stop-proxy-down.rc" && grep -q 'refusing to stop' "$OUT/rb0a-edge-stop-proxy-down.log" && [ "$(edge_running)" = true ] && grep -q 'final=200' <<<"$line"; then
+    result PASS RB0a "proxy stopped with the trust still configured (relay port closed): edge stop refused ($(sed -n 's/^edge: refusing to stop: \(.*\)\. Stopping would.*/\1/p' "$OUT/rb0a-edge-stop-proxy-down.log")), edge kept; the same proxy started again; $line"
+  else result FAIL RB0a "rc=$rc $(paste -sd' ' "$OUT/rb0a-edge-stop-proxy-down.rc" 2>/dev/null) running=$(edge_running) $line"; fi
   # RB0b: trust removed from settings and runtime.env but not yet applied (proxy not restarted).
   cli init --no-relay --server-names "localhost 127.0.0.1" > "$OUT/t4-init-no-relay.log" 2>&1 && cli access apply >> "$OUT/t4-init-no-relay.log" 2>&1; rc=$?
   edge_stop rb0b-edge-stop-not-applied; src=$?
@@ -405,6 +405,14 @@ if has rollback; then
   else result FAIL RB1 "rc=$rc state_read=$srs [$state] edge_running=$(edge_running) $line"; fi
   runc docker closed "$NET" "" closed; rc=$?
   [ $rc -eq 0 ] && result PASS RB2 "after the relay rollback the relay listener answers nobody on the lab network" || result FAIL RB2 "$(fl closed)"
+  # RB1a: trust removed and applied, but the proxy is down: its state on start is unproven, so the
+  # ordinary stop must still refuse (the proxy-state branch of the evidence), then the proxy returns.
+  pxy="$(D ps -q --filter label=com.docker.compose.project=seyra --filter label=com.docker.compose.service=proxy)"
+  transition t4b-proxy-down-after-removal proxy_down_check rb1a-edge-stop-proxy-down; rc=$?
+  line="$(tline t4b-proxy-down-after-removal)"
+  if [ $rc -eq 0 ] && grep -q 'proxy_state=exited' "$OUT/rb1a-edge-stop-proxy-down.rc" && grep -q 'edge_stop_rc=2' "$OUT/rb1a-edge-stop-proxy-down.rc" && grep -q 'not plainly running' "$OUT/rb1a-edge-stop-proxy-down.log" && [ "$(edge_running)" = true ] && grep -q 'final=200' <<<"$line"; then
+    result PASS RB1a "trust removed and applied, then the proxy stopped: edge stop refused (proxy not plainly running), edge kept; the same proxy started again; $line"
+  else result FAIL RB1a "rc=$rc $(paste -sd' ' "$OUT/rb1a-edge-stop-proxy-down.rc" 2>/dev/null) running=$(edge_running) $line"; fi
   # RB3: now the evidence holds; the edge stops and is removed.
   edge_stop rb3-edge-stop && bash "$F/infra/edge/edge.sh" "$LAB/edge.env" remove > "$OUT/rb3-edge-remove.log" 2>&1; rc=$?
   if [ $rc -eq 0 ] && grep -q 'relay trust for .* removed' "$OUT/rb3-edge-stop.log" && ! docker container inspect seyra-rh-edge >/dev/null 2>&1; then result PASS RB3 "edge stopped on positive trust-removal evidence ($(sed -n 's/^edge: relay trust for [^ ]* removed: //p' "$OUT/rb3-edge-stop.log" | cut -c1-120)) and removed"; else result FAIL RB3 "edge stop/remove rc=$rc"; fi
