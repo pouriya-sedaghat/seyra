@@ -1,0 +1,454 @@
+{
+  "sha256": "5bf5156ddd99fa9e226e51ed8acf8c97bb257cd8111ed69c61bff848a88c480b",
+  "commits": [
+    {
+      "commit": "e4c4fc2de1f6abcbff4e97c39788545e4f752d66",
+      "files_checked": [
+        {
+          "path": "docs/RUNBOOK.md",
+          "sha": "f6265cfa0848df42056c10395427d05f583279b1"
+        },
+        {
+          "path": "infra/edge/edge.env.example",
+          "sha": "d9684f1188a4ff375a5ea39dfb7c966816f00ce5"
+        },
+        {
+          "path": "infra/edge/edge.sh",
+          "sha": "7a386dcef790a29645b8ccb4914b02bf7806e0bf"
+        },
+        {
+          "path": "tests/security/test-edge-stop.mjs",
+          "sha": "752f605d882fd971b7a4ab35f89f71945700b527"
+        }
+      ]
+    },
+    {
+      "commit": "56c67620b53708359091bdb4487c1b8936100dcc",
+      "files_checked": [
+        {
+          "path": "tests/offline/namespace-egress.sh",
+          "sha": "4e3bd2fe0418749c73b2fa18d55ade36f18b1d11"
+        },
+        {
+          "path": "tests/offline/stubs/docker-egress.sh",
+          "sha": "c510eb874c402f35e25f22f9ec6807f23e9b438d"
+        },
+        {
+          "path": "tests/offline/test-namespace-egress.mjs",
+          "sha": "74653247ab818b424192d1b3efa0cd428f41cee5"
+        }
+      ]
+    },
+    {
+      "commit": "ab343f1893bb6968d561945a5a8a1bff8799e581",
+      "files_checked": [
+        {
+          "path": "tests/rehearsal/handoff-rehearsal.sh",
+          "sha": "1728a93141d10fcf29ebc59367282efb130c6b31"
+        },
+        {
+          "path": "tests/rehearsal/stubs/docker-rehearsal.sh",
+          "sha": "d10ffc53c5d8b97f4afb124795c081bfcc23fb51"
+        },
+        {
+          "path": "tests/rehearsal/test-rehearsal-guards.mjs",
+          "sha": "6d9e42e9ac697b3e5c9f843f8dcaab446f6d3206"
+        }
+      ]
+    },
+    {
+      "commit": "44bf5a1e9eba308303c898f9413efd56d964274b",
+      "files_checked": [
+        {
+          "path": "tests/browser/swagger-checks.mjs",
+          "sha": "a02c84e0457ef1f7210493b94989f518cd926bbf"
+        },
+        {
+          "path": "tests/browser/swagger-ui.mjs",
+          "sha": "0cf2a2996a0403901d6057f40383f105348058dd"
+        },
+        {
+          "path": "tests/browser/test-swagger-checks.mjs",
+          "sha": "66a8fc7514170388483750f1d6ec1cd49c327804"
+        }
+      ]
+    },
+    {
+      "commit": "c214fb984d84f357e2f98112c091411925d32423",
+      "files_checked": [
+        {
+          "path": "docs/handoff/DEPLOYMENT_PLAN.md",
+          "sha": "cab604b4d36df081b9a7457f8f73ae99cc28e26c"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-19-build-rehearse/README.md",
+          "sha": "a86392cfb03e702a9bdeef77066c671ff613d911"
+        }
+      ]
+    },
+    {
+      "commit": "7f8a3585001f1c5a856b592eca0209d1310a18b5",
+      "files_checked": [
+        {
+          "path": "infra/edge/edge.sh",
+          "sha": "a2ab45af1bf75644851e845acf3c78f760d53cd6"
+        },
+        {
+          "path": "tests/security/test-edge-stop.mjs",
+          "sha": "52f0179c1dba92ce5163edbbc5570b0b0779e6e2"
+        }
+      ]
+    },
+    {
+      "commit": "469e55a4fe493ef3a4758624424f6264e85ac870",
+      "files_checked": [
+        {
+          "path": "tests/rehearsal/handoff-rehearsal.sh",
+          "sha": "ed07ddc23a1f80d73446f6caf06a278a49bae759"
+        }
+      ]
+    },
+    {
+      "commit": "9648bb192d9e3ee821eba5b528159f27b8f4454d",
+      "files_checked": [
+        {
+          "path": "docs/IMPLEMENTATION_STATUS.md",
+          "sha": "14d6ab9f20d0019d56dc582c6be259dee86eac7a"
+        },
+        {
+          "path": "docs/TEST_RESULTS.md",
+          "sha": "90f4a3f5ab8e60b893d96b21268d365ec9b4745f"
+        },
+        {
+          "path": "docs/handoff/DEPLOYMENT_PLAN.md",
+          "sha": "30cb754d4c1d0f56dbcffc1674db78598fc4ae7d"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/README.md",
+          "sha": "849a0235f31bcc1a0a41f917abe6ad1fa3ee2f87"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/before-after/edge-stop-at-c73db85.txt",
+          "sha": "2020f1b87f8bc618b8cf29792bb2fbf1b7b7b53d"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/before-after/edge-stop-fixed.txt",
+          "sha": "6cb7d23035a4b2b915df73796d1576cd114818d6"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/before-after/namespace-egress-at-c73db85.txt",
+          "sha": "3eae084bd6b5f30d54211f05f7857c20918c0f23"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/before-after/namespace-egress-fixed.txt",
+          "sha": "e5f52dd66af4ba91fb854cbe2bdc7f09756a443b"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/before-after/rehearsal-guards-at-c73db85.txt",
+          "sha": "fb4639a33975d26f684eb0ea06e929852a85f432"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/before-after/rehearsal-guards-fixed.txt",
+          "sha": "a1790a94b9855a61c69375c58438da94cac6cb17"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/before-after/swagger-checks-fixed.txt",
+          "sha": "67486bce05947324aaab64ce5a26cb738be0e3f4"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/bundle/r9-export.log",
+          "sha": "5b11f8b4f1eaf70fe9aa826bf8908a803871a1e2"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/bundle/r9-sums-digest.txt",
+          "sha": "c0ad4fe6cfc1760e2f960936f838a50f362e34c7"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/bundle/r9-verify.log",
+          "sha": "25224305bb8df1e0700c6fb40d1fa10f4f7b66f9"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/bundle/reclaimed.txt",
+          "sha": "d995b7542f72689ddc6f478ec9951785a59a2d66"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/maintenance/README.txt",
+          "sha": "23031498c28edd90780ae677ed65a3978cc04246"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/outages/synthetic-test-outages.txt",
+          "sha": "f0f53ad2056640842b5e9b3c6f096e52231e03cc"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/r1-real/foreign-volume-summary.txt",
+          "sha": "6eed81a734e335a34480244cce5784949997d412"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/r1-real/unlabelled-volume-summary.txt",
+          "sha": "02a39fa8111e76b65d920eaba0bfa198b6a66624"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions/summary-pre-commit.txt",
+          "sha": "5371145b67290267ed7989e68d165f7f8d210925"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9-attempt1/cleanup-failures-run1.txt",
+          "sha": "a88d01daa0407c7ad5eb78882ba7b2bfed0079e6"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9-attempt1/cleanup-failures.txt",
+          "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9-attempt1/frozen-20261020T043250Z.revision",
+          "sha": "f92c65ff7c8ca6df1d5cce6d4716577fedbd9904"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9-attempt1/frozen-20261020T043949Z.revision",
+          "sha": "bd5393b07b341a301183535d2631d7db4f2bf31f"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9-attempt1/frozen-20261020T044014Z.revision",
+          "sha": "1ae03e5a5d7c5a33095c3add51088f2235048104"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9-attempt1/rb0a-edge-stop-proxy-down.log",
+          "sha": "296f4e7a0970b1e8339ef28ffab9793b86e39926"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9-attempt1/summary.txt",
+          "sha": "cfc81293a41c355578decacd3bab244877d89fbd"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/cleanup-failures.txt",
+          "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/cleanup-notes.txt",
+          "sha": "e69de29bb2d1d6434b8b29ae775ad8c2e48c5391"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/egress-host-connect.txt",
+          "sha": "17069441c9eaaacb47b65bf59aabb929687f86c2"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/egress-host-sink-inventory.txt",
+          "sha": "fa05f21510d93e1e5225d07b179e1743ea0ecc67"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/egress-host-sink-probe.txt",
+          "sha": "8a90716a7404a9850298eb96046b60830fac91e3"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/egress-summary.txt",
+          "sha": "8d079db8c7156b935324f91b3d208477321d5879"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/frozen-20261020T044024Z.revision",
+          "sha": "99bee3b55f094461a67418bb63a26b97ee6216b4"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/r-approved.json",
+          "sha": "ab100619f3e683cd84bb9e867114624b4b7df57d"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/r-closed.json",
+          "sha": "91846d77fc339ce51e714adb5181a5e6dff16de6"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/r-edge.log",
+          "sha": "d255a7bc28cae9888ee1b515c814224da09d569c"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/r-forger.json",
+          "sha": "1460192743288e224ab115b4b4fed5c0ea8efdc3"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/rb0-edge-stop-refused.log",
+          "sha": "296f4e7a0970b1e8339ef28ffab9793b86e39926"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/rb0a-edge-stop-proxy-down.log",
+          "sha": "296f4e7a0970b1e8339ef28ffab9793b86e39926"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/rb0a-edge-stop-proxy-down.rc",
+          "sha": "28af1122932c9d9bd78a3634892ac69e3a838e56"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/rb0b-edge-stop-not-applied.log",
+          "sha": "1b72a6499fefc99a09a597259f0815f64eb6d8e1"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/rb1-relay-state.txt",
+          "sha": "433af51171f83b885f0af110d2eb17392e1a4547"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/rb1a-edge-stop-proxy-down.log",
+          "sha": "3f79b866585b9a83f2fd0522b6e8c4a3cfbb823e"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/rb1a-edge-stop-proxy-down.rc",
+          "sha": "28af1122932c9d9bd78a3634892ac69e3a838e56"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/rb3-edge-stop.log",
+          "sha": "43c7b97332e398c7c6f99f86fd47a63408246dfe"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/rv0-volume.txt",
+          "sha": "7c25ea80bc80dbd3f985574e3a7a5985832220e5"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/rv1-vm.txt",
+          "sha": "f1a9c6c1705842d1600f79b73072f93d4245e90d"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/summary.txt",
+          "sha": "4167be7b376825ac07ac256caff3c40ff4f2412d"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/rehearsal-r9/transitions.txt",
+          "sha": "0ac1dd38577a3b97e56259c8942377d12c9dc0bb"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/resources/supervisor-summary.txt",
+          "sha": "4c8d6d1f6e99739ab02ae9c5def4c672acff4234"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/resources/supervisor.log",
+          "sha": "6b849aa30b8d8d610fb2b3b1b3edff459ddd21e3"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/resources/workloads.txt",
+          "sha": "227452b9077555ee3bf4cf67e010e56dfd8d2f24"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/suites/r9-offline-host.txt",
+          "sha": "5a3ed3c0067f67ae367ecf5b8e9c5201b47b9491"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/suites/r9-tamper.txt",
+          "sha": "ed16eb3393dd3b7943511ed31b064b65be773339"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/suites/swagger-normal.jpg",
+          "sha": "27e032480b9318617696485a7cddb718b9705105"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/suites/swagger-normal.json",
+          "sha": "05cbd98cfa014c371e4e922d11242ac685d832e2"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/suites/swagger-provider-down.jpg",
+          "sha": "89ed0f5a90209f521f40318a00e6add48bd1fc1f"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/suites/swagger-provider-down.json",
+          "sha": "7407b49185a785b20dbd8890f67ffd861e3c81b6"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/verifier/adapted-copy.diff",
+          "sha": "4d5e7a93eff85ebe986b0e353c7cbd8e48d42cd6"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/verifier/verifier-adapted-r3-skip-at-fixed.json",
+          "sha": "bcb8197fb9271e95a4eb26b917260f11f958382c"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/verifier/verifier-at-c73db85.json",
+          "sha": "9de990e03fbfa80104c1fc646f53bc2ad4dda6b8"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/verifier/verifier-at-fixed.json",
+          "sha": "f680e63673d9fccd7f727d2da34a9103237cccd9"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/verifier/verifier-sha256.txt",
+          "sha": "e7ba4f33a09c2a92e4df00988df15ff995f963b6"
+        }
+      ]
+    },
+    {
+      "commit": "d5700749b68929d86f1f468cc61be41f7d741a64",
+      "files_checked": [
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/final-tree.txt",
+          "sha": "d956be5c94ce9512045659f0841666bf8a9e4826"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/node-version.txt",
+          "sha": "f551f91468c2a527c7a47ffe1556c2e0855face9"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/summary.txt",
+          "sha": "b2bca629edbab25212e0555bcd777d6a1838634e"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-browser-navigation.txt",
+          "sha": "2d90f05c52ac690ae9626d4b17d58529f4322f83"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-browser-verdict.txt",
+          "sha": "417c253c621bbd6922f83b29432d80165b54ee22"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-dev-proxy.txt",
+          "sha": "9f67a03e0a2bbf5a123b26e5d3e865e59b6c4149"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-edge-stop.txt",
+          "sha": "6cb7d23035a4b2b915df73796d1576cd114818d6"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-error-contract.txt",
+          "sha": "1016038c89472d56eaffa9b1e9a96218c3b2d4e8"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-handoff-artifacts.txt",
+          "sha": "b4870c9622dc44f6d5e52a9eddbe403c048b0c1f"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-host-guard.txt",
+          "sha": "33881d8124d9f37885caaa5e276187cace57b14b"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-namespace-egress.txt",
+          "sha": "e5f52dd66af4ba91fb854cbe2bdc7f09756a443b"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-reclaim-credit.txt",
+          "sha": "acaf3656d59a1bf1dfa1141c5657aa78abaee9c0"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-rehearsal-guards.txt",
+          "sha": "a1790a94b9855a61c69375c58438da94cac6cb17"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-search-seeds.txt",
+          "sha": "7f60ab1adc6166053b2ac52f29134a57d43be2f2"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-swagger-checks.txt",
+          "sha": "67486bce05947324aaab64ce5a26cb738be0e3f4"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-tls-cli.txt",
+          "sha": "ead300a17003a4b0c28085c1b60ac84da3c67698"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-tls-recover.txt",
+          "sha": "dd2a24714c59cf980e0495ff7ca96d08dc8d4e04"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-update-gate.txt",
+          "sha": "0fc388cd71296afb925b41781cf730dea6920a68"
+        },
+        {
+          "path": "docs/handoff/evidence/2026-10-20-c73db85-corrective/regressions-final/test-wrapper-inputs.txt",
+          "sha": "000216e62c816e3318143890cdc66b3d094a590f"
+        }
+      ]
+    }
+  ]
+}
