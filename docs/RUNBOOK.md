@@ -241,7 +241,14 @@ seyra-maps access apply && seyra-maps proxy restart
   2. `edge.sh stop`;
   3. `edge.sh remove`.
 
-  A stopped container releases its lab address at once, and Docker gives it to the next container (verified on Docker 29). So the inner relay must stop trusting the address **before** the edge stops. `edge.sh stop` refuses while the relay upstream still answers; `stop --force` is for emergencies only and must be followed at once by step 1.
+  A stopped container releases its lab address at once, and Docker gives it to the next container (verified on Docker 29). So the inner relay must stop trusting the address **before** the edge stops.
+
+  `edge.sh stop` stops the edge only on positive, read-only evidence from the serving installation (`EDGE_INNER_DOCKER_HOST`, `EDGE_INNER_HOME` in the edge env file) that the edge's exact lab address is no longer trusted:
+  - `state/settings.json` is read and its `relayPeer` is not that address;
+  - exactly one serving proxy container exists and is plainly running (not stopped, restarting or paused); its `SEYRA_RELAY_PEER` is not that address; without a relay peer it publishes no relay port;
+  - `state/runtime.env` has not changed since that proxy was created (by ctime), so a restart would apply the same state.
+
+  A closed or refusing relay port is **not** evidence: a stopped or restarting proxy keeps its configured trust and applies it again on start. Any unreadable, failed, stale or inconsistent state refuses and keeps the edge, and so its address. `stop --force` is for emergencies only. It stops the edge without this evidence, and any container that later receives the address can then claim approved clients until step 1 is done, so step 1 must follow at once.
 
 ### 6.3 Rules for both modes
 
