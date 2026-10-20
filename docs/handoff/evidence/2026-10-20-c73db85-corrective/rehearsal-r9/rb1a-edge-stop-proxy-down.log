@@ -1,0 +1,1 @@
+edge: refusing to stop: the serving proxy is not plainly running (exited running=false restarting=false paused=false); its configured trust would apply on start. Stopping would release 172.18.0.3 for reuse while it may still be trusted. First: seyra-maps init --no-relay; access apply; proxy restart. Nothing changed (emergency only: stop --force)

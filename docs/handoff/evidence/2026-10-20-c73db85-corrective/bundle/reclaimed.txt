@@ -1,0 +1,2 @@
+removed tamper copy
+removed seyra-offline-host + seyra-offline-docker (r9 run)

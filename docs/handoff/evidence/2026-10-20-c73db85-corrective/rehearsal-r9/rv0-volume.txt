@@ -1,0 +1,1 @@
+volume seyra-rh-vm-docker created, labelled for this lab, unused

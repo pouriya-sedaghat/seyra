@@ -1,7 +1,9 @@
 # Client handoff: build, rehearsal, cutover and rollback plan
 
 Status:
-- **Build and disposable rehearsal: done** on 2026-10-19 (run `2026-10-19-build-rehearse`, [evidence](evidence/2026-10-19-build-rehearse/README.md)). The next bundle is **r8**, with `SHA256SUMS` digest `10797ff117c8cddc3271fe3573e236f82979e1d3f14a59a750f1443661e422bd`.
+- **Build and disposable rehearsal: done** on 2026-10-19 (run `2026-10-19-build-rehearse`, [evidence](evidence/2026-10-19-build-rehearse/README.md)).
+- **Corrections to review `c73db85`: done** on 2026-10-20 (run `2026-10-20-c73db85-corrective`, [evidence](evidence/2026-10-20-c73db85-corrective/README.md)).
+- The cutover bundle is now **r9**, with `SHA256SUMS` digest `50ade03079c11dbef7a13dabcc9a2a5bac716c024fe0107db0be5c70e57e82bf`. Its images are byte-identical to r8; its edge tooling and RUNBOOK are corrected. r8 (`10797ff1…`) is retained for recovery but superseded for the cutover.
 - **Serving-host cutover: not executed.** The serving host still runs r3 on loopback only. It was paused and resumed for the build window with its own installed CLI, and the new build was not deployed to it.
 - The cutover (§3) waits for the owner's decisions in §5.
 
@@ -16,7 +18,7 @@ Placeholders:
 - `<EDGE_LAB_ADDR>`: the edge's address on that network. It is assigned at attach time, because the lab network has no user-configured subnet.
 - `<PORT>`: the published HTTPS port.
 - `<RELAY_PORT>`: the relay listener port.
-- `<R8>`: the r8 bundle directory on transfer media.
+- `<R9>`: the r9 bundle directory on transfer media.
 
 Inside the serving host, the CLI runs as `DOCKER_HOST=unix://<LAB>/run/docker.sock SEYRA_HOME=<LAB>/home <LAB>/install/bin/seyra-maps …`. It runs from the VM against the nested daemon, not through the lab harness. The harness refuses every mutating phase on this unlabelled host by design (F4).
 
@@ -28,7 +30,7 @@ Inside the serving host, the CLI runs as `DOCKER_HOST=unix://<LAB>/run/docker.so
 | Proxy image `sha256:b953043a…` | shared location include, optional relay listener (PROXY protocol, exact peer), diagnostics block, typed 413, render script | unchanged |
 | OPS image `sha256:8cbabae5…` | relay settings, `access apply`, `proxy restart`, `tls csr/import/status/recover/restore`, publish and pair checks, operator-readable CSR | unchanged |
 | Data images (Tegola, Valhalla, Photon, Overpass, PostGIS, osmtools, geocoder-build) | **none**: their lock entries are byte-identical | dataset `ds-…` and stores unchanged |
-| Bundle r8 | these three images plus byte-identical data images; install tree adds `runtime.relay.yml` and `infra/edge/`, and the fixed wrapper (`--out` 0755, root-only `--from` backups) | — |
+| Bundle r9 | these three images plus byte-identical data images (archives identical to r8); install tree adds `runtime.relay.yml` and `infra/edge/` (evidence-based `edge.sh stop`), and the fixed wrapper (`--out` 0755, root-only `--from` backups) | — |
 
 No Iran reimport and no PBF access are needed. The original readiness 503 of 18 October stays open.
 
@@ -50,17 +52,20 @@ Owner decision 1 was resolved as "this VM, in an authorized window". Details are
   - It ran inside a disposable "rehearsal VM" with its own daemon, on internal benchmark-range segments. A client packet followed the real path: LAN address → Docker DNAT → edge → lab network → nested DNAT → PROXY listener, with the client source preserved.
   - Final result: 28/28.
   - Attempt 1 on r7 found the `tls restore --from` operator defect (B5), fixed in r8.
+- **Corrective rehearsal r3 → r9 (2026-10-20):** 32/32.
+  - It adds the real authorization-removal failure cases: the proxy down with the trust configured, the trust removed but not applied, and the proxy down after removal. In each, the edge stop is refused and the address kept; it stops only on positive evidence.
+  - It adds the volume-ownership refusals, positive sink evidence and a counted cleanup verdict, including a real cleanup failure that returned FAIL.
 
 ## 3. Serving-host cutover: concrete live LAN plan
 
 Preconditions:
 1. The owner approved a window (decision 2). The expected not-ready time is a few seconds per step (measured below). Plan for 30 minutes, including verification and the H-01 device check.
 2. A certificate for `<VM_LAN_ADDR>` (plus a DNS name if one exists) is available from the chosen issuer (decision 3), or will be signed in the window from the CSR of step 4.
-3. `<R8>` is on transfer media under `<LAB>/transfer/`, and its `SHA256SUMS` digest has been compared out of band with `10797ff117c8cddc3271fe3573e236f82979e1d3f14a59a750f1443661e422bd`.
+3. `<R9>` is on transfer media under `<LAB>/transfer/`, and its `SHA256SUMS` digest has been compared out of band with `50ade03079c11dbef7a13dabcc9a2a5bac716c024fe0107db0be5c70e57e82bf`.
 4. An approved test device (Windows, H-01) and its LAN address are known; it has the public root for application-specific trust. A second LAN device outside the approved subnet is available for the edge refusal check.
 5. The private edge env file is filled in (template `infra/edge/edge.env.example`), including `EDGE_INNER_DOCKER_HOST` and `EDGE_INNER_HOME`, which `edge.sh stop` reads to establish trust removal.
 
-Measured on the synthetic rehearsal (r3 → r8; control-listener readiness sampled every 0.5 s):
+Measured on the synthetic rehearsals (r3 → r8 and r3 → r9, the same within 0.1 s; control-listener readiness sampled every 0.5 s):
 
 | Step | Not ready | Recreated |
 | --- | --- | --- |
@@ -79,11 +84,11 @@ Provider identities did not change and the data containers were not recreated. T
 
    Then make a fresh `backup` generation and a verified copy of `secrets/`, and write a private `CUTOVER-IN-PROGRESS` marker that holds the rollback commands of §4.
 1. **Stage.**
-   - Run the strict entry checks on `<R8>`: directories and listed regular files only, plain names, well-formed `SHA256SUMS`, the digest from precondition 3, then `sha256sum --strict -c`, and no unlisted file.
+   - Run the strict entry checks on `<R9>`: directories and listed regular files only, plain names, well-formed `SHA256SUMS`, the digest from precondition 3, then `sha256sum --strict -c`, and no unlisted file.
    - Copy `<LAB>/install` to `<LAB>/install.pre-cutover`, and `runtime.env` to `runtime.env.pre-cutover`.
 2. **Install and load, with no service change.**
    - Replace `<LAB>/install` through a staged copy that is verified again against `SHA256SUMS`.
-   - Run `bootstrap-load <R8>`, then `verify-images`: new API, proxy and OPS ids; data ids unchanged.
+   - Run `bootstrap-load <R9>`, then `verify-images`: new API, proxy and OPS ids; data ids unchanged.
    - The old stack keeps serving (rehearsal RH3).
 3. **Software cutover:** `start`. It recreates the API and proxy with the new images; loopback access is unchanged.
    - Check the readiness and provider identities on the recorded dataset.
@@ -116,7 +121,7 @@ Provider identities did not change and the data containers were not recreated. T
 
 ## 4. Rollback (any failed step, or on request)
 
-Rehearsed in this order on r8 (RB0–RB5). The measured not-ready times are 0 s, 0.5 s and 2.5 s.
+Rehearsed in this order on r8 and again on r9 with the evidence-based edge stop (RB0–RB5, RB0a/RB0b/RB1a). The measured not-ready times are about 0.5 s (relay off), 0.5 s (certificate) and 2.5 s (software).
 
 1. `init --no-relay --server-names "localhost 127.0.0.1"`, then `access apply` and `proxy restart`. The inner proxy stops trusting the edge address and the LAN path closes.
 2. `infra/edge/edge.sh <private env> stop`, then `remove`.
@@ -126,7 +131,7 @@ Rehearsed in this order on r8 (RB0–RB5). The measured not-ready times are 0 s,
 3. **Certificate:** `tls restore --from <LAB>/home/secrets/tls/previous-<time>`, then `proxy restart`.
    - It is validated like any import: key match, its recorded names (or its own SAN), purpose, and its saved chain to its saved root.
    - It is journalled; an interruption is completed or undone by `tls recover`.
-   - Run it **before** step 4, with the r8 tools: the r3 CLI has no `tls restore`, and the r3 wrapper cannot pass a root-only `--from` backup (finding B5).
+   - Run it **before** step 4, with the r9 tools: the r3 CLI has no `tls restore`, and the r3 wrapper cannot pass a root-only `--from` backup (finding B5).
 4. **Images and install:**
    - restore `<LAB>/install.pre-cutover`;
    - `bootstrap-load` the bundle the host was installed from (`<LAB>/transfer/<r3>`, read-only), so the tags point at the r3 images again;

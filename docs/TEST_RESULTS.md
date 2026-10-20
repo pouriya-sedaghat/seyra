@@ -1,5 +1,30 @@
 # Seyra Map Services — test results (phase 1)
 
+## Corrections to review `c73db85` (`2026-10-20-c73db85-corrective`)
+
+Separate run identity; the sections below are earlier records and are unchanged. Record: [`docs/handoff/evidence/2026-10-20-c73db85-corrective/README.md`](handoff/evidence/2026-10-20-c73db85-corrective/README.md).
+
+The reviewer's verifier reproduced R1–R4 on `c73db85`. Desired-behavior regressions before → after:
+
+| Finding | `c73db85` | Fixed |
+| --- | --- | --- |
+| R1/R4 rehearsal guards | 24 of 25 FAIL | 25/25 |
+| R2 edge trust evidence | 19 of 23 FAIL | 23/23 |
+| R3 sink evidence | 7 of 29 FAIL | 29/29 |
+| Swagger exact-origin and pre-Execute checks | new helper (structural) | 14/14 |
+
+No image changed. Bundle **r9** `SHA256SUMS` `50ade03079c11dbef7a13dabcc9a2a5bac716c024fe0107db0be5c70e57e82bf` (edge tooling and RUNBOOK only; image archives identical to r8, which is retained).
+
+| Item | Result |
+| --- | --- |
+| Reviewer verifier on the fix | R1, R2 not reproduced; R3 adapter structurally not applicable (its `ping` line no longer exists); R4 not reproduced (adapted copy that only skips that guard) |
+| Real R1 on the VM daemon (no pause) | planted foreign and unlabelled volumes refused before any mount; cleanup preserved them and passed |
+| r9 tamper / offline host | 6/6; O0–O5, 0 outbound packets |
+| Swagger UI in Chromium (corrected harness) | normal 16/16, provider-down 13/13 |
+| Rehearsal r3 → r9 | attempt 1: 29 of 30 (RB0a harness expectation), then a real planted cleanup failure gave FAIL RC1 / exit 1 and the retry passed; **attempt 2: 32/32** incl. RB0/RB0a/RB0b/RB1a refusals, RE2, RC1 |
+| Maintenance window | about 22.7 min; serving installation resumed with identical baseline, r3 images, original dataset, ready |
+| Not run | live LAN cutover, Windows H-01, mobile, load, Iran quality, restore drill on r9 (no change-related reason) |
+
 ## Build and disposable rehearsal `2026-10-19-build-rehearse` (from reviewed head `3431e7e`)
 
 Separate run identity; the sections below are earlier records and are unchanged. Record: [`docs/handoff/evidence/2026-10-19-build-rehearse/README.md`](handoff/evidence/2026-10-19-build-rehearse/README.md).

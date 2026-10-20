@@ -1,0 +1,8 @@
+68c68
+<   if(!original.includes(needle))throw Error('ping stub changed; review adapter needs inspection');
+---
+>   if(!original.includes(needle)){rows.push({name:"R3 STRUCTURAL: ping stub line replaced by the fix; adapter not applicable",reproduced:false});} else {
+72c72
+<   record('R3 missing ping executable is accepted as verified absent sink',nr,nr.status===0&&/absent sink/.test(nr.stdout)&&!/^FAIL/m.test(nr.stdout),{ping_command:'exit 127',verdict:nr.status===0?'PASS':'FAIL'});
+---
+>   record('R3 missing ping executable is accepted as verified absent sink',nr,nr.status===0&&/absent sink/.test(nr.stdout)&&!/^FAIL/m.test(nr.stdout),{ping_command:'exit 127',verdict:nr.status===0?'PASS':'FAIL'});}

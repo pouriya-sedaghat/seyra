@@ -1,0 +1,2 @@
+edge: relay trust for 172.18.0.3 removed: settings relayPeer='', running proxy SEYRA_RELAY_PEER='', relay port unpublished, runtime.env unchanged since the proxy was created
+edge: stopped; the LAN path is closed. Next: edge.sh remove

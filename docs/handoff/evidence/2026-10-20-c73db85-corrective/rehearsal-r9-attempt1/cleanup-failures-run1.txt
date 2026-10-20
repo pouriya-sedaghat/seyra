@@ -1,0 +1,2 @@
+removing <SYNTH>/rehearsal-lab/pki failed (rm: cannot remove '<SYNTH>/rehearsal-lab/pki/locked/keep': Permission denied)
+lab directory not removed (rmdir: failed to remove '<SYNTH>/rehearsal-lab': Directory not empty; left: pki)

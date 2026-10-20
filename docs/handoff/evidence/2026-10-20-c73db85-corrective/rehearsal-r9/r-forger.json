@@ -1,0 +1,22 @@
+[
+  {
+    "name": "forger: untrusted peer forging the approved client gets 403 on 8 path classes",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "forger: no PROXY header gets no HTTP response",
+    "ok": true,
+    "detail": "null ECONNRESET"
+  },
+  {
+    "name": "forger: malformed PROXY header gets no HTTP response",
+    "ok": true,
+    "detail": "null no HTTP response"
+  },
+  {
+    "name": "forger: the ordinary listener is not reachable from the lab network",
+    "ok": true,
+    "detail": "null ECONNREFUSED"
+  }
+]

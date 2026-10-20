@@ -1,0 +1,24 @@
+FAIL trust still configured and applied, relay port closed: refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL proxy stopped with the trust still configured: refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL proxy restarting with the trust still configured: refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL proxy paused: refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL proxy stopped after the settings were cleared (state on start unproven): refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL settings.json missing: refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL settings.json unreadable as JSON: refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL settings cleared but the running proxy still trusts the edge (not restarted): refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL running proxy clean but runtime.env changed after it was created (stale applied state): refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL no relay peer but the relay port is still published: refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL nested daemon unreachable: refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL proxy inspection fails: refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL no serving proxy container: refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL two serving proxy containers: refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL edge's own lab address unreadable: refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL edge has no lab address: refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL trust state location not configured (EDGE_INNER_* unset): refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+PASS trust removed: settings, running proxy and publication clean, runtime.env older than the proxy: stopped
+PASS relay moved to another peer everywhere (this address no longer trusted): stopped
+PASS --force (emergency) with the trust still configured: stopped
+PASS --force prints the residual-risk warning
+FAIL edge already stopped: nothing to stop -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+FAIL edge run state unrecognized (inspection answered something else): refused, edge kept (address held) -- rc=0 stopped=true edge: stopped; the LAN path is closed. Next: edge.sh remove
+# edge stop trust evidence: script=<c73db85>/infra/edge/edge.sh checks=23 failed=19

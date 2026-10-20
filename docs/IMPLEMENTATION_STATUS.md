@@ -22,6 +22,14 @@ Date: 2026-10-14; updated 2026-10-17 for the corrections to the PR #1 review of 
 - Five defects were found and fixed with regressions: an operator-unreadable CSR, an unsafe relay-rollback order, egress test sink routes, the bundle root mode, and a `tls restore` wrapper path.
 - The live LAN cutover, Windows/mobile and load checks are pending. Overpass's slow SIGTERM shutdown and the readiness 503 observation remain open.
 
+**Update 2026-10-20, corrections to review `c73db85`** ([evidence](handoff/evidence/2026-10-20-c73db85-corrective/README.md)). Four safety guards were tightened, each with failing-before/passing-after regressions:
+- the rehearsal VM volume needs a positive ownership check before it is mounted;
+- `edge.sh stop` needs positive, read-only evidence that the serving installation no longer trusts the edge's exact address (a closed relay port no longer counts);
+- an egress sink counts as absent only with positive evidence;
+- cleanup failures, leftovers and changed routes now fail the rehearsal.
+
+The Swagger check compares exact origins and fails on requests before Execute. The bridge-TCP cause is recorded as unknown. No image changed; the new bundle r9 (`50ade030…`) differs from r8 only in edge tooling and the RUNBOOK. A targeted real rehearsal r3 → r9 passed 32/32, including the real authorization-removal failure cases, and the serving installation was resumed unchanged. The live cutover remains pending.
+
 ## Scope delivered
 
 | Area | State | Where |
