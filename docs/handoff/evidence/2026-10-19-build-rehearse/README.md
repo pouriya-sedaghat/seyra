@@ -16,6 +16,14 @@ Boundary kept throughout:
 
 Values that are operator-local (LAN address, approved subnet, host and lab identities, the serving dataset binding, certificate metadata) are kept in the private maintenance record, not here.
 
+> **Corrections after review `c73db85`** (record: [`../2026-10-20-c73db85-corrective/README.md`](../2026-10-20-c73db85-corrective/README.md)). The results below stay as recorded, but four guards behind them were too weak:
+> - RB0/RB3 used an `edge.sh stop` interlock that read a refused TCP connection as removal of the relay trust (R2).
+> - The rehearsal VM volume was mounted without an ownership check (R1).
+> - The egress test accepted a failed `ping` as an absent sink, and RE1 logged its positive sink controls without asserting them (R3).
+> - Cleanup reported failures as NOTE with exit 0 (R4).
+>
+> The build-network cause is corrected to "unknown". The recorded observations were not falsified by the review; their failure handling was untested.
+
 ## 1. Commits of this run
 
 | Commit | Content |
@@ -72,7 +80,7 @@ Record: [`maintenance/README.txt`](maintenance/README.txt).
 | Item | Result |
 | --- | --- |
 | Builds (sequential, frozen `git archive` of `043993c`) | API `sha256:710d5e37…` 17 s; proxy `sha256:b953043a…` 14 s; OPS `sha256:8cbabae5…` 34 s; min. available memory during builds ≥ 5,818 MiB ([`build/`](build/)) |
-| Build network | **Deviation:** `docker build --network host`. The first API attempt (kept: `build/workloads.txt`, 693 s, rc 1) timed out in `npm ci`: outbound TCP from Docker's NAT bridge to the npm registry (and most destinations) got no SYN-ACK, while ICMP/DNS from the bridge and all host-network connections worked. Base images, Dockerfiles and lockfile are the pinned ones. The cause is outside the VM. |
+| Build network | **Deviation:** `docker build --network host`. The first API attempt (kept: `build/workloads.txt`, 693 s, rc 1) timed out in `npm ci`: outbound TCP from Docker's NAT bridge to the npm registry (and most destinations) got no SYN-ACK, while ICMP/DNS from the bridge and all host-network connections worked. Base images, Dockerfiles and lockfile are the pinned ones. **Cause: unknown** (corrected after review `c73db85`; the original text said "outside the VM", which this evidence does not establish). |
 | Relock | Only API, proxy and OPS ids changed. All seven data-component entries (PostGIS, Tegola, Valhalla, Photon, Overpass, osmtools, geocoder-build) are byte-identical. The proxy Dockerfile and `package-lock.json` hashes now match the current files. |
 | Bundle **r8** | `SHA256SUMS` digest **`10797ff117c8cddc3271fe3573e236f82979e1d3f14a59a750f1443661e422bd`**: 10 image archives and 22 install files, 1.30 GB. Exported by the operator to a fresh directory. `bundle verify` OK; inventory = `SHA256SUMS`; no special files; files 0644 (executables 0755), directories 0755, owner = operator; install lock = committed lock. Image archives are byte-identical to r7. |
 | Superseded exports (removed; [`bundle/reclaimed.txt`](bundle/reclaimed.txt)) | r7 pre-umask-fix `4200848b…` and r7 `8162ae6a…`. r7 carried defect B5; the suites in §6 ran on r7 and again on r8 where the bundle matters. |
@@ -153,7 +161,7 @@ The data providers (PostGIS, Tegola, Valhalla, Photon, Overpass) were never recr
 ## 9. Observations and open items
 
 - **Overpass shutdown:** Overpass does not exit on SIGTERM within 40 s (exit 137 on every graceful stop). It is harmless to data, but it should be fixed in a later data-image change. Data images were deliberately not rebuilt here.
-- **Outbound forwarded TCP:** forwarded (NAT) TCP from Docker bridges was blocked for most internet destinations on 2026-10-19, while host traffic worked. The live LAN path also depends on forwarded replies from the edge, so the cutover verifies an approved device first (DEPLOYMENT_PLAN §3).
+- **Outbound forwarded TCP:** TCP from Docker bridges to most internet destinations timed out on 2026-10-19 while host traffic worked; the cause is unknown (corrected after review `c73db85`). The live LAN path also depends on forwarded replies from the edge, so the cutover verifies an approved device first (DEPLOYMENT_PLAN §3).
 - **Client pack modes:** the client pack builder keeps the operator's umask (files 0664). It is a developer handoff without operator material; copy it with the intended modes.
 - **Leftover test directories:** small disposable directories (offline/restore labs 7–8, under 40 MB, synthetic) remain under the synthetic area, as after earlier runs. Bundles r1–r6, the build cache and the synthetic stack (stopped) are untouched.
 - **Not run:** live LAN cutover, Windows H-01, mobile, load and Iran quality acceptance.

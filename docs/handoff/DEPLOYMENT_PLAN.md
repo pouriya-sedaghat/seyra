@@ -39,7 +39,7 @@ Owner decision 1 was resolved as "this VM, in an authorized window". Details are
 - **Window:** the serving installation was stopped gracefully with its own CLI for about 86 min and resumed with all identities unchanged. One heavy workload ran at a time under a 5 s resource supervisor, with no abort.
 - **Builds** of API, proxy and OPS only, from `043993c`:
   - each build took 14–34 s with ≥ 5.8 GiB available;
-  - `docker build --network host` was required, because forwarded NAT TCP from Docker bridges was blocked that day;
+  - `docker build --network host` was required: TCP from Docker's NAT bridge to the npm registry timed out that day, while host-network connections worked. The cause is unknown (corrected after review `c73db85`);
   - relocked with all seven data entries byte-identical.
 - **Suites on the new images:**
   - integration 137/137, security 31 + 1 note, exact-image boundary 104/104;
@@ -58,7 +58,7 @@ Preconditions:
 2. A certificate for `<VM_LAN_ADDR>` (plus a DNS name if one exists) is available from the chosen issuer (decision 3), or will be signed in the window from the CSR of step 4.
 3. `<R8>` is on transfer media under `<LAB>/transfer/`, and its `SHA256SUMS` digest has been compared out of band with `10797ff117c8cddc3271fe3573e236f82979e1d3f14a59a750f1443661e422bd`.
 4. An approved test device (Windows, H-01) and its LAN address are known; it has the public root for application-specific trust. A second LAN device outside the approved subnet is available for the edge refusal check.
-5. The private edge env file is filled in (template `infra/edge/edge.env.example`).
+5. The private edge env file is filled in (template `infra/edge/edge.env.example`), including `EDGE_INNER_DOCKER_HOST` and `EDGE_INNER_HOME`, which `edge.sh stop` reads to establish trust removal.
 
 Measured on the synthetic rehearsal (r3 → r8; control-listener readiness sampled every 0.5 s):
 
@@ -111,7 +111,7 @@ Provider identities did not change and the data containers were not recreated. T
    - **Approved device:** it gets readiness 200 on the dataset with the expected certificate, plus docs, a tile and a route.
    - **Exact address at the inner layer:** rerun the step-6 `init` with `--relay-client-cidrs` set to a `/32` of another address, then `access apply` and `proxy restart`; the device must now get 403 from the relay. Then set the device's own `/32`; it must get 200. This shows the inner proxy sees the device's exact address through PROXY protocol, not the edge's. Restore `<APPROVED_CLIENT_CIDR>` afterwards.
    - **Refusal at the edge:** a second LAN device outside the approved subnet gets no response. Narrowing the edge allowlist instead would need a new edge container with a new lab address. Edge-layer refusal by exact source address is already shown in the rehearsal (RR5).
-   - This step also proves that forwarded replies leave the VM. Forwarded internet TCP from Docker bridges was blocked on 2026-10-19, so this is not assumed.
+   - This step also proves that forwarded replies leave the VM. On 2026-10-19, TCP from Docker bridges to internet destinations timed out for an unknown cause, so this is not assumed.
 9. **Record and close.** Record the measured times, recreated containers and every check in the private run directory, with sanitized evidence in Git. Clear the marker only after steps 7–8 pass. Any failed safety boundary means the rollback of §4.
 
 ## 4. Rollback (any failed step, or on request)
@@ -121,7 +121,8 @@ Rehearsed in this order on r8 (RB0–RB5). The measured not-ready times are 0 s,
 1. `init --no-relay --server-names "localhost 127.0.0.1"`, then `access apply` and `proxy restart`. The inner proxy stops trusting the edge address and the LAN path closes.
 2. `infra/edge/edge.sh <private env> stop`, then `remove`.
    - A stopped container releases its lab address at once, and Docker reuses it for the next container. So this step comes only after step 1.
-   - `edge.sh stop` refuses while the relay upstream still answers (rehearsal RB0; attempt 1 showed the same refusal when step 1 had not completed). `stop --force` is for emergencies only and must be followed at once by step 1.
+   - `edge.sh stop` stops the edge only on positive, read-only evidence that the serving installation no longer trusts the edge's exact address: persisted `settings.json`, the running proxy's environment and publication, and an unchanged `runtime.env` since that proxy was created (RUNBOOK §6.2). A proxy that is down, restarting or not yet restarted after `access apply`, and any failed read, refuses and keeps the edge and its address. A closed relay port is not evidence. This was rehearsed in the corrective run `2026-10-20-c73db85-corrective`.
+   - `stop --force` is for emergencies only and must be followed at once by step 1.
 3. **Certificate:** `tls restore --from <LAB>/home/secrets/tls/previous-<time>`, then `proxy restart`.
    - It is validated like any import: key match, its recorded names (or its own SAN), purpose, and its saved chain to its saved root.
    - It is journalled; an interruption is completed or undone by `tls recover`.
