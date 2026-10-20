@@ -1,0 +1,36 @@
+PASS config refuses plain-HTTP upstream
+PASS config refuses upstream with a path
+PASS config refuses upstream with credentials
+PASS config refuses missing CA file
+PASS config refuses CA file holding a private key
+PASS config refuses listening on all interfaces
+PASS config refuses listening on a LAN address
+PASS config refuses no listen port
+PASS config refuses page origin with a path
+PASS config refuses wildcard page origin
+PASS forwards /api/ over verified TLS
+PASS sends the configured Seyra host, not the client Host
+PASS never forwards cookies, credentials, Origin/Referer or forwarding headers
+PASS style: source, glyph and sprite URLs rewritten to the page origin
+PASS style: only the exact configured origin is rewritten (look-alike hosts untouched)
+PASS style: rewritten body has a correct length and no stale encoding
+PASS style: upstream was asked for an identity body
+PASS TileJSON tile URL rewritten to the page origin
+PASS vector tiles pass through byte-identical
+PASS POST bodies reach /api/
+PASS refuses web root (GET /) with 404
+PASS refuses licenses (GET /licenses/vazirmatn-ofl.txt) with 404
+PASS refuses readiness outside /api/ (GET /health/ready) with 404
+PASS refuses dot segment escaping /api/ (GET /api/../licenses/x) with 400
+PASS refuses encoded dot segment (GET /api/%2e%2e/licenses/x) with 400
+PASS refuses POST to /maps/ (POST /maps/ds-20261019-devproxy01/tiles.json) with 405
+PASS refuses PUT to /api/ (PUT /api/v1/map/route) with 405
+PASS refuses an absolute-form target (arbitrary proxy)
+PASS refuses a protocol-relative target
+PASS refuses CONNECT tunnels
+PASS refuses an unexpected Host header (DNS rebinding)
+PASS accepts the page origin Host (a dev server proxying to this helper)
+PASS checkTarget accepts the forwarded prefixes only
+PASS wrong CA: 502 and no upstream request completed
+PASS client disconnect cancels the upstream request
+# checks=35 failed=0

@@ -1,0 +1,65 @@
+PASS separate-directories: SEYRA_HOME stays a writable mount
+PASS separate-directories: no read-only mount at or under SEYRA_HOME
+PASS separate-directories: no mount target repeats
+PASS separate-directories: --cert passed as the absolute path
+PASS separate-directories: --cert visible inside the container
+PASS separate-directories: --ca passed as the absolute path
+PASS separate-directories: --ca visible inside the container
+PASS separate-directories: --chain passed as the absolute path
+PASS separate-directories: --chain visible inside the container
+PASS separate-directories: --key passed as the absolute path
+PASS separate-directories: --key visible inside the container
+PASS same-directory: SEYRA_HOME stays a writable mount
+PASS same-directory: no read-only mount at or under SEYRA_HOME
+PASS same-directory: no mount target repeats
+PASS same-directory: --cert passed as the absolute path
+PASS same-directory: --cert visible inside the container
+PASS same-directory: --ca passed as the absolute path
+PASS same-directory: --ca visible inside the container
+PASS same-directory: --chain passed as the absolute path
+PASS same-directory: --chain visible inside the container
+PASS same-directory: --key passed as the absolute path
+PASS same-directory: --key visible inside the container
+PASS relative-with-spaces: SEYRA_HOME stays a writable mount
+PASS relative-with-spaces: no read-only mount at or under SEYRA_HOME
+PASS relative-with-spaces: no mount target repeats
+PASS relative-with-spaces: --cert passed as the absolute path
+PASS relative-with-spaces: --cert visible inside the container
+PASS relative-with-spaces: --ca passed as the absolute path
+PASS relative-with-spaces: --ca visible inside the container
+PASS service-local: SEYRA_HOME stays a writable mount
+PASS service-local: no read-only mount at or under SEYRA_HOME
+PASS service-local: no mount target repeats
+PASS service-local: --cert passed as the absolute path
+PASS service-local: --cert visible inside the container
+PASS service-local: --key passed as the absolute path
+PASS service-local: --key visible inside the container
+PASS service-local: --ca passed as the absolute path
+PASS service-local: --ca visible inside the container
+PASS comma-colon-path: SEYRA_HOME stays a writable mount
+PASS comma-colon-path: no read-only mount at or under SEYRA_HOME
+PASS comma-colon-path: no mount target repeats
+PASS comma-colon-path: --ca passed as the absolute path
+PASS comma-colon-path: --ca visible inside the container
+PASS same-file-twice: SEYRA_HOME stays a writable mount
+PASS same-file-twice: no read-only mount at or under SEYRA_HOME
+PASS same-file-twice: no mount target repeats
+PASS same-file-twice: --cert passed as the absolute path
+PASS same-file-twice: --cert visible inside the container
+PASS same-file-twice: --ca passed as the absolute path
+PASS same-file-twice: --ca visible inside the container
+PASS pbf-outside-home: SEYRA_HOME stays a writable mount
+PASS pbf-outside-home: no read-only mount at or under SEYRA_HOME
+PASS pbf-outside-home: no mount target repeats
+PASS pbf-outside-home: --pbf passed as the absolute path
+PASS pbf-outside-home: --pbf visible inside the container
+PASS missing-ca-file: refused before Docker (exit 2, no docker run)
+PASS missing-ca-directory: refused before Docker (exit 2, no docker run)
+PASS missing-chain-argument: refused before Docker (exit 2, no docker run)
+PASS directory-instead-of-file: refused before Docker (exit 2, no docker run)
+PASS new --out directory is 0755 under umask 0002
+PASS --from root-only backup inside SEYRA_HOME (absolute): passed as <TMP>/home-from/secrets/tls/previous-20261019T000000000Z, no extra mount
+PASS --from root-only backup inside SEYRA_HOME (relative): passed as <TMP>/home-from/secrets/tls/previous-20261019T000000000Z, no extra mount
+PASS --from outside SEYRA_HOME, operator directory it cannot enter: refused before Docker
+PASS --from outside SEYRA_HOME, missing directory: refused before Docker
+# wrapper=<REPO>/bin/seyra-maps checks=64 failed=0

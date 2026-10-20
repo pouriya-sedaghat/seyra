@@ -1,0 +1,6 @@
+# Final tree verification (pinned Node v24.21.0, OpenSSL 3.5.5) at 9648bb192d9e3ee821eba5b528159f27b8f4454d
+standalone regressions (16 suites): 403 PASS, 0 FAIL -> regressions-final/
+npm run build: rc 0; npm run typecheck: rc 0; unit: 226 passed (contracts 12, map-assets 6, api 57, ops 151)
+bundle r9 built from 7f8a358; install-tree files changed after 7f8a358: 0
+image inputs changed after 043993c (images built 2026-10-19): 0
+client pack inputs changed after a319b08 (client-pack-2026-10-19-final): 0
