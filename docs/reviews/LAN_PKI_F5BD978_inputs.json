@@ -1,0 +1,19 @@
+{
+  "reviewed_commit": "f5bd9780c9781e5ac829df50ae12694475abe610",
+  "base_commit": "d5700749b68929d86f1f468cc61be41f7d741a64",
+  "patch_sha256": "44eeb78d97818e33218c590750f12357983b6ec7154710c427f3af08a8d92a2f",
+  "test_tool_archives": {
+    "step.tar.gz": "a7e13726efa8782f3d5459174dacf602ab3514b9431f2d42a6a75950b7685e5f",
+    "pwsh.tar.gz": "cfd57927b7a0d9f2da400471ea8dadc3ceb52f5e4a4a9a51c20495b4071f055a"
+  },
+  "powershell_execution": {
+    "version_attempted": "7.4.7 linux-x64",
+    "started": false,
+    "exit_code": 137,
+    "stderr": "Failed to create CoreCLR, HRESULT: 0x8007000E",
+    "actual_windows": false
+  },
+  "bash_syntax": "all four added Bash scripts pass bash -n",
+  "verifier_syntax": "node --check passes",
+  "live_resources_accessed": false
+}
