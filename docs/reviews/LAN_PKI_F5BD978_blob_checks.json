@@ -1,0 +1,110 @@
+[
+  {
+    "path": "infra/tls/lan-pki/README.md",
+    "expected": "5acbf8b580bc10c867a7356c4ce068529b1e2f89",
+    "actual": "5acbf8b580bc10c867a7356c4ce068529b1e2f89",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/check-returned-packet.sh",
+    "expected": "40a4560e2c831ffec3151e9cad0751e96a90b511",
+    "actual": "40a4560e2c831ffec3151e9cad0751e96a90b511",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/new-server-csr.sh",
+    "expected": "a6446f9cbeb928985a0d24f7842c42bf3c339c5d",
+    "actual": "a6446f9cbeb928985a0d24f7842c42bf3c339c5d",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/Add-RootTrust.ps1",
+    "expected": "447ed0a7e3d4aed2e82e1af9e25743017b3ba46d",
+    "actual": "447ed0a7e3d4aed2e82e1af9e25743017b3ba46d",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/Export-PublicPacket.ps1",
+    "expected": "e755d6e6e81ad9371453bfccef0977a803a3251f",
+    "actual": "e755d6e6e81ad9371453bfccef0977a803a3251f",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/Get-StepCli.ps1",
+    "expected": "1e96d7cb18f992cc5360fda001bcd58d9da9e09d",
+    "actual": "1e96d7cb18f992cc5360fda001bcd58d9da9e09d",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/New-IssuingCa.ps1",
+    "expected": "04fd6227a14b2c37ae2efd945dbe7f1722fdf8bf",
+    "actual": "04fd6227a14b2c37ae2efd945dbe7f1722fdf8bf",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/New-PkiFolder.ps1",
+    "expected": "d0641c4e5bd42075547e339ad5ae587388e8bed9",
+    "actual": "d0641c4e5bd42075547e339ad5ae587388e8bed9",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/New-RootCa.ps1",
+    "expected": "d14426511318564e618d0474058df95572a1244a",
+    "actual": "d14426511318564e618d0474058df95572a1244a",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/Remove-RootTrust.ps1",
+    "expected": "ee55f0d1f877c3f842d202c687b1c3255da4cc47",
+    "actual": "ee55f0d1f877c3f842d202c687b1c3255da4cc47",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/SeyraPki.psm1",
+    "expected": "3503e1802626642539456d79c5bbe5e8f216a808",
+    "actual": "3503e1802626642539456d79c5bbe5e8f216a808",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/Sign-ServerCsr.ps1",
+    "expected": "57efba4ab32566accdb138623be84909b4e83db7",
+    "actual": "57efba4ab32566accdb138623be84909b4e83db7",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/Test-SeyraHttps.ps1",
+    "expected": "1ad8ec08c31c972ea7f456fd4a13b00021a809ee",
+    "actual": "1ad8ec08c31c972ea7f456fd4a13b00021a809ee",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/Test-SeyraSource.ps1",
+    "expected": "fd1e747ec291013ddfa26f780badb01a1cd50c6c",
+    "actual": "fd1e747ec291013ddfa26f780badb01a1cd50c6c",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/Test-SeyraTls.ps1",
+    "expected": "d28c63f067c72b846dec4cacce8628579b0f8a37",
+    "actual": "d28c63f067c72b846dec4cacce8628579b0f8a37",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/server-leaf.tpl",
+    "expected": "67e275fce74b8d36c225f959042ad423f547f067",
+    "actual": "67e275fce74b8d36c225f959042ad423f547f067",
+    "ok": true
+  },
+  {
+    "path": "tests/tls/test-lan-pki-vm.sh",
+    "expected": "f3732c1b366b0fc23e023fe654b48d5b738e91ad",
+    "actual": "f3732c1b366b0fc23e023fe654b48d5b738e91ad",
+    "ok": true
+  },
+  {
+    "path": "tests/tls/test-lan-pki-windows.sh",
+    "expected": "72e9c20a3394d2c5c0cdc2bc7dbc8ce9df3f251e",
+    "actual": "72e9c20a3394d2c5c0cdc2bc7dbc8ce9df3f251e",
+    "ok": true
+  }
+]
