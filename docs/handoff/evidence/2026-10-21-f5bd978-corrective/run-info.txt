@@ -1,0 +1,16 @@
+head 2b7981a231fff9b294be9717524dfeb08c0c7a2b
+status: 0 changed paths
+started 2026-10-21T08:00:39Z
+STEP Smallstep CLI/0.31.0 (linux/amd64)
+OPS_IMAGE seyra/ops:1.0.0-seyra1 sha256:8cbabae57ff4609b9fa8dacebc20a70567c0b075804c070654c675b81306d928
+PWSH_IMAGE mcr.microsoft.com/powershell:lts-ubuntu-22.04 mcr.microsoft.com/powershell@sha256:663a172849444279d8e7b50e19977b6e42380eae6856bdc8931ca08e2e03e92a
+node v24.21.0; openssl OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)
+after-vm rc=0 seconds=9
+before-vm rc=1 seconds=53
+after-windows rc=0 seconds=34
+after-lint rc=0 seconds=143
+after-lint-acceptance rc=0 seconds=48
+before-lint rc=0 seconds=101
+verifier-before rc=0 seconds=9
+verifier-after rc=1 seconds=10
+finished 2026-10-21T08:07:26Z

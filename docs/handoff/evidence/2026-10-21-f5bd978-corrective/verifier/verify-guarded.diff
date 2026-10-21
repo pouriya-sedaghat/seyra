@@ -1,0 +1,6 @@
+21a22
+> function sizeOrMissing(p){try{return statSync(p).size;}catch{return 'missing';}} // corrective-run guard
+79c80
+<   row('R4-CSR-manifest-failure-reported-success',jr.status===0&&statSync(join(jqReq,'to-windows/request-manifest.json')).size===0,{exit_code:jr.status,manifest_size:statSync(join(jqReq,'to-windows/request-manifest.json')).size,stdout:clean(jr.stdout),stderr:clean(jr.stderr),summary:{exit_code:jr.status,manifest_size:statSync(join(jqReq,'to-windows/request-manifest.json')).size}});
+---
+>   row('R4-CSR-manifest-failure-reported-success',jr.status===0&&sizeOrMissing(join(jqReq,'to-windows/request-manifest.json'))===0,{exit_code:jr.status,manifest_size:sizeOrMissing(join(jqReq,'to-windows/request-manifest.json')),stdout:clean(jr.stdout),stderr:clean(jr.stderr),summary:{exit_code:jr.status,manifest_size:sizeOrMissing(join(jqReq,'to-windows/request-manifest.json'))}});

@@ -1,0 +1,60 @@
+PASS CSR: created for a documentation IP
+PASS CSR: key is 0400, dirs 0700
+PASS CSR: manifest binds the CSR file and key
+PASS CSR: to-windows holds no private key
+PASS CSR: existing directory refused [new-server-csr: <tmp>/req exists; refusing to overwrite anything]
+PASS CSR: non-canonical IP refused [new-server-csr: not a canonical IPv4 address: 198.18.000.76]
+PASS CSR: invented-looking DNS name syntax refused [new-server-csr: not a plain lower-case DNS name: Bad_Name]
+PASS CSR: with an existing DNS name, both SANs exact
+FAIL CSR: --check accepts the generated request (rc=2) -- new-server-csr: not a canonical IPv4 address: <tmp>/req 
+PASS CSR: --check rejects a manifest bound to another key [new-server-csr: not a canonical IPv4 address: <tmp>/tampered]
+PASS CSR: nojq -> non-zero [<scratch>/before-tree/infra/tls/lan-pki/new]
+FAIL CSR: nojq -> no to-windows published, no READY message (rc=1) -- 
+FAIL CSR: badjq -> non-zero (rc=0) -- 
+FAIL CSR: badjq -> no to-windows published, no READY message (rc=1) -- 
+FAIL CSR: emptyjq -> non-zero (rc=0) -- 
+FAIL CSR: emptyjq -> no to-windows published, no READY message (rc=1) -- 
+FAIL CSR: badcp -> non-zero (rc=0) -- 
+FAIL CSR: badcp -> no to-windows published, no READY message (rc=1) -- 
+FAIL CSR: jq missing created nothing at all (rc=1) -- 
+FAIL CSR: jq failing leaves only a marked incomplete attempt (rc=1) -- 
+PASS packet: correct packet accepted (incl. bundle tls import validation)
+PASS packet: clientAuth leaf rejected [FAIL leaf basic constraints]
+PASS packet: leaf for another IP rejected [FAIL leaf SAN 'IP Address:198.18.0.99' != 'IP Address:198.18.0.76']
+PASS packet: leaf longer than 90 days rejected [FAIL leaf lifetime 10800300 s]
+PASS packet: leaf for another key rejected [FAIL public keys differ (leaf 232b4ecd41990f70a080a2196245472b03083588c5ff4e812db5456ee84b3a82, csr b460799b6e]
+PASS packet: extra file rejected [FAIL packet contents: f extra.pem|f intermediate_ca.crt|f issued-manifest.json|f root_ca.cer|f root_ca.crt|f s]
+PASS packet: private key in the packet rejected [FAIL packet contents: f intermediate_ca.crt|f issued-manifest.json|f root_ca.cer|f root_ca.crt|f server.crt|f ]
+PASS packet: missing intermediate rejected [FAIL packet contents: f issued-manifest.json|f root_ca.cer|f root_ca.crt|f server.crt]
+PASS packet: wrong root (chain does not verify) rejected [FAIL chain verifies for 198.18.0.76 (purpose sslserver)]
+PASS packet: checksum differing from its manifest rejected [FAIL server.crt checksum differs from the manifest]
+PASS packet: bound to another CSR rejected [FAIL packet names another CSR]
+PASS packet: wrong OPS image id rejected [FAIL OPS image seyra/ops:1.0.0-seyra1 is not sha256:0000]
+PASS packet: recorder control: valid packet + exact OK line accepted
+PASS packet: recorder control: product validation was reached
+FAIL packet: unlisted FIFO aborts by itself (no hang) (rc=1) -- ABORT-CHECK rc=124 FAIL packet contents: f intermediate_ca.crt|f issued-manifest.json|f root_ca.cer 
+PASS packet: unlisted FIFO did not reach product validation
+FAIL packet: listed FIFO (server.crt) aborts by itself (rc=1) -- ABORT-CHECK rc=124 FAIL packet contents: f intermediate_ca.crt|f issued-manifest.json|f root_ca.cer 
+PASS packet: listed FIFO did not reach product validation
+FAIL packet: unlisted unix socket aborts by itself (rc=1) -- ABORT-CHECK rc=1 FAIL packet contents: f intermediate_ca.crt|f issued-manifest.json|f root_ca.cer 
+FAIL packet: unix socket did not reach product validation (rc=1) -- 
+FAIL packet: listed character device (server.crt) aborts by itself (rc=1) -- ABORT-CHECK rc=1 FAIL packet contents: c server.crt|f intermediate_ca.crt|f issued-manifest.json| 
+FAIL packet: character device did not reach product validation (rc=1) -- 
+FAIL packet: symlinked file aborts by itself (rc=1) -- ABORT-CHECK rc=1 FAIL packet contents: f intermediate_ca.crt|f issued-manifest.json|f root_ca.cer 
+FAIL packet: symlinked file did not reach product validation (rc=1) -- 
+FAIL packet: symlinked packet root aborts by itself (rc=1) -- ABORT-CHECK rc=0  
+FAIL packet: symlinked packet root did not reach product validation (rc=1) -- 
+FAIL packet: nested directory aborts by itself (rc=1) -- ABORT-CHECK rc=1 FAIL packet contents: d sub|f intermediate_ca.crt|f issued-manifest.json|f root_ 
+FAIL packet: nested directory did not reach product validation (rc=1) -- 
+FAIL packet: unreadable file aborts by itself (a read error is not 'no key') (rc=1) -- ABORT-CHECK rc=1 FAIL server.crt checksum differs from the manifest 
+FAIL packet: unreadable file did not reach product validation (rc=1) -- 
+FAIL packet: corrupt certificate aborts by itself (rc=1) -- ABORT-CHECK rc=1 FAIL public keys differ (leaf e3b0c44298fc1c149afbf4c8996fb92427ae41e4649b934ca4 
+FAIL packet: corrupt certificate did not reach product validation (rc=1) -- 
+FAIL packet: malformed issued manifest aborts (a parse error is not a mismatch) (rc=1) -- ABORT-CHECK rc=1 FAIL server.crt checksum differs from the manifest 
+FAIL packet: malformed issued manifest did not reach product validation (rc=1) -- 
+PASS packet: image inspection failure fails [FAIL OPS image rec/ops is not sha256:rec]
+FAIL packet: validator prints OK then exits 42 -> fails (rc=0) -- 
+PASS packet: validator exits 0 with empty output -> fails [FAIL tls import validation: ]
+FAIL packet: validator prints an extra line -> fails (rc=0) -- 
+FAIL packet: validator OK line for another certificate -> fails (rc=0) -- 
+# lan-pki vm side: checks=59 failed=31
