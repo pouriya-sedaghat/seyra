@@ -376,10 +376,13 @@ function Get-SeyraRootStoreEntry {
 }
 
 function Add-SeyraRootStoreEntry {
-    # Boundary: add the public certificate to Cert:\CurrentUser\Root (Windows asks for confirmation).
-    param([string]$CerPath)
-    if ($script:Boundary.ContainsKey('StoreImport')) { & $script:Boundary.StoreImport $CerPath; return }
-    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 (, [IO.File]::ReadAllBytes($CerPath))
+    # Boundary: add exactly these DER bytes to Cert:\CurrentUser\Root (Windows asks for confirmation).
+    # It takes the caller's checked snapshot, never a path: a file changed after the check cannot be
+    # what is imported. The SHA-256 is verified again immediately before the store call.
+    param([byte[]]$Der, [string]$Sha256)
+    if ((Get-SeyraSha256Hex $Der) -ne $Sha256) { throw "CHECK FAILED: the bytes to import are not the checked root ($Sha256); nothing was imported" }
+    if ($script:Boundary.ContainsKey('StoreImport')) { & $script:Boundary.StoreImport $Der; return }
+    $cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 (, $Der)
     $store = New-Object System.Security.Cryptography.X509Certificates.X509Store('Root', 'CurrentUser')
     $store.Open('ReadWrite')
     try { $store.Add($cert) } finally { $store.Close() }

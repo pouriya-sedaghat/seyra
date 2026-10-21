@@ -263,6 +263,28 @@ $r = AddT
 T 'R2 store entry with the thumbprint but other bytes: refused, untouched' ($r.Rc -ne 0 -and $r.Out -match 'different bytes' -and (Get-Item "$Store/$thumb.cer").Length -eq 3 -and $null -eq (Rec)) $r.Out
 Remove-Item -LiteralPath "$Store/$thumb.cer"
 
+# Review f4bd578 F1: the ORIGINAL external root file is replaced by another valid root after the check
+# and before the store call. Importing the frozen checked root is correct; the other root never is.
+$othumb = (New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 (, [IO.File]::ReadAllBytes($ocer))).Thumbprint
+$savedRoot = [IO.File]::ReadAllBytes($cer)
+$env:SEYRA_TEST_ORIGINAL_ROOT = $cer; $env:SEYRA_TEST_REPLACEMENT_ROOT = $ocer
+try {
+    $r = AddT 'swap-root-input'
+    T 'F1 fixture: the external root file really was replaced at import time' ((Get-FileHash -LiteralPath $cer -Algorithm SHA256).Hash.ToLowerInvariant() -eq $osha)
+    T 'F1 file changed after the check: the unchecked root is NOT in the store' (-not (Test-Path -LiteralPath "$Store/$othumb.cer")) $r.Out
+    T 'F1 ... the checked root was imported and recorded as added by this workflow' ($r.Rc -eq 0 -and (Has) -and (Rec).state -eq 'trusted' -and (Rec).sha256 -eq $sha -and (Rec).pre_existing -eq $false) $r.Out
+    T 'F1 ... the store entry is byte-identical to the checked root' ((Digest "$Store/$thumb.cer").ToLowerInvariant() -eq $sha)
+} finally {
+    [IO.File]::WriteAllBytes($cer, $savedRoot)
+    Remove-Item Env:\SEYRA_TEST_ORIGINAL_ROOT, Env:\SEYRA_TEST_REPLACEMENT_ROOT -ErrorAction SilentlyContinue
+    $env:SEYRA_TEST_FAULT = ''
+}
+$r = UndoT
+T 'F1 ... undo removes exactly the checked root' ($r.Rc -eq 0 -and -not (Has) -and $null -eq (Rec)) $r.Out
+$refused = $false
+try { Add-SeyraRootStoreEntry ([IO.File]::ReadAllBytes($ocer)) $sha } catch { $refused = $_.Exception.Message -match 'not the checked root' }
+T 'F1 the store boundary refuses bytes whose SHA-256 is not the checked one (nothing imported)' ($refused -and -not (Test-Path -LiteralPath "$Store/$othumb.cer"))
+
 # Overlapping runs: the second waits for nothing and changes nothing.
 $env:SEYRA_TEST_FAULT = 'slow-import'
 $bg = Start-Process -FilePath pwsh -ArgumentList @('-NoProfile', '-NonInteractive', '-File', "$Win/Add-RootTrust.ps1", '-RootCer', $cer, '-ExpectedSha256', $sha, '-Base', $B) -PassThru -RedirectStandardOutput "$W/bg.out" -RedirectStandardError "$W/bg.err"

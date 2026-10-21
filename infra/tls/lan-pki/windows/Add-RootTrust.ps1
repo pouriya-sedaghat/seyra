@@ -3,6 +3,9 @@
 # here, not read from the same packet). Windows shows a security warning: confirm only if the
 # displayed thumbprint equals the one printed here.
 #
+# The file is read ONCE: those bytes are hashed, parsed, recorded and imported (the store boundary
+# takes the bytes, not the path), so changing the file after the check cannot change what is trusted.
+#
 # Recoverable record (SeyraPKI\trust\root-trust-record.json, so Remove-RootTrust.ps1 removes only a
 # root this workflow added):
 #   - one run at a time (trust\trust.lock); the record folder must be writable before anything else;
@@ -32,9 +35,10 @@ $recordPath = Join-Path $trust 'root-trust-record.json'
 
 $RootCer = (Resolve-Path -LiteralPath $RootCer).ProviderPath
 $expected = ($ExpectedSha256 -replace '[:\s]', '').ToLowerInvariant()
-$sha = Get-SeyraFileSha256 $RootCer
+$der = [IO.File]::ReadAllBytes($RootCer)   # the only read of the file; everything below uses these bytes
+$sha = Get-SeyraSha256Hex $der
 Assert-Seyra ($sha -eq $expected) "root_ca.cer SHA-256 equals the independently obtained fingerprint ($sha)"
-$cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 (, [IO.File]::ReadAllBytes($RootCer))
+$cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 (, $der)
 Assert-Seyra ((Get-SeyraSha256Hex $cert.RawData) -eq $sha) 'the file is exactly one DER certificate'
 $bc = $cert.Extensions | Where-Object { $_ -is [System.Security.Cryptography.X509Certificates.X509BasicConstraintsExtension] }
 Assert-Seyra ($null -ne $bc -and $bc.CertificateAuthority) 'certificate is a CA'
@@ -67,12 +71,12 @@ try {
     if (-not $present) {
         Write-Host ("importing into Cert:\CurrentUser\Root; Windows will ask for confirmation: the thumbprint shown must be {0}" -f $thumb)
         $importError = $null
-        try { Add-SeyraRootStoreEntry $RootCer } catch { $importError = $_.Exception.Message }
+        try { Add-SeyraRootStoreEntry $der $sha } catch { $importError = $_.Exception.Message }
         $present = Test-SeyraRootPresent $thumb $sha
         if (-not $present) {
             Remove-Item -LiteralPath $recordPath -Force
             $detail = ''; if ($importError) { $detail = ": $importError" }
-            throw "the root was NOT added to Cert:\CurrentUser\Root (nothing is trusted; the pending record was withdrawn)$detail"
+            throw "the checked root $thumb was NOT added to Cert:\CurrentUser\Root (only its checked bytes were offered to the store; the pending record was withdrawn)$detail"
         }
         if ($importError) { Write-Host "  note: the import reported '$importError', but the root IS in the store" }
     }

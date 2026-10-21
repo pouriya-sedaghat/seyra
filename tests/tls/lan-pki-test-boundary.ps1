@@ -9,7 +9,8 @@
 #                       without explicit entries; its effective entries are its explicit ones plus (unless
 #                       protected) its parent's inheritable ones, marked inherited.
 #   SEYRA_TEST_STORE    directory standing in for Cert:\CurrentUser\Root (<THUMBPRINT>.cer, DER)
-#   SEYRA_TEST_FAULT    import-refused | import-effect-then-error | import-then-crash |
+#   SEYRA_TEST_FAULT    import-refused | import-effect-then-error | import-then-crash | swap-root-input
+#                       (rewrites SEYRA_TEST_ORIGINAL_ROOT with SEYRA_TEST_REPLACEMENT_ROOT at import time) |
 #                       import-then-readonly (makes SEYRA_TEST_READONLY_DIR read-only after the import) |
 #                       slow-import (holds the run for 6 s) | remove-refused
 # Links and directories are taken from the real (Linux) filesystem: a symbolic link reports
@@ -59,9 +60,14 @@ $saveAcl = { param($Db) [IO.File]::WriteAllText($env:SEYRA_TEST_ACL, (($Db | Con
         return @([pscustomobject]@{ Thumbprint = $Thumbprint; RawData = [IO.File]::ReadAllBytes($f) })
     }
     StoreImport = {
-        param([string]$CerPath)
+        param([byte[]]$Der)
+        if ($env:SEYRA_TEST_FAULT -eq 'swap-root-input') {
+            # The ORIGINAL external root file changes after Add-RootTrust checked it (review f4bd578 F1).
+            # The store receives the caller's bytes, so this must not change what is imported.
+            [IO.File]::WriteAllBytes($env:SEYRA_TEST_ORIGINAL_ROOT, [IO.File]::ReadAllBytes($env:SEYRA_TEST_REPLACEMENT_ROOT))
+        }
         if ($env:SEYRA_TEST_FAULT -eq 'import-refused') { throw 'The operation was canceled by the user.' }
-        $bytes = [IO.File]::ReadAllBytes($CerPath)
+        $bytes = [byte[]]$Der.Clone()
         $c = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 (, $bytes)
         [IO.File]::WriteAllBytes((Join-Path $env:SEYRA_TEST_STORE "$($c.Thumbprint).cer"), $bytes)
         switch ($env:SEYRA_TEST_FAULT) {
