@@ -11,7 +11,10 @@
 #      an NTFS-like ACL model, a directory as Cert:\CurrentUser\Root, fault injection), covering review
 #      f5bd978 R1 (unsafe Base, foreign/inherited/deny entries, foreign owner, links, reuse) and R2
 #      (pending record before import, lock, interruption and reconciliation, exact undo, pre-existing
-#      roots, tampered or foreign records): tests/tls/lan-pki-windows-scripts.tests.ps1.
+#      roots, tampered or foreign records), and review f4bd578 F1 (the checked root bytes, not the file,
+#      are imported): tests/tls/lan-pki-windows-scripts.tests.ps1;
+#   4. the cleanup/recovery of the real-Windows acceptance driver itself (review f4bd578 F2), run with a
+#      Linux model of its Windows operations: tests/tls/lan-pki-acceptance-model.tests.ps1.
 # Test-only keys/passwords are generated in a temporary directory (password FILES are used only
 # here; the real scripts always prompt). Real NTFS ACLs, the real Cert:\CurrentUser\Root store,
 # Authenticode and the step.exe download are NOT exercised: they need a real Windows PC
@@ -59,7 +62,8 @@ jq '.csr_file_sha256 = "00000000000000000000000000000000000000000000000000000000
 jq --arg s "$(sha256sum "$w/pki/good.csr" | cut -c1-64)" '.csr_file_sha256 = $s' "$w/pki/m-good.json" > /dev/null
 manifest m-otherkey.json other.csr 198.18.0.76 '[]'; jq --arg s "$(sha256sum "$w/pki/good.csr" | cut -c1-64)" '.csr_file_sha256 = $s' "$w/pki/m-otherkey.json" > "$w/pki/m-wrongspki.json"
 cp -r "$repo/infra/tls/lan-pki/windows" "$w/win"
-cp "$repo/tests/tls/lan-pki-test-boundary.ps1" "$repo/tests/tls/lan-pki-windows-scripts.tests.ps1" "$w/"
+cp "$repo/tests/tls/lan-pki-test-boundary.ps1" "$repo/tests/tls/lan-pki-windows-scripts.tests.ps1" "$repo/tests/tls/lan-pki-acceptance-model.ps1" "$repo/tests/tls/lan-pki-acceptance-model.tests.ps1" "$w/"
+mkdir -p "$w/acc"; cp "$repo/tests/tls/windows/Test-LanPkiOnWindows.ps1" "$w/acc/"
 cat > "$w/test.ps1" <<'EOF'
 $ErrorActionPreference = 'Stop'
 $env:SEYRA_STEP_EXE = '/w/bin/step'
@@ -105,4 +109,5 @@ exit $(if ($fails) { 1 } else { 0 })
 EOF
 docker run --rm --network none -u "$(id -u):$(id -g)" -e HOME=/tmp -v "$w:/w" "$PWSH_IMAGE" pwsh -NoProfile -File /w/test.ps1; rc1=$?
 docker run --rm --network none -u "$(id -u):$(id -g)" -e HOME=/tmp -v "$w:/w" "$PWSH_IMAGE" pwsh -NoProfile -File /w/lan-pki-windows-scripts.tests.ps1; rc2=$?
-[ $rc1 -eq 0 ] && [ $rc2 -eq 0 ]
+docker run --rm --network none -u "$(id -u):$(id -g)" -e HOME=/tmp -v "$w:/w" "$PWSH_IMAGE" pwsh -NoProfile -File /w/lan-pki-acceptance-model.tests.ps1; rc3=$?
+[ $rc1 -eq 0 ] && [ $rc2 -eq 0 ] && [ $rc3 -eq 0 ]

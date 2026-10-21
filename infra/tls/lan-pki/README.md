@@ -21,7 +21,7 @@ the CSR + request manifest (VM → Windows) and the public packet (Windows → V
 | VM | `check-returned-packet.sh` | structure first (real directories, exactly five regular files: FIFOs, devices, links, extra or nested entries abort before any read), then binding to the VM key/CSR, purposes, names, lifetimes, chain (tool or read errors abort), then, only for an otherwise valid packet, the importing bundle's own `tls import` validation (read-only, no network; must exit 0 with exactly the expected OK line) |
 | VM | `seyra-maps tls import --cert server.crt --chain intermediate_ca.crt --ca root_ca.crt --key <vm key> --names <ip>` | the reviewed, journalled import; then `proxy restart` |
 | Windows | `windows/Test-SeyraTls.ps1` | served chain verified with the explicit root file (no trust installed) |
-| Windows | `windows/Add-RootTrust.ps1` / `Remove-RootTrust.ps1` | `Cert:\CurrentUser\Root` only, after an independent fingerprint comparison; one run at a time; a durable `pending` record (with whether the root already existed) is written before the store changes and reconciled after an interruption; undo removes only the exact root this workflow added (thumbprint and SHA-256, same account) and refuses damaged or foreign records |
+| Windows | `windows/Add-RootTrust.ps1` / `Remove-RootTrust.ps1` | `Cert:\CurrentUser\Root` only, after an independent fingerprint comparison; one run at a time; a durable `pending` record (with whether the root already existed) is written before the store changes and reconciled after an interruption; the root file is read once and exactly those checked bytes are recorded and imported (never the file again); undo removes only the exact root this workflow added (thumbprint and SHA-256, same account) and refuses damaged or foreign records |
 | Windows | `windows/Test-SeyraHttps.ps1`, `Test-SeyraSource.ps1` | service checks with normal validation; single fresh requests for source-boundary checks |
 
 Run the Windows scripts with `powershell -NoProfile -ExecutionPolicy Bypass -File .\<script>.ps1` (process
@@ -42,10 +42,16 @@ manual: re-issue, or rotate the issuing CA/root and update every installed trust
 Tests (kept separate by what they actually exercise):
 - `tests/tls/test-lan-pki-vm.sh`: VM scripts, including injected tool failures and a recording docker
   stand-in for the packet checker, plus one real read-only/no-network run of the bundle's validator.
+  Special-file fixtures are type-checked (an unavailable one is NOT RUN, never PASS); with
+  `OPENSSL_ALT_IMAGE` the scripts also run under another OpenSSL (e.g. 3.0).
 - `tests/tls/test-lan-pki-windows.sh`: module checks and parsing under PowerShell 7 on Linux with the
   Linux step build, and the actual folder/trust scripts against a controlled boundary
   (`tests/tls/lan-pki-test-boundary.ps1`: fixture profile with an NTFS-like ACL model, a directory as the
   root store, fault injection). Not real NTFS or a real certificate store.
+- `tests/tls/lan-pki-acceptance-model.tests.ps1` (run by the same script): the cleanup and recovery of the
+  real-Windows acceptance driver itself, with a Linux model of its Windows operations. Not Windows evidence.
 - `tests/tls/lint-lan-pki-windows.sh`: static Windows PowerShell 5.1 compatibility analysis.
 - `tests/tls/windows/Test-LanPkiOnWindows.ps1`: real-Windows acceptance (NTFS ACLs, junctions, and with
-  `-IncludeTrustStore` the real `Cert:\CurrentUser\Root` with a throw-away root). Run only on request.
+  `-IncludeTrustStore` the real `Cert:\CurrentUser\Root` with a throw-away root). Run only on request. Its
+  cleanup deletes the test certificate and record only after the store shows that root is gone; otherwise
+  it keeps them with `RECOVERY.txt` and exits non-zero, and a later run refuses to start until recovered.
