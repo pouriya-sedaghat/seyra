@@ -1,0 +1,218 @@
+[
+  {
+    "path": "infra/tls/lan-pki/check-returned-packet.sh",
+    "expected": "358cce0ba008c31e7400f5a51eccb521b0f6463b",
+    "actual": "358cce0ba008c31e7400f5a51eccb521b0f6463b",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/new-server-csr.sh",
+    "expected": "53afa20d19fa3e7b4f4be5ec1f5291469b75b0dd",
+    "actual": "53afa20d19fa3e7b4f4be5ec1f5291469b75b0dd",
+    "ok": true
+  },
+  {
+    "path": "tests/tls/test-lan-pki-vm.sh",
+    "expected": "41749e5f9b300f2d89b7df0fbf4d7e3efac50fdc",
+    "actual": "41749e5f9b300f2d89b7df0fbf4d7e3efac50fdc",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/README.md",
+    "expected": "47f83f3f2cbde301e714d8d11e1faa3b31566c2a",
+    "actual": "47f83f3f2cbde301e714d8d11e1faa3b31566c2a",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/Add-RootTrust.ps1",
+    "expected": "7e43d292f0824977405531ba28f7533acf18e8f7",
+    "actual": "7e43d292f0824977405531ba28f7533acf18e8f7",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/Export-PublicPacket.ps1",
+    "expected": "92e76fa07a885b002556228d4a359c09fe4603c1",
+    "actual": "92e76fa07a885b002556228d4a359c09fe4603c1",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/Get-StepCli.ps1",
+    "expected": "019f39e1d26e55483402711624001b04b34db9d5",
+    "actual": "019f39e1d26e55483402711624001b04b34db9d5",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/New-IssuingCa.ps1",
+    "expected": "a3c28a95ae4f3ae521570aa702d68b248cf0d170",
+    "actual": "a3c28a95ae4f3ae521570aa702d68b248cf0d170",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/New-PkiFolder.ps1",
+    "expected": "e516e27d3f6f33be0881c28424ceded5380a6638",
+    "actual": "e516e27d3f6f33be0881c28424ceded5380a6638",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/New-RootCa.ps1",
+    "expected": "e769b1c0bf5bd5a0991baf65ddfb8d5d0b007d2c",
+    "actual": "e769b1c0bf5bd5a0991baf65ddfb8d5d0b007d2c",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/Remove-RootTrust.ps1",
+    "expected": "8b76479e06821048c550af09eba471d8581cc4e3",
+    "actual": "8b76479e06821048c550af09eba471d8581cc4e3",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/SeyraPki.psm1",
+    "expected": "c5bc3270cc977af47b500e75f0960f69372371ab",
+    "actual": "c5bc3270cc977af47b500e75f0960f69372371ab",
+    "ok": true
+  },
+  {
+    "path": "infra/tls/lan-pki/windows/Sign-ServerCsr.ps1",
+    "expected": "cac99287876c409550153103ffc9981937106378",
+    "actual": "cac99287876c409550153103ffc9981937106378",
+    "ok": true
+  },
+  {
+    "path": "tests/tls/lan-pki-test-boundary.ps1",
+    "expected": "f99cc3bc73f5e0143e59e3834f4fd3d9cc3f068b",
+    "actual": "f99cc3bc73f5e0143e59e3834f4fd3d9cc3f068b",
+    "ok": true
+  },
+  {
+    "path": "tests/tls/lan-pki-windows-scripts.tests.ps1",
+    "expected": "99c6e0cd40e8b8939ced5d5c58b19cd59b52a822",
+    "actual": "99c6e0cd40e8b8939ced5d5c58b19cd59b52a822",
+    "ok": true
+  },
+  {
+    "path": "tests/tls/test-lan-pki-windows.sh",
+    "expected": "3a11369e275a4b4585711d1a8b259f87dbc6be8a",
+    "actual": "3a11369e275a4b4585711d1a8b259f87dbc6be8a",
+    "ok": true
+  },
+  {
+    "path": "tests/tls/lint-lan-pki-windows.sh",
+    "expected": "91d399e8f0439514ad39a99129fc1bfa990293d2",
+    "actual": "91d399e8f0439514ad39a99129fc1bfa990293d2",
+    "ok": true
+  },
+  {
+    "path": "tests/tls/windows/Test-LanPkiOnWindows.ps1",
+    "expected": "d820e2900f4ccb6dd5fbacc66eb4d8c083e3a033",
+    "actual": "d820e2900f4ccb6dd5fbacc66eb4d8c083e3a033",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/DEPLOYMENT_PLAN.md",
+    "expected": "843396253a674179695eeef139ca3f42ed8bc1b0",
+    "actual": "843396253a674179695eeef139ca3f42ed8bc1b0",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/README.md",
+    "expected": "08391f04545eddcf601da7e7b1e284d5d86ba718",
+    "actual": "08391f04545eddcf601da7e7b1e284d5d86ba718",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/lint/after-lint-acceptance.txt",
+    "expected": "467516f3bd79a13bed5fe60d9d8096d720223ba6",
+    "actual": "467516f3bd79a13bed5fe60d9d8096d720223ba6",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/lint/after-lint.txt",
+    "expected": "e5af9d826d964b7e5bc73b90a93ff796ee6ed1e9",
+    "actual": "e5af9d826d964b7e5bc73b90a93ff796ee6ed1e9",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/lint/before-lint.txt",
+    "expected": "27c9eb896792ac07ab0447f477c1cf22fa020c0a",
+    "actual": "27c9eb896792ac07ab0447f477c1cf22fa020c0a",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/run-info.txt",
+    "expected": "36dee5844d2641d8f5b399fadc44a9292eec7d08",
+    "actual": "36dee5844d2641d8f5b399fadc44a9292eec7d08",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/suites/after-vm.txt",
+    "expected": "0f8759a898e35786b165afa27cb4b9c3bd60fa9a",
+    "actual": "0f8759a898e35786b165afa27cb4b9c3bd60fa9a",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/suites/after-windows.txt",
+    "expected": "a987965d5338bc09159edbdefa1ee6c3241189ca",
+    "actual": "a987965d5338bc09159edbdefa1ee6c3241189ca",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/suites/before-vm.txt",
+    "expected": "95ef6c3ec17b45584c072561a4054a29c419fc96",
+    "actual": "95ef6c3ec17b45584c072561a4054a29c419fc96",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/verifier/verifier-after.json",
+    "expected": "adc8b433de458fb9f53813af766f1e28b9154c37",
+    "actual": "adc8b433de458fb9f53813af766f1e28b9154c37",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/verifier/verifier-after.txt",
+    "expected": "bad3fd6ab230a26cc3c53bd609f83eaed7928358",
+    "actual": "bad3fd6ab230a26cc3c53bd609f83eaed7928358",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/verifier/verifier-before.json",
+    "expected": "9f95ce96a43413ae4e14eca51271fbad5bdd7299",
+    "actual": "9f95ce96a43413ae4e14eca51271fbad5bdd7299",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/verifier/verifier-before.txt",
+    "expected": "a94cc671df639eee9b50782c8458b84401f1d675",
+    "actual": "a94cc671df639eee9b50782c8458b84401f1d675",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/verifier/verifier-guarded-after.json",
+    "expected": "5347ab40719336969acd75cdbdfbfdc2a85b2921",
+    "actual": "5347ab40719336969acd75cdbdfbfdc2a85b2921",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/verifier/verifier-guarded-after.txt",
+    "expected": "3531d44e24d7415e2d3ae5bb179d26761b8b1671",
+    "actual": "3531d44e24d7415e2d3ae5bb179d26761b8b1671",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/verifier/verifier-guarded-before.json",
+    "expected": "66cfb58d0101d80007e78e51c787dd3f2c66124e",
+    "actual": "66cfb58d0101d80007e78e51c787dd3f2c66124e",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/verifier/verifier-guarded-before.txt",
+    "expected": "a94cc671df639eee9b50782c8458b84401f1d675",
+    "actual": "a94cc671df639eee9b50782c8458b84401f1d675",
+    "ok": true
+  },
+  {
+    "path": "docs/handoff/evidence/2026-10-21-f5bd978-corrective/verifier/verify-guarded.diff",
+    "expected": "530d2d91c8f28a94f3d430d79a581867cdf78a2b",
+    "actual": "530d2d91c8f28a94f3d430d79a581867cdf78a2b",
+    "ok": true
+  }
+]
