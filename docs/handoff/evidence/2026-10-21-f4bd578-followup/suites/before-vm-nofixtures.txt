@@ -1,0 +1,63 @@
+PASS CSR: created for a documentation IP
+PASS CSR: key is 0400, dirs 0700
+PASS CSR: manifest binds the CSR file and key
+PASS CSR: to-windows holds no private key
+PASS CSR: existing directory refused [new-server-csr: <tmp>/req exists; refusing to overwrite anything]
+PASS CSR: non-canonical IP refused [new-server-csr: not a canonical IPv4 address: 198.18.000.76]
+PASS CSR: invented-looking DNS name syntax refused [new-server-csr: not a plain lower-case DNS name: Bad_Name]
+PASS CSR: with an existing DNS name, both SANs exact
+PASS CSR: --check accepts the generated request
+PASS CSR: --check rejects a manifest bound to another key [new-server-csr: request in <tmp>/tampered is NOT valid: key, CSR and manifest public keys differ]
+PASS CSR: nojq -> non-zero [new-server-csr: required tool 'jq' is not available]
+PASS CSR: nojq -> no to-windows published, no READY message
+PASS CSR: badjq -> non-zero [new-server-csr: jq failed (SAN list)]
+PASS CSR: badjq -> no to-windows published, no READY message
+PASS CSR: emptyjq -> non-zero [new-server-csr: the generated request does not validate: missing, empty or not a regular file: <tmp>]
+PASS CSR: emptyjq -> no to-windows published, no READY message
+PASS CSR: badcp -> non-zero [new-server-csr: cannot copy the CSR to the public directory]
+PASS CSR: badcp -> no to-windows published, no READY message
+PASS CSR: jq missing created nothing at all
+PASS CSR: jq failing leaves only a marked incomplete attempt
+PASS packet: correct packet accepted (incl. bundle tls import validation)
+PASS packet: clientAuth leaf rejected [FAIL leaf basic constraints]
+PASS packet: leaf for another IP rejected [FAIL leaf SAN 'IP Address:198.18.0.99' != 'IP Address:198.18.0.76']
+PASS packet: leaf longer than 90 days rejected [FAIL leaf lifetime 10800300 s]
+PASS packet: leaf for another key rejected [FAIL public keys differ (leaf 89ddb2233039924cc24a6b2a2185dffd21a500855b6b2e6bd1111d812f056f91, csr a2bd79e779]
+PASS packet: extra file rejected [FAIL packet must hold exactly five regular files; found: f extra.pem|f intermediate_ca.crt|f issued-manifest.j]
+PASS packet: private key in the packet rejected [FAIL packet must hold exactly five regular files; found: f intermediate_ca.crt|f issued-manifest.json|f root_c]
+PASS packet: missing intermediate rejected [FAIL packet must hold exactly five regular files; found: f issued-manifest.json|f root_ca.cer|f root_ca.crt|f ]
+PASS packet: wrong root (chain does not verify) rejected [FAIL chain does not verify for 198.18.0.76]
+PASS packet: checksum differing from its manifest rejected [FAIL server.crt checksum differs from the manifest]
+PASS packet: bound to another CSR rejected [FAIL packet names another CSR]
+PASS packet: wrong OPS image id rejected [FAIL OPS image seyra/ops:1.0.0-seyra1 is sha256:8cbabae57ff4609b9fa8dacebc20a70567c0b075804c070654c675b81306d9]
+PASS packet: recorder control: valid packet + exact OK line accepted
+PASS packet: recorder control: product validation was reached
+mkfifo: not permitted (emulated)
+FAIL packet: unlisted FIFO aborts by itself (no hang) (rc=1) -- ABORT-CHECK rc=0  
+FAIL packet: unlisted FIFO did not reach product validation (rc=1) -- 
+mkfifo: not permitted (emulated)
+PASS packet: listed FIFO (server.crt) aborts by itself [ABORT-CHECK rc=1 FAIL packet must hold exactly five regular files; found: f intermediate_ca.crt|f]
+PASS packet: listed FIFO did not reach product validation
+python3: socket creation denied (emulated)
+FAIL packet: unlisted unix socket aborts by itself (rc=1) -- ABORT-CHECK rc=0  
+FAIL packet: unix socket did not reach product validation (rc=1) -- 
+PASS packet: listed character device (server.crt) aborts by itself [ABORT-CHECK rc=1 FAIL packet must hold exactly five regular files; found: f intermediate_ca.crt|f]
+PASS packet: character device did not reach product validation
+PASS packet: symlinked file aborts by itself [ABORT-CHECK rc=1 FAIL packet must hold exactly five regular files; found: f intermediate_ca.crt|f]
+PASS packet: symlinked file did not reach product validation
+PASS packet: symlinked packet root aborts by itself [ABORT-CHECK rc=1 FAIL packet root <tmp>/packet-link is not a real directory (type ']
+PASS packet: symlinked packet root did not reach product validation
+PASS packet: nested directory aborts by itself [ABORT-CHECK rc=1 FAIL packet must hold exactly five regular files; found: d sub|f intermediate_ca]
+PASS packet: nested directory did not reach product validation
+PASS packet: unreadable file aborts by itself (a read error is not 'no key') [ABORT-CHECK rc=1 FAIL private-key scan failed (grep exit 2)]
+PASS packet: unreadable file did not reach product validation
+PASS packet: corrupt certificate aborts by itself [ABORT-CHECK rc=1 FAIL cannot read a public key (x509 -in <tmp>/packet-corrupt/serve]
+PASS packet: corrupt certificate did not reach product validation
+PASS packet: malformed issued manifest aborts (a parse error is not a mismatch) [ABORT-CHECK rc=1 FAIL cannot parse the issued manifest (exit 5)]
+PASS packet: malformed issued manifest did not reach product validation
+PASS packet: image inspection failure fails [FAIL cannot inspect OPS image rec/ops (exit 1)]
+PASS packet: validator prints OK then exits 42 -> fails [FAIL the bundle's tls import validation exited 42: OK IP:198.18.0.76 90 D8:3D:24:EB:5B:BE:58:82:6B:21:09:64:13]
+PASS packet: validator exits 0 with empty output -> fails [FAIL unexpected validation output: ]
+PASS packet: validator prints an extra line -> fails [FAIL unexpected validation output: OK IP:198.18.0.76 90 D8:3D:24:EB:5B:BE:58:82:6B:21:09:64:13:6D:05:9F:8F:47:]
+PASS packet: validator OK line for another certificate -> fails [FAIL validation output does not match this packet: OK IP:198.18.0.76 90 00:11:22:33:44:55:66:77:88:99:AA:BB:CC]
+# lan-pki vm side: checks=59 failed=4

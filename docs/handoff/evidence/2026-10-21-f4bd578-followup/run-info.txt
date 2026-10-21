@@ -1,0 +1,24 @@
+head bc5267b07f4708211727e65a04636a720f485637
+status: 0 changed paths
+started 2026-10-21T09:01:30Z
+STEP Smallstep CLI/0.31.0 (linux/amd64)
+OPS_IMAGE seyra/ops:1.0.0-seyra1 sha256:8cbabae57ff4609b9fa8dacebc20a70567c0b075804c070654c675b81306d928
+PWSH_IMAGE mcr.microsoft.com/powershell:lts-ubuntu-22.04 mcr.microsoft.com/powershell@sha256:663a172849444279d8e7b50e19977b6e42380eae6856bdc8931ca08e2e03e92a
+OPENSSL_ALT_IMAGE seyra-test-runner:local sha256:2e758660afdd82fa47db39cab173818ff2b4fd572fdb54df22b0912fec5b36e4 OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)
+node v24.21.0; host OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)
+review inputs: reproduce-root-snapshot-f4bd578.sh 25df302b1552aa6ca4f2d0feb4b9d9c08c876f18a09a65bd13740f24d78cfe38; verify-lan-pki-f4bd578.mjs d553f738470a68427dac8b2dcd22035cdf00e1a29e7b4f65e2f1fea0bcf369b0
+after-vm rc=0 seconds=12
+before-vm-nofixtures rc=1 seconds=10
+after-vm-nofixtures rc=0 seconds=8
+n1-before-openssl30 rc=0 seconds=1
+n1-after-openssl30 rc=0 seconds=0
+after-windows rc=0 seconds=79
+reproducer-before rc=1 seconds=34
+reproducer-after-asis rc=1 seconds=0
+reproducer-after-adapted rc=0 seconds=79
+after-lint rc=0 seconds=51
+after-lint-acceptance rc=0 seconds=38
+before-lint-acceptance rc=0 seconds=38
+verifier-before rc=1 seconds=10
+verifier-after rc=1 seconds=9
+finished 2026-10-21T09:07:40Z

@@ -1,0 +1,15 @@
+23,32c23,25
+< needle='''        $bytes = [IO.File]::ReadAllBytes($CerPath)'''
+< assert s.count(needle)==1
+< s=s.replace(needle,'''        # Change the ORIGINAL external input after Add-RootTrust checked it.
+<         # A corrected boundary may consume frozen bytes/a private snapshot instead;
+<         # that checked object must remain unaffected by this external-path change.
+<         if ($env:SEYRA_TEST_FAULT -eq 'swap-root-input') {
+<             [IO.File]::WriteAllBytes($env:SEYRA_TEST_ORIGINAL_ROOT,
+<                 [IO.File]::ReadAllBytes($env:SEYRA_TEST_REPLACEMENT_ROOT))
+<         }
+< '''+needle)
+---
+> # ADAPTED (corrective run): the corrected boundary's StoreImport takes the checked bytes, not a path,
+> # and already implements the same swap-root-input fault with the same variables; only check that.
+> assert "$env:SEYRA_TEST_FAULT -eq 'swap-root-input'" in s and 'SEYRA_TEST_REPLACEMENT_ROOT' in s

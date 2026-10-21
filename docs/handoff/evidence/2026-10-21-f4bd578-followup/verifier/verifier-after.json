@@ -1,0 +1,66 @@
+{
+  "node": "v24.21.0",
+  "scope": "Actual added Bash scripts, real Linux Step 0.31.0/OpenSSL and retained TLS validation; Docker/image boundary and explicit OpenSSL subject-format adapter. No Windows/NTFS/store or actual image validation performed.",
+  "results": [
+    {
+      "label": "native-openssl-3.0-subject-format",
+      "observed": false,
+      "exit_code": 0,
+      "scope": "Compatibility observation; current VM uses OpenSSL 3.5.5",
+      "stdout": "server key: <TEMP>/native-openssl-request/server/server.key (0400, stays on this VM)\nREADY public transfer: <TEMP>/native-openssl-request/to-windows/{server.csr,request-manifest.json}\nCSR SHA-256 e60c23e38d2cc70410e53ec8c507395be5b200965b84f3cdf308bfd46eaf91b2; public key SHA-256 0fc5eeb5ba71f9aba0f3bca4c15eec7720d63b58423b83ace109cc2a5070659d; SANs: IP Address:198.18.0.76\n",
+      "stderr": ""
+    },
+    {
+      "label": "submitted-vm-suite-with-explicit-host-adapters",
+      "observed": true,
+      "exit_code": 0,
+      "checks": 57,
+      "failed": 0,
+      "unexercised_assertions": 4,
+      "supported_checks": 55,
+      "platform_only_failures": false,
+      "stdout": "PASS CSR: created for a documentation IP\nPASS CSR: key is 0400, dirs 0700\nPASS CSR: manifest binds the CSR file and key\nPASS CSR: to-windows holds no private key\nPASS CSR: existing directory refused [new-server-csr: <TEMP>/tmp.8DB48o2Ylk/req exists; refusing to overwrite anything]\nPASS CSR: non-canonical IP refused [new-server-csr: not a canonical IPv4 address: 198.18.000.76]\nPASS CSR: invented-looking DNS name syntax refused [new-server-csr: not a plain lower-case DNS name: Bad_Name]\nPASS CSR: with an existing DNS name, both SANs exact\nPASS CSR: --check accepts the generated request\nPASS CSR: --check rejects a manifest bound to another key [new-server-csr: request in <TEMP>/tmp.8DB48o2Ylk/tampered is NOT valid: key, CSR and man]\nPASS CSR: nojq -> non-zero [new-server-csr: required tool 'jq' is not available]\nPASS CSR: nojq -> no to-windows published, no READY message\nPASS CSR: badjq -> non-zero [new-server-csr: jq failed (SAN list)]\nPASS CSR: badjq -> no to-windows published, no READY message\nPASS CSR: emptyjq -> non-zero [new-server-csr: the generated request does not validate: missing, empty or not a regular file: /tmp/seyra-pki-]\nPASS CSR: emptyjq -> no to-windows published, no READY message\nPASS CSR: badcp -> non-zero [new-server-csr: cannot copy the CSR to the public directory]\nPASS CSR: badcp -> no to-windows published, no READY message\nPASS CSR: jq missing created nothing at all\nPASS CSR: jq failing leaves only a marked incomplete attempt\nPASS packet: correct packet accepted (incl. bundle tls import validation)\nPASS packet: clientAuth leaf rejected [FAIL leaf basic constraints]\nPASS packet: leaf for another IP rejected [FAIL leaf SAN 'IP Address:198.18.0.99' != 'IP Address:198.18.0.76']\nPASS packet: leaf longer than 90 days rejected [FAIL leaf lifetime 10800300 s]\nPASS packet: leaf for another key rejected [FAIL public keys differ (leaf b5d7c17dfff681ed69167bc9a6662a2fff70fa51b9fb30068a0e487742feafbe, csr 89e3485946]\nPASS packet: extra file rejected [FAIL packet must hold exactly five regular files; found: f extra.pem|f intermediate_ca.crt|f issued-manifest.j]\nPASS packet: private key in the packet rejected [FAIL packet must hold exactly five regular files; found: f intermediate_ca.crt|f issued-manifest.json|f root_c]\nPASS packet: missing intermediate rejected [FAIL packet must hold exactly five regular files; found: f issued-manifest.json|f root_ca.cer|f root_ca.crt|f ]\nPASS packet: wrong root (chain does not verify) rejected [FAIL chain does not verify for 198.18.0.76]\nPASS packet: checksum differing from its manifest rejected [FAIL server.crt checksum differs from the manifest]\nPASS packet: bound to another CSR rejected [FAIL packet names another CSR]\nPASS packet: wrong OPS image id rejected [FAIL OPS image review/ops is sha256:review-boundary, not sha256:0000]\nPASS packet: recorder control: valid packet + exact OK line accepted\nPASS packet: recorder control: product validation was reached\nPASS packet: unlisted FIFO (no hang) aborts by itself [ABORT-CHECK rc=1 FAIL packet must hold exactly five regular files; found: f intermediate_ca.crt|f]\nPASS packet: unlisted FIFO (no hang) did not reach product validation\nPASS packet: listed FIFO (server.crt) aborts by itself [ABORT-CHECK rc=1 FAIL packet must hold exactly five regular files; found: f intermediate_ca.crt|f]\nPASS packet: listed FIFO (server.crt) did not reach product validation\nPASS packet: unlisted unix socket aborts by itself [ABORT-CHECK rc=1 FAIL packet must hold exactly five regular files; found: f intermediate_ca.crt|f]\nPASS packet: unlisted unix socket did not reach product validation\nNOT RUN packet: listed character device (server.crt) (2 assertions) -- fixture <TEMP>/tmp.8DB48o2Ylk/packet-chardev/server.crt is 'absent', wanted 'c' (creator: docker run --rm --network none -v <TEMP>/tmp.8DB48o2Ylk/packet-chardev:/p --entrypoint mknod review/host-step /p/server.crt c 1 3)\nPASS packet: symlinked file aborts by itself [ABORT-CHECK rc=1 FAIL packet must hold exactly five regular files; found: f intermediate_ca.crt|f]\nPASS packet: symlinked file did not reach product validation\nPASS packet: symlinked packet root aborts by itself [ABORT-CHECK rc=1 FAIL packet root <TEMP>/tmp.8DB48o2Ylk/packet-link is not ]\nPASS packet: symlinked packet root did not reach product validation\nPASS packet: nested directory aborts by itself [ABORT-CHECK rc=1 FAIL packet must hold exactly five regular files; found: d sub|f intermediate_ca]\nPASS packet: nested directory did not reach product validation\nPASS packet: unreadable file (a read error is not 'no key') aborts by itself [ABORT-CHECK rc=1 FAIL private-key scan failed (grep exit 2)]\nPASS packet: unreadable file (a read error is not 'no key') did not reach product validation\nPASS packet: corrupt certificate aborts by itself [ABORT-CHECK rc=1 FAIL cannot read a public key (x509 -in <TEMP>/tmp.8DB48o2]\nPASS packet: corrupt certificate did not reach product validation\nPASS packet: malformed issued manifest (a parse error is not a mismatch) aborts by itself [ABORT-CHECK rc=1 FAIL cannot parse the issued manifest (exit 5)]\nPASS packet: malformed issued manifest (a parse error is not a mismatch) did not reach product validation\nPASS packet: image inspection failure fails [FAIL cannot inspect OPS image rec/ops (exit 1)]\nPASS packet: validator prints OK then exits 42 -> fails [FAIL the bundle's tls import validation exited 42: OK IP:198.18.0.76 90 81:D6:6F:49:04:4D:1D:B6:4E:9C:CF:CD:51]\nPASS packet: validator exits 0 with empty output -> fails [FAIL unexpected validation output: ]\nPASS packet: validator prints an extra line -> fails [FAIL unexpected validation output: OK IP:198.18.0.76 90 81:D6:6F:49:04:4D:1D:B6:4E:9C:CF:CD:51:0F:D1:CE:DA:69:]\nPASS packet: validator OK line for another certificate -> fails [FAIL validation output does not match this packet: OK IP:198.18.0.76 90 00:11:22:33:44:55:66:77:88:99:AA:BB:CC]\nNOT RUN alt OpenSSL (10 assertions) -- OPENSSL_ALT_IMAGE is not set\n# lan-pki vm side: checks=57 failed=0 notrun_assertions=12 setup_failed=0\n",
+      "stderr": "",
+      "summary": {
+        "exit_code": 0,
+        "checks": 57,
+        "failed": 0
+      }
+    },
+    {
+      "label": "device-fixture-coverage-observation",
+      "observed": true,
+      "events": [
+        "{\"event\":\"mknod-fixture\",\"exit_code\":255,\"target_exists\":false}"
+      ],
+      "detail": "Host mknod is not permitted; this records whether the stock test checks fixture creation. Do not count a missing file as a real character-device test."
+    },
+    {
+      "label": "correct-request-check",
+      "observed": true,
+      "exit_code": 0,
+      "stdout": "request in <TEMP>/good-request is valid: SANs IP Address:198.18.0.76; CSR SHA-256 991edb4cfab45f3daf9ec2d362c3c802d5c8bf4715a174e161435df9bcf00b8e; public key SHA-256 d598922fbe5d1bac8fea8b20185e6fb53a78244f352c6a140ef09f3fbc2a99ee\n",
+      "stderr": ""
+    },
+    {
+      "label": "R4-jq-failure-not-published",
+      "observed": true,
+      "exit_code": 2,
+      "ready_directory_exists": false,
+      "stdout": "",
+      "stderr": "new-server-csr: jq failed (SAN list)\nnew-server-csr: INCOMPLETE: <TEMP>/bad-request/to-windows.incomplete is an abandoned attempt, not a ready request\n"
+    },
+    {
+      "label": "F1-root-import-source-obligation",
+      "observed": false,
+      "scope": "SOURCE FINDING, not Windows or PowerShell execution",
+      "detail": "The checked certificate is discarded at the store boundary, which reopens the mutable input path. A changed path can install root B while checks and journal still refer to A."
+    },
+    {
+      "label": "F2-acceptance-cleanup-source-obligation",
+      "observed": false,
+      "scope": "SOURCE FINDING, not actual Windows store execution",
+      "detail": "A failed/refused test-root removal still reaches recursive deletion of the folder containing its recovery record."
+    }
+  ]
+}

@@ -4,7 +4,8 @@ Status:
 - **Build and disposable rehearsal: done** on 2026-10-19 (run `2026-10-19-build-rehearse`, [evidence](evidence/2026-10-19-build-rehearse/README.md)).
 - **Corrections to review `c73db85`: done** on 2026-10-20 (run `2026-10-20-c73db85-corrective`, [evidence](evidence/2026-10-20-c73db85-corrective/README.md)).
 - **LAN PKI tooling corrections to review `f5bd978`: done** on 2026-10-21 (run `2026-10-21-f5bd978-corrective`, [evidence](evidence/2026-10-21-f5bd978-corrective/README.md)). The corrected scripts await review. Their real-Windows acceptance has not been run, and the owner's Windows steps (issuer keys, signing, trust) have not started.
-- On 2026-10-21 the VM rebooted, and the serving host (restart policy `no`) was down for about 39 minutes. It was restored unchanged; see §6 of that evidence.
+- **Follow-up to review `f4bd578` (F1 checked-root snapshot import, F2 acceptance cleanup/recovery, N1, N2): done** on 2026-10-21 (run `2026-10-21-f4bd578-followup`, [evidence](evidence/2026-10-21-f4bd578-followup/README.md)). The corrected Windows packet is staged privately as an unreleased draft, awaiting review. The real-Windows acceptance has not been run.
+- On 2026-10-21 the VM rebooted, and the serving host (restart policy `no`) was down for about 39 minutes. It was restored unchanged; see §6 of the [`2026-10-21-f5bd978-corrective` evidence](evidence/2026-10-21-f5bd978-corrective/README.md).
 - The cutover bundle is now **r9**, with `SHA256SUMS` digest `50ade03079c11dbef7a13dabcc9a2a5bac716c024fe0107db0be5c70e57e82bf`. Its images are byte-identical to r8; its edge tooling and RUNBOOK are corrected. r8 (`10797ff1…`) is retained for recovery but superseded for the cutover.
 - **Serving-host cutover: not executed.** The serving host still runs r3 on loopback only. It was paused and resumed for the build window with its own installed CLI, and the new build was not deployed to it.
 - The cutover (§3) waits for the owner's decisions in §5.
