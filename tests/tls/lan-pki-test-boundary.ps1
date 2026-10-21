@@ -16,14 +16,16 @@
 # Links and directories are taken from the real (Linux) filesystem: a symbolic link reports
 # ReparsePoint, as a junction or symbolic link does on Windows.
 $loadAcl = {
-    if ($env:SEYRA_TEST_ACL -and (Test-Path -LiteralPath $env:SEYRA_TEST_ACL)) { return (Get-Content -Raw -LiteralPath $env:SEYRA_TEST_ACL | ConvertFrom-Json -AsHashtable) }
+    if ($env:SEYRA_TEST_ACL -and (Test-Path -LiteralPath $env:SEYRA_TEST_ACL)) { return (Get-Content -Raw -LiteralPath $env:SEYRA_TEST_ACL | Microsoft.PowerShell.Utility\ConvertFrom-Json -AsHashtable) }
     return @{}
 }
 $saveAcl = { param($Db) [IO.File]::WriteAllText($env:SEYRA_TEST_ACL, (($Db | ConvertTo-Json -Depth 6) + "`n")) }
 @{
+    # SEYRA_TEST_NOW (ISO 8601 with a zone) fixes the module's "now" for deterministic time tests.
+    UtcNow     = { if ($env:SEYRA_TEST_NOW) { $env:SEYRA_TEST_NOW } else { [DateTime]::UtcNow } }
     Account    = { [pscustomobject]@{ Sid = $env:SEYRA_TEST_ACCOUNT_SID; Name = $env:SEYRA_TEST_ACCOUNT_NAME } }
     BasePolicy = {
-        $p = Get-Content -Raw -LiteralPath $env:SEYRA_TEST_POLICY | ConvertFrom-Json
+        $p = Get-Content -Raw -LiteralPath $env:SEYRA_TEST_POLICY | Microsoft.PowerShell.Utility\ConvertFrom-Json
         [pscustomobject]@{ Under = @($p.Under); Exact = @($p.Exact) }
     }
     GetAclItem = {
