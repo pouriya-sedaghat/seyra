@@ -1,0 +1,77 @@
+{
+  "node": "v24.19.0",
+  "scope": "Actual added Bash scripts, pinned Linux step and retained real TLS validation with Docker/image/namespace adapter. Windows ACL/trust findings are explicitly source-backed; no Windows execution claimed.",
+  "results": [
+    {
+      "label": "submitted-vm-suite-host-adapter",
+      "observed": true,
+      "exit_code": 0,
+      "checks": 20,
+      "failed": 0,
+      "stdout": "PASS CSR: created for a documentation IP\nPASS CSR: key is 0400, dirs 0700\nPASS CSR: manifest binds the CSR file and key\nPASS CSR: to-windows holds no private key\nPASS CSR: existing directory refused [new-server-csr: <TEMP>/tmp.Kj8F8KxoX]\nPASS CSR: non-canonical IP refused [new-server-csr: not a canonical IPv4 address: 198.18.000.76]\nPASS CSR: invented-looking DNS name syntax refused [new-server-csr: not a plain lower-case DNS name: Bad_Name]\nPASS CSR: with an existing DNS name, both SANs exact\nPASS packet: correct packet accepted (incl. bundle tls import validation)\nPASS packet: clientAuth leaf rejected [FAIL leaf basic constraints]\nPASS packet: leaf for another IP rejected [FAIL leaf SAN 'IP Address:198.18.0.99' != 'IP Address:198.18.0.76']\nPASS packet: leaf longer than 90 days rejected [FAIL leaf lifetime 10800300 s]\nPASS packet: leaf for another key rejected [FAIL public keys differ (leaf 32871c46decb1938d7dda5995635dc6f840be5b6b863065ca379b15e347eb8e4, csr d15c7c06e1]\nPASS packet: extra file rejected [FAIL packet contents: f extra.pem|f intermediate_ca.crt|f issued-manifest.json|f root_ca.cer|f root_ca.crt|f s]\nPASS packet: private key in the packet rejected [FAIL packet contents: f intermediate_ca.crt|f issued-manifest.json|f root_ca.cer|f root_ca.crt|f server.crt|f ]\nPASS packet: missing intermediate rejected [FAIL packet contents: f issued-manifest.json|f root_ca.cer|f root_ca.crt|f server.crt]\nPASS packet: wrong root (chain does not verify) rejected [FAIL chain verifies for 198.18.0.76 (purpose sslserver)]\nPASS packet: checksum differing from its manifest rejected [FAIL server.crt checksum differs from the manifest]\nPASS packet: bound to another CSR rejected [FAIL packet names another CSR]\nPASS packet: wrong OPS image id rejected [FAIL OPS image review/ops is not sha256:0000]\n# lan-pki vm side: checks=20 failed=0\n",
+      "stderr": "",
+      "summary": {
+        "exit_code": 0,
+        "checks": 20,
+        "failed": 0
+      }
+    },
+    {
+      "label": "valid-packet-positive-control",
+      "observed": true,
+      "exit_code": 0,
+      "stdout": "PASS packet holds exactly the five public files\nPASS no private key in the packet\nPASS server.crt checksum equals the manifest\nPASS intermediate_ca.crt checksum equals the manifest\nPASS root_ca.crt checksum equals the manifest\nPASS root_ca.cer checksum equals the manifest\nPASS request: IP SAN 198.18.0.76\nPASS packet is bound to this CSR (file SHA-256)\nPASS leaf public key == CSR == VM server key == request manifest\nPASS leaf SAN exactly 'IP Address:198.18.0.76'\nPASS leaf CA:FALSE\nPASS leaf key usage exactly digitalSignature\nPASS leaf extended key usage exactly serverAuth\nPASS leaf lifetime 2160 h (90 days + skew)\nPASS leaf within issuing CA within root validity\nPASS leaf currently valid\nPASS issuing CA: CA, path length 0\nPASS root: CA, path length 1\nPASS intermediate_ca.crt EC P-256\nPASS root_ca.crt EC P-256\nPASS chain verifies for 198.18.0.76 (purpose sslserver)\nPASS root_ca.cer is the DER of root_ca.crt\nPASS root fingerprint equals the manifest (bf3501acfe9b89219c950c3a6793bf37d851177543531bc81f834adbebb51857)\nPASS the bundle's tls import validation accepts it (OK IP:198.18.0.76 90 CE:7E:96:E9:41:C5:31:25:CC:1C:8D:70:60:B0:73:67:49:92:B6:26:7F:45:06:4B:28:1C:3E:94:45:2B:82:04)\n# returned packet: failures=0\n",
+      "stderr": ""
+    },
+    {
+      "label": "bad-hash-negative-control",
+      "observed": true,
+      "exit_code": 1,
+      "stdout": "PASS packet holds exactly the five public files\nPASS no private key in the packet\nFAIL server.crt checksum differs from the manifest\nPASS intermediate_ca.crt checksum equals the manifest\nPASS root_ca.crt checksum equals the manifest\nPASS root_ca.cer checksum equals the manifest\nPASS request: IP SAN 198.18.0.76\nPASS packet is bound to this CSR (file SHA-256)\nPASS leaf public key == CSR == VM server key == request manifest\nPASS leaf SAN exactly 'IP Address:198.18.0.76'\nPASS leaf CA:FALSE\nPASS leaf key usage exactly digitalSignature\nPASS leaf extended key usage exactly serverAuth\nPASS leaf lifetime 2160 h (90 days + skew)\nPASS leaf within issuing CA within root validity\nPASS leaf currently valid\nPASS issuing CA: CA, path length 0\nPASS root: CA, path length 1\nPASS intermediate_ca.crt EC P-256\nPASS root_ca.crt EC P-256\nPASS chain verifies for 198.18.0.76 (purpose sslserver)\nPASS root_ca.cer is the DER of root_ca.crt\nPASS root fingerprint equals the manifest (bf3501acfe9b89219c950c3a6793bf37d851177543531bc81f834adbebb51857)\nPASS the bundle's tls import validation accepts it (OK IP:198.18.0.76 90 CE:7E:96:E9:41:C5:31:25:CC:1C:8D:70:60:B0:73:67:49:92:B6:26:7F:45:06:4B:28:1C:3E:94:45:2B:82:04)\n# returned packet: failures=1\n"
+    },
+    {
+      "label": "R3-packet-FIFO-blocks-after-rejection",
+      "observed": true,
+      "exit_code": 124,
+      "stdout": "FAIL packet contents: f intermediate_ca.crt|f issued-manifest.json|f root_ca.cer|f root_ca.crt|f server.crt|p unexpected.fifo\n",
+      "stderr": "",
+      "summary": {
+        "exit_code": 124
+      }
+    },
+    {
+      "label": "R3-validator-nonzero-exit-accepted",
+      "observed": true,
+      "exit_code": 0,
+      "stdout": "PASS packet holds exactly the five public files\nPASS no private key in the packet\nPASS server.crt checksum equals the manifest\nPASS intermediate_ca.crt checksum equals the manifest\nPASS root_ca.crt checksum equals the manifest\nPASS root_ca.cer checksum equals the manifest\nPASS request: IP SAN 198.18.0.76\nPASS packet is bound to this CSR (file SHA-256)\nPASS leaf public key == CSR == VM server key == request manifest\nPASS leaf SAN exactly 'IP Address:198.18.0.76'\nPASS leaf CA:FALSE\nPASS leaf key usage exactly digitalSignature\nPASS leaf extended key usage exactly serverAuth\nPASS leaf lifetime 2160 h (90 days + skew)\nPASS leaf within issuing CA within root validity\nPASS leaf currently valid\nPASS issuing CA: CA, path length 0\nPASS root: CA, path length 1\nPASS intermediate_ca.crt EC P-256\nPASS root_ca.crt EC P-256\nPASS chain verifies for 198.18.0.76 (purpose sslserver)\nPASS root_ca.cer is the DER of root_ca.crt\nPASS root fingerprint equals the manifest (bf3501acfe9b89219c950c3a6793bf37d851177543531bc81f834adbebb51857)\nPASS the bundle's tls import validation accepts it (OK fixture validation output before container failure)\n# returned packet: failures=0\n",
+      "stderr": "",
+      "summary": {
+        "exit_code": 0
+      }
+    },
+    {
+      "label": "R4-CSR-manifest-failure-reported-success",
+      "observed": true,
+      "exit_code": 0,
+      "manifest_size": 0,
+      "stdout": "server key: <TEMP>/jq-failure/server/server.key (0400, stays on this VM)\npublic transfer: <TEMP>/jq-failure/to-windows/{server.csr,request-manifest.json}\nCSR SHA-256 a596e429a67cc060662d6766bec83f6bcc111752e5e68c9c597dceaafdeab346; public key SHA-256 76570a460be804536f673928a323fe8874435cd250222e347dcf558679f32dbf; SANs: IP Address:198.18.0.76\n",
+      "stderr": "injected jq failure\ninjected jq failure\n",
+      "summary": {
+        "exit_code": 0,
+        "manifest_size": 0
+      }
+    },
+    {
+      "label": "R1-ACL-source-obligation",
+      "observed": true,
+      "scope": "Source review, NOT actual Windows/NTFS execution",
+      "detail": "The sole Get-Acl checks Base, while icacls changes inherited entries plus the named owner grant. Existing foreign explicit child ACEs are neither enumerated nor refused."
+    },
+    {
+      "label": "R2-trust-record-source-obligation",
+      "observed": true,
+      "scope": "Source review, NOT actual Windows certificate-store execution",
+      "detail": "No pre-import durable ownership record; if import succeeds then final record write fails/dies, retry labels the new root pre_existing and undo refuses it."
+    }
+  ]
+}
