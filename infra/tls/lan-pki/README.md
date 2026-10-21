@@ -12,16 +12,16 @@ the CSR + request manifest (VM → Windows) and the public packet (Windows → V
 
 | Where | Tool | Purpose |
 | --- | --- | --- |
-| VM | `new-server-csr.sh <new-private-dir> <ip> [<existing-dns>]` | server key (0400) + exact CSR + `request-manifest.json`, all checks independent of OpenSSL's exit status |
-| Windows | `windows/New-PkiFolder.ps1` | `%LOCALAPPDATA%\SeyraPKI`, owner-only NTFS ACL, refuses synchronized folders |
+| VM | `new-server-csr.sh <new-private-dir> <ip> [<existing-dns>]` | server key (0400) + exact CSR + `request-manifest.json`, all checks independent of OpenSSL's exit status; every step checked, public files published as `to-windows` only after the whole request validates (a failure exits non-zero and leaves only `to-windows.incomplete`); `--check <dir>` re-validates an existing request without changes |
+| Windows | `windows/New-PkiFolder.ps1` | `%LOCALAPPDATA%\SeyraPKI`; refuses synchronized, shared, temporary, roaming, system and too-broad locations and links/junctions/network paths before any change; sets an owner-only access list only on a folder it has just created (not recursive); checks the whole tree (owner, links, foreign explicit/inherited/deny entries, encrypted issuer keys) and never repairs an existing folder: it stops with a one-item remedy. The other Windows scripts repeat this read-only check before using the folder |
 | Windows | `windows/Get-StepCli.ps1` | pinned step v0.31.0, SHA-256 checked before extraction |
 | Windows | `windows/New-RootCa.ps1`, `New-IssuingCa.ps1` | encrypted CA keys (passwords typed at step's prompts), extensions/dates verified |
 | Windows | `windows/Sign-ServerCsr.ps1` + `server-leaf.tpl` | verifies the CSR against its manifest, signs with a server-only template, verifies the result and chain |
 | Windows | `windows/Export-PublicPacket.ps1` | the five public files + `issued-manifest.json`; refuses private keys |
-| VM | `check-returned-packet.sh` | binding to the VM key/CSR, purposes, names, lifetimes, chain, and the importing bundle's own `tls import` validation (read-only, no network) |
+| VM | `check-returned-packet.sh` | structure first (real directories, exactly five regular files: FIFOs, devices, links, extra or nested entries abort before any read), then binding to the VM key/CSR, purposes, names, lifetimes, chain (tool or read errors abort), then, only for an otherwise valid packet, the importing bundle's own `tls import` validation (read-only, no network; must exit 0 with exactly the expected OK line) |
 | VM | `seyra-maps tls import --cert server.crt --chain intermediate_ca.crt --ca root_ca.crt --key <vm key> --names <ip>` | the reviewed, journalled import; then `proxy restart` |
 | Windows | `windows/Test-SeyraTls.ps1` | served chain verified with the explicit root file (no trust installed) |
-| Windows | `windows/Add-RootTrust.ps1` / `Remove-RootTrust.ps1` | `Cert:\CurrentUser\Root` only, after an independent fingerprint comparison; undo removes only the root it added |
+| Windows | `windows/Add-RootTrust.ps1` / `Remove-RootTrust.ps1` | `Cert:\CurrentUser\Root` only, after an independent fingerprint comparison; one run at a time; a durable `pending` record (with whether the root already existed) is written before the store changes and reconciled after an interruption; undo removes only the exact root this workflow added (thumbprint and SHA-256, same account) and refuses damaged or foreign records |
 | Windows | `windows/Test-SeyraHttps.ps1`, `Test-SeyraSource.ps1` | service checks with normal validation; single fresh requests for source-boundary checks |
 
 Run the Windows scripts with `powershell -NoProfile -ExecutionPolicy Bypass -File .\<script>.ps1` (process
@@ -39,5 +39,13 @@ use `--ssl-no-revoke`/`-k` as a substitute for a real check.
 re-sign, re-import, `proxy restart`; trust unchanged. Issuing CA: yearly with the root key. Revocation is
 manual: re-issue, or rotate the issuing CA/root and update every installed trust.
 
-Tests: `tests/tls/test-lan-pki-vm.sh` (VM scripts) and `tests/tls/test-lan-pki-windows.sh` (module checks
-and parsing under PowerShell 7 with the Linux step build; Windows-only cmdlets need a real PC).
+Tests (kept separate by what they actually exercise):
+- `tests/tls/test-lan-pki-vm.sh`: VM scripts, including injected tool failures and a recording docker
+  stand-in for the packet checker, plus one real read-only/no-network run of the bundle's validator.
+- `tests/tls/test-lan-pki-windows.sh`: module checks and parsing under PowerShell 7 on Linux with the
+  Linux step build, and the actual folder/trust scripts against a controlled boundary
+  (`tests/tls/lan-pki-test-boundary.ps1`: fixture profile with an NTFS-like ACL model, a directory as the
+  root store, fault injection). Not real NTFS or a real certificate store.
+- `tests/tls/lint-lan-pki-windows.sh`: static Windows PowerShell 5.1 compatibility analysis.
+- `tests/tls/windows/Test-LanPkiOnWindows.ps1`: real-Windows acceptance (NTFS ACLs, junctions, and with
+  `-IncludeTrustStore` the real `Cert:\CurrentUser\Root` with a throw-away root). Run only on request.

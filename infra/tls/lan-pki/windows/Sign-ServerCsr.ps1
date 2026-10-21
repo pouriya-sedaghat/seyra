@@ -11,6 +11,7 @@ Set-StrictMode -Version 2
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'SeyraPki.psm1') -Force
 $Base = Get-SeyraBase $Base
+Assert-SeyraPkiFolder $Base   # read-only: private to this account, no links, keys encrypted
 $step = Get-SeyraStep $Base
 $csr = Join-Path $RequestDir 'server.csr'
 $manifestPath = Join-Path $RequestDir 'request-manifest.json'

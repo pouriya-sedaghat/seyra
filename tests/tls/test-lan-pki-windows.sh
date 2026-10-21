@@ -6,9 +6,16 @@
 #      an extra DNS SAN, a wrong IP, a too-long leaf, a leaf outliving its issuer, a leaf for another
 #      key, wrong CA path lengths/kinds, an unencrypted issuer key, a CSR with an extra SAN, a CSR
 #      whose file hash or public key differs from the request manifest, a manifest with a DNS name.
+#   3. the ACTUAL scripts New-PkiFolder / Add-RootTrust / Remove-RootTrust / New-RootCa run as separate
+#      processes against a controlled boundary (tests/tls/lan-pki-test-boundary.ps1: fixture profile with
+#      an NTFS-like ACL model, a directory as Cert:\CurrentUser\Root, fault injection), covering review
+#      f5bd978 R1 (unsafe Base, foreign/inherited/deny entries, foreign owner, links, reuse) and R2
+#      (pending record before import, lock, interruption and reconciliation, exact undo, pre-existing
+#      roots, tampered or foreign records): tests/tls/lan-pki-windows-scripts.tests.ps1.
 # Test-only keys/passwords are generated in a temporary directory (password FILES are used only
-# here; the real scripts always prompt). Windows-only parts (icacls, Cert:\ stores, Authenticode,
-# step.exe download) are not exercised: they need a real Windows PC.
+# here; the real scripts always prompt). Real NTFS ACLs, the real Cert:\CurrentUser\Root store,
+# Authenticode and the step.exe download are NOT exercised: they need a real Windows PC
+# (tests/tls/windows/Test-LanPkiOnWindows.ps1).
 #
 #   STEP_LINUX=/abs/step PWSH_IMAGE=mcr.microsoft.com/powershell:lts-ubuntu-22.04 DOCKER_RUN_IMAGE=docker:29.8.2-dind \
 #     tests/tls/test-lan-pki-windows.sh
@@ -38,6 +45,8 @@ sign good.csr server-leaf.tpl 198.18.0.76 short_int.crt short_int.key 2160h leaf
 sign other.csr server-leaf.tpl 198.18.0.76 intermediate_ca.crt intermediate_ca.key 2160h leaf-otherkey.crt
 $S certificate sign good.csr intermediate_ca.crt intermediate_ca.key --not-after 2160h --password-file pw.int > leaf-clientauth.crt
 $S certificate sign extra.csr intermediate_ca.crt intermediate_ca.key --not-after 2160h --password-file pw.int > leaf-extradns.crt
+$S certificate create "Other Root" other_root.crt other_root.key --profile root-ca --kty EC --curve P-256 --not-after 43800h --no-password --insecure >/dev/null
+$S certificate format root_ca.crt --out root_ca.cer >/dev/null; $S certificate format other_root.crt --out other_root.cer >/dev/null
 EOF
 docker run --rm --network none -u "$(id -u):$(id -g)" -v "$w:/w" --entrypoint sh "$DOCKER_RUN_IMAGE" /w/pki/build.sh || { echo "FAIL building the test PKI"; exit 1; }
 manifest() { # name csr ip dns -> request manifest for that CSR
@@ -50,6 +59,7 @@ jq '.csr_file_sha256 = "00000000000000000000000000000000000000000000000000000000
 jq --arg s "$(sha256sum "$w/pki/good.csr" | cut -c1-64)" '.csr_file_sha256 = $s' "$w/pki/m-good.json" > /dev/null
 manifest m-otherkey.json other.csr 198.18.0.76 '[]'; jq --arg s "$(sha256sum "$w/pki/good.csr" | cut -c1-64)" '.csr_file_sha256 = $s' "$w/pki/m-otherkey.json" > "$w/pki/m-wrongspki.json"
 cp -r "$repo/infra/tls/lan-pki/windows" "$w/win"
+cp "$repo/tests/tls/lan-pki-test-boundary.ps1" "$repo/tests/tls/lan-pki-windows-scripts.tests.ps1" "$w/"
 cat > "$w/test.ps1" <<'EOF'
 $ErrorActionPreference = 'Stop'
 $env:SEYRA_STEP_EXE = '/w/bin/step'
@@ -93,4 +103,6 @@ T 'directory with a private key detected' $false { Assert-SeyraNoPrivateKey $P }
 Write-Output ("# lan-pki windows module: checks={0} failed={1}" -f $n, $fails)
 exit $(if ($fails) { 1 } else { 0 })
 EOF
-docker run --rm --network none -u "$(id -u):$(id -g)" -e HOME=/tmp -v "$w:/w" "$PWSH_IMAGE" pwsh -NoProfile -File /w/test.ps1
+docker run --rm --network none -u "$(id -u):$(id -g)" -e HOME=/tmp -v "$w:/w" "$PWSH_IMAGE" pwsh -NoProfile -File /w/test.ps1; rc1=$?
+docker run --rm --network none -u "$(id -u):$(id -g)" -e HOME=/tmp -v "$w:/w" "$PWSH_IMAGE" pwsh -NoProfile -File /w/lan-pki-windows-scripts.tests.ps1; rc2=$?
+[ $rc1 -eq 0 ] && [ $rc2 -eq 0 ]

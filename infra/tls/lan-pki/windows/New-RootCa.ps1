@@ -9,6 +9,7 @@ Set-StrictMode -Version 2
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'SeyraPki.psm1') -Force
 $Base = Get-SeyraBase $Base
+Assert-SeyraPkiFolder $Base   # read-only: private to this account, no links, keys encrypted
 $step = Get-SeyraStep $Base
 $crt = Join-Path $Base 'root\root_ca.crt'
 $key = Join-Path $Base 'root\root_ca.key'
@@ -24,6 +25,7 @@ if ((Test-Path -LiteralPath $crt) -or (Test-Path -LiteralPath $key)) {
 if (-not ((Test-Path -LiteralPath $crt) -and (Test-Path -LiteralPath $key))) { throw 'root certificate or key file missing' }
 $c = Test-SeyraCaCert -Step $step -Path $crt -Kind root
 Test-SeyraKeyEncrypted $key
+Assert-SeyraPkiFolder $Base   # the new key file is private too
 Write-Host ("root SHA-256 fingerprint: {0}" -f $c.fingerprint_sha256)
 Write-Host ("root valid {0} .. {1}" -f $c.validity.start, $c.validity.end)
 Write-Host 'Next: New-IssuingCa.ps1. Afterwards keep the root key encrypted and copy it to protected offline storage if you have one.'

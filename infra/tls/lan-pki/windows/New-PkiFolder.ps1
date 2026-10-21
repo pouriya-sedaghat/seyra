@@ -1,6 +1,18 @@
 # Create the user-local SeyraPKI folder (default %LOCALAPPDATA%\SeyraPKI, which OneDrive does not
-# sync) and restrict it with NTFS ACLs to the current user only (inheritance removed). Refuses a
-# location under Desktop, Documents or OneDrive. Safe to re-run: it re-applies and prints the ACL.
+# sync), private to the current Windows account, or check an existing one. Nothing outside the folder
+# is changed, and an existing folder is never repaired:
+#   1. before anything is created or changed, -Base is refused if it is in, equal to or above a
+#      Desktop, Documents, OneDrive, roaming, temporary, public or system folder; equal to or above the
+#      profile or %LOCALAPPDATA%; a network/device path; or reached through a link, junction or
+#      network drive;
+#   2. a NEW folder (created by this run) gets a protected owner-only access list on that one folder
+#      (no inheritance from its parent, full control for you, nothing else); what is created inside
+#      it inherits that;
+#   3. an EXISTING folder must hold only the SeyraPKI subfolders; it is checked, not modified;
+#   4. the whole tree (subfolders, issuer keys, tools) is checked without following links: owned by
+#      you, no link or junction, no entry for anyone else (explicit or inherited), existing issuer
+#      keys still encrypted. Any problem stops the run with the exact item and a remedy for that
+#      item only (this script never takes ownership or changes permissions recursively).
 #
 #   powershell -NoProfile -ExecutionPolicy Bypass -File .\New-PkiFolder.ps1 [-Base <dir>]
 #
@@ -12,25 +24,32 @@ Set-StrictMode -Version 2
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'SeyraPki.psm1') -Force
 $Base = [IO.Path]::GetFullPath((Get-SeyraBase $Base))
+$acct = Get-SeyraAccount
+$managed = @(Get-SeyraManagedFolder)
 
-$forbidden = @([Environment]::GetFolderPath('Desktop'), [Environment]::GetFolderPath('MyDocuments'))
-foreach ($v in @($env:OneDrive, $env:OneDriveCommercial, $env:OneDriveConsumer)) { if ($v) { $forbidden += $v } }
-foreach ($f in $forbidden) {
-    if ($f -and $Base.StartsWith($f.TrimEnd('\') + '\', [StringComparison]::OrdinalIgnoreCase)) { throw "refusing ${Base}: it is under $f (synchronized or commonly shared)" }
+$why = @(Test-SeyraBasePath $Base (Get-SeyraBasePolicy)) + @(Get-SeyraPathRedirection $Base)
+if ($why.Count -gt 0) {
+    throw ("refusing {0} (nothing was created or changed):`n  - {1}`nOmit -Base to use %LOCALAPPDATA%\SeyraPKI, or name a new dedicated folder." -f $Base, ($why -join "`n  - "))
 }
-if ($Base -match '(?i)onedrive|dropbox|google drive|icloud') { throw "refusing ${Base}: looks like a synchronized folder" }
 
-New-Item -ItemType Directory -Force -Path $Base | Out-Null
-foreach ($d in @('tools', 'root', 'issuing', 'requests', 'issued', 'public', 'trust')) {
-    New-Item -ItemType Directory -Force -Path (Join-Path $Base $d) | Out-Null
+if (Test-Path -LiteralPath $Base) {
+    if (-not (Test-Path -LiteralPath $Base -PathType Container)) { throw "refusing ${Base}: it exists and is not a folder (nothing was changed)" }
+    $foreign = @(Get-ChildItem -LiteralPath $Base -Force | Where-Object { $managed -notcontains $_.Name } | ForEach-Object { $_.Name })
+    if ($foreign.Count -gt 0) { throw ("refusing {0}: it exists and is not a SeyraPKI folder (unexpected: {1}). Nothing was changed; use a new -Base." -f $Base, ($foreign -join ', ')) }
+    Write-Host "existing folder $Base (checked, not modified):"
+} else {
+    $parent = [IO.Path]::GetDirectoryName($Base)
+    if (-not (Test-Path -LiteralPath $parent -PathType Container)) { throw "refusing ${Base}: its parent folder $parent does not exist (nothing was created)" }
+    New-Item -ItemType Directory -Path $Base | Out-Null
+    Set-SeyraOwnerOnlyAcl $Base $acct.Sid
+    Write-Host "created $Base for $($acct.Name) only:"
 }
-$me = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-& icacls.exe $Base /inheritance:r /grant:r ("{0}:(OI)(CI)F" -f $me) /T /C /Q | Out-Null
-if ($LASTEXITCODE -ne 0) { throw "icacls failed (exit $LASTEXITCODE)" }
-$acl = Get-Acl -LiteralPath $Base
-$ids = @($acl.Access | ForEach-Object { $_.IdentityReference.Value } | Sort-Object -Unique)
-Write-Host "SeyraPKI folder: $Base"
-Write-Host ("  access entries: {0}" -f ($ids -join ', '))
-Write-Host ("  inheritance protected: {0}" -f $acl.AreAccessRulesProtected)
-if (-not $acl.AreAccessRulesProtected -or $ids.Count -ne 1 -or $ids[0] -ne $me) { throw "ACL is not restricted to $me only; fix before creating keys" }
-Write-Host "  ok  only $me has access"
+# The folder must already be private before anything is created inside it.
+Assert-SeyraPkiFolder $Base
+foreach ($d in $managed) {
+    $p = Join-Path $Base $d
+    if (-not (Test-Path -LiteralPath $p)) { New-Item -ItemType Directory -Path $p | Out-Null }
+}
+Write-Host 'with its subfolders:'
+Assert-SeyraPkiFolder $Base
+Write-Host "SeyraPKI folder ready: $Base"

@@ -26,7 +26,7 @@ if (-not $pins.ContainsKey($arch)) { throw "unsupported architecture '$arch' (pi
 $pin = $pins[$arch]
 
 $tools = Join-Path $Base 'tools'
-if (-not (Test-Path -LiteralPath $Base)) { throw "$Base does not exist; run New-PkiFolder.ps1 first (it sets the folder permissions)" }
+Assert-SeyraPkiFolder $Base   # read-only: exists, private to this account, no links
 New-Item -ItemType Directory -Force -Path $tools | Out-Null
 $zip = Join-Path $tools ([IO.Path]::GetFileName($pin.Url))
 if (-not (Test-Path -LiteralPath $zip)) {
@@ -43,6 +43,7 @@ Write-Host "  ok  zip SHA-256 equals the pin ($got, $arch)"
 Expand-Archive -LiteralPath $zip -DestinationPath $tools -Force
 $exe = Join-Path $tools ("step_{0}\bin\step.exe" -f $version)
 if (-not (Test-Path -LiteralPath $exe)) { throw "step.exe not found at $exe after extraction" }
+Assert-SeyraPkiFolder $Base   # the extracted tools are private too
 $sig = Get-AuthenticodeSignature -LiteralPath $exe
 Write-Host ("  Authenticode status of step.exe: {0} (recorded as observed; trust rests on the pinned SHA-256)" -f $sig.Status)
 $v = & $exe version

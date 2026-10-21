@@ -1,8 +1,18 @@
 # Trust the Seyra LAN root for the CURRENT Windows user only (Cert:\CurrentUser\Root). Imports the
 # PUBLIC root only, after its file SHA-256 equals the fingerprint you obtained independently (typed
-# here, not read from the same packet). Records whether it already existed so Remove-RootTrust.ps1
-# removes only a root this script added. Windows shows a security warning: confirm only if the
+# here, not read from the same packet). Windows shows a security warning: confirm only if the
 # displayed thumbprint equals the one printed here.
+#
+# Recoverable record (SeyraPKI\trust\root-trust-record.json, so Remove-RootTrust.ps1 removes only a
+# root this workflow added):
+#   - one run at a time (trust\trust.lock); the record folder must be writable before anything else;
+#   - BEFORE any store change the record is written durably with the original observation
+#     (pre_existing = whether this exact root was already trusted) and state "pending";
+#   - after the import the store is checked again: present -> state "trusted"; absent (you declined,
+#     or policy blocked it) -> nothing was trusted and the pending record is withdrawn;
+#   - after an interruption, a re-run reconciles the pending record with the store and keeps the
+#     original observation (a root this workflow added is never re-classified as pre-existing);
+#   - a damaged record, another account's record or another root's record stops the run unchanged.
 #
 # Scope: every application that uses this account's certificate store will trust certificates this
 # root (and its issuing CA) signs, for any name, not only the map VM's address. It does not affect
@@ -14,28 +24,64 @@ param([Parameter(Mandatory = $true)][string]$RootCer, [Parameter(Mandatory = $tr
 Set-StrictMode -Version 2
 $ErrorActionPreference = 'Stop'
 Import-Module (Join-Path $PSScriptRoot 'SeyraPki.psm1') -Force
-$Base = Get-SeyraBase $Base
-$record = Join-Path $Base 'trust\root-trust-record.json'
-if (Test-Path -LiteralPath $record) { throw "a trust record already exists ($record); run Remove-RootTrust.ps1 first or inspect it" }
+$Base = [IO.Path]::GetFullPath((Get-SeyraBase $Base))
+$acct = Get-SeyraAccount
+Assert-SeyraPkiFolder $Base
+$trust = Join-Path $Base 'trust'
+$recordPath = Join-Path $trust 'root-trust-record.json'
 
+$RootCer = (Resolve-Path -LiteralPath $RootCer).ProviderPath
 $expected = ($ExpectedSha256 -replace '[:\s]', '').ToLowerInvariant()
-$got = Get-SeyraFileSha256 $RootCer
-Assert-Seyra ($got -eq $expected) "root_ca.cer SHA-256 equals the independently obtained fingerprint ($got)"
-$cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 $RootCer
+$sha = Get-SeyraFileSha256 $RootCer
+Assert-Seyra ($sha -eq $expected) "root_ca.cer SHA-256 equals the independently obtained fingerprint ($sha)"
+$cert = New-Object System.Security.Cryptography.X509Certificates.X509Certificate2 (, [IO.File]::ReadAllBytes($RootCer))
+Assert-Seyra ((Get-SeyraSha256Hex $cert.RawData) -eq $sha) 'the file is exactly one DER certificate'
 $bc = $cert.Extensions | Where-Object { $_ -is [System.Security.Cryptography.X509Certificates.X509BasicConstraintsExtension] }
 Assert-Seyra ($null -ne $bc -and $bc.CertificateAuthority) 'certificate is a CA'
 Assert-Seyra ($cert.Subject -eq $cert.Issuer) "self-signed root: $($cert.Subject)"
 Assert-Seyra (-not $cert.HasPrivateKey) 'public certificate only'
+$thumb = $cert.Thumbprint
 
-$existing = @(Get-ChildItem Cert:\CurrentUser\Root | Where-Object { $_.Thumbprint -eq $cert.Thumbprint })
-$pre = $existing.Count -gt 0
-if (-not $pre) {
-    Write-Host ("importing into Cert:\CurrentUser\Root; Windows will ask for confirmation: the thumbprint shown must be {0}" -f $cert.Thumbprint)
-    Import-Certificate -FilePath $RootCer -CertStoreLocation Cert:\CurrentUser\Root | Out-Null
+$lock = Open-SeyraLock (Join-Path $trust 'trust.lock')
+try {
+    Assert-SeyraWritable $trust
+    $present = Test-SeyraRootPresent $thumb $sha
+    if (Test-Path -LiteralPath $recordPath) {
+        $r = Read-SeyraTrustRecord $recordPath $acct.Sid $sha
+        if ($r.thumbprint_sha1 -ne $thumb) { throw "CHECK FAILED: trust record $recordPath has thumbprint $($r.thumbprint_sha1), not $thumb; nothing was changed" }
+        $pre = [bool]$r.pre_existing
+        $observed = [string]$r.observed_at
+        Write-Host ("existing record: state {0}, pre_existing {1} (observed {2}); root in store now: {3}" -f $r.state, $pre, $observed, $present)
+        if ($r.state -eq 'trusted' -and -not $present) {
+            throw "the record says this root is trusted, but it is no longer in Cert:\CurrentUser\Root (removed outside this workflow). Nothing was changed. Run Remove-RootTrust.ps1 to close the record, then Add-RootTrust.ps1 again."
+        }
+        if ($r.state -eq 'pending' -and $present) { Write-Host '  reconciling: an earlier run''s import had taken effect; it stays recorded as added by this workflow' }
+    } else {
+        $pre = $present
+        $observed = Get-SeyraUtcStamp
+        $state = 'pending'; if ($pre) { $state = 'trusted' }
+        Write-SeyraFileDurable $recordPath (Format-SeyraTrustRecord $acct $sha $thumb $cert.Subject $pre $state $observed)
+        Write-Host ("  ok  recorded before any store change: pre_existing {0}, state {1}" -f $pre, $state)
+    }
+
+    if (-not $present) {
+        Write-Host ("importing into Cert:\CurrentUser\Root; Windows will ask for confirmation: the thumbprint shown must be {0}" -f $thumb)
+        $importError = $null
+        try { Add-SeyraRootStoreEntry $RootCer } catch { $importError = $_.Exception.Message }
+        $present = Test-SeyraRootPresent $thumb $sha
+        if (-not $present) {
+            Remove-Item -LiteralPath $recordPath -Force
+            $detail = ''; if ($importError) { $detail = ": $importError" }
+            throw "the root was NOT added to Cert:\CurrentUser\Root (nothing is trusted; the pending record was withdrawn)$detail"
+        }
+        if ($importError) { Write-Host "  note: the import reported '$importError', but the root IS in the store" }
+    }
+    $final = Format-SeyraTrustRecord $acct $sha $thumb $cert.Subject $pre 'trusted' $observed
+    Write-SeyraFileDurable $recordPath $final
+    Assert-Seyra (Test-SeyraRootPresent $thumb $sha) 'root present in Cert:\CurrentUser\Root'
+    Assert-Seyra ((Read-SeyraTrustRecord $recordPath $acct.Sid $sha).state -eq 'trusted') 'trust record complete'
+} finally {
+    $lock.Dispose()
 }
-$now = @(Get-ChildItem Cert:\CurrentUser\Root | Where-Object { $_.Thumbprint -eq $cert.Thumbprint })
-Assert-Seyra ($now.Count -eq 1) 'root present in Cert:\CurrentUser\Root'
-$r = [ordered]@{ store = 'Cert:\CurrentUser\Root'; thumbprint_sha1 = $cert.Thumbprint; sha256 = $got; subject = $cert.Subject; pre_existing = $pre; recorded_at = (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ'); account = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name }
-Write-SeyraUtf8 $record (($r | ConvertTo-Json) + "`n")
-if ($pre) { Write-Host 'the root was ALREADY trusted before this script; Remove-RootTrust.ps1 will not remove it.' }
-Write-Host ("trusted for {0}: thumbprint {1}; record {2}" -f $r.account, $cert.Thumbprint, $record)
+if ($pre) { Write-Host 'this root was ALREADY trusted before this workflow; Remove-RootTrust.ps1 will leave it in place.' }
+Write-Host ("trusted for {0}: thumbprint {1}; record {2}" -f $acct.Name, $thumb, $recordPath)
