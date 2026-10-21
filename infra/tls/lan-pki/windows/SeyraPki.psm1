@@ -46,6 +46,83 @@ function Get-SeyraCertInfo {
     return (Invoke-SeyraStepText $Step @('certificate', 'inspect', $Path, '--format', 'json')) | ConvertFrom-Json
 }
 
+function ConvertTo-SeyraUtc {
+    # One certificate instant as a UTC DateTime. `step certificate inspect --format json` writes ISO 8601
+    # times with a zone; Windows PowerShell 5.1 keeps them as strings, PowerShell 7 parses them into
+    # DateTime values. Accepted: such a string with Z or an explicit +hh:mm/-hh:mm offset, a DateTime of
+    # kind Utc or Local (Local converts back exactly), a DateTimeOffset. Refused: an unzoned or malformed
+    # string and a DateTime of kind Unspecified, which would otherwise be read in this PC's time zone.
+    # (A [datetime] cast of the string yields LOCAL time; comparing it with a UTC "now" was the bug.)
+    param($Value, [string]$What = 'certificate time')
+    if ($Value -is [DateTimeOffset]) { return $Value.UtcDateTime }
+    if ($Value -is [datetime]) {
+        if ($Value.Kind -eq [DateTimeKind]::Utc) { return $Value }
+        if ($Value.Kind -eq [DateTimeKind]::Local) { return $Value.ToUniversalTime() }
+        throw "CHECK FAILED: $What has no time zone (DateTime of kind Unspecified)"
+    }
+    if ($Value -is [string] -and $Value -cmatch '^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\.\d{1,7})?(Z|[+-]\d{2}:\d{2})$') {
+        $dto = [DateTimeOffset]::MinValue
+        if ([DateTimeOffset]::TryParse($Value, [Globalization.CultureInfo]::InvariantCulture, [Globalization.DateTimeStyles]::None, [ref]$dto)) { return $dto.UtcDateTime }
+    }
+    throw "CHECK FAILED: $What '$Value' is not an ISO 8601 time with a time zone"
+}
+
+function Format-SeyraUtc {
+    # A UTC instant as yyyy-MM-ddTHH:mm:ssZ (Gregorian, invariant culture, whatever this PC's settings).
+    param($Value, [string]$What = 'certificate time')
+    return (ConvertTo-SeyraUtc $Value $What).ToString('yyyy-MM-ddTHH:mm:ssZ', [Globalization.CultureInfo]::InvariantCulture)
+}
+
+function Get-SeyraUtcNow {
+    # The current UTC time (a Linux regression may fix it through the test boundary; refused on Windows).
+    if ($script:Boundary.ContainsKey('UtcNow')) { return ConvertTo-SeyraUtc (& $script:Boundary.UtcNow) 'test clock' }
+    return [DateTime]::UtcNow
+}
+
+function Get-SeyraValidity {
+    # NotBefore/NotAfter of step's certificate JSON as UTC instants, checked against its stated length.
+    param($Cert, [string]$Name)
+    $start = ConvertTo-SeyraUtc $Cert.validity.start "$Name NotBefore"
+    $end = ConvertTo-SeyraUtc $Cert.validity.end "$Name NotAfter"
+    $seconds = ($end - $start).TotalSeconds
+    if ($seconds -le 0 -or [math]::Abs($seconds - [double]$Cert.validity.length) -gt 1) { throw "CHECK FAILED: $Name validity is inconsistent ($($Cert.validity.start) .. $($Cert.validity.end), length $($Cert.validity.length))" }
+    return [pscustomobject]@{ Start = $start; End = $end; Days = $seconds / 86400 }
+}
+
+function Test-SeyraIssuedChain {
+    # RFC 5280 path validation of the actual leaf signature chain, at the current time, for the IP, by
+    # the pinned step CLI: the root is the ONLY trust anchor (--roots); the issuing CA is supplied only
+    # as an intermediate inside the certificate file (step reads intermediates from it; --issuing-ca is
+    # for OCSP/CRL and is not used), so it is never promoted to a trust anchor. No system trust, no
+    # network. The temporary bundle lives in its own temporary folder (never the issued folder) and is
+    # removed afterwards; the issued certificate is not changed.
+    param([string]$Step, [string]$Leaf, [string]$Intermediate, [string]$Root, [string]$Ip)
+    $tmp = Join-Path ([IO.Path]::GetTempPath()) ('seyra-chain-' + [guid]::NewGuid().ToString('N'))
+    New-Item -ItemType Directory -Path $tmp | Out-Null
+    try {
+        $bundle = Join-Path $tmp 'leaf-then-issuing-ca.pem'
+        Write-SeyraUtf8 $bundle (((Get-Content -LiteralPath $Leaf -Raw).TrimEnd() + "`n" + (Get-Content -LiteralPath $Intermediate -Raw).TrimEnd()) + "`n")
+        $ErrorActionPreference = 'Continue'   # step reports failures on stderr; the exit status decides
+        $out = & $Step certificate verify $bundle --roots $Root --host $Ip 2>&1 | ForEach-Object { "$_" }
+        $rc = $LASTEXITCODE
+    } finally { Remove-Item -LiteralPath $tmp -Recurse -Force -ErrorAction SilentlyContinue }
+    if ($rc -ne 0) { throw ("CHECK FAILED: the chain (leaf + issuing CA) does not verify against the root for {0} now: {1}" -f $Ip, ($out -join ' ')) }
+    Write-Host "  ok  chain (leaf + issuing CA) verifies against the root for $Ip at the current time (pinned step, explicit root only)"
+}
+
+function Resolve-SeyraIssuedDir {
+    # An issuance attempt named EXPLICITLY (never chosen by age): a folder directly inside <Base>\issued
+    # holding server.crt, server.csr and request-manifest.json. Read-only; returns the full path.
+    param([string]$Base, [string]$Path)
+    $dir = [IO.Path]::GetFullPath($Path).TrimEnd('\', '/')
+    $issued = [IO.Path]::GetFullPath((Join-Path $Base 'issued')).TrimEnd('\', '/')
+    if ((ConvertTo-SeyraPathKey ([IO.Path]::GetDirectoryName($dir))) -ne (ConvertTo-SeyraPathKey $issued)) { throw "CHECK FAILED: $dir is not a folder directly inside $issued" }
+    if (-not (Test-Path -LiteralPath $dir -PathType Container)) { throw "CHECK FAILED: $dir does not exist" }
+    $missing = @(@('server.crt', 'server.csr', 'request-manifest.json') | Where-Object { -not (Test-Path -LiteralPath (Join-Path $dir $_) -PathType Leaf) })
+    if ($missing.Count -gt 0) { throw "CHECK FAILED: $dir is not a completed issuance attempt (missing: $($missing -join ', '))" }
+    return $dir
+}
+
 function Get-SeyraSha256Hex {
     param([byte[]]$Bytes)
     $h = [System.Security.Cryptography.SHA256]::Create()
@@ -131,7 +208,7 @@ function Test-SeyraCaCert {
         Assert-Seyra ($days -ge 364 -and $days -le 367) "validity about 1 year ($days days)"
         Assert-Seyra ($c.issuer_dn -eq $Issuer.subject_dn) "issued by $($Issuer.subject_dn)"
         Assert-Seyra ($c.extensions.authority_key_id -eq $Issuer.extensions.subject_key_id) 'authority key id matches the root'
-        Assert-Seyra ([datetime]$c.validity.end -le [datetime]$Issuer.validity.end) 'does not outlive the root'
+        Assert-Seyra ((Get-SeyraValidity $c 'issuing CA').End -le (Get-SeyraValidity $Issuer 'root').End) 'does not outlive the root (UTC)'
     }
     return $c
 }
@@ -176,10 +253,13 @@ function Test-SeyraLeafCert {
     Assert-Seyra (($sanKinds -join ',') -eq 'ip_addresses' -and (@($san.ip_addresses) -join ',') -eq $ip) "SAN exactly IP $ip"
     Assert-Seyra ($c.subject_key_info.fingerprint_sha256 -eq $Manifest.spki_sha256) 'public key equals the VM request (server key stays on the VM)'
     Assert-Seyra ($c.issuer_dn -eq $Issuer.subject_dn -and $x.authority_key_id -eq $Issuer.extensions.subject_key_id) "issued by $($Issuer.subject_dn)"
-    $days = $c.validity.length / 86400
+    # Every instant is compared in UTC (see ConvertTo-SeyraUtc); limits unchanged.
+    $v = Get-SeyraValidity $c 'leaf'
+    $days = $v.Days
     Assert-Seyra ($days -gt 89 -and $days -le 90.01) ("lifetime 90 days plus at most 15 minutes back-dating ({0:N3} days)" -f $days)
-    Assert-Seyra ([datetime]$c.validity.end -le [datetime]$Issuer.validity.end) 'does not outlive the issuing CA'
-    Assert-Seyra ([datetime]$c.validity.start -le (Get-Date).ToUniversalTime().AddMinutes(1)) 'already valid'
+    Assert-Seyra ($v.End -le (Get-SeyraValidity $Issuer 'issuing CA').End) 'does not outlive the issuing CA (UTC)'
+    $now = Get-SeyraUtcNow
+    Assert-Seyra ($v.Start -le $now.AddMinutes(1)) ("already valid: NotBefore {0} <= now {1} + 1 minute" -f (Format-SeyraUtc $v.Start), (Format-SeyraUtc $now))
     return $c
 }
 
@@ -409,7 +489,7 @@ function Test-SeyraRootPresent {
 }
 
 function Get-SeyraUtcStamp {
-    return (Get-Date).ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ')
+    return Format-SeyraUtc ([DateTime]::UtcNow)
 }
 
 function Write-SeyraFileDurable {
@@ -481,14 +561,14 @@ function Read-SeyraTrustRecord {
     if ([string]$r.sha256 -cnotmatch '^[0-9a-f]{64}$' -or [string]$r.thumbprint_sha1 -cnotmatch '^[0-9A-F]{40}$') { & $stop 'has a malformed fingerprint' }
     foreach ($n in @('observed_at', 'updated_at')) {
         # PowerShell 7 parses ISO dates into [datetime] (5.1 keeps the string); keep the recorded UTC text.
-        if ($r.$n -is [datetime]) { $r.$n = $r.$n.ToUniversalTime().ToString('yyyy-MM-ddTHH:mm:ssZ') }
-        if ([string]$r.$n -cnotmatch '^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$') { & $stop "has a malformed $n" }
+        if ([string]$r.$n -cnotmatch '^\d{4}-\d\d-\d\dT\d\d:\d\d:\d\dZ$' -and $r.$n -isnot [datetime]) { & $stop "has a malformed $n" }
+        try { $r.$n = Format-SeyraUtc $r.$n "record $n" } catch { & $stop "has a malformed $n" }
     }
     if ($r.account_sid -ne $Sid) { & $stop "belongs to another Windows account ($($r.account) $($r.account_sid)); run as that account" }
     if ($Sha256 -and $r.sha256 -ne $Sha256) { & $stop "is for another root (SHA-256 $($r.sha256)); run Remove-RootTrust.ps1 for that one first" }
     return $r
 }
 
-Export-ModuleMember -Function Get-SeyraBase, Get-SeyraStep, Invoke-SeyraStepText, Get-SeyraCertInfo, Get-SeyraSha256Hex, Get-SeyraFileSha256, Get-SeyraTrueProperties, Get-SeyraJsonStringList, Get-SeyraCsrFacts, Assert-Seyra, Test-SeyraKeyEncrypted, Test-SeyraCaCert, Test-SeyraCsr, Get-SeyraExpectedIp, Test-SeyraLeafCert, Assert-SeyraNoPrivateKey, Write-SeyraUtf8,
+Export-ModuleMember -Function Get-SeyraBase, Get-SeyraStep, Invoke-SeyraStepText, Get-SeyraCertInfo, ConvertTo-SeyraUtc, Format-SeyraUtc, Get-SeyraUtcNow, Get-SeyraValidity, Test-SeyraIssuedChain, Resolve-SeyraIssuedDir, Get-SeyraSha256Hex, Get-SeyraFileSha256, Get-SeyraTrueProperties, Get-SeyraJsonStringList, Get-SeyraCsrFacts, Assert-Seyra, Test-SeyraKeyEncrypted, Test-SeyraCaCert, Test-SeyraCsr, Get-SeyraExpectedIp, Test-SeyraLeafCert, Assert-SeyraNoPrivateKey, Write-SeyraUtf8,
     Get-SeyraManagedFolder, Get-SeyraAccount, Get-SeyraBasePolicy, ConvertTo-SeyraPathKey, Test-SeyraBasePath, Get-SeyraPathRedirection, Get-SeyraAclItem, Get-SeyraTreeAcl, Test-SeyraAclPolicy, Set-SeyraOwnerOnlyAcl, Assert-SeyraPkiFolder,
     Get-SeyraRootStoreEntry, Add-SeyraRootStoreEntry, Remove-SeyraRootStoreEntry, Test-SeyraRootPresent, Get-SeyraUtcStamp, Write-SeyraFileDurable, Assert-SeyraWritable, Open-SeyraLock, Format-SeyraTrustRecord, Read-SeyraTrustRecord

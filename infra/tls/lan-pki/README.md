@@ -16,8 +16,8 @@ the CSR + request manifest (VM → Windows) and the public packet (Windows → V
 | Windows | `windows/New-PkiFolder.ps1` | `%LOCALAPPDATA%\SeyraPKI`; refuses synchronized, shared, temporary, roaming, system and too-broad locations and links/junctions/network paths before any change; sets an owner-only access list only on a folder it has just created (not recursive); checks the whole tree (owner, links, foreign explicit/inherited/deny entries, encrypted issuer keys) and never repairs an existing folder: it stops with a one-item remedy. The other Windows scripts repeat this read-only check before using the folder |
 | Windows | `windows/Get-StepCli.ps1` | pinned step v0.31.0, SHA-256 checked before extraction |
 | Windows | `windows/New-RootCa.ps1`, `New-IssuingCa.ps1` | encrypted CA keys (passwords typed at step's prompts), extensions/dates verified |
-| Windows | `windows/Sign-ServerCsr.ps1` + `server-leaf.tpl` | verifies the CSR against its manifest, signs with a server-only template, verifies the result and chain |
-| Windows | `windows/Export-PublicPacket.ps1` | the five public files + `issued-manifest.json`; refuses private keys |
+| Windows | `windows/Sign-ServerCsr.ps1` + `server-leaf.tpl` | verifies the CSR against its manifest, signs with a server-only template, verifies the result (every certificate time compared in UTC) and its actual chain for the IP with the root as the only trust anchor; `-CheckIssuedDir <Base>\issued\<stamp>` re-checks an existing, explicitly named attempt against the delivered request without signing, writing or deleting anything |
+| Windows | `windows/Export-PublicPacket.ps1` | from an explicitly named attempt, after re-checking the leaf and its chain: the five public files + `issued-manifest.json` (UTC times; `renew_before` is a UTC date); refuses private keys; never overwrites an existing packet |
 | VM | `check-returned-packet.sh` | structure first (real directories, exactly five regular files: FIFOs, devices, links, extra or nested entries abort before any read), then binding to the VM key/CSR, purposes, names, lifetimes, chain (tool or read errors abort), then, only for an otherwise valid packet, the importing bundle's own `tls import` validation (read-only, no network; must exit 0 with exactly the expected OK line) |
 | VM | `seyra-maps tls import --cert server.crt --chain intermediate_ca.crt --ca root_ca.crt --key <vm key> --names <ip>` | the reviewed, journalled import; then `proxy restart` |
 | Windows | `windows/Test-SeyraTls.ps1` | served chain verified with the explicit root file (no trust installed) |
@@ -50,6 +50,9 @@ Tests (kept separate by what they actually exercise):
   root store, fault injection). Not real NTFS or a real certificate store.
 - `tests/tls/lan-pki-acceptance-model.tests.ps1` (run by the same script): the cleanup and recovery of the
   real-Windows acceptance driver itself, with a Linux model of its Windows operations. Not Windows evidence.
+- `tests/tls/lan-pki-time.tests.ps1` (run by the same script): certificate times in UTC, Asia/Tehran and
+  America/New_York, with PowerShell 7's DateTime values and Windows PowerShell 5.1's string form
+  (`lan-pki-json51-shim.ps1`), including `Sign-ServerCsr -CheckIssuedDir` and `Export-PublicPacket`.
 - `tests/tls/lint-lan-pki-windows.sh`: static Windows PowerShell 5.1 compatibility analysis.
 - `tests/tls/windows/Test-LanPkiOnWindows.ps1`: real-Windows acceptance (NTFS ACLs, junctions, and with
   `-IncludeTrustStore` the real `Cert:\CurrentUser\Root` with a throw-away root). Run only on request. Its
