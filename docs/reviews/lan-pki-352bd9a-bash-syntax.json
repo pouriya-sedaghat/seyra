@@ -1,0 +1,27 @@
+[
+  {
+    "file": "infra/tls/lan-pki/check-returned-packet.sh",
+    "exit_code": 0,
+    "stderr": ""
+  },
+  {
+    "file": "infra/tls/lan-pki/new-server-csr.sh",
+    "exit_code": 0,
+    "stderr": ""
+  },
+  {
+    "file": "tests/tls/lint-lan-pki-windows.sh",
+    "exit_code": 0,
+    "stderr": ""
+  },
+  {
+    "file": "tests/tls/test-lan-pki-windows.sh",
+    "exit_code": 0,
+    "stderr": ""
+  },
+  {
+    "file": "tests/tls/test-lan-pki-vm.sh",
+    "exit_code": 0,
+    "stderr": ""
+  }
+]
