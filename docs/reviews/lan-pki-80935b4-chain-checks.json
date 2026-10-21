@@ -1,0 +1,73 @@
+{
+  "scope": "Pinned Linux Step CLI and exact leaf+intermediate/explicit-root construction. No PowerShell module, Windows, Docker image or VM service execution.",
+  "step_version": "Smallstep CLI/0.31.0 (linux/amd64)\nRelease Date: 2026-09-25T19:53:51Z",
+  "openssl": "OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)",
+  "source_sha256": {
+    "infra/tls/lan-pki/windows/Remove-RootTrust.ps1": "3df2dbc7d540bb765c4033010eb77f45f3509c0d4b262dd56422cd81a0ce61fe",
+    "infra/tls/lan-pki/windows/Sign-ServerCsr.ps1": "86c7a17698c9784285de70b6c4d67623d8134f6cb9832ea096255635ed6a117d",
+    "infra/tls/lan-pki/windows/Export-PublicPacket.ps1": "4555ea8579b77e207f78c8372d43156bb0fbdbb303325af1e518ce506c3d928a",
+    "infra/tls/lan-pki/windows/Get-StepCli.ps1": "c8e3eee4da2d1dae7269110ab57c7d4764d2acb15bf0f5eecfe5dc09acc9fc0b",
+    "infra/tls/lan-pki/windows/New-RootCa.ps1": "c1053af1c1ba0b2e7f134e59b32fda1fac07e783f2fc403649e424d53e7c1385",
+    "infra/tls/lan-pki/windows/New-PkiFolder.ps1": "568b4a4bdbd7806aa951297e8eee63a838f7ff279355724aa7beec8c5515acc2",
+    "infra/tls/lan-pki/windows/Add-RootTrust.ps1": "82fee1ae0b0dd29a46295112d51d450dbaa54ba0b0db2951425ae020c64e8f6c",
+    "infra/tls/lan-pki/windows/Test-SeyraHttps.ps1": "d0989f6f44278bccae2ac6a020a6cf7ade8baa406b983d08f23fd79a39bf6c3b",
+    "infra/tls/lan-pki/windows/New-IssuingCa.ps1": "d5d8e8a98bfdf0c9bc80fdb2ce63595b25064ed275f1f79a5e83b876dd0bc8cc",
+    "infra/tls/lan-pki/windows/SeyraPki.psm1": "362d64ca2249c24d4701e34054a88de3023357ebb72e367a1aafd17c828c2251",
+    "infra/tls/lan-pki/windows/Test-SeyraTls.ps1": "d67d358ea8ba8719a01e9fb31f3fbff9df0084e586071eb13d155ba9b009fd6e",
+    "infra/tls/lan-pki/windows/Test-SeyraSource.ps1": "58f7997c929f04f33e78cba9493b64c596449a7798b6d4b65647795f59dc5f76",
+    "infra/tls/lan-pki/windows/server-leaf.tpl": "9331492fbdc9162222f8d2fa68db5d3be54be2fdfb797fd4332194655fa5b58e"
+  },
+  "checks": 7,
+  "failed": 0,
+  "results": [
+    {
+      "label": "complete chain, explicit root, correct IP",
+      "exit_code": 0,
+      "expected_success": true,
+      "passed": true,
+      "stderr": ""
+    },
+    {
+      "label": "missing intermediate refused",
+      "exit_code": 1,
+      "expected_success": false,
+      "passed": true,
+      "stderr": "failed to verify certificate: x509: certificate signed by unknown authority"
+    },
+    {
+      "label": "unrelated root refused",
+      "exit_code": 1,
+      "expected_success": false,
+      "passed": true,
+      "stderr": "failed to verify certificate: x509: certificate signed by unknown authority"
+    },
+    {
+      "label": "wrong IP refused",
+      "exit_code": 1,
+      "expected_success": false,
+      "passed": true,
+      "stderr": "failed to verify certificate: x509: certificate is valid for 198.18.0.76, not 198.18.0.99"
+    },
+    {
+      "label": "future NotBefore refused",
+      "exit_code": 1,
+      "expected_success": false,
+      "passed": true,
+      "stderr": "failed to verify certificate: x509: certificate has expired or is not yet valid: current time 2026-10-21T18:04:05+02:00 is before 2026-10-21T18:04:05Z"
+    },
+    {
+      "label": "altered leaf signature refused",
+      "exit_code": 1,
+      "expected_success": false,
+      "passed": true,
+      "stderr": "failed to verify certificate: x509: certificate signed by unknown authority (possibly because of \"x509: ECDSA verification failure\" while trying to verify candidate authority certificate \"Review issuing\")"
+    },
+    {
+      "label": "missing root file refused",
+      "exit_code": 1,
+      "expected_success": false,
+      "passed": true,
+      "stderr": "failed to verify certificate: x509: certificate signed by unknown authority"
+    }
+  ]
+}
