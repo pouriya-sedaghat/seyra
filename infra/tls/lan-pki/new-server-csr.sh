@@ -47,7 +47,8 @@ validate_request() {
   [ "$(jq -er .subject_cn "$m" 2>/dev/null)" = "$ip" ] || { echo "manifest subject differs from its IP"; return 1; }
   sha="$(sha256sum "$pc" 2>/dev/null)" && [ "${sha:0:64}" = "$(jq -er .csr_file_sha256 "$m")" ] || { echo "manifest csr_file_sha256 does not match the public CSR"; return 1; }
   text="$(openssl req -in "$c" -noout -text 2>/dev/null)" || { echo "CSR text unreadable"; return 1; }
-  [ "$(openssl req -in "$c" -noout -subject 2>/dev/null)" = "subject=CN=$ip" ] || { echo "CSR subject is not CN=$ip"; return 1; }
+  # Explicit RFC 2253 name format: the default display differs between OpenSSL 3.0 ("CN = x") and 3.5 ("CN=x").
+  [ "$(openssl req -in "$c" -noout -subject -nameopt RFC2253 2>/dev/null)" = "subject=CN=$ip" ] || { echo "CSR subject is not CN=$ip"; return 1; }
   want="IP Address:$ip"; [ -n "$dns" ] && want="$want, DNS:$dns"
   got="$(sed -n '/Subject Alternative Name/{n;s/^ *//;p}' <<<"$text")"
   [ "$got" = "$want" ] || { echo "CSR SANs '$got' != manifest '$want'"; return 1; }
