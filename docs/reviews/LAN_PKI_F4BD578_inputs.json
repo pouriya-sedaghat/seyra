@@ -1,0 +1,24 @@
+{
+  "base": "f5bd9780c9781e5ac829df50ae12694475abe610",
+  "reviewed_head": "f4bd578ffe6a7c9f1c59ecb2ec91c363eb154bc9",
+  "patch_sha256": "a676a154e8c6693de31c0ae3099a07a22f82694379cc8347f2f1a57eee579a9d",
+  "node": "24.19.0",
+  "openssl": "3.0.13",
+  "step": "0.31.0 linux-amd64",
+  "powershell_execution": "NOT RUN: CoreCLR initialization fails with 0x8007000E",
+  "prepared_powershell_reproducer": "NOT RUN: source-backed F1; actual scripts + supplied Linux boundary, no Windows store",
+  "actual_windows_execution": false,
+  "source_observations": [
+    "F1 mutable root input reopened at store import",
+    "F2 acceptance deletes retained recovery record after failed test-root removal"
+  ],
+  "adapters": [
+    "Docker recording host adapter; no actual image/namespace verification",
+    "OpenSSL req -subject adds explicit RFC2253 display formatting"
+  ],
+  "unexercised_cases": [
+    "Unix socket creation denied (2 assertions)",
+    "mknod denied; stock harness passes absent-file fallback (2 assertions, not device coverage)"
+  ],
+  "owner_resources_accessed": false
+}
