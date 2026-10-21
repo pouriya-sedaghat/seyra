@@ -1,0 +1,11 @@
+{
+  "bash_syntax": {
+    "file": "tests/tls/test-lan-pki-windows.sh",
+    "exit_code": 0,
+    "stderr": ""
+  },
+  "powershell_execution": {
+    "status": "NOT RUN",
+    "reason": "Portable PowerShell 7.4.7 could not create CoreCLR in this sandbox; HRESULT 0x8007000E, exit 137. No PowerShell module or Windows execution is claimed by this reviewer."
+  }
+}
