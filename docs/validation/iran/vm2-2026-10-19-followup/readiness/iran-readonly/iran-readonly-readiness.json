@@ -1,0 +1,210 @@
+{
+ "label": "read-only, warm owner host seyra-iran-restore, ds-20261017-2d2c87f31d11",
+ "started_at": "2026-10-19T05:34:35.652Z",
+ "config": {
+  "base": "https://127.0.0.1:8443",
+  "seconds": 120,
+  "sample_ms": 250,
+  "tile_clients": 4,
+  "cancel_ms": [
+   150,
+   1500
+  ],
+  "zooms": [
+   3,
+   12
+  ]
+ },
+ "polls": 442,
+ "ready_codes": {
+  "200": 442
+ },
+ "first_ready_at": "2026-10-19T05:34:35.653Z",
+ "not_ready_after_first_ready": 0,
+ "not_ready_events_after_first_ready": [],
+ "provider_latency_ms": {
+  "tiles": {
+   "n": 442,
+   "p50": 265,
+   "p90": 369,
+   "max": 4288
+  },
+  "routing": {
+   "n": 442,
+   "p50": 5,
+   "p90": 20,
+   "max": 34
+  },
+  "geocoder": {
+   "n": 442,
+   "p50": 58,
+   "p90": 91,
+   "max": 658
+  },
+  "overpass": {
+   "n": 442,
+   "p50": 84,
+   "p90": 123,
+   "max": 167
+  }
+ },
+ "tiles": {
+  "requested": 21112,
+  "completed": 21080,
+  "cancelled": 32,
+  "by_status": {
+   "200": 21080
+  },
+  "by_zoom": {
+   "3": {
+    "requested": 2281,
+    "completed": 2281,
+    "cancelled": 0,
+    "ms": {
+     "n": 2281,
+     "p50": 3,
+     "p90": 14,
+     "max": 581
+    }
+   },
+   "4": {
+    "requested": 2228,
+    "completed": 2227,
+    "cancelled": 1,
+    "ms": {
+     "n": 2227,
+     "p50": 32,
+     "p90": 52,
+     "max": 23762
+    }
+   },
+   "5": {
+    "requested": 2244,
+    "completed": 2243,
+    "cancelled": 1,
+    "ms": {
+     "n": 2243,
+     "p50": 7,
+     "p90": 33,
+     "max": 16354
+    }
+   },
+   "6": {
+    "requested": 2160,
+    "completed": 2158,
+    "cancelled": 2,
+    "ms": {
+     "n": 2158,
+     "p50": 4,
+     "p90": 23,
+     "max": 2890
+    }
+   },
+   "7": {
+    "requested": 2106,
+    "completed": 2106,
+    "cancelled": 0,
+    "ms": {
+     "n": 2106,
+     "p50": 3,
+     "p90": 20,
+     "max": 7865
+    }
+   },
+   "8": {
+    "requested": 1968,
+    "completed": 1963,
+    "cancelled": 5,
+    "ms": {
+     "n": 1963,
+     "p50": 2,
+     "p90": 29,
+     "max": 3740
+    }
+   },
+   "9": {
+    "requested": 2075,
+    "completed": 2065,
+    "cancelled": 10,
+    "ms": {
+     "n": 2065,
+     "p50": 2,
+     "p90": 39,
+     "max": 3174
+    }
+   },
+   "10": {
+    "requested": 1942,
+    "completed": 1939,
+    "cancelled": 3,
+    "ms": {
+     "n": 1939,
+     "p50": 2,
+     "p90": 38,
+     "max": 1235
+    }
+   },
+   "11": {
+    "requested": 2062,
+    "completed": 2056,
+    "cancelled": 6,
+    "ms": {
+     "n": 2056,
+     "p50": 2,
+     "p90": 34,
+     "max": 710
+    }
+   },
+   "12": {
+    "requested": 2046,
+    "completed": 2042,
+    "cancelled": 4,
+    "ms": {
+     "n": 2042,
+     "p50": 2,
+     "p90": 42,
+     "max": 992
+    }
+   }
+  },
+  "clients_started": 4
+ },
+ "timeline": [
+  {
+   "at": "2026-10-19T05:34:35.653Z",
+   "t_s": 0.3,
+   "ready": "200",
+   "ready_error": null,
+   "providers": [
+    {
+     "provider": "tiles",
+     "status": "ok",
+     "latency_ms": 151,
+     "error": null,
+     "checked_at": "2026-10-19T05:34:31.901Z"
+    },
+    {
+     "provider": "routing",
+     "status": "ok",
+     "latency_ms": 3,
+     "error": null,
+     "checked_at": "2026-10-19T05:34:31.753Z"
+    },
+    {
+     "provider": "geocoder",
+     "status": "ok",
+     "latency_ms": 37,
+     "error": null,
+     "checked_at": "2026-10-19T05:34:31.787Z"
+    },
+    {
+     "provider": "overpass",
+     "status": "ok",
+     "latency_ms": 123,
+     "error": null,
+     "checked_at": "2026-10-19T05:34:31.873Z"
+    }
+   ]
+  }
+ ]
+}

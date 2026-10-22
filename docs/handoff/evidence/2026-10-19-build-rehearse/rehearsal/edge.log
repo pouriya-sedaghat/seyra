@@ -1,0 +1,9 @@
+2026/10/19 15:54:47 [error] 7#7: *55 access forbidden by rule while initializing session, client: 198.18.10.20, server: 0.0.0.0:8443
+2026/10/19 15:54:47 [error] 7#7: *56 access forbidden by rule while initializing session, client: 198.18.10.20, server: 0.0.0.0:8443
+2026/10/19 15:54:47 [error] 7#7: *57 access forbidden by rule while initializing session, client: 198.18.10.20, server: 0.0.0.0:8443
+2026/10/19 15:54:47 [error] 7#7: *58 access forbidden by rule while initializing session, client: 198.18.10.20, server: 0.0.0.0:8443
+2026/10/19 15:54:47 [error] 7#7: *59 access forbidden by rule while initializing session, client: 198.18.10.20, server: 0.0.0.0:8443
+2026/10/19 15:54:47 [error] 7#7: *60 access forbidden by rule while initializing session, client: 198.18.10.20, server: 0.0.0.0:8443
+2026/10/19 15:54:47 [error] 7#7: *61 access forbidden by rule while initializing session, client: 198.18.10.20, server: 0.0.0.0:8443
+2026/10/19 15:54:47 [error] 7#7: *62 access forbidden by rule while initializing session, client: 198.18.10.20, server: 0.0.0.0:8443
+2026/10/19 15:54:47 [error] 7#7: *63 access forbidden by rule while initializing session, client: 198.18.10.20, server: 0.0.0.0:8443

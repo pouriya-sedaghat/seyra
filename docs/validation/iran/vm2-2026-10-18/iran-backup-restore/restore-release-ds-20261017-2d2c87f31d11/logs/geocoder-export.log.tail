@@ -1,0 +1,200 @@
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting boundaries rank 13 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED boundaries rank 13
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting boundaries rank 14 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED boundaries rank 14
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting boundaries rank 15 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED boundaries rank 15
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting boundaries rank 16 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED boundaries rank 16
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting boundaries rank 17 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED boundaries rank 17
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting boundaries rank 18 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED boundaries rank 18
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting boundaries rank 19 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED boundaries rank 19
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting boundaries rank 20 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED boundaries rank 20
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting boundaries rank 21 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED boundaries rank 21
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting boundaries rank 22 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED boundaries rank 22
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting boundaries rank 23 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED boundaries rank 23
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting boundaries rank 24 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED boundaries rank 24
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting boundaries rank 25 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED boundaries rank 25
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting indexing rank (5 to 25) using 2 threads
+[nominatim] 2026-10-18 14:42:15: Starting rank 5 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 5
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 6 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 6
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 7 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 7
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 8 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 8
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 9 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 9
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 10 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 10
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 11 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 11
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 12 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 12
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 13 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 13
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 14 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 14
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 15 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 15
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 16 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 44/44 in 0 @ 258.621 per second - FINISHED rank 16
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 17 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 17
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 18 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 19/19 in 0 @ 134.953 per second - FINISHED rank 18
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 19 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 19
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 20 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 16/16 in 0 @ 156.874 per second - FINISHED rank 20
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 21 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 21
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 22 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 22
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 23 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 23
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 24 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 133/133 in 0 @ 351.126 per second - FINISHED rank 24
+[nominatim] 
+[nominatim] 2026-10-18 14:42:15: Starting rank 25 (using batch size 1)
+[nominatim] 2026-10-18 14:42:15: Done 10/10 in 0 @ 159.474 per second - FINISHED rank 25
+[nominatim] 
+[nominatim] 2026-10-18 14:42:49: Starting indexing rank (26 to 30) using 2 threads
+[nominatim] 2026-10-18 14:42:49: Starting rank 26 (using batch size 5)
+[nominatim] 2026-10-18 14:42:49: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 26
+[nominatim] 
+[nominatim] 2026-10-18 14:42:49: Starting rank 27 (using batch size 5)
+[nominatim] 2026-10-18 14:42:49: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 27
+[nominatim] 
+[nominatim] 2026-10-18 14:42:49: Starting rank 28 (using batch size 5)
+[nominatim] 2026-10-18 14:42:49: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 28
+[nominatim] 
+[nominatim] 2026-10-18 14:42:49: Starting rank 29 (using batch size 5)
+[nominatim] 2026-10-18 14:42:49: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 29
+[nominatim] 
+[nominatim] 2026-10-18 14:42:49: Starting rank 30 (using batch size 20)
+[nominatim] 2026-10-18 14:42:49: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 30
+[nominatim] 
+[nominatim] 2026-10-18 14:42:49: Starting interpolation lines (location_property_osmline) (using batch size 20)
+[nominatim] 2026-10-18 14:42:49: Done 0/0 in 0 @ 0.000 per second - FINISHED interpolation lines (location_property_osmline)
+[nominatim] 
+[nominatim] 2026-10-18 14:42:49: Starting indexing rank (0 to 0) using 2 threads
+[nominatim] 2026-10-18 14:42:49: Starting rank 0 (using batch size 1)
+[nominatim] 2026-10-18 14:42:49: Done 0/0 in 0 @ 0.000 per second - FINISHED rank 0
+[nominatim] 
+[nominatim] 2026-10-18 14:42:49: Starting indexing postcodes using 2 threads
+[nominatim] 2026-10-18 14:42:49: Starting postcodes (location_postcodes) (using batch size 20)
+[nominatim] 2026-10-18 14:42:49: Done 0/0 in 0 @ 0.000 per second - FINISHED postcodes (location_postcodes)
+[nominatim] 
+[nominatim] 2026-10-18 14:42:49: Post-process tables
+[nominatim] 2026-10-18 14:43:02: Create search index for default country names.
+[nominatim] 2026-10-18 14:43:05: Recompute word counts
+[nominatim] 2026-10-18 14:43:05: Import completed successfully in 1998.70 seconds.
+[geocoder] photon export
+[photon-dump] 2026-10-18T14:43:10.750919480Z main ERROR Could not determine local host name
+[photon-dump] java.net.UnknownHostException: 70f3791f0522: 70f3791f0522: Temporary failure in name resolution
+[photon-dump] 	at java.base/java.net.InetAddress.getLocalHost(InetAddress.java:1936)
+[photon-dump] 	at org.apache.logging.log4j.core.util.NetUtils.getHostname(NetUtils.java:71)
+[photon-dump] 	at org.apache.logging.log4j.core.util.NetUtils.getLocalHostname(NetUtils.java:56)
+[photon-dump] 	at org.apache.logging.log4j.core.LoggerContext.lambda$setConfiguration$2(LoggerContext.java:691)
+[photon-dump] 	at java.base/java.util.concurrent.ConcurrentHashMap.computeIfAbsent(ConcurrentHashMap.java:1708)
+[photon-dump] 	at org.apache.logging.log4j.core.LoggerContext.setConfiguration(LoggerContext.java:691)
+[photon-dump] 	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:786)
+[photon-dump] 	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:808)
+[photon-dump] 	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:311)
+[photon-dump] 	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:160)
+[photon-dump] 	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:48)
+[photon-dump] 	at org.apache.logging.log4j.LogManager.getContext(LogManager.java:139)
+[photon-dump] 	at org.apache.logging.log4j.LogManager.getLogger(LogManager.java:557)
+[photon-dump] 	at org.apache.logging.log4j.LogManager.getLogger(LogManager.java:543)
+[photon-dump] 	at de.komoot.photon.App.<clinit>(App.java:36)
+[photon-dump] Caused by: java.net.UnknownHostException: 70f3791f0522: Temporary failure in name resolution
+[photon-dump] 	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+[photon-dump] 	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Inet6AddressImpl.java:52)
+[photon-dump] 	at java.base/java.net.InetAddress$PlatformResolver.lookupByName(InetAddress.java:1211)
+[photon-dump] 	at java.base/java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1828)
+[photon-dump] 	at java.base/java.net.InetAddress$NameServiceAddresses.get(InetAddress.java:1139)
+[photon-dump] 	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1818)
+[photon-dump] 	at java.base/java.net.InetAddress.getLocalHost(InetAddress.java:1931)
+[photon-dump] 	... 14 more
+[photon-dump] 
+[photon-dump] 2026-10-18 14:43:11,660 [main] INFO  de.komoot.photon.App - Connecting to database nominatim at 127.0.0.1:5432 (user: postgres)
+[photon-dump] 2026-10-18 14:43:11,719 [main] INFO  de.komoot.photon.nominatim.NominatimImporter - Creating index over countries.
+[photon-dump] 2026-10-18 14:43:12,471 [main] INFO  de.komoot.photon.nominatim.model.NominatimAddressCache - Loaded 10 address places for country af
+[photon-dump] 2026-10-18 14:43:12,596 [main] INFO  de.komoot.photon.nominatim.model.NominatimAddressCache - Loaded 3 address places for country am
+[photon-dump] 2026-10-18 14:43:12,626 [main] INFO  de.komoot.photon.nominatim.model.NominatimAddressCache - Loaded 65 address places for country az
+[photon-dump] 2026-10-18 14:43:12,943 [main] INFO  de.komoot.photon.nominatim.model.NominatimAddressCache - Loaded 22 address places for country tm
+[photon-dump] 2026-10-18 14:43:13,006 [main] INFO  de.komoot.photon.nominatim.model.NominatimAddressCache - Loaded 16 address places for country tr
+[photon-dump] 2026-10-18 14:43:13,159 [main] INFO  de.komoot.photon.nominatim.model.NominatimAddressCache - Loaded 381 address places for country iq
+[photon-dump] 2026-10-18 14:43:13,557 [main] INFO  de.komoot.photon.nominatim.model.NominatimAddressCache - Loaded 73012 address places for country ir
+[photon-dump] 2026-10-18 14:43:22,008 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 50000 documents [4830.451164138731/second]
+[photon-dump] 2026-10-18 14:43:23,582 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 100000 documents [8385.744234800839/second]
+[photon-dump] 2026-10-18 14:43:26,013 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 150000 documents [10448.592922819727/second]
+[photon-dump] 2026-10-18 14:43:27,561 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 200000 documents [12575.452716297787/second]
+[photon-dump] 2026-10-18 14:43:29,470 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 250000 documents [14035.481697731866/second]
+[photon-dump] 2026-10-18 14:43:31,506 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 300000 documents [15114.11154214318/second]
+[photon-dump] 2026-10-18 14:43:33,038 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 350000 documents [16369.674009634722/second]
+[photon-dump] 2026-10-18 14:43:34,366 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 400000 documents [17614.161786076005/second]
+[photon-dump] 2026-10-18 14:43:36,080 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 450000 documents [18426.00933584473/second]
+[photon-dump] 2026-10-18 14:43:36,636 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 500000 documents [20016.814123864046/second]
+[photon-dump] 2026-10-18 14:43:38,934 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 550000 documents [20163.507717124317/second]
+[photon-dump] 2026-10-18 14:43:40,915 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 600000 documents [20507.211702782144/second]
+[photon-dump] 2026-10-18 14:43:42,486 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 650000 documents [21084.04424405592/second]
+[photon-dump] 2026-10-18 14:43:44,559 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 700000 documents [21275.30241322716/second]
+[photon-dump] 2026-10-18 14:43:46,271 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 750000 documents [21667.533368001386/second]
+[photon-dump] 2026-10-18 14:43:47,793 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 800000 documents [22138.58755811379/second]
+[photon-dump] 2026-10-18 14:43:49,728 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 850000 documents [22326.7053662893/second]
+[photon-dump] 2026-10-18 14:43:51,071 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 900000 documents [22834.525803014156/second]
+[photon-dump] 2026-10-18 14:43:59,299 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 950000 documents [19940.388732630872/second]
+[photon-dump] 2026-10-18 14:44:02,080 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 1000000 documents [19832.219423675702/second]
+[photon-dump] 2026-10-18 14:44:02,795 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 1050000 documents [20532.676287692128/second]
+[photon-dump] 2026-10-18 14:44:05,584 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 1100000 documents [20397.94537059358/second]
+[photon-dump] 2026-10-18 14:44:06,243 [main] INFO  de.komoot.photon.nominatim.ImportThread - Imported 1150000 documents [21067.67302971458/second]
+[photon-dump] 2026-10-18 14:44:09,339 [main] INFO  de.komoot.photon.nominatim.model.NominatimAddressCache - Loaded 5 address places for country pk
+[photon-dump] 2026-10-18 14:44:09,382 [main] INFO  de.komoot.photon.nominatim.ImportThread - Finished import of 1199260 photon documents. (Total processing time: 57s)
+[photon-dump] 2026-10-18 14:44:09,382 [main] INFO  de.komoot.photon.App - Json dump was created: /out/nominatim-export.jsonl
+[photon-dump] 2026-10-18 14:44:09,382 [main] INFO  de.komoot.photon.App - Shutting down the service.
+[geocoder] export complete: 1199262 records

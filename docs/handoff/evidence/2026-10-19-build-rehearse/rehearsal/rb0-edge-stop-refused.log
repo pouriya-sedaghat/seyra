@@ -1,0 +1,1 @@
+edge: the inner relay listener 172.18.0.2:8444 still answers, so it still trusts this edge's address; stopping would release that address for reuse. First: seyra-maps init --no-relay; access apply; proxy restart. Nothing changed (emergency only: stop --force)

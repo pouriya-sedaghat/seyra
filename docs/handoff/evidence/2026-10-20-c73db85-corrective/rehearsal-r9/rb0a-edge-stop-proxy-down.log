@@ -1,0 +1,1 @@
+edge: refusing to stop: settings.json still names 172.18.0.3 as the relay peer. Stopping would release 172.18.0.3 for reuse while it may still be trusted. First: seyra-maps init --no-relay; access apply; proxy restart. Nothing changed (emergency only: stop --force)

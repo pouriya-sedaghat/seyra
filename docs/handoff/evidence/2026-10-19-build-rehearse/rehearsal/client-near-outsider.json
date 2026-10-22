@@ -1,0 +1,47 @@
+[
+  {
+    "name": "outsider: no HTTP response for /health/live",
+    "ok": true,
+    "detail": "null no HTTP response"
+  },
+  {
+    "name": "outsider: no HTTP response for /",
+    "ok": true,
+    "detail": "null no HTTP response"
+  },
+  {
+    "name": "outsider: no HTTP response for /api/docs/",
+    "ok": true,
+    "detail": "null no HTTP response"
+  },
+  {
+    "name": "outsider: no HTTP response for /api/docs/json",
+    "ok": true,
+    "detail": "null no HTTP response"
+  },
+  {
+    "name": "outsider: no HTTP response for /api/v1/map/capabilities",
+    "ok": true,
+    "detail": "null no HTTP response"
+  },
+  {
+    "name": "outsider: no HTTP response for /maps/ds-20261001-9843cf36a06e/tiles.json",
+    "ok": true,
+    "detail": "null no HTTP response"
+  },
+  {
+    "name": "outsider: no HTTP response for /maps/ds-20261001-9843cf36a06e/tiles/14/8192/8191.pbf",
+    "ok": true,
+    "detail": "null no HTTP response"
+  },
+  {
+    "name": "outsider: no HTTP response for /licenses/vazirmatn-ofl.txt",
+    "ok": true,
+    "detail": "null no HTTP response"
+  },
+  {
+    "name": "outsider: forwarding headers naming the approved client do not help",
+    "ok": true,
+    "detail": "null no HTTP response"
+  }
+]

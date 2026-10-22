@@ -1,0 +1,15 @@
+PASS isExternal: same origin -> same origin
+PASS isExternal: same origin with a query -> same origin
+PASS isExternal: data: URL -> same origin
+PASS isExternal: blob: URL -> same origin
+PASS isExternal: prefix-extended host -> external
+PASS isExternal: prefix-extended port -> external
+PASS isExternal: userinfo trick -> external
+PASS isExternal: other scheme -> external
+PASS isExternal: other host name -> external
+PASS isExternal: unparsable -> external
+PASS the pre-fix prefix check accepted a prefix-extended host and port as same origin (defect reproduced)
+PASS clean UI: requests before Execute=0, sent by Execute=1
+PASS request emitted at Try it out (detected): requests before Execute=1, sent by Execute=1
+PASS request emitted while opening the operation (detected): requests before Execute=1, sent by Execute=1
+# swagger checks: checks=14 failed=0

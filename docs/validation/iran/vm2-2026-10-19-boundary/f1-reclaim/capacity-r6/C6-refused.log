@@ -1,0 +1,6 @@
+[import] the import started 2026-10-19T07:13:26.080Z is no longer running; recovering
+[import] marked interrupted release ds-20250514-9843cf36a06e as failed (remove it with: seyra-maps prune)
+[import] source-checksum …
+[import] source-validate …
+[import] capacity: available 37325119488 B (37.33 GB: free 37317951488 + reclaimable 7168000) < required 41620037632 B (41.62 GB: max(minFreeBytes 41620037632, minFreeFactor 120 x input 3167)) (reclaim estimate of the failed build: 7168000 B allocated; its apparent size 8596999440 B and render DB 16764051 B are not credited)
+seyra-maps: import failed at setup: insufficient free space for ds-20250514-9843cf36a06e on /home/owner/seyra-bnd-lab/home: available 37325119488 B (37.33 GB: free 37317951488 + reclaimable 7168000) < required 41620037632 B (41.62 GB: max(minFreeBytes 41620037632, minFreeFactor 120 x input 3167)); nothing was changed (the failed build of ds-20250514-9843cf36a06e was kept). Add capacity or, after measuring, adjust minFreeFactor/minFreeBytes in state/settings.json; never delete unrelated data

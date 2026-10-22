@@ -1,0 +1,12 @@
+# @fastify/swagger-ui pin verification 2026-10-19T10:18:47Z
+lock integrity: 5.2.6 sha512-OMnms0O5s9wb6wis/K5nlrAMLsgUbr1GA8uphM41IasWe3AFdgxz6r/3bA9HTxlDNUYc2FGGKeqMp3ntxmSiNA== https://registry.npmjs.org/@fastify/swagger-ui/-/swagger-ui-5.2.6.tgz
+registry: {"dist.integrity":"sha512-OMnms0O5s9wb6wis/K5nlrAMLsgUbr1GA8uphM41IasWe3AFdgxz6r/3bA9HTxlDNUYc2FGGKeqMp3ntxmSiNA==","gitHead":"56ee3720ced3061101788400d83d8d16a25264d4"}
+declared: fastify: '5.x', dependencies: ['@fastify/swagger']
+bundled swagger-ui-dist: 5.32.1
+compatibility table (README): ^5.x plugin / ^5.x Fastify / ^9.x @fastify/swagger; 6.x not listed
+new lock entries: 22 packages
+165 packages have verified registry signatures
+
+61 packages have verified attestations
+(use --json --include-attestations to view attestation details)
+

@@ -1,0 +1,28 @@
+node:internal/modules/run_main:123
+    triggerUncaughtException(
+    ^
+
+locator.click: Timeout 30000ms exceeded.
+Call log:
+  - waiting for locator('.maplibregl-ctrl-zoom-out')
+    - locator resolved to <button disabled type="button" title="Zoom out" aria-disabled="true" aria-label="Zoom out" class="maplibregl-ctrl-zoom-out">…</button>
+  - attempting click action
+    2 × waiting for element to be visible, enabled and stable
+      - element is not enabled
+    - retrying click action
+    - waiting 20ms
+    2 × waiting for element to be visible, enabled and stable
+      - element is not enabled
+    - retrying click action
+      - waiting 100ms
+    58 × waiting for element to be visible, enabled and stable
+       - element is not enabled
+     - retrying click action
+       - waiting 500ms
+
+    at zoomOut (/v/iran-browser.mjs:75:83)
+    at /v/iran-browser.mjs:104:7 {
+  name: 'TimeoutError'
+}
+
+Node.js v22.20.0

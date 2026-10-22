@@ -1,0 +1,6 @@
+# 2026-10-20T04:21:42Z rehearsal start phases=[vm] frozen=<RUN>/r1-real-unlabelled/frozen-20261020T042142Z
+FAIL RV0 rehearsal VM volume refused before any mount: volume seyra-rh-vm-docker (existing) is not this lab's: seyra-rh-vm-docker|local|
+# 2026-10-20T04:21:42Z phases=[vm] failures=1
+# 2026-10-20T04:21:43Z rehearsal start phases=[cleanup] frozen=<RUN>/r1-real-unlabelled/frozen-20261020T042143Z
+PASS RC1 cleanup: every owned object removed; inventory empty (containers, networks, volumes); lab directory removed; outer routes unchanged; evidence kept in OUT; preserved non-lab objects: volume seyra-rh-vm-docker is not this lab's (label ''); left untouched
+# 2026-10-20T04:21:43Z phases=[cleanup] failures=0

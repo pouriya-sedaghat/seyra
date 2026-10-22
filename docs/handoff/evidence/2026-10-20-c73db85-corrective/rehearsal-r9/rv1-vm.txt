@@ -1,0 +1,7 @@
+rehearsal VM: engine 29.8.2 image=docker:29.8.2-dind
+routes inside the rehearsal VM:
+10.250.0.0/24 dev eth2 scope link  src 10.250.0.2 
+172.17.0.0/16 dev docker0 scope link  src 172.17.0.1 
+198.18.10.0/24 dev eth0 scope link  src 198.18.10.2 
+198.18.20.0/24 dev eth1 scope link  src 198.18.20.2 
+images loaded: seyra-test-runner:local 2e758660afdd docker:29.8.2-dind 1e08cdb63405

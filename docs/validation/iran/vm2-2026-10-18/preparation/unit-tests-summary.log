@@ -1,0 +1,14 @@
+node v24.21.0 npm 11.19.0 commit 9f0d7925eef0d43fc157cdd64b557b962df457a6
+npm ci rc=0 18s
+typecheck rc=2 9s
+build rc=0 9s
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+ Test Files  6 passed (6)
+      Tests  46 passed (46)
+ Test Files  7 passed (7)
+      Tests  82 passed (82)
+test rc=0 5s
+typecheck-after-build rc=0 4s

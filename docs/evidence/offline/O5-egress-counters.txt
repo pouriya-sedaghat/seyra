@@ -1,0 +1,14 @@
+Chain SEYRA_EGRESS (2 references)
+    pkts      bytes target     prot opt in     out     source               destination         
+       6      240 RETURN     2    --  *      *       0.0.0.0/0            224.0.0.0/4          /* IGMP */
+     163    54889 RETURN     all  --  *      *       0.0.0.0/0            127.0.0.0/8         
+    3987   632206 RETURN     all  --  *      *       0.0.0.0/0            172.16.0.0/12       
+       0        0 RETURN     all  --  *      *       0.0.0.0/0            192.168.0.0/16      
+       0        0 RETURN     all  --  *      *       0.0.0.0/0            10.0.0.0/8          
+       0        0 DROP       all  --  *      *       0.0.0.0/0            0.0.0.0/0            /* COUNT */
+Chain OUTPUT (policy ACCEPT 241 packets, 73897 bytes)
+    pkts      bytes target     prot opt in     out     source               destination         
+     241    73897 SEYRA_EGRESS  all  --  *      *       0.0.0.0/0            0.0.0.0/0           
+Chain DOCKER-USER (1 references)
+    pkts      bytes target     prot opt in     out     source               destination         
+    3915   613438 SEYRA_EGRESS  all  --  *      *       0.0.0.0/0            0.0.0.0/0           

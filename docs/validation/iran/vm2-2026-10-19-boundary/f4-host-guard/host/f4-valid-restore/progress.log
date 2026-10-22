@@ -1,0 +1,14 @@
+# 2026-10-19T07:16:09Z iran-offline-host start phases=[import serve backup restore] pbf=synthetic-v1.osm.pbf sha256=e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323 size=3167
+== 2026-10-19T07:16:10Z PASS I3a free space 37310160896 B >= import guard 2147483648 B at the managed home
+== 2026-10-19T07:17:16Z PASS I3 full Iran import with staging validation: ds-20261001-9843cf36a06e (65 s)
+== 2026-10-19T07:17:16Z PASS I4 verify-release ds-20261001-9843cf36a06e
+== 2026-10-19T07:17:30Z PASS I5 activated ds-20261001-9843cf36a06e; /health/ready reports it through https://127.0.0.1:8443 with all four providers
+== 2026-10-19T07:17:34Z PASS I6 exploratory Iran smoke completed: {"dataset_id":"ds-20261001-9843cf36a06e","ready":200,"search_hit_at_1":0,"search_hit_at_5":0,"search_cases":33,"autocomplete_hit_at_5":0,"autocomplete_cases":6,"reverse_expected_seen":0,"reverse_cases_with_expectation":12,"routing_status_as_expected":1,"routing_cases":14,"routing_distance_in_range":0,"proximity_ok":6,"pois_ok":32,"pois_cases":32,"tiles_ok":27,"tiles_requests":27,"transport_errors":0}
+== 2026-10-19T07:18:23Z PASS I7 stop/start: ready again on ds-20261001-9843cf36a06e with the same provider identities
+== 2026-10-19T07:18:26Z PASS I8 backup generation seyra-backup-20261019T071825353Z-7aa772 (without --include-sources) and a separate secrets copy
+== 2026-10-19T07:18:26Z FAIL I9 outbound attempts counted:  -> 0
+== 2026-10-19T07:19:42Z PASS R2 restore before the secrets are back is refused and starts nothing
+== 2026-10-19T07:19:51Z PASS R3 secrets -> init -> restore: control DB events identical; restore names the original input by SHA-256 (e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323)
+== 2026-10-19T07:20:58Z PASS R4 rebuilt from the owner's original input without included sources; dataset_id reproduced (ds-20261001-9843cf36a06e)
+== 2026-10-19T07:21:09Z PASS R5 restored host serves ds-20261001-9843cf36a06e through the ingress
+== 2026-10-19T07:21:10Z PASS R6 zero packets to non-local destinations from offline host 2 during install/restore/rebuild/activate

@@ -1,0 +1,33 @@
+2026-10-18T13:45:26Z free_bytes=51924013056 free_inodes=6009311 mem_avail=6416949248 swap_used=173940736 load1=1.25 host_ctr=seyra-iran-host cpu=56.29% mem=499.2MiB / 7.204GiB
+ctr trusting_golick cpu=26.69% mem=97.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.12% mem=231.5MiB / 7.204GiB
+2026-10-18T13:45:39Z free_bytes=51923791872 free_inodes=6009252 mem_avail=6356033536 swap_used=172904448 load1=1.21 host_ctr=seyra-iran-host cpu=26.05% mem=582.5MiB / 7.204GiB
+ctr trusting_golick cpu=18.76% mem=127.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.91% mem=231.9MiB / 7.204GiB
+2026-10-18T13:45:52Z free_bytes=51923791872 free_inodes=6009252 mem_avail=6342393856 swap_used=172904448 load1=1.16 host_ctr=seyra-iran-host cpu=29.77% mem=585.8MiB / 7.204GiB
+ctr trusting_golick cpu=32.13% mem=129.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.49% mem=231.8MiB / 7.204GiB
+2026-10-18T13:46:05Z free_bytes=51923791872 free_inodes=6009252 mem_avail=6361235456 swap_used=172896256 load1=1.20 host_ctr=seyra-iran-host cpu=23.43% mem=583.8MiB / 7.204GiB
+ctr trusting_golick cpu=22.17% mem=129.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.16% mem=231.7MiB / 7.204GiB
+2026-10-18T13:46:19Z free_bytes=51923791872 free_inodes=6009252 mem_avail=6358802432 swap_used=172896256 load1=1.25 host_ctr=seyra-iran-host cpu=24.77% mem=481.6MiB / 7.204GiB
+ctr trusting_golick cpu=24.28% mem=128.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.53% mem=232.1MiB / 7.204GiB
+2026-10-18T13:46:32Z free_bytes=51923103744 free_inodes=6009048 mem_avail=6291058688 swap_used=172875776 load1=1.11 host_ctr=seyra-iran-host cpu=168.45% mem=605MiB / 7.204GiB
+ctr seyra-overpass-1 cpu=0.07% mem=13.97MiB / 7.204GiB
+ctr seyra-photon-1 cpu=33.87% mem=92.1MiB / 7.204GiB
+ctr seyra-valhalla-1 cpu=0.10% mem=79.86MiB / 7.204GiB
+ctr trusting_golick cpu=0.05% mem=179.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.58% mem=233.5MiB / 7.204GiB
+ctr seyra-tegola-1 cpu=0.00% mem=19.91MiB / 7.204GiB
+ctr seyra-api-1 cpu=19.84% mem=106.6MiB / 7.204GiB
+ctr seyra-proxy-1 cpu=20.32% mem=15.58MiB / 7.204GiB
+2026-10-18T13:46:47Z free_bytes=51922436096 free_inodes=6008921 mem_avail=5695053824 swap_used=168161280 load1=1.70 host_ctr=seyra-iran-host cpu=50.67% mem=1.676GiB / 7.204GiB
+ctr seyra-proxy-1 cpu=0.00% mem=11.05MiB / 7.204GiB
+ctr seyra-api-1 cpu=16.37% mem=112MiB / 7.204GiB
+ctr seyra-tegola-1 cpu=0.11% mem=5.109MiB / 7.204GiB
+ctr seyra-overpass-1 cpu=1.06% mem=6.285MiB / 7.204GiB
+ctr seyra-photon-1 cpu=195.82% mem=972.6MiB / 7.204GiB
+ctr seyra-valhalla-1 cpu=0.12% mem=52.43MiB / 7.204GiB
+ctr trusting_golick cpu=6.22% mem=162MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.29% mem=238.7MiB / 7.204GiB

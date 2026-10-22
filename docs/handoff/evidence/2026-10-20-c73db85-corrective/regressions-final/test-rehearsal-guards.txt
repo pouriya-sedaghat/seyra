@@ -1,0 +1,26 @@
+PASS R1 existing foreign volume: refused before any mount, non-zero exit
+PASS R1 existing unlabelled volume: refused before any mount, non-zero exit
+PASS R1 existing volume of this lab on another driver: refused before any mount, non-zero exit
+PASS R1 existing owned volume in use by a container: refused before any mount, non-zero exit
+PASS R1 volume state uncertain (inspect error): refused before any mount, non-zero exit
+PASS R1 volume create fails: refused before any mount, non-zero exit
+PASS R1 foreign volume created concurrently (create returns it): refused before any mount, non-zero exit
+PASS R1 inspect after create fails: refused before any mount, non-zero exit
+PASS R1 users of the volume cannot be listed: refused before any mount, non-zero exit
+PASS R1 absent volume: created with the lab label, verified, then mounted
+PASS R1 existing owned, unused volume: reused
+PASS R4 clean cleanup: PASS RC1, exit 0, lab directory removed
+PASS R4 clean cleanup: removes exactly the owned VM, volume and three networks
+PASS R4 removals fail, objects remain, routes changed (review case): FAIL RC1, non-zero exit
+PASS R4 container removal fails only: FAIL RC1, non-zero exit
+PASS R4 inner removal on the lab host fails: FAIL RC1, non-zero exit
+PASS R4 an owned container remains after removal: FAIL RC1, non-zero exit
+PASS R4 inventory query fails: FAIL RC1, non-zero exit
+PASS R4 outer routes changed only: FAIL RC1, non-zero exit
+PASS R4 outer routes unreadable: FAIL RC1, non-zero exit
+PASS R4 no route baseline: FAIL RC1, non-zero exit
+PASS R4 network inspection fails (not "not found"): FAIL RC1, non-zero exit
+PASS R4 lab directory cannot be removed: FAIL RC1, non-zero exit
+PASS R4 foreign network/volume with the fixed names: preserved (never removed), reported, verdict PASS
+PASS R4 cleanup after the VM is already gone: no guard refusal, PASS
+# rehearsal guards: driver=<REPO>/tests/rehearsal/handoff-rehearsal.sh checks=25 failed=0

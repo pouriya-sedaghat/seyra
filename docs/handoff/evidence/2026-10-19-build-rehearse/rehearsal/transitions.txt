@@ -1,0 +1,6 @@
+t1-update-start rc=0 not_ready_ms=2078 samples=20 final=200 recreated=[api,proxy] identities_equal=yes
+t2-proxy-restart-tls rc=0 not_ready_ms=507 samples=16 final=200 recreated=[proxy] identities_equal=yes
+t3-relay-on rc=0 not_ready_ms=512 samples=16 final=200 recreated=[proxy] identities_equal=yes
+t4-rollback-relay rc=0 not_ready_ms=0 samples=17 final=200 recreated=[proxy] identities_equal=yes
+t5-rollback-tls rc=0 not_ready_ms=507 samples=17 final=200 recreated=[proxy] identities_equal=yes
+t6-rollback-software rc=0 not_ready_ms=2532 samples=58 final=200 recreated=[api,proxy] identities_equal=yes

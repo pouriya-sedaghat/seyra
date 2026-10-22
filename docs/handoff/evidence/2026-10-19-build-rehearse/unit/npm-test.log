@@ -1,0 +1,56 @@
+
+> seyra@1.0.0 test
+> npm run test --workspaces --if-present
+
+
+> @seyra/contracts@1.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 <REPO>/packages/contracts
+
+
+ Test Files  2 passed (2)
+      Tests  12 passed (12)
+   Start at  14:34:45
+   Duration  114ms (import 41%, transform 29%, tests 18%, worker 12%, environment 1%)
+
+
+> @seyra/map-assets@1.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 <REPO>/packages/map-assets
+
+
+ Test Files  1 passed (1)
+      Tests  6 passed (6)
+   Start at  14:34:46
+   Duration  122ms (import 40%, tests 39%, transform 15%, worker 6%)
+
+
+> @seyra/api@1.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 <REPO>/apps/api
+
+
+ Test Files  7 passed (7)
+      Tests  57 passed (57)
+   Start at  14:34:46
+   Duration  1.38s (tests 62%, import 34%, transform 4%, worker 1%)
+
+
+> @seyra/ops@1.0.0 test
+> vitest run
+
+
+ RUN  v5.0.4 <REPO>/apps/ops
+
+
+ Test Files  11 passed (11)
+      Tests  151 passed (151)
+   Start at  14:34:47
+   Duration  3.41s (tests 82%, import 16%, transform 2%)
+

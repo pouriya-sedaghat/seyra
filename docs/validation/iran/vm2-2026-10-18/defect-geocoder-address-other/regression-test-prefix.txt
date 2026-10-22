@@ -1,0 +1,43 @@
+
+ RUN  v5.0.4 /home/owner/seyra/apps/ops
+
+ ❯ src/geocoder-preprocess.test.ts (5 tests | 2 failed) 12ms
+   ❯ geocoder dump preprocessing (5)
+     × accepts the string-array address lines of real Photon dumps 3ms
+     × takes text values from strings and string arrays only 0ms
+
+⎯⎯⎯⎯⎯⎯⎯ Failed Tests 2 ⎯⎯⎯⎯⎯⎯⎯
+
+ FAIL  src/geocoder-preprocess.test.ts > geocoder dump preprocessing > accepts the string-array address lines of real Photon dumps
+TypeError: text.normalize is not a function
+ ❯ tokens src/geocoder-preprocess.ts:51:6
+     49| export function tokens(text: string): string[] {
+     50|   return text
+     51|     .normalize('NFC')
+       |      ^
+     52|     .split(/[\s,\-‐-―_/\\()[\]{}"'«»؛،.:;!?]+/u)
+     53|     .map((t) => t.replace(/[‌‍‎‏]/gu, ''))
+ ❯ collectSynonyms src/geocoder-preprocess.ts:94:23
+ ❯ preprocessDump src/geocoder-preprocess.ts:154:57
+ ❯ src/geocoder-preprocess.test.ts:69:19
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[1/2]⎯
+
+ FAIL  src/geocoder-preprocess.test.ts > geocoder dump preprocessing > takes text values from strings and string arrays only
+TypeError: textValues is not a function
+ ❯ src/geocoder-preprocess.test.ts:80:12
+     78|
+     79|   it('takes text values from strings and string arrays only', () => {
+     80|     expect(textValues('a')).toEqual(['a']);
+       |            ^
+     81|     expect(textValues(['a', 3, 'b', null])).toEqual(['a', 'b']);
+     82|     expect(textValues(5)).toEqual([]);
+
+⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯⎯[2/2]⎯
+
+
+ Test Files  1 failed (1)
+      Tests  2 failed | 3 passed (5)
+   Start at  10:44:50
+   Duration  532ms (import 60%, transform 33%, worker 3%, tests 3%)
+

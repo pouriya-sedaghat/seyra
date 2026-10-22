@@ -1,0 +1,6 @@
+{
+  "seyraOrigin": "https://<SEYRA_HOST>:<PORT>",
+  "caFile": "<path to the Seyra CA certificate (public, PEM)>",
+  "listen": { "host": "127.0.0.1", "port": 0 },
+  "pageOrigin": "http://localhost:<DEV_SERVER_PORT>"
+}

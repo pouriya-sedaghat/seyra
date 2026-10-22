@@ -1,0 +1,6 @@
+OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)
+new-server-csr: the generated request does not validate: CSR subject is not CN=198.18.0.76
+new-server-csr: INCOMPLETE: /o/req/to-windows.incomplete is an abandoned attempt, not a ready request
+create rc=2
+new-server-csr: request in /o/req is NOT valid: missing, empty or not a regular file: /o/req/to-windows/server.csr
+check rc=2

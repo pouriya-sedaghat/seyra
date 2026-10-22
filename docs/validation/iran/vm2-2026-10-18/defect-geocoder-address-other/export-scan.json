@@ -1,0 +1,79 @@
+{
+ "lines": 1199261,
+ "places": 1199311,
+ "doc_types": {
+  "NominatimDumpFile": 1,
+  "CountryInfo": 1,
+  "Place": 1199259
+ },
+ "header": {
+  "version": "0.1.0",
+  "generator": "photon",
+  "database_version": "1.0.0-4",
+  "data_timestamp": "2026-10-17T20:14:22.000+00:00",
+  "features": {
+   "sorted_by_country": true,
+   "has_addresslines": false
+  }
+ },
+ "first_offending_line": 696,
+ "non_string_by_path": {
+  "address.other:array": 1191816,
+  "address.other:en:array": 35941,
+  "address.other:fa:array": 140391
+ },
+ "samples": [
+  {
+   "line": 696,
+   "place_id": "1932849",
+   "osm": "W117236894",
+   "osm_key": "place",
+   "osm_value": "city",
+   "field": "address",
+   "key": "other",
+   "value": [
+    "Etrek etraby",
+    "Balkan welaýaty"
+   ]
+  },
+  {
+   "line": 702,
+   "place_id": "1932848",
+   "osm": "R19980164",
+   "osm_key": "place",
+   "osm_value": "city",
+   "field": "address",
+   "key": "other",
+   "value": [
+    "Etrek etraby",
+    "Balkan welaýaty"
+   ]
+  },
+  {
+   "line": 840,
+   "place_id": "719648",
+   "osm": "N13584327751",
+   "osm_key": "amenity",
+   "osm_value": "place_of_worship",
+   "field": "address",
+   "key": "other",
+   "value": [
+    "Saray",
+    "Kapıköy"
+   ]
+  },
+  {
+   "line": 842,
+   "place_id": "719702",
+   "osm": "N13584306139",
+   "osm_key": "amenity",
+   "osm_value": "place_of_worship",
+   "field": "address",
+   "key": "other",
+   "value": [
+    "Başkale",
+    "Kaşkol"
+   ]
+  }
+ ]
+}

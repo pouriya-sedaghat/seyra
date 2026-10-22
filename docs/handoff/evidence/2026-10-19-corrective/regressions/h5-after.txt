@@ -1,0 +1,11 @@
+PASS the proxy template generates JSON errors
+PASS ingress 413 PAYLOAD_TOO_LARGE satisfies the documented error schema
+PASS ingress 404 NOT_FOUND satisfies the documented error schema
+PASS ingress 503 PROVIDER_UNAVAILABLE satisfies the documented error schema
+PASS ingress 404 DATASET_MISMATCH satisfies the documented error schema
+PASS ingress 404 NOT_FOUND satisfies the documented error schema
+PASS ingress 413 satisfies the exported /api/v1/map/route 413 schema
+PASS the exported /api/v1/map/route 413 schema still requires request_id
+PASS ingress 413 satisfies the exported /api/v1/map/proximity 413 schema
+PASS the exported /api/v1/map/proximity 413 schema still requires request_id
+# checkout=<repo> checks=10 failed=0

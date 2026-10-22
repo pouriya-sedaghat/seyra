@@ -1,0 +1,90 @@
+{
+  "reviewed_head": "e7a2175149824f7cba92e47382c464607248f609",
+  "node": "v24.21.0",
+  "checks": [
+    {
+      "id": "capacity-boundaries",
+      "result": "PASS",
+      "detail": "The 120x reference, 2 GiB floor, exact boundary and reclaim arithmetic behave as documented."
+    },
+    {
+      "id": "within-step-minimum",
+      "result": "PASS",
+      "detail": "An actual monitor sample between two high boundaries becomes the step/run minimum."
+    },
+    {
+      "id": "failed-statfs",
+      "result": "PASS",
+      "detail": "A failed sample is not recorded as a free-space value."
+    },
+    {
+      "id": "monitor-timer",
+      "result": "PASS",
+      "detail": "Timer samples stop when stop() is called."
+    },
+    {
+      "id": "bundle-output-policy",
+      "result": "PASS",
+      "detail": "Actual ownership helper fixes archive mode, retains executable mode and bytes, and leaves the output parent and symlink target untouched. No real non-root wrapper rerun here."
+    },
+    {
+      "id": "update-regular-files",
+      "result": "PASS",
+      "detail": "Actual update block admits a valid fixture and refuses an unlisted regular file before bootstrap."
+    },
+    {
+      "id": "browser-negative-categories",
+      "result": "PASS",
+      "detail": "The new predicate does reject missing declared visits and console errors."
+    }
+  ],
+  "observations": [
+    {
+      "id": "F1-logical-reclaim-credit",
+      "reproduced": true,
+      "logical_credit_bytes": 8589934592,
+      "allocated_file_bytes": 0,
+      "illustrative_free_bytes": 1073741824,
+      "required_bytes": 4294967296,
+      "admission": true,
+      "detail": "The actual helper credits 8 GiB for a sparse file with almost no allocated blocks. Arithmetic admits a 4 GiB requirement with only a 1 GiB free-space budget. This is an actual-code/filesystem counterexample, not a full import."
+    },
+    {
+      "id": "F1-followed-link-credit",
+      "reproduced": true,
+      "linked_target_bytes_credited": 13,
+      "detail": "duBytes follows a symlink and credits target bytes even though deleting the release removes only the link."
+    },
+    {
+      "id": "F2-unlisted-link-gate",
+      "reproduced": true,
+      "rc": 0,
+      "audit": "in_host rm -rf /home/owner/seyra-prep/boundary/review/out/fixtures-rBonfO/update-symlink/install\ncli bootstrap-load /home/owner/seyra-prep/boundary/review/out/fixtures-rBonfO/update-symlink/bundle\ncli verify-images\ncli status\nresult PASS U1 software update: SHA256SUMS digest 371adb09b4db5091e4d313f5c461728a94e08abc91d36b4e370f7d9869d8e607 matches the out-of-band value; 1 listed files verified; no unlisted files; install tree replaced; all locked images verified\n",
+      "copied_link": true,
+      "detail": "The actual pre-install gate ignores unlisted symlinks (find -type f). The link is copied and bootstrap is called. CLI is a recorder; a later product verifier might reject, after install mutation."
+    },
+    {
+      "id": "F3-visit-click-failure",
+      "reproduced": true,
+      "click_attempts": 1,
+      "visit": {
+        "q": "برج آزادی",
+        "expect": "تهران",
+        "found": true,
+        "rank_of_expected_area": 1,
+        "results_listed": 1,
+        "scale_after_open": "100 km",
+        "panel_text": "تهران"
+      },
+      "verdict": "PASS",
+      "detail": "The actual searchAndOpen swallows a failed result click, returns found=true, and the new verdict accepts six such visits. No actual map movement is checked."
+    },
+    {
+      "id": "F4-unguarded-attached-host-drop",
+      "reproduced": true,
+      "audit": "in_host sh -c docker ps -q | xargs -r docker kill\nin_host rm -rf /home/owner/seyra-prep/boundary/review/out/fixtures-rBonfO/host-drop/lab/home /home/owner/seyra-prep/boundary/review/out/fixtures-rBonfO/host-drop/lab/install /home/owner/seyra-prep/boundary/review/out/fixtures-rBonfO/host-drop/lab/work\ndocker rm -f preserved-unlabelled-owner-host\ndocker volume rm preserved-unlabelled-owner-host-docker\n",
+      "detail": "Actual drop_host issues destructive cleanup without checking a lab label. attach_host accepts any name; the restore phase calls drop_host before new_host can protect the other target. Docker/in_host are recorders only."
+    }
+  ],
+  "limitations": "No full checkout dependencies, exact pinned Node 24.21.0, real Docker/Photon/PBF import, browser or full provider suites were run by this reviewer."
+}

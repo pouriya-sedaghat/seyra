@@ -1,0 +1,7 @@
+removed superseded export <PREP>/bundle-2026-10-19-vm2-r7-pre-umask-fix (digest 4200848b…, created this session)
+removed tamper copy <SYNTH>/tamper-r7 (created this session from r7)
+removed seyra-offline-host + seyra-offline-docker (offline-host suite, this run)
+removed superseded bundle r7 <PREP>/bundle-2026-10-19-vm2-r7 (digest 8162ae6a…, created this session; wrapper --from defect)
+removed tamper copy <SYNTH>/tamper-r8
+removed seyra-offline-host + seyra-offline-docker (r8 run)
+removed superseded client pack client-pack-2026-10-19-r7 (from 862dc8d, created this session)

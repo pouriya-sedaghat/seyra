@@ -1,0 +1,105 @@
+PASS render refuses: relay with lan access mode
+PASS render refuses: relay peer without client CIDRs
+PASS render refuses: relay CIDRs without a peer
+PASS render refuses: relay peer is not an address
+PASS render refuses: relay peer out of range
+PASS render refuses: relay peer 0.0.0.0
+PASS render refuses: relay client CIDR 0.0.0.0/0
+PASS render refuses: relay client CIDR not canonical
+PASS render refuses: relay client CIDR list with an empty entry
+PASS render refuses: relay peer inside the client allowlist
+PASS render refuses: relay server names with localhost
+PASS render refuses: relay server names with 127.0.0.1
+PASS render refuses: relay server names with a wildcard
+PASS render refuses: lan mode without CIDRs
+PASS render refuses: lan CIDR with an invalid entry
+PASS render refuses: loopback mode bound to 0.0.0.0
+PASS nginx -t (loopback mode, image 07e3eca26da7)
+PASS nginx -t (direct lan mode, image 07e3eca26da7)
+PASS nginx -t (relay mode, image 07e3eca26da7)
+PASS direct LAN mode keeps the allowlist on the ordinary listener and renders no relay
+PASS relay-mode render
+PASS edge stream config passes nginx -t with the exact image binary (stream + proxy_protocol)
+PASS edge render refuses {"EDGE_CLIENT_CIDRS":"0.0.0.0/0","EDGE_UPSTREAM":"198.18.0.2:8444"}
+PASS edge render refuses {"EDGE_CLIENT_CIDRS":"127.0.0.8/29","EDGE_UPSTREAM":"relay.local:8444"}
+PASS edge render refuses {"EDGE_CLIENT_CIDRS":"127.0.0.8/29","EDGE_UPSTREAM":"198.18.0.2"}
+PASS control path: readiness without a PROXY header
+PASS control path: unknown Host (valid SNI) gets 421
+PASS control path: diagnostics blocked (404 JSON)
+PASS relay e2e: approved client /health/live -> 200
+PASS relay e2e: approved client /health/ready -> 200
+PASS relay e2e: approved client /api/v1/map/capabilities -> 200
+PASS relay e2e: approved client /api/docs/ -> 200
+PASS relay e2e: approved client /api/docs -> 200
+PASS relay e2e: approved client /api/docs/static/swagger-ui-bundle.js -> 200
+PASS relay e2e: approved client /api/docs/json -> 200
+PASS relay e2e: approved client /maps/ds-20261019-boundary0001/tiles.json -> 200
+PASS relay e2e: approved client /maps/ds-20261019-boundary0001/styles/light-fa.json -> 200
+PASS relay e2e: approved client /maps/ds-20261019-boundary0001/tiles/0/0/0.pbf -> 200
+PASS relay e2e: approved client /maps/ds-20261019-boundary0001/fonts/Vazirmatn%20Regular/0-255.pbf -> 200
+PASS relay e2e: approved client /maps/ds-20261019-boundary0001/sprites/light.json -> 200
+PASS relay e2e: approved client /maps/ds-other-release/tiles.json -> 404
+PASS relay e2e: approved client /licenses/vazirmatn-ofl.txt -> 200
+PASS relay e2e: approved client / -> 200
+PASS relay e2e: unknown Host (valid SNI) gets 421
+PASS relay e2e: control-path name localhost as Host gets 421 on the relay listener
+PASS relay e2e: body over 64 KiB gets the typed 413 envelope
+PASS relay e2e: the ingress 413 body validates against the exported 413 schema
+PASS relay e2e: ingress DATASET_MISMATCH for /maps/ds-other-release/tiles.json carries a request_id and validates
+PASS relay e2e: ingress NOT_FOUND for /maps/nothing-here carries a request_id and validates
+PASS relay e2e: ingress NOT_FOUND for /api/v1/map/diagnostics carries a request_id and validates
+PASS relay e2e: spoofed X-Forwarded-For/X-Real-IP/Forwarded naming an outsider are ignored
+PASS edge: client outside the approved subnet is dropped before TLS
+PASS relay: conveyed outsider address gets 403 for /health/live
+PASS relay: conveyed outsider address gets 403 for /api/v1/map/capabilities
+PASS relay: conveyed outsider address gets 403 for /api/docs/
+PASS relay: conveyed outsider address gets 403 for /api/docs/json
+PASS relay: conveyed outsider address gets 403 for /maps/ds-20261019-boundary0001/tiles.json
+PASS relay: conveyed outsider address gets 403 for /maps/ds-20261019-boundary0001/tiles/0/0/0.pbf
+PASS relay: conveyed outsider address gets 403 for /maps/ds-20261019-boundary0001/sprites/light.json
+PASS relay: conveyed outsider address gets 403 for /licenses/vazirmatn-ofl.txt
+PASS relay: conveyed outsider address gets 403 for /
+PASS relay: conveyed outsider address gets 403 for /assets/x.js
+PASS relay: outsider with X-Forwarded-For/X-Real-IP naming an approved client still 403
+PASS relay: a PROXY header sent by the client through the edge never admits it
+PASS relay: untrusted peer forging an approved client address gets 403
+PASS relay: approved client bypassing the edge gets 403 (peer is not the relay)
+PASS relay: no PROXY header (even from the relay address) gets no HTTP response
+PASS relay: malformed PROXY header gets no HTTP response
+PASS relay: the configured relay conveying an approved client is admitted
+PASS relay: the configured relay conveying an outsider gets 403
+PASS relay: untrusted peer with an unknown Host gets 403, not 421
+PASS diagnostics variant GET /api/v1/map/diagnostics is not served
+PASS diagnostics variant HEAD /api/v1/map/diagnostics is not served
+PASS diagnostics variant GET /api/v1/map/diagnostics/ is not served
+PASS diagnostics variant HEAD /api/v1/map/diagnostics/ is not served
+PASS diagnostics variant GET /api/v1/map/diagnostics?x=1 is not served
+PASS diagnostics variant HEAD /api/v1/map/diagnostics?x=1 is not served
+PASS diagnostics variant GET /api/v1/map//diagnostics is not served
+PASS diagnostics variant HEAD /api/v1/map//diagnostics is not served
+PASS diagnostics variant GET /api//v1/map/diagnostics is not served
+PASS diagnostics variant HEAD /api//v1/map/diagnostics is not served
+PASS diagnostics variant GET /api/v1/map/./diagnostics is not served
+PASS diagnostics variant HEAD /api/v1/map/./diagnostics is not served
+PASS diagnostics variant GET /api/v1/map/x/../diagnostics is not served
+PASS diagnostics variant HEAD /api/v1/map/x/../diagnostics is not served
+PASS diagnostics variant GET /api/v1/map/%64iagnostics is not served
+PASS diagnostics variant HEAD /api/v1/map/%64iagnostics is not served
+PASS diagnostics variant GET /api/v1/map/diagnostic%73 is not served
+PASS diagnostics variant HEAD /api/v1/map/diagnostic%73 is not served
+PASS diagnostics variant GET /api/v1/map/diagnostics%3Fx is not served
+PASS diagnostics variant HEAD /api/v1/map/diagnostics%3Fx is not served
+PASS diagnostics variant GET /api/v1%2Fmap%2Fdiagnostics is not served
+PASS diagnostics variant HEAD /api/v1%2Fmap%2Fdiagnostics is not served
+PASS diagnostics variant GET /health/../api/v1/map/diagnostics is not served
+PASS diagnostics variant HEAD /health/../api/v1/map/diagnostics is not served
+PASS diagnostics variant GET /health/%2E%2E/api/v1/map/diagnostics is not served
+PASS diagnostics variant HEAD /health/%2E%2E/api/v1/map/diagnostics is not served
+PASS diagnostics variant GET /api/v1/map/Diagnostics is not served
+PASS diagnostics variant HEAD /api/v1/map/Diagnostics is not served
+PASS diagnostics variant GET /API/v1/map/diagnostics is not served
+PASS diagnostics variant HEAD /API/v1/map/diagnostics is not served
+PASS diagnostics variant GET /api/v1/map/diagnostics;x is not served
+PASS diagnostics variant HEAD /api/v1/map/diagnostics;x is not served
+PASS diagnostics: the API handler was never reached through the ingress
+# image=sha256:07e3eca26da70c86cf69cb4538dbcac9eb163ad507a574eb411d561d005e233c nginx=<scratch>/proxy-nginx checks=104 failed=0

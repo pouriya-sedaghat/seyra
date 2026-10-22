@@ -1,0 +1,17 @@
+{
+  "name": "@seyra/integration-tests",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "description": "Real-provider integration tests against a running Seyra Map Services stack (not part of any runtime image).",
+  "license": "UNLICENSED",
+  "scripts": {
+    "test": "vitest run"
+  },
+  "devDependencies": {
+    "@mapbox/vector-tile": "3.0.0",
+    "@types/node": "24.19.2",
+    "pbf": "5.1.2",
+    "vitest": "5.0.4"
+  }
+}

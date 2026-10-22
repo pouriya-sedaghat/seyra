@@ -1,0 +1,4 @@
+# 2026-10-19T04:43:59Z iran-offline-host start phases=[install] pbf=synthetic-v1.osm.pbf sha256=e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323 size=3167
+== 2026-10-19T04:44:11Z PASS I0 offline host has no images and no outside route (probe to example.com failed)
+== 2026-10-19T04:45:51Z PASS I1 bootstrap-load verified checksums and loaded 10 images; every reference resolves to its locked image ID
+== 2026-10-19T04:45:59Z PASS I2 init (loopback 127.0.0.1:8443) and internal TLS CA/certificate

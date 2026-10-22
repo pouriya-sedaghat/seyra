@@ -1,0 +1,74 @@
+{
+  "recorded_at": "2026-10-18T13:56:15.007Z",
+  "label": "EXPLORATORY real-Iran views (screenshots for visual review; request audit asserted)",
+  "base": "https://127.0.0.1:8443",
+  "title": "سیرا — آزمون سرویس‌های نقشه",
+  "total_requests": 259,
+  "external_requests": [],
+  "rtl_plugin_requests": [],
+  "font_resources": [
+    "/maps/ds-20261017-2d2c87f31d11/fonts/files/Vazirmatn-Bold.woff2",
+    "/maps/ds-20261017-2d2c87f31d11/fonts/files/Vazirmatn-Regular.woff2",
+    "/maps/ds-20261017-2d2c87f31d11/fonts/Vazirmatn Bold/0-255.pbf",
+    "/maps/ds-20261017-2d2c87f31d11/fonts/Vazirmatn Regular/0-255.pbf",
+    "/maps/ds-20261017-2d2c87f31d11/fonts/Vazirmatn Regular/256-511.pbf",
+    "/maps/ds-20261017-2d2c87f31d11/fonts/Vazirmatn Regular/8192-8447.pbf"
+  ],
+  "failed_requests": [],
+  "client_aborted_requests": 52,
+  "tile_requests": 193,
+  "console_errors": [],
+  "visits": [
+    {
+      "area": "Tehran (urban)",
+      "q": "میدان آزادی",
+      "found": true,
+      "panel_text": "جستجو\nمکان‌یابی معکوس\nمسیریابی\nنزدیکی\nمکان‌ها\nعیب‌یابی\n تکمیل خودکار\n اولویت با محدوده نقشه\nجستجو\nautocomplete · photon · normalized: میدان ازادی\nمیدان ازادی\nhighway=trunk · osm:w674948787\nمحمودآباد، استان مازندران\nمیدان آزادی\nhighway=residential · osm:w485289880\nسرخه، دهستان لاسگرد، استان سمنان\nمید"
+    },
+    {
+      "area": "Isfahan (urban)",
+      "q": "میدان نقش جهان",
+      "found": true,
+      "panel_text": "جستجو\nمکان‌یابی معکوس\nمسیریابی\nنزدیکی\nمکان‌ها\nعیب‌یابی\n تکمیل خودکار\n اولویت با محدوده نقشه\nجستجو\nautocomplete · photon · normalized: میدان نقش جهان\nمیدان آزادی\nplace=square · osm:r7790807\nمنطقه ۹، تهران، استان تهران\nمیدان نقش جهان\nhighway=track · osm:w406648469\nپیشوا، استان تهران\nمیدان نقش جهان\npla"
+    },
+    {
+      "area": "Abyaneh (rural)",
+      "q": "ابیانه",
+      "found": true,
+      "panel_text": "جستجو\nمکان‌یابی معکوس\nمسیریابی\nنزدیکی\nمکان‌ها\nعیب‌یابی\n تکمیل خودکار\n اولویت با محدوده نقشه\nجستجو\nautocomplete · photon · normalized: ابیانه\nمیدان آزادی\nplace=square · osm:r7790807\nمنطقه ۹، تهران، استان تهران\nابیانه\nplace=village · osm:n27369333\nدهستان برزرود، استان اصفهان\nابیانه\ntourism=attraction "
+    },
+    {
+      "area": "Zahedan (south-east border province)",
+      "q": "زاهدان",
+      "found": true,
+      "panel_text": "جستجو\nمکان‌یابی معکوس\nمسیریابی\nنزدیکی\nمکان‌ها\nعیب‌یابی\n تکمیل خودکار\n اولویت با محدوده نقشه\nجستجو\nautocomplete · photon · normalized: زاهدان\nمیدان آزادی\nplace=square · osm:r7790807\nمنطقه ۹، تهران، استان تهران\nزاهدان\nhighway=residential · osm:w33181680\nمنطقه ۷، تهران، استان تهران\nزاهدی\nhighway=reside"
+    },
+    {
+      "area": "Bazargan (north-west border crossing)",
+      "q": "بازرگان",
+      "found": true,
+      "panel_text": "جستجو\nمکان‌یابی معکوس\nمسیریابی\nنزدیکی\nمکان‌ها\nعیب‌یابی\n تکمیل خودکار\n اولویت با محدوده نقشه\nجستجو\nautocomplete · photon · normalized: بازرگان\nمیدان آزادی\nplace=square · osm:r7790807\nمنطقه ۹، تهران، استان تهران\nبازرگان\nhighway=residential · osm:w491389560\nمنطقه ۵، تهران، استان تهران\nبازرگان\nhighway=r"
+    },
+    {
+      "area": "Shiraz (English query)",
+      "q": "Shiraz",
+      "found": true,
+      "panel_text": "Search\nReverse\nRoute\nProximity\nPOIs\nDiagnostics\n Autocomplete\n Bias to map view\nSearch\nautocomplete · photon · normalized: shiraz\nمیدان آزادی\nplace=square · osm:r7790807\nمنطقه ۹، تهران، استان تهران\nShiraz\nhighway=residential · osm:w488907214\nTajrish، بخش رودبار قصران، Tehran\nShiraz\nhighway=residenti"
+    }
+  ],
+  "screenshots": [
+    "country-light-fa.jpg",
+    "tehran-azadi-light-fa.jpg",
+    "tehran-azadi-dark-fa.jpg",
+    "tehran-azadi-light-en.jpg",
+    "tehran-azadi-dark-en.jpg",
+    "tehran-city-light-fa.jpg",
+    "isfahan-naqshejahan-light-fa.jpg",
+    "abyaneh-rural-light-fa.jpg",
+    "abyaneh-region-light-fa.jpg",
+    "zahedan-dark-en.jpg",
+    "bazargan-border-light-fa.jpg",
+    "bazargan-region-light-fa.jpg",
+    "shiraz-light-en.jpg"
+  ]
+}

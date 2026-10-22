@@ -1,0 +1,3850 @@
+{
+  "recorded_at": "2026-10-18T13:46:58.149Z",
+  "base": "https://127.0.0.1:8443",
+  "label": "EXPLORATORY real-Iran smoke (no owner-approved fixtures yet)",
+  "reference_points": {
+    "tehran": [
+      51.389,
+      35.6892
+    ],
+    "azadi": [
+      51.338,
+      35.6997
+    ],
+    "milad": [
+      51.3753,
+      35.7448
+    ],
+    "bazaar": [
+      51.4214,
+      35.6726
+    ],
+    "tajrish": [
+      51.4339,
+      35.8044
+    ],
+    "mehrabad": [
+      51.3134,
+      35.6892
+    ],
+    "ika": [
+      51.1522,
+      35.4161
+    ],
+    "karaj": [
+      50.9915,
+      35.84
+    ],
+    "isfahan": [
+      51.666,
+      32.6539
+    ],
+    "naqshejahan": [
+      51.6777,
+      32.6575
+    ],
+    "siosepol": [
+      51.6676,
+      32.6444
+    ],
+    "shiraz": [
+      52.5837,
+      29.5918
+    ],
+    "persepolis": [
+      52.8916,
+      29.9355
+    ],
+    "mashhad": [
+      59.6168,
+      36.2605
+    ],
+    "tabriz": [
+      46.2919,
+      38.08
+    ],
+    "zahedan": [
+      60.8629,
+      29.4963
+    ],
+    "chabahar": [
+      60.643,
+      25.2919
+    ],
+    "bandarabbas": [
+      56.2666,
+      27.1832
+    ],
+    "rasht": [
+      49.5832,
+      37.2808
+    ],
+    "yazd": [
+      54.3569,
+      31.8974
+    ],
+    "abyaneh": [
+      51.6025,
+      33.5767
+    ],
+    "masuleh": [
+      48.9867,
+      37.1553
+    ],
+    "bazargan": [
+      44.386,
+      39.3925
+    ],
+    "astara": [
+      48.872,
+      38.429
+    ],
+    "kish": [
+      53.98,
+      26.53
+    ]
+  },
+  "ready": {
+    "status": 200,
+    "body": {
+      "status": "ready",
+      "dataset_id": "ds-20261017-2d2c87f31d11",
+      "providers": [
+        {
+          "provider": "tiles",
+          "implementation": "tegola",
+          "expected_identity": "seyra_ds_20261017_2d2c87f31d11",
+          "status": "ok",
+          "observed_identity": "seyra_ds_20261017_2d2c87f31d11",
+          "latency_ms": 170,
+          "checked_at": "2026-10-18T13:46:55.653Z"
+        },
+        {
+          "provider": "routing",
+          "implementation": "valhalla",
+          "expected_identity": "1792328023",
+          "status": "ok",
+          "observed_identity": "1792328023",
+          "latency_ms": 5,
+          "checked_at": "2026-10-18T13:46:55.489Z"
+        },
+        {
+          "provider": "geocoder",
+          "implementation": "photon",
+          "expected_identity": "seyra-release-ds-20261017-2d2c87f31d11",
+          "status": "ok",
+          "observed_identity": "seyra-release-ds-20261017-2d2c87f31d11",
+          "latency_ms": 540,
+          "checked_at": "2026-10-18T13:46:56.025Z"
+        },
+        {
+          "provider": "overpass",
+          "implementation": "overpass",
+          "expected_identity": "seyra:ds-20261017-2d2c87f31d11",
+          "status": "ok",
+          "observed_identity": "seyra:ds-20261017-2d2c87f31d11",
+          "latency_ms": 113,
+          "checked_at": "2026-10-18T13:46:55.599Z"
+        }
+      ],
+      "dependencies": [
+        {
+          "name": "control_db",
+          "status": "ok"
+        }
+      ],
+      "checked_at": "2026-10-18T13:46:56.026Z"
+    }
+  },
+  "dataset_id": "ds-20261017-2d2c87f31d11",
+  "health": {
+    "status": "ready",
+    "dataset_id": "ds-20261017-2d2c87f31d11",
+    "providers": [
+      {
+        "provider": "tiles",
+        "implementation": "tegola",
+        "expected_identity": "seyra_ds_20261017_2d2c87f31d11",
+        "status": "ok",
+        "observed_identity": "seyra_ds_20261017_2d2c87f31d11",
+        "latency_ms": 170,
+        "checked_at": "2026-10-18T13:46:55.653Z"
+      },
+      {
+        "provider": "routing",
+        "implementation": "valhalla",
+        "expected_identity": "1792328023",
+        "status": "ok",
+        "observed_identity": "1792328023",
+        "latency_ms": 5,
+        "checked_at": "2026-10-18T13:46:55.489Z"
+      },
+      {
+        "provider": "geocoder",
+        "implementation": "photon",
+        "expected_identity": "seyra-release-ds-20261017-2d2c87f31d11",
+        "status": "ok",
+        "observed_identity": "seyra-release-ds-20261017-2d2c87f31d11",
+        "latency_ms": 540,
+        "checked_at": "2026-10-18T13:46:56.025Z"
+      },
+      {
+        "provider": "overpass",
+        "implementation": "overpass",
+        "expected_identity": "seyra:ds-20261017-2d2c87f31d11",
+        "status": "ok",
+        "observed_identity": "seyra:ds-20261017-2d2c87f31d11",
+        "latency_ms": 113,
+        "checked_at": "2026-10-18T13:46:55.599Z"
+      }
+    ],
+    "dependencies": [
+      {
+        "name": "control_db",
+        "status": "ok"
+      }
+    ],
+    "checked_at": "2026-10-18T13:46:56.026Z"
+  },
+  "search": [
+    {
+      "q": "تهران",
+      "lang": "fa",
+      "ref": "tehran",
+      "km": 20,
+      "status": 200,
+      "ms": 473.4,
+      "result_status": "ok",
+      "normalized_query": "تهران",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 0.1,
+      "top3": [
+        {
+          "name": "تهران",
+          "category": "place=city",
+          "lon": 51.3896004,
+          "lat": 35.6892523,
+          "city": null,
+          "state": "استان تهران"
+        },
+        {
+          "name": "تهران",
+          "category": "highway=residential",
+          "lon": 51.668178,
+          "lat": 32.661626,
+          "city": "اصفهان",
+          "state": "استان اصفهان"
+        },
+        {
+          "name": "تهران",
+          "category": "highway=residential",
+          "lon": 46.7113538,
+          "lat": 38.0159091,
+          "city": "دهستان قوریگل",
+          "state": "استان آذربایجان شرقی"
+        }
+      ]
+    },
+    {
+      "q": "Tehran",
+      "lang": "en",
+      "ref": "tehran",
+      "km": 20,
+      "status": 200,
+      "ms": 192.2,
+      "result_status": "ok",
+      "normalized_query": "tehran",
+      "count": 9,
+      "rank": 2,
+      "nearest_km": 0.1,
+      "top3": [
+        {
+          "name": "Tehran",
+          "category": "place=province",
+          "lon": 51.8005344,
+          "lat": 35.5121097,
+          "city": null,
+          "state": null
+        },
+        {
+          "name": "Tehran",
+          "category": "place=city",
+          "lon": 51.3896004,
+          "lat": 35.6892523,
+          "city": null,
+          "state": "Tehran"
+        },
+        {
+          "name": "Tehran",
+          "category": "highway=secondary",
+          "lon": 50.8631256,
+          "lat": 35.8616621,
+          "city": "Karaj",
+          "state": "Alborz"
+        }
+      ]
+    },
+    {
+      "q": "برج آزادی",
+      "lang": "fa",
+      "ref": "azadi",
+      "km": 2,
+      "status": 200,
+      "ms": 647.2,
+      "result_status": "ok",
+      "normalized_query": "برج ازادی",
+      "count": 5,
+      "rank": 1,
+      "nearest_km": 0,
+      "top3": [
+        {
+          "name": "برج آزادی",
+          "category": "tourism=attraction",
+          "lon": 51.3380605,
+          "lat": 35.6997384,
+          "city": "تهران",
+          "state": "استان تهران"
+        },
+        {
+          "name": "برج آزادی",
+          "category": "historic=monument",
+          "lon": 51.3380605,
+          "lat": 35.6997383,
+          "city": "تهران",
+          "state": "استان تهران"
+        },
+        {
+          "name": "برج نگین آزادی",
+          "category": "building=commercial",
+          "lon": 51.4171179,
+          "lat": 35.7285001,
+          "city": "تهران",
+          "state": "استان تهران"
+        }
+      ]
+    },
+    {
+      "q": "Azadi Tower",
+      "lang": "en",
+      "ref": "azadi",
+      "km": 2,
+      "status": 200,
+      "ms": 80.2,
+      "result_status": "ok",
+      "normalized_query": "azadi tower",
+      "count": 3,
+      "rank": 1,
+      "nearest_km": 0,
+      "top3": [
+        {
+          "name": "Azadi Tower",
+          "category": "tourism=attraction",
+          "lon": 51.3380605,
+          "lat": 35.6997384,
+          "city": "Tehran",
+          "state": "Tehran"
+        },
+        {
+          "name": "Azadi Tower",
+          "category": "historic=monument",
+          "lon": 51.3380605,
+          "lat": 35.6997383,
+          "city": "Tehran",
+          "state": "Tehran"
+        },
+        {
+          "name": "Parsi Tower",
+          "category": "aeroway=helipad",
+          "lon": 51.2647556,
+          "lat": 35.7434903,
+          "city": "Tehran",
+          "state": "Tehran"
+        }
+      ]
+    },
+    {
+      "q": "برج میلاد",
+      "lang": "fa",
+      "ref": "milad",
+      "km": 2,
+      "status": 200,
+      "ms": 73.9,
+      "result_status": "ok",
+      "normalized_query": "برج میلاد",
+      "count": 10,
+      "rank": 2,
+      "nearest_km": 0,
+      "top3": [
+        {
+          "name": "برج میلاد",
+          "category": "building=yes",
+          "lon": 60.8309954,
+          "lat": 29.4683043,
+          "city": "زاهدان",
+          "state": "استان سیستان و بلوچستان"
+        },
+        {
+          "name": "برج میلاد",
+          "category": "historic=monument",
+          "lon": 51.3752738,
+          "lat": 35.7447016,
+          "city": "تهران",
+          "state": "استان تهران"
+        },
+        {
+          "name": "برج میلاد",
+          "category": "building=commercial",
+          "lon": 50.999516,
+          "lat": 35.8322314,
+          "city": "کرج",
+          "state": "استان البرز"
+        }
+      ]
+    },
+    {
+      "q": "Milad Tower",
+      "lang": "en",
+      "ref": "milad",
+      "km": 2,
+      "status": 200,
+      "ms": 26.9,
+      "result_status": "ok",
+      "normalized_query": "milad tower",
+      "count": 2,
+      "rank": 1,
+      "nearest_km": 0,
+      "top3": [
+        {
+          "name": "Milad Tower",
+          "category": "historic=monument",
+          "lon": 51.3752738,
+          "lat": 35.7447016,
+          "city": "Tehran",
+          "state": "Tehran"
+        },
+        {
+          "name": "Mahtab Tower",
+          "category": "landuse=residential",
+          "lon": 48.3048557,
+          "lat": 38.217903,
+          "city": "Ardabil",
+          "state": "Ardabil"
+        }
+      ]
+    },
+    {
+      "q": "اصفهان",
+      "lang": "fa",
+      "ref": "isfahan",
+      "km": 20,
+      "status": 200,
+      "ms": 82.4,
+      "result_status": "ok",
+      "normalized_query": "اصفهان",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 1.9,
+      "top3": [
+        {
+          "name": "اصفهان",
+          "category": "place=city",
+          "lon": 51.6650002,
+          "lat": 32.6707877,
+          "city": null,
+          "state": "استان اصفهان"
+        },
+        {
+          "name": "اصفهان",
+          "category": "highway=residential",
+          "lon": 59.603062,
+          "lat": 36.27925,
+          "city": "مشهد",
+          "state": "استان خراسان رضوی"
+        },
+        {
+          "name": "اصفهان",
+          "category": "highway=residential",
+          "lon": 51.5184477,
+          "lat": 32.4683292,
+          "city": "نرگان",
+          "state": "استان اصفهان"
+        }
+      ]
+    },
+    {
+      "q": "Isfahan",
+      "lang": "en",
+      "ref": "isfahan",
+      "km": 20,
+      "status": 200,
+      "ms": 80.3,
+      "result_status": "ok",
+      "normalized_query": "isfahan",
+      "count": 10,
+      "rank": 2,
+      "nearest_km": 1.7,
+      "top3": [
+        {
+          "name": "Isfahan",
+          "category": "place=province",
+          "lon": 52.4981635,
+          "lat": 33.1881386,
+          "city": null,
+          "state": null
+        },
+        {
+          "name": "Isfahan",
+          "category": "place=city",
+          "lon": 51.6650002,
+          "lat": 32.6707877,
+          "city": null,
+          "state": "Isfahan"
+        },
+        {
+          "name": "Isfahan",
+          "category": "railway=station",
+          "lon": 51.6953745,
+          "lat": 32.5499852,
+          "city": "Isfahan",
+          "state": "Isfahan"
+        }
+      ]
+    },
+    {
+      "q": "میدان نقش جهان",
+      "lang": "fa",
+      "ref": "naqshejahan",
+      "km": 2,
+      "status": 200,
+      "ms": 77,
+      "result_status": "ok",
+      "normalized_query": "میدان نقش جهان",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 0.1,
+      "top3": [
+        {
+          "name": "میدان نقش جهان",
+          "category": "place=square",
+          "lon": 51.6773624,
+          "lat": 32.6581024,
+          "city": "اصفهان",
+          "state": "استان اصفهان"
+        },
+        {
+          "name": "میدان نقش جهان",
+          "category": "highway=track",
+          "lon": 51.7456724,
+          "lat": 35.3173756,
+          "city": "پیشوا",
+          "state": "استان تهران"
+        },
+        {
+          "name": "میدان نقش جهان",
+          "category": "highway=footway",
+          "lon": 51.677345,
+          "lat": 32.6589803,
+          "city": "اصفهان",
+          "state": "استان اصفهان"
+        }
+      ]
+    },
+    {
+      "q": "شیراز",
+      "lang": "fa",
+      "ref": "shiraz",
+      "km": 20,
+      "status": 200,
+      "ms": 70,
+      "result_status": "ok",
+      "normalized_query": "شیراز",
+      "count": 10,
+      "rank": 2,
+      "nearest_km": 4.7,
+      "top3": [
+        {
+          "name": "شیراز",
+          "category": "place=village",
+          "lon": 45.909407,
+          "lat": 37.4352186,
+          "city": null,
+          "state": "استان آذربایجان شرقی"
+        },
+        {
+          "name": "شيراز",
+          "category": "place=city",
+          "lon": 52.5378041,
+          "lat": 29.6060218,
+          "city": null,
+          "state": "استان فارس"
+        },
+        {
+          "name": "شیراز ۶",
+          "category": "highway=residential",
+          "lon": 57.0367601,
+          "lat": 30.3006228,
+          "city": "کرمان",
+          "state": "استان کرمان"
+        }
+      ]
+    },
+    {
+      "q": "Shiraz",
+      "lang": "en",
+      "ref": "shiraz",
+      "km": 20,
+      "status": 200,
+      "ms": 92.9,
+      "result_status": "ok",
+      "normalized_query": "shiraz",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 4.7,
+      "top3": [
+        {
+          "name": "Shiraz",
+          "category": "place=city",
+          "lon": 52.5378041,
+          "lat": 29.6060218,
+          "city": null,
+          "state": "Fars"
+        },
+        {
+          "name": "Shiraz",
+          "category": "place=village",
+          "lon": 45.909407,
+          "lat": 37.4352186,
+          "city": null,
+          "state": "East Azarbaijan"
+        },
+        {
+          "name": "Shiraz",
+          "category": "highway=residential",
+          "lon": 48.2050152,
+          "lat": 30.4044177,
+          "city": "Khorramshahr",
+          "state": "Khuzestan"
+        }
+      ]
+    },
+    {
+      "q": "تخت جمشید",
+      "lang": "fa",
+      "ref": "persepolis",
+      "km": 5,
+      "status": 200,
+      "ms": 69.2,
+      "result_status": "ok",
+      "normalized_query": "تخت جمشید",
+      "count": 10,
+      "rank": 2,
+      "nearest_km": 1.4,
+      "top3": [
+        {
+          "name": "تخت جمشید",
+          "category": "highway=residential",
+          "lon": 55.6463967,
+          "lat": 29.4284806,
+          "city": "سيرجان",
+          "state": "استان کرمان"
+        },
+        {
+          "name": "تخت جمشید",
+          "category": "highway=residential",
+          "lon": 52.8914542,
+          "lat": 29.9226151,
+          "city": "حومه شهر مرودشت",
+          "state": "استان فارس"
+        },
+        {
+          "name": "تخت جمشید",
+          "category": "highway=secondary",
+          "lon": 52.8535856,
+          "lat": 29.9246624,
+          "city": "حومه شهر مرودشت",
+          "state": "استان فارس"
+        }
+      ]
+    },
+    {
+      "q": "مشهد",
+      "lang": "fa",
+      "ref": "mashhad",
+      "km": 20,
+      "status": 200,
+      "ms": 81.1,
+      "result_status": "ok",
+      "normalized_query": "مشهد",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 2.3,
+      "top3": [
+        {
+          "name": "مشهد",
+          "category": "place=city",
+          "lon": 59.6059232,
+          "lat": 36.2974945,
+          "city": null,
+          "state": "استان خراسان رضوی"
+        },
+        {
+          "name": "مشهد",
+          "category": "place=village",
+          "lon": 48.9267913,
+          "lat": 35.7901186,
+          "city": "دهستان حصارولیعصر",
+          "state": "استان قزوین"
+        },
+        {
+          "name": "مشهد",
+          "category": "highway=residential",
+          "lon": 59.6053953,
+          "lat": 36.3032164,
+          "city": "مشهد",
+          "state": "استان خراسان رضوی"
+        }
+      ]
+    },
+    {
+      "q": "تبریز",
+      "lang": "fa",
+      "ref": "tabriz",
+      "km": 20,
+      "status": 200,
+      "ms": 96,
+      "result_status": "ok",
+      "normalized_query": "تبریز",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 0.6,
+      "top3": [
+        {
+          "name": "تبریز",
+          "category": "place=city",
+          "lon": 46.2978789,
+          "lat": 38.0738612,
+          "city": null,
+          "state": "استان آذربایجان شرقی"
+        },
+        {
+          "name": "تبریز",
+          "category": "highway=residential",
+          "lon": 51.4022932,
+          "lat": 35.7069169,
+          "city": "تهران",
+          "state": "استان تهران"
+        },
+        {
+          "name": "تبریز",
+          "category": "highway=residential",
+          "lon": 49.9903712,
+          "lat": 36.263209,
+          "city": "قزوین",
+          "state": "استان قزوین"
+        }
+      ]
+    },
+    {
+      "q": "Tabriz",
+      "lang": "en",
+      "ref": "tabriz",
+      "km": 20,
+      "status": 200,
+      "ms": 51,
+      "result_status": "ok",
+      "normalized_query": "tabriz",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 0.9,
+      "top3": [
+        {
+          "name": "Tabriz",
+          "category": "place=city",
+          "lon": 46.2978789,
+          "lat": 38.0738612,
+          "city": null,
+          "state": "East Azarbaijan"
+        },
+        {
+          "name": "Tabriz",
+          "category": "highway=residential",
+          "lon": 49.9903712,
+          "lat": 36.263209,
+          "city": "Qazvin",
+          "state": "Qazvin"
+        },
+        {
+          "name": "Tabriz",
+          "category": "highway=tertiary",
+          "lon": 49.9927233,
+          "lat": 36.2681751,
+          "city": "Qazvin",
+          "state": "Qazvin"
+        }
+      ]
+    },
+    {
+      "q": "زاهدان",
+      "lang": "fa",
+      "ref": "zahedan",
+      "km": 20,
+      "status": 200,
+      "ms": 60.8,
+      "result_status": "ok",
+      "normalized_query": "زاهدان",
+      "count": 7,
+      "rank": 1,
+      "nearest_km": 0.6,
+      "top3": [
+        {
+          "name": "زاهدان",
+          "category": "place=city",
+          "lon": 60.8635357,
+          "lat": 29.4906872,
+          "city": null,
+          "state": "استان سیستان و بلوچستان"
+        },
+        {
+          "name": "زاهدان",
+          "category": "place=village",
+          "lon": 57.8792,
+          "lat": 28.8977585,
+          "city": "دهستان مسکون",
+          "state": "استان کرمان"
+        },
+        {
+          "name": "زاهدان",
+          "category": "highway=residential",
+          "lon": 60.8129813,
+          "lat": 29.4715024,
+          "city": "دهستان چشمه زیارت",
+          "state": "استان سیستان و بلوچستان"
+        }
+      ]
+    },
+    {
+      "q": "چابهار",
+      "lang": "fa",
+      "ref": "chabahar",
+      "km": 20,
+      "status": 200,
+      "ms": 60.7,
+      "result_status": "ok",
+      "normalized_query": "چابهار",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 0.4,
+      "top3": [
+        {
+          "name": "چابهار",
+          "category": "place=city",
+          "lon": 60.6469115,
+          "lat": 25.2935488,
+          "city": null,
+          "state": "استان سیستان و بلوچستان"
+        },
+        {
+          "name": "چابهار",
+          "category": "highway=residential",
+          "lon": 60.7631237,
+          "lat": 28.5391875,
+          "city": "نوک‌آباد",
+          "state": "استان سیستان و بلوچستان"
+        },
+        {
+          "name": "چابهار",
+          "category": "highway=residential",
+          "lon": 51.7550046,
+          "lat": 35.7293962,
+          "city": "پردیس",
+          "state": "استان تهران"
+        }
+      ]
+    },
+    {
+      "q": "بندرعباس",
+      "lang": "fa",
+      "ref": "bandarabbas",
+      "km": 20,
+      "status": 200,
+      "ms": 85.8,
+      "result_status": "ok",
+      "normalized_query": "بندرعباس",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 2.2,
+      "top3": [
+        {
+          "name": "بندرعباس",
+          "category": "place=city",
+          "lon": 56.2892533,
+          "lat": 27.1842023,
+          "city": null,
+          "state": "استان هرمزگان"
+        },
+        {
+          "name": "بندرعباس",
+          "category": "highway=residential",
+          "lon": 53.5562131,
+          "lat": 27.4003834,
+          "city": "دهستان بالاده",
+          "state": "استان فارس"
+        },
+        {
+          "name": "بندرعباس",
+          "category": "highway=tertiary",
+          "lon": 51.2999579,
+          "lat": 35.7692899,
+          "city": "تهران",
+          "state": "استان تهران"
+        }
+      ]
+    },
+    {
+      "q": "بندر عباس",
+      "lang": "fa",
+      "ref": "bandarabbas",
+      "km": 20,
+      "note": "space variant",
+      "status": 200,
+      "ms": 90,
+      "result_status": "ok",
+      "normalized_query": "بندر عباس",
+      "count": 10,
+      "rank": 3,
+      "nearest_km": 0.7,
+      "top3": [
+        {
+          "name": "بندر عباس",
+          "category": "highway=residential",
+          "lon": 57.0428114,
+          "lat": 27.1828334,
+          "city": "دهستان حومه",
+          "state": "استان هرمزگان"
+        },
+        {
+          "name": "جیرفت-بندر عباس",
+          "category": "highway=trunk",
+          "lon": 57.7751419,
+          "lat": 28.6394645,
+          "city": "جیرفت",
+          "state": "استان کرمان"
+        },
+        {
+          "name": "وسایل لوله و هود بندر عباس",
+          "category": "shop=hvac",
+          "lon": 56.2690931,
+          "lat": 27.1776772,
+          "city": "بندرعباس",
+          "state": "استان هرمزگان"
+        }
+      ]
+    },
+    {
+      "q": "رشت",
+      "lang": "fa",
+      "ref": "rasht",
+      "km": 20,
+      "status": 200,
+      "ms": 44.7,
+      "result_status": "ok",
+      "normalized_query": "رشت",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 1.3,
+      "top3": [
+        {
+          "name": "رشت",
+          "category": "place=city",
+          "lon": 49.5894854,
+          "lat": 37.2697578,
+          "city": null,
+          "state": "استان گیلان"
+        },
+        {
+          "name": "رشت",
+          "category": "highway=service",
+          "lon": 49.6155796,
+          "lat": 37.2104962,
+          "city": "دهستان لاکان",
+          "state": "استان گیلان"
+        },
+        {
+          "name": "رشت",
+          "category": "highway=residential",
+          "lon": 48.2034362,
+          "lat": 30.4060209,
+          "city": "خرمشهر",
+          "state": "استان خوزستان"
+        }
+      ]
+    },
+    {
+      "q": "یزد",
+      "lang": "fa",
+      "ref": "yazd",
+      "km": 20,
+      "status": 200,
+      "ms": 71.5,
+      "result_status": "ok",
+      "normalized_query": "یزد",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 1.5,
+      "top3": [
+        {
+          "name": "یزد",
+          "category": "place=city",
+          "lon": 54.3701235,
+          "lat": 31.9052223,
+          "city": null,
+          "state": "استان یزد"
+        },
+        {
+          "name": "یزد",
+          "category": "highway=residential",
+          "lon": 54.3984778,
+          "lat": 31.807757,
+          "city": "دهستان فجر",
+          "state": "استان یزد"
+        },
+        {
+          "name": "یزد",
+          "category": "highway=living_street",
+          "lon": 54.32971,
+          "lat": 31.8607126,
+          "city": "دهستان فجر",
+          "state": "استان یزد"
+        }
+      ]
+    },
+    {
+      "q": "ابیانه",
+      "lang": "fa",
+      "ref": "abyaneh",
+      "km": 5,
+      "note": "village",
+      "status": 200,
+      "ms": 50.6,
+      "result_status": "ok",
+      "normalized_query": "ابیانه",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 1.5,
+      "top3": [
+        {
+          "name": "ابیانه",
+          "category": "place=village",
+          "lon": 51.5908576,
+          "lat": 33.5865097,
+          "city": "دهستان برزرود",
+          "state": "استان اصفهان"
+        },
+        {
+          "name": "ابیانه",
+          "category": "tourism=attraction",
+          "lon": 51.5886563,
+          "lat": 33.5902255,
+          "city": "دهستان برزرود",
+          "state": "استان اصفهان"
+        },
+        {
+          "name": "ابیانه - نطنز",
+          "category": "highway=tertiary",
+          "lon": 51.7177329,
+          "lat": 33.6120943,
+          "city": "دهستان برزرود",
+          "state": "استان اصفهان"
+        }
+      ]
+    },
+    {
+      "q": "ماسوله",
+      "lang": "fa",
+      "ref": "masuleh",
+      "km": 5,
+      "note": "village",
+      "status": 200,
+      "ms": 39,
+      "result_status": "ok",
+      "normalized_query": "ماسوله",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 0.3,
+      "top3": [
+        {
+          "name": "ماسوله",
+          "category": "place=town",
+          "lon": 48.9899692,
+          "lat": 37.1551276,
+          "city": "دهستان سردار جنگل",
+          "state": "استان گیلان"
+        },
+        {
+          "name": "ماسوله",
+          "category": "tourism=viewpoint",
+          "lon": 48.9941345,
+          "lat": 37.155029,
+          "city": "دهستان سردار جنگل",
+          "state": "استان گیلان"
+        },
+        {
+          "name": "ماسوله",
+          "category": "tourism=hostel",
+          "lon": 48.9875775,
+          "lat": 37.1530822,
+          "city": "دهستان سردار جنگل",
+          "state": "استان گیلان"
+        }
+      ]
+    },
+    {
+      "q": "بازرگان",
+      "lang": "fa",
+      "ref": "bazargan",
+      "km": 10,
+      "note": "border town",
+      "status": 200,
+      "ms": 55.6,
+      "result_status": "ok",
+      "normalized_query": "بازرگان",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 0.5,
+      "top3": [
+        {
+          "name": "بازرگان",
+          "category": "place=town",
+          "lon": 44.3876859,
+          "lat": 39.3886668,
+          "city": "دهستان ساری سو",
+          "state": "استان آذربایجان غربی"
+        },
+        {
+          "name": "بازرگان",
+          "category": "place=village",
+          "lon": 55.2360454,
+          "lat": 28.6690535,
+          "city": "دهستان کوهستان",
+          "state": "استان فارس"
+        },
+        {
+          "name": "بازرگان",
+          "category": "place=village",
+          "lon": 45.3866142,
+          "lat": 36.4972245,
+          "city": "دهستان منگورغربی",
+          "state": "استان آذربایجان غربی"
+        }
+      ]
+    },
+    {
+      "q": "آستارا",
+      "lang": "fa",
+      "ref": "astara",
+      "km": 10,
+      "note": "border town",
+      "status": 200,
+      "ms": 44.9,
+      "result_status": "ok",
+      "normalized_query": "استارا",
+      "count": 10,
+      "rank": 2,
+      "nearest_km": 1.1,
+      "top3": [
+        {
+          "name": "استارا",
+          "category": "highway=residential",
+          "lon": 48.3383621,
+          "lat": 33.5423437,
+          "city": "خرم آباد",
+          "state": "استان لرستان"
+        },
+        {
+          "name": "آستارا",
+          "category": "place=city",
+          "lon": 48.8715278,
+          "lat": 38.4193239,
+          "city": null,
+          "state": "استان گیلان"
+        },
+        {
+          "name": "آستارا",
+          "category": "place=town",
+          "lon": 48.8746961,
+          "lat": 38.4530541,
+          "city": null,
+          "state": null
+        }
+      ]
+    },
+    {
+      "q": "فرودگاه مهرآباد",
+      "lang": "fa",
+      "ref": "mehrabad",
+      "km": 4,
+      "status": 200,
+      "ms": 34.3,
+      "result_status": "ok",
+      "normalized_query": "فرودگاه مهراباد",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 0.1,
+      "top3": [
+        {
+          "name": "فرودگاه مهراباد",
+          "category": "aeroway=taxiway",
+          "lon": 51.2985286,
+          "lat": 35.691304,
+          "city": "تهران",
+          "state": "استان تهران"
+        },
+        {
+          "name": "فرودگاه مهراباد",
+          "category": "aeroway=taxiway",
+          "lon": 51.2945268,
+          "lat": 35.6924967,
+          "city": "تهران",
+          "state": "استان تهران"
+        },
+        {
+          "name": "فرودگاه مهراباد",
+          "category": "aeroway=taxiway",
+          "lon": 51.3272613,
+          "lat": 35.6832812,
+          "city": "تهران",
+          "state": "استان تهران"
+        }
+      ]
+    },
+    {
+      "q": "فرودگاه امام خمینی",
+      "lang": "fa",
+      "ref": "ika",
+      "km": 8,
+      "status": 200,
+      "ms": 41.1,
+      "result_status": "ok",
+      "normalized_query": "فرودگاه امام خمینی",
+      "count": 6,
+      "rank": 1,
+      "nearest_km": 0.7,
+      "top3": [
+        {
+          "name": "فرودگاه امام خمینی فاز ۲",
+          "category": "landuse=construction",
+          "lon": 51.1603757,
+          "lat": 35.3940091,
+          "city": "دهستان حسن آباد",
+          "state": "استان تهران"
+        },
+        {
+          "name": "فرودگاه امام خمینی(ره)",
+          "category": "railway=station",
+          "lon": 51.1544783,
+          "lat": 35.4078348,
+          "city": "دهستان حسن آباد",
+          "state": "استان تهران"
+        },
+        {
+          "name": "فرودگاه امام خمینی(ره)",
+          "category": "railway=stop",
+          "lon": 51.1544627,
+          "lat": 35.4078102,
+          "city": "دهستان حسن آباد",
+          "state": "استان تهران"
+        }
+      ]
+    },
+    {
+      "q": "تهران",
+      "lang": "fa",
+      "ref": "tehran",
+      "km": 20,
+      "bias": "isfahan",
+      "note": "bias towards Isfahan",
+      "status": 200,
+      "ms": 112.1,
+      "result_status": "ok",
+      "normalized_query": "تهران",
+      "count": 10,
+      "rank": null,
+      "nearest_km": 333.1,
+      "top3": [
+        {
+          "name": "تهران",
+          "category": "highway=residential",
+          "lon": 51.668178,
+          "lat": 32.661626,
+          "city": "اصفهان",
+          "state": "استان اصفهان"
+        },
+        {
+          "name": "تهران",
+          "category": "highway=primary_link",
+          "lon": 51.6740678,
+          "lat": 32.6954633,
+          "city": "اصفهان",
+          "state": "استان اصفهان"
+        },
+        {
+          "name": "تهران",
+          "category": "highway=residential",
+          "lon": 51.6865482,
+          "lat": 32.6850355,
+          "city": "اصفهان",
+          "state": "استان اصفهان"
+        }
+      ]
+    },
+    {
+      "q": "برج ميلاد",
+      "lang": "fa",
+      "ref": "milad",
+      "km": 2,
+      "note": "Arabic Yeh (ي)",
+      "status": 200,
+      "ms": 44.7,
+      "result_status": "ok",
+      "normalized_query": "برج میلاد",
+      "count": 10,
+      "rank": 2,
+      "nearest_km": 0,
+      "top3": [
+        {
+          "name": "برج میلاد",
+          "category": "building=yes",
+          "lon": 60.8309954,
+          "lat": 29.4683043,
+          "city": "زاهدان",
+          "state": "استان سیستان و بلوچستان"
+        },
+        {
+          "name": "برج میلاد",
+          "category": "historic=monument",
+          "lon": 51.3752738,
+          "lat": 35.7447016,
+          "city": "تهران",
+          "state": "استان تهران"
+        },
+        {
+          "name": "برج میلاد",
+          "category": "building=commercial",
+          "lon": 50.999516,
+          "lat": 35.8322314,
+          "city": "کرج",
+          "state": "استان البرز"
+        }
+      ]
+    },
+    {
+      "q": "شيراز",
+      "lang": "fa",
+      "ref": "shiraz",
+      "km": 20,
+      "note": "Arabic Yeh (ي)",
+      "status": 200,
+      "ms": 26,
+      "result_status": "ok",
+      "normalized_query": "شیراز",
+      "count": 10,
+      "rank": 2,
+      "nearest_km": 4.7,
+      "top3": [
+        {
+          "name": "شیراز",
+          "category": "place=village",
+          "lon": 45.909407,
+          "lat": 37.4352186,
+          "city": null,
+          "state": "استان آذربایجان شرقی"
+        },
+        {
+          "name": "شيراز",
+          "category": "place=city",
+          "lon": 52.5378041,
+          "lat": 29.6060218,
+          "city": null,
+          "state": "استان فارس"
+        },
+        {
+          "name": "شیراز ۶",
+          "category": "highway=residential",
+          "lon": 57.0367601,
+          "lat": 30.3006228,
+          "city": "کرمان",
+          "state": "استان کرمان"
+        }
+      ]
+    },
+    {
+      "q": "كرج",
+      "lang": "fa",
+      "ref": "karaj",
+      "km": 20,
+      "note": "Arabic Kaf (ك)",
+      "status": 200,
+      "ms": 47.2,
+      "result_status": "ok",
+      "normalized_query": "کرج",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 1.9,
+      "top3": [
+        {
+          "name": "کرج",
+          "category": "place=county",
+          "lon": 50.9904681,
+          "lat": 35.8224892,
+          "city": null,
+          "state": "استان البرز"
+        },
+        {
+          "name": "کرج",
+          "category": "place=city",
+          "lon": 50.9904681,
+          "lat": 35.8224892,
+          "city": "کرج",
+          "state": "استان البرز"
+        },
+        {
+          "name": "کرج",
+          "category": "highway=residential",
+          "lon": 51.4699858,
+          "lat": 35.8072507,
+          "city": "بخش رودبار قصران",
+          "state": "استان تهران"
+        }
+      ]
+    },
+    {
+      "q": "کرج",
+      "lang": "fa",
+      "ref": "karaj",
+      "km": 20,
+      "status": 200,
+      "ms": 19.7,
+      "result_status": "ok",
+      "normalized_query": "کرج",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 1.9,
+      "top3": [
+        {
+          "name": "کرج",
+          "category": "place=county",
+          "lon": 50.9904681,
+          "lat": 35.8224892,
+          "city": null,
+          "state": "استان البرز"
+        },
+        {
+          "name": "کرج",
+          "category": "place=city",
+          "lon": 50.9904681,
+          "lat": 35.8224892,
+          "city": "کرج",
+          "state": "استان البرز"
+        },
+        {
+          "name": "کرج",
+          "category": "highway=residential",
+          "lon": 51.4699858,
+          "lat": 35.8072507,
+          "city": "بخش رودبار قصران",
+          "state": "استان تهران"
+        }
+      ]
+    },
+    {
+      "q": "تهران۱",
+      "lang": "fa",
+      "ref": "tehran",
+      "km": 30,
+      "note": "trailing Persian digit (noise)",
+      "status": 200,
+      "ms": 65.8,
+      "result_status": "ok",
+      "normalized_query": "تهران1",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 0.1,
+      "top3": [
+        {
+          "name": "قاسم آباد تهرانچی",
+          "category": "place=village",
+          "lon": 51.5544504,
+          "lat": 35.5329013,
+          "city": "دهستان خاوران غربی",
+          "state": "استان تهران"
+        },
+        {
+          "name": "استان تهران",
+          "category": "place=province",
+          "lon": 51.8005344,
+          "lat": 35.5121097,
+          "city": null,
+          "state": null
+        },
+        {
+          "name": "شهرستان تهران",
+          "category": "place=county",
+          "lon": 51.3934054,
+          "lat": 35.7571898,
+          "city": null,
+          "state": "استان تهران"
+        }
+      ]
+    }
+  ],
+  "autocomplete": [
+    {
+      "q": "تهر",
+      "lang": "fa",
+      "ref": "tehran",
+      "km": 30,
+      "status": 200,
+      "ms": 20.9,
+      "result_status": "ok",
+      "count": 10,
+      "rank": 1,
+      "nearest_km": 0.1,
+      "top3": [
+        {
+          "name": "تهران",
+          "category": "place=city",
+          "lon": 51.3896004,
+          "lat": 35.6892523,
+          "city": null,
+          "state": "استان تهران"
+        },
+        {
+          "name": "تهرود",
+          "category": "place=village",
+          "lon": 59.0589662,
+          "lat": 28.6891689,
+          "city": "دهستان پشت ریگ",
+          "state": "استان کرمان"
+        },
+        {
+          "name": "تهراندشت",
+          "category": "place=village",
+          "lon": 50.7357936,
+          "lat": 35.8996144,
+          "city": "دهستان سعیدآباد",
+          "state": "استان البرز"
+        }
+      ]
+    },
+    {
+      "q": "Teh",
+      "lang": "en",
+      "ref": "tehran",
+      "km": 30,
+      "status": 200,
+      "ms": 27.6,
+      "result_status": "ok",
+      "count": 10,
+      "rank": 2,
+      "nearest_km": 0.1,
+      "top3": [
+        {
+          "name": "Tehran",
+          "category": "place=province",
+          "lon": 51.8005344,
+          "lat": 35.5121097,
+          "city": null,
+          "state": null
+        },
+        {
+          "name": "Tehran County",
+          "category": "place=county",
+          "lon": 51.3934054,
+          "lat": 35.7571898,
+          "city": null,
+          "state": "Tehran"
+        },
+        {
+          "name": "Tehran",
+          "category": "place=city",
+          "lon": 51.3896004,
+          "lat": 35.6892523,
+          "city": null,
+          "state": "Tehran"
+        }
+      ]
+    },
+    {
+      "q": "اصف",
+      "lang": "fa",
+      "ref": "isfahan",
+      "km": 30,
+      "status": 200,
+      "ms": 28.9,
+      "result_status": "ok",
+      "count": 9,
+      "rank": 1,
+      "nearest_km": 1.9,
+      "top3": [
+        {
+          "name": "اصفهان",
+          "category": "place=city",
+          "lon": 51.6650002,
+          "lat": 32.6707877,
+          "city": null,
+          "state": "استان اصفهان"
+        },
+        {
+          "name": "آصف",
+          "category": "highway=residential",
+          "lon": 51.3616974,
+          "lat": 32.634228,
+          "city": "نجف‌آباد",
+          "state": "استان اصفهان"
+        },
+        {
+          "name": "سیدرضا اعجازی",
+          "category": "highway=secondary",
+          "lon": 51.4097427,
+          "lat": 35.8115101,
+          "city": "بخش رودبار قصران",
+          "state": "استان تهران"
+        }
+      ]
+    },
+    {
+      "q": "برج آز",
+      "lang": "fa",
+      "ref": "azadi",
+      "km": 3,
+      "status": 200,
+      "ms": 38.3,
+      "result_status": "ok",
+      "count": 9,
+      "rank": 4,
+      "nearest_km": 0,
+      "top3": [
+        {
+          "name": "نیکل (البرز برج)",
+          "category": "office=company",
+          "lon": 51.4298235,
+          "lat": 35.7069034,
+          "city": "تهران",
+          "state": "استان تهران"
+        },
+        {
+          "name": "SAMAN TRAVEL خدمات مسافرت هوایی سامان پرواز",
+          "category": "shop=travel_agency",
+          "lon": 51.4118481,
+          "lat": 35.7700902,
+          "city": "تهران",
+          "state": "استان تهران"
+        },
+        {
+          "name": "نیروگاه خورشیدی پژوهشگاه نیرو ایستگاه آزمایش برج",
+          "category": "landuse=industrial",
+          "lon": 49.7954372,
+          "lat": 34.0500633,
+          "city": "دهستان حاجی آباد",
+          "state": "استان مرکزی"
+        }
+      ]
+    },
+    {
+      "q": "Mash",
+      "lang": "en",
+      "ref": "mashhad",
+      "km": 30,
+      "status": 200,
+      "ms": 26,
+      "result_status": "ok",
+      "count": 10,
+      "rank": 4,
+      "nearest_km": 4.2,
+      "top3": [
+        {
+          "name": "Mash",
+          "category": "natural=peak",
+          "lon": 51.4691608,
+          "lat": 30.9327639,
+          "city": "Padena-ye Vosta RD",
+          "state": "Isfahan"
+        },
+        {
+          "name": "Mashi",
+          "category": "place=village",
+          "lon": 60.7800126,
+          "lat": 25.2994926,
+          "city": "دهستان کمبل سلیمان",
+          "state": "Sistan and Baluchestan"
+        },
+        {
+          "name": "Mashe",
+          "category": "highway=primary",
+          "lon": 54.0193211,
+          "lat": 26.5579124,
+          "city": "کیش",
+          "state": "Hormozgan"
+        }
+      ]
+    },
+    {
+      "q": "شیرا",
+      "lang": "fa",
+      "ref": "shiraz",
+      "km": 30,
+      "status": 200,
+      "ms": 36.9,
+      "result_status": "ok",
+      "count": 10,
+      "rank": 7,
+      "nearest_km": 17,
+      "top3": [
+        {
+          "name": "شیرا",
+          "category": "place=village",
+          "lon": 52.4781832,
+          "lat": 36.6745739,
+          "city": "دهستان امامزاده عبدالله شمالی",
+          "state": "استان مازندران"
+        },
+        {
+          "name": "شیراز",
+          "category": "place=village",
+          "lon": 45.909407,
+          "lat": 37.4352186,
+          "city": null,
+          "state": "استان آذربایجان شرقی"
+        },
+        {
+          "name": "شیران",
+          "category": "place=village",
+          "lon": 47.2797046,
+          "lat": 38.2670553,
+          "city": "دهستان خانمرود",
+          "state": "استان آذربایجان شرقی"
+        }
+      ]
+    }
+  ],
+  "reverse": [
+    {
+      "at": "azadi",
+      "lang": "fa",
+      "point": [
+        51.338,
+        35.6997
+      ],
+      "status": 200,
+      "ms": 63.9,
+      "result_status": "ok",
+      "count": 3,
+      "expected_name_seen": true,
+      "top3": [
+        {
+          "name": "برج آزادی",
+          "category": "historic=monument",
+          "lon": 51.3380605,
+          "lat": 35.6997383,
+          "city": "تهران",
+          "state": "استان تهران",
+          "address": {
+            "street": "میدان آزادی",
+            "locality": "استاد معین",
+            "district": "منطقه ۹",
+            "city": "تهران",
+            "county": "شهرستان تهران",
+            "state": "استان تهران",
+            "postcode": "14586-43635",
+            "country": "ایران"
+          },
+          "distance_km": 0.007
+        },
+        {
+          "name": "برج آزادی",
+          "category": "tourism=attraction",
+          "lon": 51.3380605,
+          "lat": 35.6997384,
+          "city": "تهران",
+          "state": "استان تهران",
+          "address": {
+            "street": "میدان آزادی",
+            "locality": "استاد معین",
+            "district": "منطقه ۹",
+            "city": "تهران",
+            "county": "شهرستان تهران",
+            "state": "استان تهران",
+            "postcode": "14586-43635",
+            "country": "ایران"
+          },
+          "distance_km": 0.007
+        },
+        {
+          "name": "میدان آزادی",
+          "category": "place=square",
+          "lon": 51.3375039,
+          "lat": 35.6997056,
+          "city": "تهران",
+          "state": "استان تهران",
+          "address": {
+            "district": "منطقه ۹",
+            "city": "تهران",
+            "county": "شهرستان تهران",
+            "state": "استان تهران",
+            "country": "ایران"
+          },
+          "distance_km": 0.045
+        }
+      ],
+      "note": null
+    },
+    {
+      "at": "azadi",
+      "lang": "en",
+      "point": [
+        51.338,
+        35.6997
+      ],
+      "status": 200,
+      "ms": 24.3,
+      "result_status": "ok",
+      "count": 3,
+      "expected_name_seen": true,
+      "top3": [
+        {
+          "name": "Azadi Tower",
+          "category": "historic=monument",
+          "lon": 51.3380605,
+          "lat": 35.6997383,
+          "city": "Tehran",
+          "state": "Tehran",
+          "address": {
+            "street": "Azadi Square",
+            "locality": "Ostad Moein",
+            "district": "District 9",
+            "city": "Tehran",
+            "county": "Tehran County",
+            "state": "Tehran",
+            "postcode": "14586-43635",
+            "country": "Iran"
+          },
+          "distance_km": 0.007
+        },
+        {
+          "name": "Azadi Tower",
+          "category": "tourism=attraction",
+          "lon": 51.3380605,
+          "lat": 35.6997384,
+          "city": "Tehran",
+          "state": "Tehran",
+          "address": {
+            "street": "Azadi Square",
+            "locality": "Ostad Moein",
+            "district": "District 9",
+            "city": "Tehran",
+            "county": "Tehran County",
+            "state": "Tehran",
+            "postcode": "14586-43635",
+            "country": "Iran"
+          },
+          "distance_km": 0.007
+        },
+        {
+          "name": "Azadi Square",
+          "category": "place=square",
+          "lon": 51.3375039,
+          "lat": 35.6997056,
+          "city": "Tehran",
+          "state": "Tehran",
+          "address": {
+            "district": "District 9",
+            "city": "Tehran",
+            "county": "Tehran County",
+            "state": "Tehran",
+            "country": "Iran"
+          },
+          "distance_km": 0.045
+        }
+      ],
+      "note": null
+    },
+    {
+      "at": "naqshejahan",
+      "lang": "fa",
+      "point": [
+        51.6777,
+        32.6575
+      ],
+      "status": 200,
+      "ms": 31.6,
+      "result_status": "ok",
+      "count": 3,
+      "expected_name_seen": true,
+      "top3": [
+        {
+          "name": "میدان نقش جهان",
+          "category": "place=square",
+          "lon": 51.6773624,
+          "lat": 32.6581024,
+          "city": "اصفهان",
+          "state": "استان اصفهان",
+          "address": {
+            "district": "منطقه ۳",
+            "city": "اصفهان",
+            "county": "شهرستان اصفهان",
+            "state": "استان اصفهان",
+            "country": "ایران"
+          },
+          "distance_km": 0.074
+        },
+        {
+          "name": "Spadana Cafe",
+          "category": "amenity=cafe",
+          "lon": 51.6783232,
+          "lat": 32.6579492,
+          "city": "اصفهان",
+          "state": "استان اصفهان",
+          "address": {
+            "street": "بازار آهنگرها",
+            "locality": "نقش جهان",
+            "district": "منطقه ۳",
+            "city": "اصفهان",
+            "county": "شهرستان اصفهان",
+            "state": "استان اصفهان",
+            "postcode": "81467-93371",
+            "country": "ایران"
+          },
+          "distance_km": 0.077
+        },
+        {
+          "name": "صنایع دستی آقاجانی",
+          "category": "craft=handicraft",
+          "lon": 51.6783046,
+          "lat": 32.6580522,
+          "city": "اصفهان",
+          "state": "استان اصفهان",
+          "address": {
+            "street": "بازار آهنگرها",
+            "locality": "نقش جهان",
+            "district": "منطقه ۳",
+            "city": "اصفهان",
+            "county": "شهرستان اصفهان",
+            "state": "استان اصفهان",
+            "postcode": "81467-93371",
+            "country": "ایران"
+          },
+          "distance_km": 0.084
+        }
+      ],
+      "note": null
+    },
+    {
+      "at": "naqshejahan",
+      "lang": "en",
+      "point": [
+        51.6777,
+        32.6575
+      ],
+      "status": 200,
+      "ms": 22.1,
+      "result_status": "ok",
+      "count": 3,
+      "expected_name_seen": true,
+      "top3": [
+        {
+          "name": "Naqsh-e Jahan Square",
+          "category": "place=square",
+          "lon": 51.6773624,
+          "lat": 32.6581024,
+          "city": "Isfahan",
+          "state": "Isfahan",
+          "address": {
+            "district": "District 3",
+            "city": "Isfahan",
+            "county": "Isfahan County",
+            "state": "Isfahan",
+            "country": "Iran"
+          },
+          "distance_km": 0.074
+        },
+        {
+          "name": "Spadana Cafe",
+          "category": "amenity=cafe",
+          "lon": 51.6783232,
+          "lat": 32.6579492,
+          "city": "Isfahan",
+          "state": "Isfahan",
+          "address": {
+            "street": "بازار آهنگرها",
+            "locality": "Naghshe Jahan",
+            "district": "District 3",
+            "city": "Isfahan",
+            "county": "Isfahan County",
+            "state": "Isfahan",
+            "postcode": "81467-93371",
+            "country": "Iran"
+          },
+          "distance_km": 0.077
+        },
+        {
+          "name": "صنایع دستی آقاجانی",
+          "category": "craft=handicraft",
+          "lon": 51.6783046,
+          "lat": 32.6580522,
+          "city": "Isfahan",
+          "state": "Isfahan",
+          "address": {
+            "street": "بازار آهنگرها",
+            "locality": "Naghshe Jahan",
+            "district": "District 3",
+            "city": "Isfahan",
+            "county": "Isfahan County",
+            "state": "Isfahan",
+            "postcode": "81467-93371",
+            "country": "Iran"
+          },
+          "distance_km": 0.084
+        }
+      ],
+      "note": null
+    },
+    {
+      "at": "shiraz",
+      "lang": "fa",
+      "point": [
+        52.5837,
+        29.5918
+      ],
+      "status": 200,
+      "ms": 23.3,
+      "result_status": "ok",
+      "count": 3,
+      "expected_name_seen": true,
+      "top3": [
+        {
+          "name": "۸",
+          "category": "highway=residential",
+          "lon": 52.5834252,
+          "lat": 29.5916589,
+          "city": "شيراز",
+          "state": "استان فارس",
+          "address": {
+            "locality": "کیان شهر",
+            "district": "منطقه ۱۱",
+            "city": "شيراز",
+            "county": "شهرستان شیراز",
+            "state": "استان فارس",
+            "postcode": "71556-40010",
+            "country": "ایران"
+          },
+          "distance_km": 0.031
+        },
+        {
+          "name": "آزادگان ۴",
+          "category": "highway=residential",
+          "lon": 52.58408,
+          "lat": 29.5918987,
+          "city": "شيراز",
+          "state": "استان فارس",
+          "address": {
+            "locality": "کیان شهر",
+            "district": "منطقه ۱۱",
+            "city": "شيراز",
+            "county": "شهرستان شیراز",
+            "state": "استان فارس",
+            "postcode": "71556-40010",
+            "country": "ایران"
+          },
+          "distance_km": 0.038
+        },
+        {
+          "name": "شهاب ۳",
+          "category": "highway=residential",
+          "lon": 52.5823057,
+          "lat": 29.5920982,
+          "city": "شيراز",
+          "state": "استان فارس",
+          "address": {
+            "locality": "کیان شهر",
+            "district": "منطقه ۱۱",
+            "city": "شيراز",
+            "county": "شهرستان شیراز",
+            "state": "استان فارس",
+            "postcode": "71556-40010",
+            "country": "ایران"
+          },
+          "distance_km": 0.139
+        }
+      ],
+      "note": null
+    },
+    {
+      "at": "shiraz",
+      "lang": "en",
+      "point": [
+        52.5837,
+        29.5918
+      ],
+      "status": 200,
+      "ms": 18.3,
+      "result_status": "ok",
+      "count": 3,
+      "expected_name_seen": true,
+      "top3": [
+        {
+          "name": "۸",
+          "category": "highway=residential",
+          "lon": 52.5834252,
+          "lat": 29.5916589,
+          "city": "Shiraz",
+          "state": "Fars",
+          "address": {
+            "locality": "Kian Shahr",
+            "district": "Zone 11",
+            "city": "Shiraz",
+            "county": "Shiraz County",
+            "state": "Fars",
+            "postcode": "71556-40010",
+            "country": "Iran"
+          },
+          "distance_km": 0.031
+        },
+        {
+          "name": "آزادگان ۴",
+          "category": "highway=residential",
+          "lon": 52.58408,
+          "lat": 29.5918987,
+          "city": "Shiraz",
+          "state": "Fars",
+          "address": {
+            "locality": "Kian Shahr",
+            "district": "Zone 11",
+            "city": "Shiraz",
+            "county": "Shiraz County",
+            "state": "Fars",
+            "postcode": "71556-40010",
+            "country": "Iran"
+          },
+          "distance_km": 0.038
+        },
+        {
+          "name": "شهاب ۳",
+          "category": "highway=residential",
+          "lon": 52.5823057,
+          "lat": 29.5920982,
+          "city": "Shiraz",
+          "state": "Fars",
+          "address": {
+            "locality": "Kian Shahr",
+            "district": "Zone 11",
+            "city": "Shiraz",
+            "county": "Shiraz County",
+            "state": "Fars",
+            "postcode": "71556-40010",
+            "country": "Iran"
+          },
+          "distance_km": 0.139
+        }
+      ],
+      "note": null
+    },
+    {
+      "at": "tabriz",
+      "lang": "fa",
+      "point": [
+        46.2919,
+        38.08
+      ],
+      "status": 200,
+      "ms": 19.5,
+      "result_status": "ok",
+      "count": 3,
+      "expected_name_seen": true,
+      "top3": [
+        {
+          "name": "حاج علی اکبر دالانی",
+          "category": "highway=pedestrian",
+          "lon": 46.2920945,
+          "lat": 38.0800258,
+          "city": "تبریز",
+          "state": "استان آذربایجان شرقی",
+          "address": {
+            "locality": "بازار",
+            "city": "تبریز",
+            "county": "شهرستان تبریز",
+            "state": "استان آذربایجان شرقی",
+            "postcode": "51348-33664",
+            "country": "ایران"
+          },
+          "distance_km": 0.017
+        },
+        {
+          "name": "شهیدی راستا بازاری",
+          "category": "highway=pedestrian",
+          "lon": 46.2921537,
+          "lat": 38.0797956,
+          "city": "تبریز",
+          "state": "استان آذربایجان شرقی",
+          "address": {
+            "locality": "بازار",
+            "city": "تبریز",
+            "county": "شهرستان تبریز",
+            "state": "استان آذربایجان شرقی",
+            "postcode": "51348-33664",
+            "country": "ایران"
+          },
+          "distance_km": 0.032
+        },
+        {
+          "name": "بویوک شعربافلار تیمچه سی",
+          "category": "highway=pedestrian",
+          "lon": 46.2917087,
+          "lat": 38.0802762,
+          "city": "تبریز",
+          "state": "استان آذربایجان شرقی",
+          "address": {
+            "locality": "بازار",
+            "city": "تبریز",
+            "county": "شهرستان تبریز",
+            "state": "استان آذربایجان شرقی",
+            "postcode": "51348-33664",
+            "country": "ایران"
+          },
+          "distance_km": 0.035
+        }
+      ],
+      "note": null
+    },
+    {
+      "at": "tabriz",
+      "lang": "en",
+      "point": [
+        46.2919,
+        38.08
+      ],
+      "status": 200,
+      "ms": 15.3,
+      "result_status": "ok",
+      "count": 3,
+      "expected_name_seen": true,
+      "top3": [
+        {
+          "name": "حاج علی اکبر دالانی",
+          "category": "highway=pedestrian",
+          "lon": 46.2920945,
+          "lat": 38.0800258,
+          "city": "Tabriz",
+          "state": "East Azarbaijan",
+          "address": {
+            "locality": "Bazzar",
+            "city": "Tabriz",
+            "county": "Tabriz County",
+            "state": "East Azarbaijan",
+            "postcode": "51348-33664",
+            "country": "Iran"
+          },
+          "distance_km": 0.017
+        },
+        {
+          "name": "شهیدی راستا بازاری",
+          "category": "highway=pedestrian",
+          "lon": 46.2921537,
+          "lat": 38.0797956,
+          "city": "Tabriz",
+          "state": "East Azarbaijan",
+          "address": {
+            "locality": "Bazzar",
+            "city": "Tabriz",
+            "county": "Tabriz County",
+            "state": "East Azarbaijan",
+            "postcode": "51348-33664",
+            "country": "Iran"
+          },
+          "distance_km": 0.032
+        },
+        {
+          "name": "بویوک شعربافلار تیمچه سی",
+          "category": "highway=pedestrian",
+          "lon": 46.2917087,
+          "lat": 38.0802762,
+          "city": "Tabriz",
+          "state": "East Azarbaijan",
+          "address": {
+            "locality": "Bazzar",
+            "city": "Tabriz",
+            "county": "Tabriz County",
+            "state": "East Azarbaijan",
+            "postcode": "51348-33664",
+            "country": "Iran"
+          },
+          "distance_km": 0.035
+        }
+      ],
+      "note": null
+    },
+    {
+      "at": "zahedan",
+      "lang": "fa",
+      "point": [
+        60.8629,
+        29.4963
+      ],
+      "status": 200,
+      "ms": 17.2,
+      "result_status": "ok",
+      "count": 3,
+      "expected_name_seen": true,
+      "top3": [
+        {
+          "name": "میلان ۲",
+          "category": "highway=service",
+          "lon": 60.8631091,
+          "lat": 29.4964836,
+          "city": "زاهدان",
+          "state": "استان سیستان و بلوچستان",
+          "address": {
+            "district": "منطقه ۴",
+            "city": "زاهدان",
+            "county": "شهرستان زاهدان",
+            "state": "استان سیستان و بلوچستان",
+            "postcode": "98136-93625",
+            "country": "ایران"
+          },
+          "distance_km": 0.029
+        },
+        {
+          "name": "مولوی ۱۴",
+          "category": "highway=residential",
+          "lon": 60.8626709,
+          "lat": 29.4959964,
+          "city": "زاهدان",
+          "state": "استان سیستان و بلوچستان",
+          "address": {
+            "district": "منطقه ۴",
+            "city": "زاهدان",
+            "county": "شهرستان زاهدان",
+            "state": "استان سیستان و بلوچستان",
+            "postcode": "98136-93625",
+            "country": "ایران"
+          },
+          "distance_km": 0.04
+        },
+        {
+          "name": "مولوی ۱۶",
+          "category": "highway=footway",
+          "lon": 60.8621303,
+          "lat": 29.4966945,
+          "city": "زاهدان",
+          "state": "استان سیستان و بلوچستان",
+          "address": {
+            "district": "منطقه ۴",
+            "city": "زاهدان",
+            "county": "شهرستان زاهدان",
+            "state": "استان سیستان و بلوچستان",
+            "postcode": "98136-93625",
+            "country": "ایران"
+          },
+          "distance_km": 0.086
+        }
+      ],
+      "note": null
+    },
+    {
+      "at": "zahedan",
+      "lang": "en",
+      "point": [
+        60.8629,
+        29.4963
+      ],
+      "status": 200,
+      "ms": 21,
+      "result_status": "ok",
+      "count": 3,
+      "expected_name_seen": true,
+      "top3": [
+        {
+          "name": "میلان ۲",
+          "category": "highway=service",
+          "lon": 60.8631091,
+          "lat": 29.4964836,
+          "city": "Zahedan",
+          "state": "Sistan and Baluchestan",
+          "address": {
+            "district": "منطقه ۴",
+            "city": "Zahedan",
+            "county": "Zahedan County",
+            "state": "Sistan and Baluchestan",
+            "postcode": "98136-93625",
+            "country": "Iran"
+          },
+          "distance_km": 0.029
+        },
+        {
+          "name": "مولوی ۱۴",
+          "category": "highway=residential",
+          "lon": 60.8626709,
+          "lat": 29.4959964,
+          "city": "Zahedan",
+          "state": "Sistan and Baluchestan",
+          "address": {
+            "district": "منطقه ۴",
+            "city": "Zahedan",
+            "county": "Zahedan County",
+            "state": "Sistan and Baluchestan",
+            "postcode": "98136-93625",
+            "country": "Iran"
+          },
+          "distance_km": 0.04
+        },
+        {
+          "name": "مولوی ۱۶",
+          "category": "highway=footway",
+          "lon": 60.8621303,
+          "lat": 29.4966945,
+          "city": "Zahedan",
+          "state": "Sistan and Baluchestan",
+          "address": {
+            "district": "منطقه ۴",
+            "city": "Zahedan",
+            "county": "Zahedan County",
+            "state": "Sistan and Baluchestan",
+            "postcode": "98136-93625",
+            "country": "Iran"
+          },
+          "distance_km": 0.086
+        }
+      ],
+      "note": null
+    },
+    {
+      "at": "abyaneh",
+      "lang": "fa",
+      "point": [
+        51.6025,
+        33.5767
+      ],
+      "status": 200,
+      "ms": 16.3,
+      "result_status": "no_results",
+      "count": 0,
+      "expected_name_seen": false,
+      "top3": [],
+      "note": null
+    },
+    {
+      "at": "abyaneh",
+      "lang": "en",
+      "point": [
+        51.6025,
+        33.5767
+      ],
+      "status": 200,
+      "ms": 13.2,
+      "result_status": "no_results",
+      "count": 0,
+      "expected_name_seen": false,
+      "top3": [],
+      "note": null
+    },
+    {
+      "at": "desert",
+      "lang": "fa",
+      "point": [
+        54,
+        34.5
+      ],
+      "status": 200,
+      "ms": 10.6,
+      "result_status": "no_results",
+      "count": 0,
+      "expected_name_seen": null,
+      "top3": [],
+      "note": "Dasht-e Kavir; sparse data expected"
+    },
+    {
+      "at": "desert",
+      "lang": "en",
+      "point": [
+        54,
+        34.5
+      ],
+      "status": 200,
+      "ms": 9.5,
+      "result_status": "no_results",
+      "count": 0,
+      "expected_name_seen": null,
+      "top3": [],
+      "note": "Dasht-e Kavir; sparse data expected"
+    }
+  ],
+  "routing": [
+    {
+      "name": "Tehran Azadi -> Karaj (car, time, 2 alternatives)",
+      "status": 200,
+      "ms": 650.4,
+      "error": null,
+      "route_optimality": "not_guaranteed",
+      "duration_semantics": "static_estimate",
+      "visit_order": [
+        "azadi",
+        "karaj"
+      ],
+      "optimization": null,
+      "alternatives_requested": 2,
+      "alternatives_returned": 2,
+      "routes": [
+        {
+          "rank": 0,
+          "distance_km": 42.3,
+          "duration_min": 32.6
+        },
+        {
+          "rank": 1,
+          "distance_km": 40.2,
+          "duration_min": 35.9
+        },
+        {
+          "rank": 2,
+          "distance_km": 46.9,
+          "duration_min": 36.3
+        }
+      ],
+      "expected_distance_km": [
+        30,
+        70
+      ],
+      "distance_in_expected_range": true,
+      "expected_status": 200
+    },
+    {
+      "name": "Tehran Azadi -> Karaj (car, distance)",
+      "status": 200,
+      "ms": 116.9,
+      "error": null,
+      "route_optimality": "not_guaranteed",
+      "duration_semantics": "static_estimate",
+      "visit_order": [
+        "azadi",
+        "karaj"
+      ],
+      "optimization": null,
+      "alternatives_requested": 0,
+      "alternatives_returned": 0,
+      "routes": [
+        {
+          "rank": 0,
+          "distance_km": 39.3,
+          "duration_min": 43.6
+        }
+      ],
+      "expected_distance_km": [
+        30,
+        70
+      ],
+      "distance_in_expected_range": true,
+      "expected_status": 200
+    },
+    {
+      "name": "Tehran -> Isfahan (car, time)",
+      "status": 200,
+      "ms": 674.2,
+      "error": null,
+      "route_optimality": "not_guaranteed",
+      "duration_semantics": "static_estimate",
+      "visit_order": [
+        "tehran",
+        "isfahan"
+      ],
+      "optimization": null,
+      "alternatives_requested": 0,
+      "alternatives_returned": 0,
+      "routes": [
+        {
+          "rank": 0,
+          "distance_km": 439.2,
+          "duration_min": 236.1
+        }
+      ],
+      "expected_distance_km": [
+        400,
+        520
+      ],
+      "distance_in_expected_range": true,
+      "expected_status": 200
+    },
+    {
+      "name": "Tehran -> Mashhad (car, time)",
+      "status": 200,
+      "ms": 375.2,
+      "error": null,
+      "route_optimality": "not_guaranteed",
+      "duration_semantics": "static_estimate",
+      "visit_order": [
+        "tehran",
+        "mashhad"
+      ],
+      "optimization": null,
+      "alternatives_requested": 0,
+      "alternatives_returned": 0,
+      "routes": [
+        {
+          "rank": 0,
+          "distance_km": 898.6,
+          "duration_min": 546.9
+        }
+      ],
+      "expected_distance_km": [
+        850,
+        1050
+      ],
+      "distance_in_expected_range": true,
+      "expected_status": 200
+    },
+    {
+      "name": "Tabriz -> Zahedan (car, time; cross-country)",
+      "status": 200,
+      "ms": 1100.4,
+      "error": null,
+      "route_optimality": "not_guaranteed",
+      "duration_semantics": "static_estimate",
+      "visit_order": [
+        "tabriz",
+        "zahedan"
+      ],
+      "optimization": null,
+      "alternatives_requested": 0,
+      "alternatives_returned": 0,
+      "routes": [
+        {
+          "rank": 0,
+          "distance_km": 2006.8,
+          "duration_min": 1162.6
+        }
+      ],
+      "expected_distance_km": [
+        1900,
+        2600
+      ],
+      "distance_in_expected_range": true,
+      "expected_status": 200
+    },
+    {
+      "name": "Azadi -> Milad (motorcycle, time, 2 alternatives)",
+      "status": 200,
+      "ms": 72.6,
+      "error": null,
+      "route_optimality": "not_guaranteed",
+      "duration_semantics": "static_estimate",
+      "visit_order": [
+        "azadi",
+        "milad"
+      ],
+      "optimization": null,
+      "alternatives_requested": 2,
+      "alternatives_returned": 0,
+      "routes": [
+        {
+          "rank": 0,
+          "distance_km": 10.5,
+          "duration_min": 12.7
+        }
+      ],
+      "expected_distance_km": [
+        4,
+        15
+      ],
+      "distance_in_expected_range": true,
+      "expected_status": 200
+    },
+    {
+      "name": "Azadi -> Milad (motorcycle, distance)",
+      "status": 200,
+      "ms": 24.8,
+      "error": null,
+      "route_optimality": "not_guaranteed",
+      "duration_semantics": "static_estimate",
+      "visit_order": [
+        "azadi",
+        "milad"
+      ],
+      "optimization": null,
+      "alternatives_requested": 0,
+      "alternatives_returned": 0,
+      "routes": [
+        {
+          "rank": 0,
+          "distance_km": 9.7,
+          "duration_min": 11.5
+        }
+      ],
+      "expected_distance_km": [
+        4,
+        15
+      ],
+      "distance_in_expected_range": true,
+      "expected_status": 200
+    },
+    {
+      "name": "Naqsh-e Jahan -> Si-o-se-pol (pedestrian, distance)",
+      "status": 200,
+      "ms": 45.3,
+      "error": null,
+      "route_optimality": "not_guaranteed",
+      "duration_semantics": "static_estimate",
+      "visit_order": [
+        "naqsh",
+        "siosepol"
+      ],
+      "optimization": null,
+      "alternatives_requested": 0,
+      "alternatives_returned": 0,
+      "routes": [
+        {
+          "rank": 0,
+          "distance_km": 3.2,
+          "duration_min": 37.4
+        }
+      ],
+      "expected_distance_km": [
+        1,
+        3.5
+      ],
+      "distance_in_expected_range": true,
+      "expected_status": 200
+    },
+    {
+      "name": "Naqsh-e Jahan -> Si-o-se-pol (pedestrian, time, 2 alternatives)",
+      "status": 200,
+      "ms": 9.2,
+      "error": null,
+      "route_optimality": "not_guaranteed",
+      "duration_semantics": "static_estimate",
+      "visit_order": [
+        "naqsh",
+        "siosepol"
+      ],
+      "optimization": null,
+      "alternatives_requested": 2,
+      "alternatives_returned": 2,
+      "routes": [
+        {
+          "rank": 0,
+          "distance_km": 3.2,
+          "duration_min": 37.4
+        },
+        {
+          "rank": 1,
+          "distance_km": 3.5,
+          "duration_min": 40.9
+        },
+        {
+          "rank": 2,
+          "distance_km": 3.6,
+          "duration_min": 42
+        }
+      ],
+      "expected_distance_km": [
+        1,
+        3.5
+      ],
+      "distance_in_expected_range": true,
+      "expected_status": 200
+    },
+    {
+      "name": "Tehran ordered 4 stops (car, time)",
+      "status": 200,
+      "ms": 36.4,
+      "error": null,
+      "route_optimality": "not_guaranteed",
+      "duration_semantics": "static_estimate",
+      "visit_order": [
+        "azadi",
+        "milad",
+        "tajrish",
+        "bazaar"
+      ],
+      "optimization": null,
+      "alternatives_requested": 0,
+      "alternatives_returned": 0,
+      "routes": [
+        {
+          "rank": 0,
+          "distance_km": 43.7,
+          "duration_min": 48.1
+        }
+      ],
+      "expected_distance_km": [
+        20,
+        70
+      ],
+      "distance_in_expected_range": true,
+      "expected_status": 200
+    },
+    {
+      "name": "Tehran optimized 5 stops (car, time; fixed first/last)",
+      "status": 200,
+      "ms": 220.6,
+      "error": null,
+      "route_optimality": "not_guaranteed",
+      "duration_semantics": "static_estimate",
+      "visit_order": [
+        "azadi",
+        "milad",
+        "tajrish",
+        "bazaar",
+        "mehrabad"
+      ],
+      "optimization": {
+        "method": "held_karp_directed_pair_costs",
+        "visit_order_optimal_for_pair_costs": true,
+        "modeled_cost": 4456.738,
+        "modeled_cost_unit": "s",
+        "pair_routes_computed": 12,
+        "unreachable_pairs": 0,
+        "final_route_cost": 4456.739,
+        "note": "Order is exact only for the modeled directed two-point pair-cost table; road-route optimality is not guaranteed and the final multi-stop route total can differ."
+      },
+      "alternatives_requested": 0,
+      "alternatives_returned": 0,
+      "routes": [
+        {
+          "rank": 0,
+          "distance_km": 62.6,
+          "duration_min": 74.3
+        }
+      ],
+      "expected_distance_km": [
+        20,
+        90
+      ],
+      "distance_in_expected_range": true,
+      "expected_status": 200
+    },
+    {
+      "name": "Tehran optimized 5 stops (motorcycle, distance)",
+      "status": 200,
+      "ms": 211,
+      "error": null,
+      "route_optimality": "not_guaranteed",
+      "duration_semantics": "static_estimate",
+      "visit_order": [
+        "azadi",
+        "milad",
+        "tajrish",
+        "bazaar",
+        "mehrabad"
+      ],
+      "optimization": {
+        "method": "held_karp_directed_pair_costs",
+        "visit_order_optimal_for_pair_costs": true,
+        "modeled_cost": 58297,
+        "modeled_cost_unit": "m",
+        "pair_routes_computed": 12,
+        "unreachable_pairs": 0,
+        "final_route_cost": 58299,
+        "note": "Order is exact only for the modeled directed two-point pair-cost table; road-route optimality is not guaranteed and the final multi-stop route total can differ."
+      },
+      "alternatives_requested": 0,
+      "alternatives_returned": 0,
+      "routes": [
+        {
+          "rank": 0,
+          "distance_km": 58.3,
+          "duration_min": 71.2
+        }
+      ],
+      "expected_distance_km": [
+        20,
+        90
+      ],
+      "distance_in_expected_range": true,
+      "expected_status": 200
+    },
+    {
+      "name": "Tehran -> Kish Island (car; island, ferry handling observed only)",
+      "status": 200,
+      "ms": 622.6,
+      "error": null,
+      "route_optimality": "not_guaranteed",
+      "duration_semantics": "static_estimate",
+      "visit_order": [
+        "tehran",
+        "kish"
+      ],
+      "optimization": null,
+      "alternatives_requested": 0,
+      "alternatives_returned": 0,
+      "routes": [
+        {
+          "rank": 0,
+          "distance_km": 1430.6,
+          "duration_min": 984.3
+        }
+      ],
+      "expected_distance_km": null,
+      "distance_in_expected_range": null,
+      "expected_status": 200
+    },
+    {
+      "name": "Rejected: 3-point alternatives (UNSUPPORTED_COMBINATION expected)",
+      "status": 422,
+      "ms": 1.9,
+      "error": "UNSUPPORTED_COMBINATION",
+      "route_optimality": null,
+      "duration_semantics": null,
+      "visit_order": null,
+      "optimization": null,
+      "alternatives_requested": null,
+      "alternatives_returned": null,
+      "routes": [],
+      "expected_distance_km": null,
+      "distance_in_expected_range": null,
+      "expected_status": 422
+    }
+  ],
+  "proximity": [
+    {
+      "metric": "straight_line",
+      "direction": "origin_to_candidate",
+      "status": 200,
+      "ms": 286.6,
+      "error": null,
+      "ranked_by": "distance_m",
+      "ranking": [
+        {
+          "id": "mehrabad",
+          "rank": 1,
+          "status": "reachable",
+          "distance_km": 2.5,
+          "duration_min": null
+        },
+        {
+          "id": "milad",
+          "rank": 2,
+          "status": "reachable",
+          "distance_km": 6,
+          "duration_min": null
+        },
+        {
+          "id": "bazaar",
+          "rank": 3,
+          "status": "reachable",
+          "distance_km": 8.1,
+          "duration_min": null
+        },
+        {
+          "id": "tajrish",
+          "rank": 4,
+          "status": "reachable",
+          "distance_km": 14.5,
+          "duration_min": null
+        },
+        {
+          "id": "ika",
+          "rank": 5,
+          "status": "reachable",
+          "distance_km": 35.7,
+          "duration_min": null
+        }
+      ]
+    },
+    {
+      "metric": "straight_line",
+      "direction": "candidate_to_origin",
+      "status": 200,
+      "ms": 3.3,
+      "error": null,
+      "ranked_by": "distance_m",
+      "ranking": [
+        {
+          "id": "mehrabad",
+          "rank": 1,
+          "status": "reachable",
+          "distance_km": 2.5,
+          "duration_min": null
+        },
+        {
+          "id": "milad",
+          "rank": 2,
+          "status": "reachable",
+          "distance_km": 6,
+          "duration_min": null
+        },
+        {
+          "id": "bazaar",
+          "rank": 3,
+          "status": "reachable",
+          "distance_km": 8.1,
+          "duration_min": null
+        },
+        {
+          "id": "tajrish",
+          "rank": 4,
+          "status": "reachable",
+          "distance_km": 14.5,
+          "duration_min": null
+        },
+        {
+          "id": "ika",
+          "rank": 5,
+          "status": "reachable",
+          "distance_km": 35.7,
+          "duration_min": null
+        }
+      ]
+    },
+    {
+      "metric": "road_distance",
+      "direction": "origin_to_candidate",
+      "status": 200,
+      "ms": 79.9,
+      "error": null,
+      "ranked_by": "distance_m",
+      "ranking": [
+        {
+          "id": "mehrabad",
+          "rank": 1,
+          "status": "reachable",
+          "distance_km": 5.2,
+          "duration_min": 10.2
+        },
+        {
+          "id": "milad",
+          "rank": 2,
+          "status": "reachable",
+          "distance_km": 9.7,
+          "duration_min": 11.5
+        },
+        {
+          "id": "bazaar",
+          "rank": 3,
+          "status": "reachable",
+          "distance_km": 12.3,
+          "duration_min": 15.2
+        },
+        {
+          "id": "tajrish",
+          "rank": 4,
+          "status": "reachable",
+          "distance_km": 18.2,
+          "duration_min": 16.8
+        },
+        {
+          "id": "ika",
+          "rank": 5,
+          "status": "reachable",
+          "distance_km": 47.5,
+          "duration_min": 34.8
+        }
+      ]
+    },
+    {
+      "metric": "road_distance",
+      "direction": "candidate_to_origin",
+      "status": 200,
+      "ms": 74.9,
+      "error": null,
+      "ranked_by": "distance_m",
+      "ranking": [
+        {
+          "id": "mehrabad",
+          "rank": 1,
+          "status": "reachable",
+          "distance_km": 3.1,
+          "duration_min": 5.7
+        },
+        {
+          "id": "milad",
+          "rank": 2,
+          "status": "reachable",
+          "distance_km": 11.1,
+          "duration_min": 15.2
+        },
+        {
+          "id": "bazaar",
+          "rank": 3,
+          "status": "reachable",
+          "distance_km": 11.8,
+          "duration_min": 15.3
+        },
+        {
+          "id": "tajrish",
+          "rank": 4,
+          "status": "reachable",
+          "distance_km": 19.5,
+          "duration_min": 20.5
+        },
+        {
+          "id": "ika",
+          "rank": 5,
+          "status": "reachable",
+          "distance_km": 49.9,
+          "duration_min": 35.3
+        }
+      ]
+    },
+    {
+      "metric": "travel_time",
+      "direction": "origin_to_candidate",
+      "status": 200,
+      "ms": 57.4,
+      "error": null,
+      "ranked_by": "duration_s",
+      "ranking": [
+        {
+          "id": "milad",
+          "rank": 1,
+          "status": "reachable",
+          "distance_km": 10.5,
+          "duration_min": 12.7
+        },
+        {
+          "id": "mehrabad",
+          "rank": 2,
+          "status": "reachable",
+          "distance_km": 7.6,
+          "duration_min": 13.1
+        },
+        {
+          "id": "bazaar",
+          "rank": 3,
+          "status": "reachable",
+          "distance_km": 12.4,
+          "duration_min": 14.5
+        },
+        {
+          "id": "tajrish",
+          "rank": 4,
+          "status": "reachable",
+          "distance_km": 19,
+          "duration_min": 15.8
+        },
+        {
+          "id": "ika",
+          "rank": 5,
+          "status": "reachable",
+          "distance_km": 47.5,
+          "duration_min": 33.5
+        }
+      ]
+    },
+    {
+      "metric": "travel_time",
+      "direction": "candidate_to_origin",
+      "status": 200,
+      "ms": 54.9,
+      "error": null,
+      "ranked_by": "duration_s",
+      "ranking": [
+        {
+          "id": "mehrabad",
+          "rank": 1,
+          "status": "reachable",
+          "distance_km": 7.2,
+          "duration_min": 11.7
+        },
+        {
+          "id": "milad",
+          "rank": 2,
+          "status": "reachable",
+          "distance_km": 12.3,
+          "duration_min": 14.8
+        },
+        {
+          "id": "bazaar",
+          "rank": 3,
+          "status": "reachable",
+          "distance_km": 12.4,
+          "duration_min": 15.2
+        },
+        {
+          "id": "tajrish",
+          "rank": 4,
+          "status": "reachable",
+          "distance_km": 20.2,
+          "duration_min": 17.1
+        },
+        {
+          "id": "ika",
+          "rank": 5,
+          "status": "reachable",
+          "distance_km": 49.9,
+          "duration_min": 35.2
+        }
+      ]
+    }
+  ],
+  "pois": [
+    {
+      "box": "tehran_center",
+      "preset": "hospitals",
+      "status": 200,
+      "ms": 411.7,
+      "error": null,
+      "count": 36,
+      "truncated": false,
+      "named": 34
+    },
+    {
+      "box": "tehran_center",
+      "preset": "pharmacies",
+      "status": 200,
+      "ms": 120.9,
+      "error": null,
+      "count": 95,
+      "truncated": false,
+      "named": 87
+    },
+    {
+      "box": "tehran_center",
+      "preset": "police",
+      "status": 200,
+      "ms": 49.9,
+      "error": null,
+      "count": 22,
+      "truncated": false,
+      "named": 21
+    },
+    {
+      "box": "tehran_center",
+      "preset": "fire_stations",
+      "status": 200,
+      "ms": 50.4,
+      "error": null,
+      "count": 9,
+      "truncated": false,
+      "named": 6
+    },
+    {
+      "box": "tehran_center",
+      "preset": "fuel",
+      "status": 200,
+      "ms": 50.2,
+      "error": null,
+      "count": 8,
+      "truncated": false,
+      "named": 8
+    },
+    {
+      "box": "tehran_center",
+      "preset": "parking",
+      "status": 200,
+      "ms": 81.5,
+      "error": null,
+      "count": 66,
+      "truncated": false,
+      "named": 31
+    },
+    {
+      "box": "tehran_center",
+      "preset": "schools",
+      "status": 200,
+      "ms": 81.2,
+      "error": null,
+      "count": 112,
+      "truncated": false,
+      "named": 100
+    },
+    {
+      "box": "tehran_center",
+      "preset": "food",
+      "status": 200,
+      "ms": 124.6,
+      "error": null,
+      "count": 200,
+      "truncated": true,
+      "named": 185
+    },
+    {
+      "box": "isfahan_center",
+      "preset": "hospitals",
+      "status": 200,
+      "ms": 187.6,
+      "error": null,
+      "count": 13,
+      "truncated": false,
+      "named": 13
+    },
+    {
+      "box": "isfahan_center",
+      "preset": "pharmacies",
+      "status": 200,
+      "ms": 51.8,
+      "error": null,
+      "count": 35,
+      "truncated": false,
+      "named": 33
+    },
+    {
+      "box": "isfahan_center",
+      "preset": "police",
+      "status": 200,
+      "ms": 49.8,
+      "error": null,
+      "count": 10,
+      "truncated": false,
+      "named": 7
+    },
+    {
+      "box": "isfahan_center",
+      "preset": "fire_stations",
+      "status": 200,
+      "ms": 51.3,
+      "error": null,
+      "count": 4,
+      "truncated": false,
+      "named": 4
+    },
+    {
+      "box": "isfahan_center",
+      "preset": "fuel",
+      "status": 200,
+      "ms": 49.9,
+      "error": null,
+      "count": 4,
+      "truncated": false,
+      "named": 4
+    },
+    {
+      "box": "isfahan_center",
+      "preset": "parking",
+      "status": 200,
+      "ms": 80.8,
+      "error": null,
+      "count": 46,
+      "truncated": false,
+      "named": 23
+    },
+    {
+      "box": "isfahan_center",
+      "preset": "schools",
+      "status": 200,
+      "ms": 50.8,
+      "error": null,
+      "count": 48,
+      "truncated": false,
+      "named": 45
+    },
+    {
+      "box": "isfahan_center",
+      "preset": "food",
+      "status": 200,
+      "ms": 82.4,
+      "error": null,
+      "count": 200,
+      "truncated": true,
+      "named": 183
+    },
+    {
+      "box": "zahedan_center",
+      "preset": "hospitals",
+      "status": 200,
+      "ms": 79.1,
+      "error": null,
+      "count": 7,
+      "truncated": false,
+      "named": 6
+    },
+    {
+      "box": "zahedan_center",
+      "preset": "pharmacies",
+      "status": 200,
+      "ms": 50.7,
+      "error": null,
+      "count": 30,
+      "truncated": false,
+      "named": 25
+    },
+    {
+      "box": "zahedan_center",
+      "preset": "police",
+      "status": 200,
+      "ms": 30.3,
+      "error": null,
+      "count": 2,
+      "truncated": false,
+      "named": 2
+    },
+    {
+      "box": "zahedan_center",
+      "preset": "fire_stations",
+      "status": 200,
+      "ms": 30.5,
+      "error": null,
+      "count": 1,
+      "truncated": false,
+      "named": 1
+    },
+    {
+      "box": "zahedan_center",
+      "preset": "fuel",
+      "status": 200,
+      "ms": 30.2,
+      "error": null,
+      "count": 7,
+      "truncated": false,
+      "named": 5
+    },
+    {
+      "box": "zahedan_center",
+      "preset": "parking",
+      "status": 200,
+      "ms": 30.3,
+      "error": null,
+      "count": 12,
+      "truncated": false,
+      "named": 5
+    },
+    {
+      "box": "zahedan_center",
+      "preset": "schools",
+      "status": 200,
+      "ms": 51.1,
+      "error": null,
+      "count": 60,
+      "truncated": false,
+      "named": 50
+    },
+    {
+      "box": "zahedan_center",
+      "preset": "food",
+      "status": 200,
+      "ms": 50.6,
+      "error": null,
+      "count": 28,
+      "truncated": false,
+      "named": 26
+    },
+    {
+      "box": "rural_kavir",
+      "preset": "hospitals",
+      "status": 200,
+      "ms": 50.2,
+      "error": null,
+      "count": 0,
+      "truncated": false,
+      "named": 0
+    },
+    {
+      "box": "rural_kavir",
+      "preset": "pharmacies",
+      "status": 200,
+      "ms": 30.2,
+      "error": null,
+      "count": 0,
+      "truncated": false,
+      "named": 0
+    },
+    {
+      "box": "rural_kavir",
+      "preset": "police",
+      "status": 200,
+      "ms": 30.6,
+      "error": null,
+      "count": 0,
+      "truncated": false,
+      "named": 0
+    },
+    {
+      "box": "rural_kavir",
+      "preset": "fire_stations",
+      "status": 200,
+      "ms": 30,
+      "error": null,
+      "count": 0,
+      "truncated": false,
+      "named": 0
+    },
+    {
+      "box": "rural_kavir",
+      "preset": "fuel",
+      "status": 200,
+      "ms": 30.4,
+      "error": null,
+      "count": 0,
+      "truncated": false,
+      "named": 0
+    },
+    {
+      "box": "rural_kavir",
+      "preset": "parking",
+      "status": 200,
+      "ms": 30.3,
+      "error": null,
+      "count": 0,
+      "truncated": false,
+      "named": 0
+    },
+    {
+      "box": "rural_kavir",
+      "preset": "schools",
+      "status": 200,
+      "ms": 30.7,
+      "error": null,
+      "count": 0,
+      "truncated": false,
+      "named": 0
+    },
+    {
+      "box": "rural_kavir",
+      "preset": "food",
+      "status": 200,
+      "ms": 30.5,
+      "error": null,
+      "count": 0,
+      "truncated": false,
+      "named": 0
+    }
+  ],
+  "tiles": [
+    {
+      "place": "tehran",
+      "z": 0,
+      "x": 0,
+      "y": 0,
+      "status": 200,
+      "ms": 134.6,
+      "bytes": 29797,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "tehran",
+      "z": 4,
+      "x": 10,
+      "y": 6,
+      "status": 200,
+      "ms": 1547.3,
+      "bytes": 2099808,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "tehran",
+      "z": 6,
+      "x": 41,
+      "y": 25,
+      "status": 200,
+      "ms": 2101.1,
+      "bytes": 907204,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "tehran",
+      "z": 8,
+      "x": 164,
+      "y": 100,
+      "status": 200,
+      "ms": 680.1,
+      "bytes": 1262720,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "tehran",
+      "z": 10,
+      "x": 658,
+      "y": 403,
+      "status": 200,
+      "ms": 157.6,
+      "bytes": 809868,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "tehran",
+      "z": 12,
+      "x": 2632,
+      "y": 1612,
+      "status": 200,
+      "ms": 308.4,
+      "bytes": 873093,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "tehran",
+      "z": 14,
+      "x": 10530,
+      "y": 6451,
+      "status": 200,
+      "ms": 54.6,
+      "bytes": 147668,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "tehran",
+      "z": 16,
+      "x": 42123,
+      "y": 25804,
+      "status": 200,
+      "ms": 6.7,
+      "bytes": 14283,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "isfahan",
+      "z": 8,
+      "x": 164,
+      "y": 103,
+      "status": 200,
+      "ms": 307.6,
+      "bytes": 723617,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "isfahan",
+      "z": 12,
+      "x": 2635,
+      "y": 1654,
+      "status": 200,
+      "ms": 249,
+      "bytes": 1125750,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "isfahan",
+      "z": 14,
+      "x": 10543,
+      "y": 6618,
+      "status": 200,
+      "ms": 77.7,
+      "bytes": 115564,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "zahedan",
+      "z": 8,
+      "x": 171,
+      "y": 106,
+      "status": 200,
+      "ms": 239.7,
+      "bytes": 62344,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "zahedan",
+      "z": 12,
+      "x": 2740,
+      "y": 1696,
+      "status": 200,
+      "ms": 110,
+      "bytes": 495753,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "zahedan",
+      "z": 14,
+      "x": 10961,
+      "y": 6786,
+      "status": 200,
+      "ms": 85.1,
+      "bytes": 139116,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "bazargan",
+      "z": 10,
+      "x": 638,
+      "y": 389,
+      "status": 200,
+      "ms": 94.4,
+      "bytes": 12377,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "bazargan",
+      "z": 14,
+      "x": 10212,
+      "y": 6238,
+      "status": 200,
+      "ms": 48.4,
+      "bytes": 18432,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "chabahar",
+      "z": 10,
+      "x": 684,
+      "y": 437,
+      "status": 200,
+      "ms": 100.6,
+      "bytes": 50975,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "chabahar",
+      "z": 14,
+      "x": 10951,
+      "y": 7001,
+      "status": 200,
+      "ms": 49.8,
+      "bytes": 113917,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "abyaneh",
+      "z": 12,
+      "x": 2635,
+      "y": 1642,
+      "status": 200,
+      "ms": 55,
+      "bytes": 1515,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "abyaneh",
+      "z": 14,
+      "x": 10540,
+      "y": 6568,
+      "status": 200,
+      "ms": 25.8,
+      "bytes": 985,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "abyaneh",
+      "z": 16,
+      "x": 42161,
+      "y": 26272,
+      "status": 200,
+      "ms": 6.2,
+      "bytes": 839,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "kish",
+      "z": 10,
+      "x": 665,
+      "y": 433,
+      "status": 200,
+      "ms": 79.3,
+      "bytes": 50091,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "place": "kish",
+      "z": 14,
+      "x": 10648,
+      "y": 6938,
+      "status": 200,
+      "ms": 34,
+      "bytes": 20051,
+      "content_type": "application/vnd.mapbox-vector-tile"
+    },
+    {
+      "style": "/maps/ds-20261017-2d2c87f31d11/styles/light-fa.json",
+      "status": 200,
+      "bytes": 14739
+    },
+    {
+      "style": "/maps/ds-20261017-2d2c87f31d11/styles/light-en.json",
+      "status": 200,
+      "bytes": 14739
+    },
+    {
+      "style": "/maps/ds-20261017-2d2c87f31d11/styles/dark-fa.json",
+      "status": 200,
+      "bytes": 14736
+    },
+    {
+      "style": "/maps/ds-20261017-2d2c87f31d11/styles/dark-en.json",
+      "status": 200,
+      "bytes": 14736
+    }
+  ],
+  "latency_ms": {
+    "ready": {
+      "n": 1,
+      "min": 34.2,
+      "p50": 34.2,
+      "p90": 34.2,
+      "max": 34.2
+    },
+    "capabilities": {
+      "n": 1,
+      "min": 6.8,
+      "p50": 6.8,
+      "p90": 6.8,
+      "max": 6.8
+    },
+    "health": {
+      "n": 1,
+      "min": 2.5,
+      "p50": 2.5,
+      "p90": 2.5,
+      "max": 2.5
+    },
+    "search": {
+      "n": 33,
+      "min": 19.7,
+      "p50": 69.2,
+      "p90": 112.1,
+      "max": 647.2
+    },
+    "autocomplete": {
+      "n": 6,
+      "min": 20.9,
+      "p50": 28.9,
+      "p90": 38.3,
+      "max": 38.3
+    },
+    "reverse": {
+      "n": 14,
+      "min": 9.5,
+      "p50": 19.5,
+      "p90": 31.6,
+      "max": 63.9
+    },
+    "route": {
+      "n": 14,
+      "min": 1.9,
+      "p50": 211,
+      "p90": 674.2,
+      "max": 1100.4
+    },
+    "proximity": {
+      "n": 6,
+      "min": 3.3,
+      "p50": 74.9,
+      "p90": 286.6,
+      "max": 286.6
+    },
+    "pois": {
+      "n": 32,
+      "min": 30,
+      "p50": 50.4,
+      "p90": 120.9,
+      "max": 411.7
+    },
+    "tile": {
+      "n": 23,
+      "min": 6.2,
+      "p50": 94.4,
+      "p90": 680.1,
+      "max": 2101.1
+    },
+    "style": {
+      "n": 4,
+      "min": 0.9,
+      "p50": 1.1,
+      "p90": 3.9,
+      "max": 3.9
+    }
+  },
+  "latency_method": "one sequential client on the validation host via the TLS ingress; wall time per request (performance.now); no concurrency",
+  "summary": {
+    "search_hit_at_1": 23,
+    "search_hit_at_5": 32,
+    "search_cases": 33,
+    "autocomplete_hit_at_5": 5,
+    "autocomplete_cases": 6,
+    "reverse_expected_seen": 10,
+    "reverse_cases_with_expectation": 12,
+    "routing_status_as_expected": 14,
+    "routing_cases": 14,
+    "routing_distance_in_range": 12,
+    "proximity_ok": 6,
+    "pois_ok": 32,
+    "pois_cases": 32,
+    "tiles_ok": 27,
+    "tiles_requests": 27,
+    "transport_errors": 0
+  }
+}

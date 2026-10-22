@@ -1,0 +1,6 @@
+PASS bundle: all 15 declared install paths exist
+FAIL bundle: every relative link in the install docs resolves inside the install set -- docs/CLIENT_INTEGRATION.md -> handoff/README.md | docs/CLIENT_INTEGRATION.md -> ../examples/web-dev-proxy/README.md | docs/CLIENT_INTEGRATION.md -> mobile-fixtures/README.md | docs/CLIENT_INTEGRATION.md -> ../tests/validation/search-seeds.json
+PASS bundle: no install file holds a PEM private key
+PASS bundle: no development issuer tool in the install set
+FAIL pack: a declared client handoff pack builder exists -- <scratch>/review-6602199/checkout/infra/handoff/build-client-pack.mjs missing; the guide's linked examples/handoff files belong to no deliverable
+# checkout=<scratch>/review-6602199/checkout checks=5 failed=2

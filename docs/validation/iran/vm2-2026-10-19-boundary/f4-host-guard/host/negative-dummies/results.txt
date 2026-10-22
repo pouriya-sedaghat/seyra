@@ -1,0 +1,4 @@
+seyra-bnd-dummy restore: rc=2 == 2026-10-19T07:15:59Z REFUSED cannot attach for phases [restore]: container seyra-bnd-dummy is not a disposable host of this lab (/home/owner/seyra-bnd-lab)
+seyra-bnd-dummy readiness: rc=2 == 2026-10-19T07:15:59Z REFUSED cannot attach for phases [readiness]: container seyra-bnd-dummy is not a disposable host of this lab (/home/owner/seyra-bnd-lab)
+seyra-bnd-wronglab restore: rc=2 == 2026-10-19T07:15:59Z REFUSED cannot attach for phases [restore]: container seyra-bnd-wronglab is not a disposable host of this lab (/home/owner/seyra-bnd-lab)
+seyra-bnd-wronglab readiness: rc=2 == 2026-10-19T07:15:59Z REFUSED cannot attach for phases [readiness]: container seyra-bnd-wronglab is not a disposable host of this lab (/home/owner/seyra-bnd-lab)

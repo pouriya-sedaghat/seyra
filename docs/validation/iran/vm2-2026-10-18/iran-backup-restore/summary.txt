@@ -1,0 +1,10 @@
+# RECONSTRUCTED from progress.log: the harness finished every check below, but its final summary block did not run.
+# Cause: iran-offline-host.sh was edited (comment lines, commit 741a23c) while this run was executing; bash then read a shifted offset ('unexpected EOF' at the end of run.log).
+PASS I8 backup generation seyra-backup-20261018T140109746Z-8c35ff (without --include-sources) and a separate secrets copy
+PASS I9 zero packets to non-local destinations from offline host 1 during install/import/activate/smoke/restart/backup (7 link-local IGMP reports counted separately)
+PASS R2 restore before the secrets are back is refused and starts nothing
+PASS R3 secrets -> init -> restore: control DB events identical; restore names the original input by SHA-256 (7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f)
+PASS R4 rebuilt from the owner's original input without included sources; dataset_id reproduced (ds-20261017-2d2c87f31d11)
+PASS R5 restored host serves ds-20261017-2d2c87f31d11 through the ingress
+PASS R6 zero packets to non-local destinations from offline host 2 during install/restore/rebuild/activate
+# failures: 0

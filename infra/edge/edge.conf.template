@@ -1,0 +1,29 @@
+# Seyra edge relay (nested-host topology only). Layer-4 relay: it never terminates TLS and holds no
+# key. Rendered by infra/edge/render-edge.sh from operator-local values; this template contains
+# placeholders only.
+worker_processes 1;
+pid /tmp/seyra-edge.pid;
+error_log /dev/stderr warn;
+events { worker_connections 512; }
+
+stream {
+  # No access log: client addresses are not recorded (same policy as the Seyra ingress).
+  access_log off;
+
+  server {
+    # Container port; Docker publishes it on the approved host address only.
+    listen 8443;
+
+    # Approved client networks, checked on the actual TCP peer of this connection.
+${EDGE_ACCESS_RULES}
+
+    proxy_pass ${EDGE_UPSTREAM};
+    # The PROXY header is built from this connection's actual peer. The edge never accepts a PROXY
+    # header itself (no proxy_protocol on its listen), so a client cannot choose the conveyed address.
+    proxy_protocol on;
+${EDGE_PROXY_BIND}
+    proxy_connect_timeout 5s;
+    # Idle timeout; above the ingress proxy_read_timeout (130 s) and the optimized-route deadline.
+    proxy_timeout 180s;
+  }
+}

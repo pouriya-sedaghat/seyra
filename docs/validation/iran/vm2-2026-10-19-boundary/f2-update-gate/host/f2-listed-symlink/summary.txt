@@ -1,0 +1,4 @@
+# Seyra real-Iran offline-host validation — 2026-10-19T07:09:03Z
+# harness=/home/owner/seyra-prep/boundary/host/f2-listed-symlink/harness-20261019T070903Z bundle=/home/owner/seyra-prep/bundle-2026-10-19-vm2-r5 pbf=synthetic-v1.osm.pbf sha256=e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323 dataset_id=
+FAIL U1 update refused before any install change: bundle holds entries that are neither directories nor regular files (type:path): l:install/docs/LICENSES.md 
+# failures: 1

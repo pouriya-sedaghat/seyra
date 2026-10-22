@@ -1,0 +1,8 @@
+pre-import free_bytes=51925262336 guard_bytes=9193803280 (max(2 GiB, 40 x 229845082))
+Filesystem                        Type    1B-blocks        Used   Available Use% Mounted on
+/dev/mapper/ubuntu--vg-ubuntu--lv ext4 105089261568 47778516992 51925258240  48% /
+TYPE            TOTAL     ACTIVE    SIZE      RECLAIMABLE
+Images          12        1         3.624GB   1.834GB (50%)
+Containers      1         1         24.58kB   0B (0%)
+Local Volumes   0         0         0B        0B
+Build Cache     0         0         0B        0B

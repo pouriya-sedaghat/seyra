@@ -1,0 +1,7 @@
+OpenSSL 3.0.13 30 Jan 2024 (Library: OpenSSL 3.0.13 30 Jan 2024)
+server key: /o/req/server/server.key (0400, stays on this VM)
+READY public transfer: /o/req/to-windows/{server.csr,request-manifest.json}
+CSR SHA-256 b39e6947e0417dbd6c0c89f0e9b66113379d059d8d2b15cfa695e2fc8d8f6ba7; public key SHA-256 d7e86cfc22261970ac84636e0d640bba487d3da3a6a0fd7f390443d36459fec0; SANs: IP Address:198.18.0.76
+create rc=0
+request in /o/req is valid: SANs IP Address:198.18.0.76; CSR SHA-256 b39e6947e0417dbd6c0c89f0e9b66113379d059d8d2b15cfa695e2fc8d8f6ba7; public key SHA-256 d7e86cfc22261970ac84636e0d640bba487d3da3a6a0fd7f390443d36459fec0
+check rc=0

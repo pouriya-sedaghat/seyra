@@ -1,0 +1,11 @@
+head f59318eb62301481ed9d52eb9e0e1531f1dd818d
+status: 0 changed paths
+started 2026-10-21T15:22:58Z
+STEP Smallstep CLI/0.31.0 (linux/amd64)
+PWSH_IMAGE mcr.microsoft.com/powershell:lts-ubuntu-22.04 mcr.microsoft.com/powershell@sha256:663a172849444279d8e7b50e19977b6e42380eae6856bdc8931ca08e2e03e92a
+zones from the host database (mounted read-only): UTC +00:00, Asia/Tehran +03:30, America/New_York -04:00
+before = untouched 352bd9a infra/tls/lan-pki/windows (ee5846a7ca5e7be9 tree digest)
+windows-suites rc=0 seconds=151
+lint-after rc=0 seconds=44
+lint-before rc=0 seconds=70
+finished 2026-10-21T15:27:23Z

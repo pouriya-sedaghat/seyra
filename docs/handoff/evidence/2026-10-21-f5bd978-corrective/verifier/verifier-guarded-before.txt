@@ -1,0 +1,8 @@
+{"label":"submitted-vm-suite-host-adapter","observed":true,"exit_code":0,"checks":20,"failed":0}
+{"label":"valid-packet-positive-control","observed":true}
+{"label":"bad-hash-negative-control","observed":true}
+{"label":"R3-packet-FIFO-blocks-after-rejection","observed":true,"exit_code":124}
+{"label":"R3-validator-nonzero-exit-accepted","observed":true,"exit_code":0}
+{"label":"R4-CSR-manifest-failure-reported-success","observed":true,"exit_code":0,"manifest_size":0}
+{"label":"R1-ACL-source-obligation","observed":true}
+{"label":"R2-trust-record-source-obligation","observed":true}

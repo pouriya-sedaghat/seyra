@@ -1,0 +1,12 @@
+build start 2026-10-18T08:43:42Z commit 9f0d7925eef0d43fc157cdd64b557b962df457a6
+== building osmtools
+== building valhalla
+== building overpass
+== building tegola
+== building photon
+== building geocoder-build
+== building api
+== building proxy
+== building ops
+all images built; now run: node infra/prepare/write-lock.mjs
+build-images rc=0 seconds=1603 end 2026-10-18T09:10:25Z

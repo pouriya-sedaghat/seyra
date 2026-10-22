@@ -1,0 +1,3 @@
+[recover] restoring ds-20261001-9843cf36a06e (the activate to ds-20261008-9843cf36a06e did not complete)
+[ingress] the proxy is running without 127.0.0.1:8443 published (docker reports: :0); recreating it
+[recover] done; the active release is ready

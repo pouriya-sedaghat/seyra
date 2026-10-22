@@ -1,0 +1,315 @@
+{
+  "schema": "seyra.release-manifest/1",
+  "dataset_id": "ds-20250513-9843cf36a06e",
+  "status": "validated",
+  "created_at": "2026-10-19T07:12:21.927Z",
+  "updated_at": "2026-10-19T07:13:25.079Z",
+  "source": {
+    "original_path": "/home/owner/seyra-synth/fx/synthetic-v1.osm.pbf",
+    "filename": "synthetic-v1.osm.pbf",
+    "size_bytes": 3167,
+    "sha256": "e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323",
+    "managed_copy": "/home/owner/seyra-bnd-lab/home/releases/ds-20250513-9843cf36a06e/source/input.osm.pbf",
+    "snapshot_timestamp": "2025-05-13T00:00:00Z",
+    "snapshot_timestamp_source": "operator",
+    "bbox": [
+      0,
+      0,
+      0.095,
+      0.095
+    ],
+    "counts": {
+      "changesets": 0,
+      "nodes": 151,
+      "ways": 38,
+      "relations": 3
+    }
+  },
+  "pipeline": {
+    "pipeline_version": "seyra-pipeline-1.0.1",
+    "fingerprint_sha256": "217f94a9c5e25192510d2d054914511ddc10f1cfc0581a632382324e8801b8e8",
+    "files": {
+      "infra/catalog/seyra-flex.lua": "44a7911075d9ebb8877f4f68134f5279c103247ea1afe3eb15dfcc4ccd4a5954",
+      "infra/catalog/pre-import.sql": "434ceab4a968cd63141429e58bd97f0a57c21897f1362b5b1faf38bee625617c",
+      "infra/catalog/post-import.sql": "d35e9008583697fbad55a40d447e99235eaa285a6813f9e2e6a2d59305e698a4",
+      "infra/catalog/catalog-report.sql": "3130f0636e5b6deafd80067fd71eb2a036d36ca70d94fbbde1bcd5bc15d8a699",
+      "infra/catalog/tegola.toml.tmpl": "a4088362a9eb3ad0fc554f733dcd8a3cd399bdbbd1d2a6d6880a09ac099218a5",
+      "infra/catalog/catalog.json": "737fc60c42416ff686f636723d9427c0c4c1f399a99140fe48099c1e047214f5",
+      "infra/valhalla/valhalla.json": "1f846f9f031d904e0b2a03ba8a7d55551066f558acf8c6e676b8ab2acd53871b",
+      "infra/compose/jobs.yml": "84ec52ab1f87090a4ed02a0bf537bff95aa44539b478a3eb2caf0e406f1ce6aa"
+    },
+    "catalog_version": "seyra-catalog-1.0.0",
+    "search_normalization_version": "fa-search-norm-1",
+    "style_version": "seyra-style-1.0.1"
+  },
+  "components": {
+    "DB": {
+      "ref": "postgis/postgis:17-3.5",
+      "image_id": "sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6"
+    },
+    "TEGOLA": {
+      "ref": "seyra/tegola:0.21.2-seyra1",
+      "image_id": "sha256:4379ed15b436599a68b7908c8b35767c586801273eeca725ca144926e5e0757f"
+    },
+    "VALHALLA": {
+      "ref": "seyra/valhalla:3.9.1-seyra1",
+      "image_id": "sha256:df4afb12dd7e4d5a110178d3a931facc206239470dc043c38dd117af331defc3"
+    },
+    "PHOTON": {
+      "ref": "seyra/photon:1.3.0-seyra1",
+      "image_id": "sha256:46112b0677bb6866b8c7c5c55d883d5c302264f7c855a5bc4a5fefac745f97b2"
+    },
+    "OVERPASS": {
+      "ref": "seyra/overpass:0.7.62.4-seyra1",
+      "image_id": "sha256:44d8f7a9837f953d34122189a716c663263a7e6a531104548f37c5604c4b85fa"
+    },
+    "API": {
+      "ref": "seyra/api:1.0.0-seyra1",
+      "image_id": "sha256:ad11e92b08790044a31c23bf16a61bd6689fdeda1f7241f2c41dce4d59d36b00"
+    },
+    "PROXY": {
+      "ref": "seyra/proxy:1.0.0-seyra1",
+      "image_id": "sha256:07e3eca26da70c86cf69cb4538dbcac9eb163ad507a574eb411d561d005e233c"
+    },
+    "OSMTOOLS": {
+      "ref": "seyra/osmtools:2.3.1-1.19.1-seyra1",
+      "image_id": "sha256:a6803a35f3a1ed2d059bb170e7e2efdabd31567412c33b94ccd518b6678acfc0"
+    },
+    "GEOCODER_BUILD": {
+      "ref": "seyra/geocoder-build:5.3.2-1.3.0-seyra1",
+      "image_id": "sha256:ee886ca3890b697b2117919c1dcff389988ee782fb5c1bf20a61c90be8f80057"
+    },
+    "OPS": {
+      "ref": "seyra/ops:1.0.0-seyra1",
+      "image_id": "sha256:135ef05c476379db3b51165ab816967cd3ba4c789c96fbd2311c9a6221325dc7"
+    }
+  },
+  "assets": {
+    "assets_sha256": "8f7bcaf8f8dfe98cd89f12d1a2db440aa246e52d3434a93ca8de98091ec5fb31",
+    "source": "proxy image /usr/share/seyra/assets/asset-manifest.json"
+  },
+  "artifacts": {
+    "render": {
+      "database": "render_ds_20250513_9843cf36a06e",
+      "frozen": true,
+      "catalog_report": "validation/catalog-report.json",
+      "tegola_config_sha256": "560b454a6bc714762eea883f0ea5a23a1688fd20438cb41790030c00ae009223"
+    },
+    "routing": {
+      "dir": "valhalla",
+      "sha256": "75e0d092761bddce34cfe6634cc9b264d75e32163d43fe202a826109446d5b30",
+      "files": 5,
+      "bytes": 7045920,
+      "timezone_db": "not packaged (date_time rejected in phase 1)",
+      "speed_config": "not packaged (built-in class defaults)"
+    },
+    "geocoder": {
+      "nominatim": "Nominatim version 5.3.2-0",
+      "export_sha256": "3081252002407599ff0a1f748b27309a702bb14ea2b09111e6b830654e718b33",
+      "import_file": "geocoder/photon-import.jsonl",
+      "import_sha256": "1b7931309bab90e1ff7068420b52bf523e04ef45343668700ee89fa93169b36a",
+      "synonyms_sha256": "a0980a551075392f97d1be29586e9dd8b9e8d69c861bf988fd5c2e23991891e7",
+      "preprocess": {
+        "places": 55,
+        "names_with_variants": 52,
+        "variants_added": 52,
+        "variants_without_free_slot": 0,
+        "synonym_entries": 19,
+        "synonym_entries_dropped": 0,
+        "marker_name": "seyra-release-ds-20250513-9843cf36a06e",
+        "normalization_version": "fa-search-norm-1"
+      },
+      "photon_dir": "photon",
+      "photon_extra_tags": "seyra_name,seyra_name_fa,seyra_name_en,seyra_housenumber",
+      "note": "The Photon index directory receives OpenSearch working-state writes while served; the import JSON is the immutable rebuild input."
+    },
+    "overpass": {
+      "dir": "overpass/db",
+      "version_label": "seyra:ds-20250513-9843cf36a06e",
+      "sha256": "3c4a32677bba320ec9b06921693b1da5f0c71d6d113054bd1815e144d3f86736",
+      "files": 39,
+      "bytes": 557555,
+      "meta": false,
+      "attic": false,
+      "areas": false
+    },
+    "maps": {
+      "dir": "maps",
+      "sha256": "4edd224824624d946c8e20fffb763e44a6236d4ad70899f103ce3b916ef4a4da",
+      "files": 5,
+      "bytes": 61223
+    }
+  },
+  "identities": {
+    "tiles": "seyra_ds_20250513_9843cf36a06e",
+    "routing": "1792393944",
+    "geocoder": "seyra-release-ds-20250513-9843cf36a06e",
+    "overpass": "seyra:ds-20250513-9843cf36a06e"
+  },
+  "measurements": {
+    "steps": [
+      {
+        "step": "source-checksum",
+        "seconds": 0.001,
+        "bytes": null,
+        "free_bytes_min": 37349154816
+      },
+      {
+        "step": "source-validate",
+        "seconds": 0.206,
+        "bytes": null,
+        "free_bytes_min": 37349154816
+      },
+      {
+        "step": "source-copy",
+        "seconds": 0,
+        "bytes": null,
+        "free_bytes_min": 37356134400
+      },
+      {
+        "step": "render-import",
+        "seconds": 1.25,
+        "bytes": null,
+        "free_bytes_min": 37344976896
+      },
+      {
+        "step": "routing-build",
+        "seconds": 0.868,
+        "bytes": 7045920,
+        "free_bytes_min": 37337862144
+      },
+      {
+        "step": "geocoder-build",
+        "seconds": 13.3,
+        "bytes": 192391,
+        "free_bytes_min": 37175132160
+      },
+      {
+        "step": "overpass-build",
+        "seconds": 0.304,
+        "bytes": 557555,
+        "free_bytes_min": 37336555520
+      },
+      {
+        "step": "map-styles",
+        "seconds": 0.01,
+        "bytes": null,
+        "free_bytes_min": 37336481792
+      },
+      {
+        "step": "staging-validation",
+        "seconds": 47.08,
+        "bytes": null,
+        "free_bytes_min": 37335605248
+      }
+    ],
+    "free_bytes_before": 37349163008,
+    "free_bytes_min_observed": 37175132160,
+    "free_bytes_min_observed_at": "2026-10-19T07:12:31.585Z",
+    "free_space_sampling": {
+      "interval_s": 5,
+      "samples": 33,
+      "filesystem_path": "/home/owner/seyra-bnd-lab/home"
+    },
+    "capacity_check": {
+      "admission": {
+        "ok": true,
+        "filesystem_path": "/home/owner/seyra-bnd-lab/home",
+        "free_bytes": 37349150720,
+        "reclaimable_bytes": 7168000,
+        "available_bytes": 37356318720,
+        "required_bytes": 2147483648,
+        "input_bytes": 3167,
+        "min_free_factor": 120,
+        "min_free_bytes": 2147483648,
+        "reference_min_free_factor": 120
+      },
+      "reclaim": {
+        "bytes": 7168000,
+        "logical_bytes": 7064852,
+        "files": 11,
+        "directories": 18,
+        "not_credited": {
+          "symlinks": 0,
+          "other_filesystem": 0,
+          "shared_inodes": 0,
+          "special": 0,
+          "unreadable": 0
+        },
+        "method": "allocated blocks (st_blocks x 512), lstat (no symlink following), same device as SEYRA_HOME, hard links credited once and only if all links are inside the tree"
+      },
+      "render_db_logical_bytes": 16523791,
+      "render_db_credit_bytes": 0,
+      "after_cleanup": {
+        "ok": true,
+        "filesystem_path": "/home/owner/seyra-bnd-lab/home",
+        "free_bytes": 37356175360,
+        "reclaimable_bytes": 0,
+        "available_bytes": 37356175360,
+        "required_bytes": 2147483648,
+        "input_bytes": 3167,
+        "min_free_factor": 120,
+        "min_free_bytes": 2147483648,
+        "reference_min_free_factor": 120
+      }
+    }
+  },
+  "validation": {
+    "status": "passed",
+    "checks": [
+      {
+        "name": "providers-started",
+        "ok": true,
+        "detail": {
+          "valhalla": true,
+          "photon": true,
+          "overpass": true,
+          "tegola": true
+        }
+      },
+      {
+        "name": "tiles",
+        "ok": true,
+        "detail": {
+          "map": "seyra_ds_20250513_9843cf36a06e",
+          "capabilities": 200,
+          "tile": {
+            "z": 14,
+            "x": 8194,
+            "y": 8189,
+            "status": 200,
+            "bytes": 176
+          }
+        }
+      },
+      {
+        "name": "routing",
+        "ok": true,
+        "detail": {
+          "version": "3.9.1",
+          "tileset_last_modified": 1792393944,
+          "sampled_routes": 5,
+          "routed": 5
+        }
+      },
+      {
+        "name": "geocoder",
+        "ok": true,
+        "detail": {
+          "marker_found": true,
+          "sample_query_present": true,
+          "sample_hits": 3
+        }
+      },
+      {
+        "name": "overpass",
+        "ok": true,
+        "detail": {
+          "identity": "seyra:ds-20250513-9843cf36a06e",
+          "status": 200
+        }
+      }
+    ]
+  },
+  "failure": null
+}

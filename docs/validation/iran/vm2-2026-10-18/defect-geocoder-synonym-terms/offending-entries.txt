@@ -1,0 +1,3 @@
+synonym entries in the failed Iran release: 22564
+offending entry: ?,؟ | code points: U+003F U+002C U+061F
+offending entry: ????,؟؟؟؟ | code points: U+003F U+003F U+003F U+003F U+002C U+061F U+061F U+061F U+061F

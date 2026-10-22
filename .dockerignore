@@ -1,0 +1,12 @@
+# Build contexts for repo-root images (api, ops, proxy): source only.
+**/node_modules
+**/dist
+infra/assets/dist
+.git
+var
+secrets
+bundle
+*.osm.pbf
+docs
+prompts
+**/*.tsbuildinfo

@@ -1,0 +1,12 @@
+# Reviewer harness docs/reviews/verify-pr1-d967a00.mjs (unmodified) run against the FIXED working tree — 2026-10-17T09:57:56Z, node v24.21.0
+# Its R1, R2, R2-ingress, R3-live-import and R4 assertions run first and passed (an assertion failure there would have thrown).
+# It then stops at its R3 pre-fix reproduction: worker A no longer reads-then-unlinks a stale lock (the pause point never occurs);
+# A acquires the kernel lock and holds it, so the reviewed interleaving cannot be produced. Exit code 1 here is the expected post-fix outcome.
+# R5 is covered by apps/ops/src/restore.test.ts (see R5-restore-test-postfix.txt).
+
+docs/reviews/verify-pr1-d967a00.mjs:144
+    if(c.exitCode!==null||Date.now()>deadline)throw new Error(`child did not reach ${needle}: ${c.output} ${c.errors}`);
+                                                    ^
+
+Error: child did not reach PAUSED_AFTER_STALE_READ: HOLDING
+

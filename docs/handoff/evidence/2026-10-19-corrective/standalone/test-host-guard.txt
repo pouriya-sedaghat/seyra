@@ -1,0 +1,27 @@
+PASS restore on an attached unlabelled host: run stopped (exit 2, REFUSED recorded)
+PASS restore on an attached unlabelled host: no kill/rm/volume rm/run against seyra-guard-preserved
+PASS restore on an attached unlabelled host: no Seyra CLI call
+PASS readiness on an attached unlabelled host: run stopped (exit 2, REFUSED recorded)
+PASS readiness on an attached unlabelled host: no kill/rm/volume rm/run against seyra-guard-preserved
+PASS readiness on an attached unlabelled host: no Seyra CLI call
+PASS update on an attached unlabelled host: run stopped (exit 2, REFUSED recorded)
+PASS update on an attached unlabelled host: no kill/rm/volume rm/run against seyra-guard-preserved
+PASS update on an attached unlabelled host: no Seyra CLI call
+PASS restore on an attached wrong-lab host: run stopped (exit 2, REFUSED recorded)
+PASS restore on an attached wrong-lab host: no kill/rm/volume rm/run against seyra-guard-preserved
+PASS restore on an attached wrong-lab host: no Seyra CLI call
+PASS readiness on an attached wrong-lab host: run stopped (exit 2, REFUSED recorded)
+PASS readiness on an attached wrong-lab host: no kill/rm/volume rm/run against seyra-guard-preserved
+PASS readiness on an attached wrong-lab host: no Seyra CLI call
+PASS update on an attached wrong-lab host: run stopped (exit 2, REFUSED recorded)
+PASS update on an attached wrong-lab host: no kill/rm/volume rm/run against seyra-guard-preserved
+PASS update on an attached wrong-lab host: no Seyra CLI call
+PASS install over an unlabelled leftover volume: run stopped
+PASS install over an unlabelled leftover volume: volume kept
+PASS restore onto a preserved restore target: run stopped
+PASS restore onto a preserved restore target: target untouched
+PASS restore onto a preserved restore target: own host 1 was dropped first
+PASS readiness on the lab's own host: admitted (stop/start issued)
+PASS restore on the lab's own host: host 1 and its volume removed
+PASS restore on the lab's own host: host 2 created with this lab's label
+# harness=<repo>/tests/validation/iran-offline-host.sh checks=26 failed=0

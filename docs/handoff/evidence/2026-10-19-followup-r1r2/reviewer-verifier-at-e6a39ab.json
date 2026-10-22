@@ -1,0 +1,40 @@
+{
+  "node": "v24.21.0",
+  "openssl": "OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)",
+  "limits": "No full build, Docker/browser/VM/LAN execution. Temporary PKI only; ownership adapter skips unsupported uid-101 chown.",
+  "results": [
+    {
+      "id": "H2-H4-existing-TLS-dispatch-regression",
+      "exit_code": 0,
+      "output": "PASS H2a: tls csr --replace-pending is refused while tls import holds the lifecycle lock\nPASS H2a: the import completes\nPASS H2a: served certificate and key match after the import\nPASS H2a: the served key is the validated pending key\nPASS H2a: no replacement journal is left\nPASS H2a: the served set changed exactly once (to the new pair)\nPASS H2b: tls recover is refused while tls import holds the lifecycle lock\nPASS H2b: the import completes with a matching pair\nPASS H2c: the import installs the validated snapshot, not the replaced path\nPASS H2d: recover restores the verified previous pair instead of the journal-matching incompatible set\nPASS H2e: with no valid candidate, recover refuses and keeps the journal and files\nPASS H2e: a new CSR is refused while the replacement is unfinished\nPASS H4: the served certificate is leaf + intermediate\nPASS H4: renewal import succeeds\nPASS H4: the renewal kept the first served set as a backup\nPASS H4: documented rollback (tls restore --from <backup>) succeeds on the full-chain backup\nPASS H4: served chain, key and trust anchor are byte-identical to the first served set\nPASS H4: no journal left after the rollback\nPASS H4: the backup's split leaf.crt/chain.pem import cleanly as well\nPASS H4: a backup whose key does not match is refused and the served set is kept\n# checkout=<TEMP>/adapter checks=20 failed=0\n",
+      "stderr": "",
+      "adapter": "Actual tlsCommand/tls/proc/flock; minimal layout/dispatch and non-root ownership adapter; not the full built main.js dependency graph"
+    },
+    {
+      "id": "R1-recovery-backup-trust",
+      "defect_reproduced": true,
+      "real_import_journal_schema": "seyra.tls-replace/2",
+      "recovery_result": "restored",
+      "recovery_error": null,
+      "served_leaf_key_equal_previous": true,
+      "trust_equal_previous": false,
+      "openssl_verification_exit": 2,
+      "journal_retained": false
+    },
+    {
+      "id": "R2-reused-client-pack-output",
+      "defect_reproduced": true,
+      "builder_succeeded": true,
+      "stale_excluded_operator_file_retained": true,
+      "stale_file_in_manifest": false,
+      "error": null
+    },
+    {
+      "id": "H5-configured-error-required-fields",
+      "configured_errors": 5,
+      "all_required_fields_present": true,
+      "all_request_ids_32_hex": true,
+      "note": "Structural comparison, not the provided Ajv/full Nginx test"
+    }
+  ]
+}

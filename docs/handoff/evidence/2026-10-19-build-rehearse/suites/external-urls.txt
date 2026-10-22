@@ -1,0 +1,88 @@
+# External URL inventory (AC04) — 2026-10-19T14:58:15Z; active release ds-20261001-9843cf36a06e
+library error-message/doc link | apps/web/dist/assets/maplibre-gl-worker-DxGNRm0a.mjs | https://github.com/maplibre/maplibre-gl-js/blob/v6.14.0/LICENSE.txt
+library error-message/doc link | apps/web/dist/assets/maplibre-gl-worker-DxGNRm0a.mjs | https://github.com/mapbox/mapbox-gl-js/issues/2907
+library error-message/doc link | apps/web/dist/assets/index-BnEPnJIq.js | https://react.dev/errors/
+namespace (XML/SVG/MathML constant) | apps/web/dist/assets/index-BnEPnJIq.js | http://www.w3.org/2000/svg
+namespace (XML/SVG/MathML constant) | apps/web/dist/assets/index-BnEPnJIq.js | http://www.w3.org/1998/Math/MathML
+namespace (XML/SVG/MathML constant) | apps/web/dist/assets/index-BnEPnJIq.js | http://www.w3.org/1999/xlink
+namespace (XML/SVG/MathML constant) | apps/web/dist/assets/index-BnEPnJIq.js | http://www.w3.org/XML/1998/namespace
+namespace (XML/SVG/MathML constant) | apps/web/dist/assets/index-BnEPnJIq.js | http://www.w3.org/1999/xhtml
+URL-parsing base on the reserved .invalid TLD (RFC 2606; never resolvable) | apps/web/dist/assets/index-BnEPnJIq.js | https://maplibre.invalid/
+library error-message/doc link | apps/web/dist/assets/index-BnEPnJIq.js | https://github.com/mapbox/mapbox-gl-js/issues/2907
+library error-message link (no-WebGL message) | apps/web/dist/assets/index-BnEPnJIq.js | https://wiki.openstreetmap.org/wiki/This_map_requires_WebGL
+library error-message/doc link | apps/web/dist/assets/index-BnEPnJIq.js | https://maplibre.org/
+internal service (private network; DSN host is the internal db service) | <SYNTH>/home/releases/ds-20261001-9843cf36a06e/tegola/tegola.toml | postgres://seyra_tile_reader:$
+internal service (private network; DSN host is the internal db service) | infra/images/proxy/locations.conf.template | http://seyra_api
+internal service (private network; DSN host is the internal db service) | infra/images/proxy/locations.conf.template | http://seyra_tegola/maps/$
+namespace (XML/SVG/MathML constant) | node_modules/@fastify/swagger-ui/static/swagger-ui.css | http://www.w3.org/2000/svg
+library doc/error link | node_modules/@fastify/swagger-ui/static/swagger-ui-standalone-preset.js | https://github.com/zloirock/core-js/blob/v3.40.0/LICENSE
+library doc/error link | node_modules/@fastify/swagger-ui/static/swagger-ui-standalone-preset.js | https://github.com/zloirock/core-js
+namespace (XML/SVG/MathML constant) | node_modules/@fastify/swagger-ui/static/swagger-ui-standalone-preset.js | http://www.w3.org/2000/svg
+library doc/error link | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://github.com/highlightjs/highlight.js/issues/2277
+library doc/error link | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://github.com/highlightjs/highlight.js/issues/2534
+library doc/error link | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://github.com/highlightjs/highlight.js/issues/2559
+library doc/error link | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://github.com/highlightjs/highlight.js/pull/2844
+library doc/error link | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | http://fb.me/use-check-prop-types
+library error-message/doc link | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://reactjs.org/docs/error-decoder.html?invariant=
+namespace (XML/SVG/MathML constant) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | http://www.w3.org/1999/xlink
+namespace (XML/SVG/MathML constant) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | http://www.w3.org/XML/1998/namespace
+namespace (XML/SVG/MathML constant) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | http://www.w3.org/2000/svg
+namespace (XML/SVG/MathML constant) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | http://www.w3.org/1998/Math/MathML
+namespace (XML/SVG/MathML constant) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | http://www.w3.org/1999/xhtml
+library doc/error link | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://github.com/zloirock/core-js/blob/v3.40.0/LICENSE
+library doc/error link | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://github.com/zloirock/core-js
+library doc/error link | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://redux.js.org/Errors?code=$
+URL-parsing base for sanitizing (never fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://base$
+library doc/error link | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://swagger.io
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://datatracker.ietf.org/doc/html/rfc6901
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://datatracker.ietf.org/doc/html/rfc6901#section-4
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | http://json-schema.org/draft-04/schema#
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://spec.openapis.org/oas/3.1/dialect/base
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | http://json-schema.org/draft-06/schema#
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | http://json-schema.org/draft-07/schema#
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://json-schema.org/draft/2019-09/schema
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://json-schema.org/draft/2020-12/schema
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://www.rfc-editor.org/rfc/rfc6570#section-2
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://www.rfc-editor.org/rfc/rfc6570#section-2.1
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://www.rfc-editor.org/errata/eid6937
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://www.rfc-editor.org/rfc/rfc6570#section-1.5
+library doc/error link | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://vladimirgorej.com
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://datatracker.ietf.org/doc/html/rfc3986#section-3.3
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://datatracker.ietf.org/doc/html/rfc3986#section-2.3
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://datatracker.ietf.org/doc/html/rfc3986#section-2.1
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://datatracker.ietf.org/doc/html/rfc3986#section-2.2
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://datatracker.ietf.org/doc/html/rfc5234#appendix-B.1
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://datatracker.ietf.org/doc/html/rfc6265#section-4.2.1
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://datatracker.ietf.org/doc/html/rfc6265#section-4.1.1
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://www.rfc-editor.org/errata/eid5518
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://www.rfc-editor.org/errata/eid8242
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://datatracker.ietf.org/doc/html/rfc6265#section-2.2
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://datatracker.ietf.org/doc/html/rfc9110#section-5.6.2
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://datatracker.ietf.org/doc/html/rfc2616#section-2.2
+Swagger UI online-validator default, overridden (validatorUrl null; tested) and blocked by CSP connect-src 'self' | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://validator.swagger.io/validator
+library link template (user-clicked anchor, never fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://twitter.com/hashtag/
+library link template (user-clicked anchor, never fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://www.facebook.com/hashtag/
+library link template (user-clicked anchor, never fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://instagram.com/explore/tags/
+library link template (user-clicked anchor, never fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://www.tiktok.com/tag/
+library link template (user-clicked anchor, never fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://twitter.com/
+library link template (user-clicked anchor, never fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://instagram.com/
+library link template (user-clicked anchor, never fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://soundcloud.com/
+library link template (user-clicked anchor, never fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://www.tiktok.com/@
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://spdx.org/licenses/$
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://spec.openapis.org/oas/3.2/schema/2025-09-17
+documentation example domain (RFC 2606) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://example.com/
+documentation example domain (RFC 2606) | node_modules/@fastify/swagger-ui/static/swagger-ui-bundle.js | https://example.com/dictionary/
+namespace (XML/SVG/MathML constant) | node_modules/@fastify/swagger-ui/static/swagger-ui.js | http://www.w3.org/2000/svg
+URL-parsing base for sanitizing (never fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui.js | https://base$
+Swagger UI online-validator default, overridden (validatorUrl null; tested) and blocked by CSP connect-src 'self' | node_modules/@fastify/swagger-ui/static/swagger-ui.js | https://validator.swagger.io/validator
+namespace (XML/SVG/MathML constant) | node_modules/@fastify/swagger-ui/static/swagger-ui.js | http://www.w3.org/1999/xlink
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui.js | https://spec.openapis.org/oas/3.1/dialect/base
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui.js | https://spdx.org/licenses/$
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui.js | https://spec.openapis.org/oas/3.2/schema/2025-09-17
+specification/schema identifier constant (not fetched) | node_modules/@fastify/swagger-ui/static/swagger-ui.js | https://json-schema.org/draft/2020-12/schema
+documentation example domain (RFC 2606) | node_modules/@fastify/swagger-ui/static/swagger-ui.js | https://example.com/
+documentation example domain (RFC 2606) | node_modules/@fastify/swagger-ui/static/swagger-ui.js | https://example.com/dictionary/
+namespace (XML/SVG/MathML constant) | node_modules/@fastify/swagger-ui/static/logo.svg | http://www.w3.org/2000/svg
+namespace (XML/SVG/MathML constant) | node_modules/@fastify/swagger-ui/static/logo.svg | http://www.w3.org/1999/xlink
+library doc/error link | node_modules/@fastify/swagger-ui/lib/swagger-initializer.js | https://stackoverflow.com/a/77855838/492336
+# unclassified: 0

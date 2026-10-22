@@ -1,0 +1,556 @@
+PASS parses: Add-RootTrust.ps1
+PASS parses: Export-PublicPacket.ps1
+PASS parses: Get-StepCli.ps1
+PASS parses: New-IssuingCa.ps1
+PASS parses: New-PkiFolder.ps1
+PASS parses: New-RootCa.ps1
+PASS parses: Remove-RootTrust.ps1
+PASS parses: SeyraPki.psm1
+PASS parses: Sign-ServerCsr.ps1
+PASS parses: Test-SeyraHttps.ps1
+PASS parses: Test-SeyraSource.ps1
+PASS parses: Test-SeyraTls.ps1
+PASS root accepted (pathlen 1, 5 years, self-signed)
+PASS issuing CA accepted (pathlen 0, 1 year, issued by root)
+PASS issuing CA rejected as a root
+PASS root rejected as an issuing CA
+PASS short (30-day) issuing CA rejected
+PASS encrypted issuer key accepted
+PASS unencrypted issuer key rejected
+PASS CSR matching its manifest accepted
+PASS CSR with an extra DNS SAN rejected
+PASS CSR whose file hash differs from the manifest rejected
+PASS CSR whose public key differs from the manifest rejected
+PASS manifest naming a DNS name rejected
+PASS server-only leaf (shipped template) accepted
+PASS leaf with clientAuth (default step profile) rejected
+PASS leaf with an extra DNS SAN rejected
+PASS leaf for another IP rejected
+PASS leaf longer than 90 days rejected
+PASS leaf for another key rejected
+PASS leaf outliving its issuing CA rejected
+PASS leaf against the wrong issuer rejected
+PASS directory with a private key detected
+# lan-pki windows module: checks=33 failed=0
+PASS path: default %LOCALAPPDATA%\SeyraPKI accepted
+PASS path: exact Desktop refused (any case, trailing separator)
+PASS path: exact Documents refused
+PASS path: beneath Documents refused
+PASS path: beneath OneDrive refused
+PASS path: roaming AppData refused
+PASS path: profile itself refused
+PASS path: %LOCALAPPDATA% itself refused
+PASS path: drive root refused (contains everything)
+PASS path: C:\Users refused (contains the profile)
+PASS path: system folder refused
+PASS path: UNC share refused
+PASS path: Dropbox-like name refused
+PASS path: a dedicated folder on another drive accepted
+PASS path: prefix-only match is not "inside" (Desktop2)
+PASS acl: owner-only tree accepted
+PASS acl: owner-only base + foreign explicit ACE on a child key refused with a one-entry remedy
+PASS acl: base inheriting from its parent refused (remedy on that folder only, no /T)
+PASS acl: deny entry for another principal refused
+PASS acl: child owned by someone else refused (never takes ownership)
+PASS acl: junction refused, remedy removes only the link
+PASS R1 fresh safe tree: created (exit 0)
+PASS R1 fresh: the seven managed subfolders exist
+PASS R1 fresh: exactly one permission change, on the new folder (protected, you only)
+PASS R1 fresh: the parent profile permissions are untouched
+PASS R1 safe reuse: accepted
+PASS R1 safe reuse: nothing modified
+PASS R1 foreign explicit ACE on a key: refused
+PASS R1 foreign ACE: names the key and the one-entry remedy
+PASS R1 foreign ACE: nothing changed (permissions, key bytes)
+PASS R1 foreign ACE: New-RootCa also stops before using the folder
+PASS R1 after the targeted remedy: accepted again
+PASS R1 foreign inheritable ACE on issuing\: refused, the key listed as inherited
+PASS R1 subfolder owned by another account: refused, no ownership taken
+PASS R1 deny entry for another principal: refused
+PASS R1 junction-like child (directory link): refused
+PASS R1 directory link: not followed, nothing changed
+PASS R1 file link to a key: refused (remedy deletes only the link)
+PASS R1 existing issuer key stored unencrypted: refused (key untouched)
+PASS R1 tree restored: accepted
+PASS R1 reuse of a folder made by the earlier icacls /T version: accepted unchanged
+PASS R1 unsafe Base refused before any change: exact forbidden root (Desktop itself)
+PASS R1 unsafe Base refused before any change: inside Documents
+PASS R1 unsafe Base refused before any change: inside OneDrive
+PASS R1 unsafe Base refused before any change: roaming AppData
+PASS R1 unsafe Base refused before any change: temporary folder
+PASS R1 unsafe Base refused before any change: %LOCALAPPDATA% itself
+PASS R1 unsafe Base refused before any change: the profile itself
+PASS R1 unsafe Base refused before any change: a folder containing the profile
+PASS R1 unsafe Base refused before any change: filesystem root
+PASS R1 unsafe Base refused before any change: sync-client name
+PASS R1 Base reached through a link: refused, nothing created at the target
+PASS R1 Base that is a dangling link: refused
+PASS R1 existing folder that is not a SeyraPKI folder: refused, untouched
+PASS R1 existing folder inheriting its parent permissions: refused, not repaired
+PASS R1 Base that is a file: refused
+PASS R2 setup: PKI folder created
+PASS R2 no record-write permission (no lock yet): refused before import
+PASS R2 no record-write permission (lock present): refused by the write probe before import
+PASS R2 wrong fingerprint typed: refused, nothing trusted or recorded
+PASS R2 import refused / no effect: non-zero, nothing trusted, pending record withdrawn
+PASS R2 import succeeded, then the run was interrupted: root trusted, record pending, pre_existing false
+PASS R2 retry reconciles: trusted, still NOT pre-existing, original observation kept
+PASS R2 repeated Add: no change, still not pre-existing
+PASS R2 undo removes the root this workflow added; record archived
+PASS R2 import took effect but reported an error: recorded as added (trusted, not pre-existing)
+PASS R2 ... and undo removes it
+PASS R2 import succeeded, final record write failed: non-zero, root trusted, record still pending/not pre-existing
+PASS R2 ... retry completes it as added by this workflow
+PASS R2 ... and undo removes it
+PASS R2 genuinely pre-existing root: recorded pre_existing true, store unchanged
+PASS R2 undo leaves a genuinely pre-existing root in place (record archived)
+PASS R2 setup: trusted by this workflow
+PASS R2 another account: refused (the folder is not theirs), store and record unchanged
+PASS R2 tampered record (other account in the record): refused, store unchanged
+PASS R2 tampered record (other root bytes): refused, store unchanged
+PASS R2 tampered record (pre_existing flipped while pending): refused, store unchanged
+PASS R2 tampered record (unknown state): refused, store unchanged
+PASS R2 tampered record (not JSON): refused, store unchanged
+PASS R2 tampered record (malformed timestamp): refused, store unchanged
+PASS R2 tampered record (other store): refused, store unchanged
+PASS R2 Add for another root while a record exists: refused, record kept
+PASS R2 removal declined: non-zero, root and record kept
+PASS R2 record says trusted but the root was removed outside: Add refuses with the next step
+PASS R2 ... Remove closes that record
+PASS R2 Remove without a record: refused (nothing to undo)
+PASS R2 store entry with the thumbprint but other bytes: refused, untouched
+PASS F1 fixture: the external root file really was replaced at import time
+PASS F1 file changed after the check: the unchecked root is NOT in the store
+PASS F1 ... the checked root was imported and recorded as added by this workflow
+PASS F1 ... the store entry is byte-identical to the checked root
+PASS F1 ... undo removes exactly the checked root
+PASS F1 the store boundary refuses bytes whose SHA-256 is not the checked one (nothing imported)
+PASS R2 overlapping Add while another run holds the lock: refused
+PASS R2 overlapping Remove while another run holds the lock: refused
+PASS R2 the first run completed normally
+PASS R2 a left-over lock file does not block a later run (OS lock, not file existence)
+PASS R2 the record folder holds no temporary or probe files
+# lan-pki windows scripts (controlled boundary): checks=98 failed=0
+PASS A success: exit 0, all checks pass, W7 reported as SKIP (Windows only), cleanup ok
+PASS A success: no test folder, link or recovery file left
+PASS A success: test root removed, removal ran once (W10), unrelated root and Desktop untouched
+PASS B refused removal: non-zero exit, W10 FAIL, CLEANUP NEEDED, cleanup INCOMPLETE
+PASS B ... no automatic retry: Remove-RootTrust ran exactly once
+PASS B ... the test root is still trusted and the record for exactly that root is kept
+PASS B ... the kept certificate is exactly that root
+PASS B ... RECOVERY.txt names the account, thumbprint, SHA-256 and the exact commands
+PASS B ... the output prints the same recovery steps
+PASS B ... links were still removed; unrelated root and Desktop untouched
+PASS B ... a new run refuses to start while RECOVERY.txt exists (prints it, creates nothing)
+PASS B ... the documented recovery removes exactly that root
+PASS C error after import: non-zero exit, UNEXPECTED ERROR reported, cleanup ok
+PASS C ... cleanup removed the test root with exactly one Remove-RootTrust run; folders gone
+PASS D error + refused cleanup removal: non-zero, root, record, certificate and RECOVERY.txt kept
+PASS D ... the refused removal was not retried
+PASS D ... recovered
+PASS E unremovable link: non-zero, W5/W6 removal FAIL, CLEANUP PROBLEM names the link
+PASS E ... folders holding a link were NOT deleted; link targets intact
+PASS E ... the trust part still cleaned up exactly (root removed once)
+PASS F icacls /remove:g fails: W3 remedy FAIL, non-zero; cleanup ok
+PASS F icacls /grant fails: W3 setup FAIL (no claim about the ACE check), non-zero
+PASS G killed after import: the root, its record and the pre-written RECOVERY.txt for exactly it remain
+PASS G ... the next run refuses to start and prints the recovery steps
+PASS G ... recovered
+PASS H folder-only run: exit 0, no trust-store step, nothing left
+# lan-pki acceptance driver cleanup (Linux model): checks=26 failed=0
+PASS [UTC native after] time zone in effect: +00:00 (expected +00:00)
+PASS [UTC native after] JSON form is native (NotBefore arrives as DateTime)
+PASS [UTC native after] Z, +03:30 and -04:00 forms of one instant are equal in UTC
+PASS [UTC native after] a DateTime from PowerShell 7 JSON keeps its instant
+PASS [UTC native after] a [datetime] cast of the ISO string (Local kind, the 5.1 path) keeps its instant
+PASS [UTC native after] a DateTimeOffset keeps its instant
+PASS [UTC native after] fractional seconds are accepted
+PASS [UTC native after] malformed or unzoned '2026-10-21T14:35:54' is refused
+PASS [UTC native after] malformed or unzoned '2026-10-21 14:35:54Z' is refused
+PASS [UTC native after] malformed or unzoned '2026-13-01T00:00:00Z' is refused
+PASS [UTC native after] malformed or unzoned 'yesterday' is refused
+PASS [UTC native after] malformed or unzoned '' is refused
+PASS [UTC native after] malformed or unzoned '21/10/2026 14:35:54' is refused
+PASS [UTC native after] a DateTime of kind Unspecified is refused (it would be read as local time)
+PASS [UTC native after] $null and numbers are refused
+PASS [UTC native after] formatting is UTC and invariant
+PASS [UTC native after] the test clock is the fixed reference time
+PASS [UTC native after] root accepted
+PASS [UTC native after] issuing CA accepted (does not outlive the root)
+PASS [UTC native after] a valid back-dated leaf (NotBefore now-5m) is accepted
+PASS [UTC native after] a leaf whose NotBefore is 2 h in the future is refused
+PASS [UTC native after] NotBefore 30 s after now is accepted (inside the unchanged 1-minute allowance)
+PASS [UTC native after] NotBefore 2 min after now is refused (outside the allowance)
+PASS [UTC native after] leaves ending at 22:45Z and 01:15Z (90 days) are accepted
+PASS [UTC native after] a leaf outliving its issuing CA is still refused
+PASS [UTC native after] fixture PKI folder created
+PASS [UTC native after] recovery: the explicitly named candidate passes (request binding, leaf in UTC, actual chain for the IP)
+PASS [UTC native after] recovery: the same attempt named with a trailing separator is accepted
+PASS [UTC native after] recovery: an empty attempt is refused (missing server.crt)
+PASS [UTC native after] recovery: a partial attempt is refused
+PASS [UTC native after] recovery: a folder that is not inside issued is refused
+PASS [UTC native after] recovery: an attempt whose server.csr is not the delivered request is refused
+PASS [UTC native after] recovery: a leaf for another key is refused
+PASS [UTC native after] recovery: a leaf with a future NotBefore is refused (already valid)
+PASS [UTC native after] recovery checks wrote and deleted nothing in any attempt
+PASS [UTC native after] export (cand): exit 0, the five public files, chain verified
+PASS [UTC native after] export (cand): validity written as the exact UTC instants
+PASS [UTC native after] export (cand): renew_before is the UTC date 2026-12-20
+PASS [UTC native after] export (cand): CA dates are UTC ISO strings
+PASS [UTC native after] export (late): exit 0, the five public files, chain verified
+PASS [UTC native after] export (late): validity written as the exact UTC instants
+PASS [UTC native after] export (late): renew_before is the UTC date 2026-12-19
+PASS [UTC native after] export (late): CA dates are UTC ISO strings
+PASS [UTC native after] export (early): exit 0, the five public files, chain verified
+PASS [UTC native after] export (early): validity written as the exact UTC instants
+PASS [UTC native after] export (early): renew_before is the UTC date 2026-12-19
+PASS [UTC native after] export (early): CA dates are UTC ISO strings
+PASS [UTC native after] export: an existing public packet is never overwritten
+PASS [UTC native after] export: an empty attempt is refused
+PASS [UTC native after] export: a leaf with a future NotBefore is refused, nothing exported
+PASS [UTC native after] exports changed no attempt
+# lan-pki certificate times [UTC native after]: checks=51 failed=0 notrun=0
+PASS [UTC ps51 after] time zone in effect: +00:00 (expected +00:00)
+PASS [UTC ps51 after] JSON form is ps51 (NotBefore arrives as String)
+PASS [UTC ps51 after] Z, +03:30 and -04:00 forms of one instant are equal in UTC
+PASS [UTC ps51 after] a DateTime from PowerShell 7 JSON keeps its instant
+PASS [UTC ps51 after] a [datetime] cast of the ISO string (Local kind, the 5.1 path) keeps its instant
+PASS [UTC ps51 after] a DateTimeOffset keeps its instant
+PASS [UTC ps51 after] fractional seconds are accepted
+PASS [UTC ps51 after] malformed or unzoned '2026-10-21T14:35:54' is refused
+PASS [UTC ps51 after] malformed or unzoned '2026-10-21 14:35:54Z' is refused
+PASS [UTC ps51 after] malformed or unzoned '2026-13-01T00:00:00Z' is refused
+PASS [UTC ps51 after] malformed or unzoned 'yesterday' is refused
+PASS [UTC ps51 after] malformed or unzoned '' is refused
+PASS [UTC ps51 after] malformed or unzoned '21/10/2026 14:35:54' is refused
+PASS [UTC ps51 after] a DateTime of kind Unspecified is refused (it would be read as local time)
+PASS [UTC ps51 after] $null and numbers are refused
+PASS [UTC ps51 after] formatting is UTC and invariant
+PASS [UTC ps51 after] the test clock is the fixed reference time
+PASS [UTC ps51 after] root accepted
+PASS [UTC ps51 after] issuing CA accepted (does not outlive the root)
+PASS [UTC ps51 after] a valid back-dated leaf (NotBefore now-5m) is accepted
+PASS [UTC ps51 after] a leaf whose NotBefore is 2 h in the future is refused
+PASS [UTC ps51 after] NotBefore 30 s after now is accepted (inside the unchanged 1-minute allowance)
+PASS [UTC ps51 after] NotBefore 2 min after now is refused (outside the allowance)
+PASS [UTC ps51 after] leaves ending at 22:45Z and 01:15Z (90 days) are accepted
+PASS [UTC ps51 after] a leaf outliving its issuing CA is still refused
+PASS [UTC ps51 after] fixture PKI folder created
+PASS [UTC ps51 after] recovery: the explicitly named candidate passes (request binding, leaf in UTC, actual chain for the IP)
+PASS [UTC ps51 after] recovery: the same attempt named with a trailing separator is accepted
+PASS [UTC ps51 after] recovery: an empty attempt is refused (missing server.crt)
+PASS [UTC ps51 after] recovery: a partial attempt is refused
+PASS [UTC ps51 after] recovery: a folder that is not inside issued is refused
+PASS [UTC ps51 after] recovery: an attempt whose server.csr is not the delivered request is refused
+PASS [UTC ps51 after] recovery: a leaf for another key is refused
+PASS [UTC ps51 after] recovery: a leaf with a future NotBefore is refused (already valid)
+PASS [UTC ps51 after] recovery checks wrote and deleted nothing in any attempt
+PASS [UTC ps51 after] export (cand): exit 0, the five public files, chain verified
+PASS [UTC ps51 after] export (cand): validity written as the exact UTC instants
+PASS [UTC ps51 after] export (cand): renew_before is the UTC date 2026-12-20
+PASS [UTC ps51 after] export (cand): CA dates are UTC ISO strings
+PASS [UTC ps51 after] export (late): exit 0, the five public files, chain verified
+PASS [UTC ps51 after] export (late): validity written as the exact UTC instants
+PASS [UTC ps51 after] export (late): renew_before is the UTC date 2026-12-19
+PASS [UTC ps51 after] export (late): CA dates are UTC ISO strings
+PASS [UTC ps51 after] export (early): exit 0, the five public files, chain verified
+PASS [UTC ps51 after] export (early): validity written as the exact UTC instants
+PASS [UTC ps51 after] export (early): renew_before is the UTC date 2026-12-19
+PASS [UTC ps51 after] export (early): CA dates are UTC ISO strings
+PASS [UTC ps51 after] export: an existing public packet is never overwritten
+PASS [UTC ps51 after] export: an empty attempt is refused
+PASS [UTC ps51 after] export: a leaf with a future NotBefore is refused, nothing exported
+PASS [UTC ps51 after] exports changed no attempt
+# lan-pki certificate times [UTC ps51 after]: checks=51 failed=0 notrun=0
+PASS [Asia/Tehran native after] time zone in effect: +03:30 (expected +03:30)
+PASS [Asia/Tehran native after] JSON form is native (NotBefore arrives as DateTime)
+PASS [Asia/Tehran native after] Z, +03:30 and -04:00 forms of one instant are equal in UTC
+PASS [Asia/Tehran native after] a DateTime from PowerShell 7 JSON keeps its instant
+PASS [Asia/Tehran native after] a [datetime] cast of the ISO string (Local kind, the 5.1 path) keeps its instant
+PASS [Asia/Tehran native after] a DateTimeOffset keeps its instant
+PASS [Asia/Tehran native after] fractional seconds are accepted
+PASS [Asia/Tehran native after] malformed or unzoned '2026-10-21T14:35:54' is refused
+PASS [Asia/Tehran native after] malformed or unzoned '2026-10-21 14:35:54Z' is refused
+PASS [Asia/Tehran native after] malformed or unzoned '2026-13-01T00:00:00Z' is refused
+PASS [Asia/Tehran native after] malformed or unzoned 'yesterday' is refused
+PASS [Asia/Tehran native after] malformed or unzoned '' is refused
+PASS [Asia/Tehran native after] malformed or unzoned '21/10/2026 14:35:54' is refused
+PASS [Asia/Tehran native after] a DateTime of kind Unspecified is refused (it would be read as local time)
+PASS [Asia/Tehran native after] $null and numbers are refused
+PASS [Asia/Tehran native after] formatting is UTC and invariant
+PASS [Asia/Tehran native after] the test clock is the fixed reference time
+PASS [Asia/Tehran native after] root accepted
+PASS [Asia/Tehran native after] issuing CA accepted (does not outlive the root)
+PASS [Asia/Tehran native after] a valid back-dated leaf (NotBefore now-5m) is accepted
+PASS [Asia/Tehran native after] a leaf whose NotBefore is 2 h in the future is refused
+PASS [Asia/Tehran native after] NotBefore 30 s after now is accepted (inside the unchanged 1-minute allowance)
+PASS [Asia/Tehran native after] NotBefore 2 min after now is refused (outside the allowance)
+PASS [Asia/Tehran native after] leaves ending at 22:45Z and 01:15Z (90 days) are accepted
+PASS [Asia/Tehran native after] a leaf outliving its issuing CA is still refused
+PASS [Asia/Tehran native after] fixture PKI folder created
+PASS [Asia/Tehran native after] recovery: the explicitly named candidate passes (request binding, leaf in UTC, actual chain for the IP)
+PASS [Asia/Tehran native after] recovery: the same attempt named with a trailing separator is accepted
+PASS [Asia/Tehran native after] recovery: an empty attempt is refused (missing server.crt)
+PASS [Asia/Tehran native after] recovery: a partial attempt is refused
+PASS [Asia/Tehran native after] recovery: a folder that is not inside issued is refused
+PASS [Asia/Tehran native after] recovery: an attempt whose server.csr is not the delivered request is refused
+PASS [Asia/Tehran native after] recovery: a leaf for another key is refused
+PASS [Asia/Tehran native after] recovery: a leaf with a future NotBefore is refused (already valid)
+PASS [Asia/Tehran native after] recovery checks wrote and deleted nothing in any attempt
+PASS [Asia/Tehran native after] export (cand): exit 0, the five public files, chain verified
+PASS [Asia/Tehran native after] export (cand): validity written as the exact UTC instants
+PASS [Asia/Tehran native after] export (cand): renew_before is the UTC date 2026-12-20
+PASS [Asia/Tehran native after] export (cand): CA dates are UTC ISO strings
+PASS [Asia/Tehran native after] export (late): exit 0, the five public files, chain verified
+PASS [Asia/Tehran native after] export (late): validity written as the exact UTC instants
+PASS [Asia/Tehran native after] export (late): renew_before is the UTC date 2026-12-19
+PASS [Asia/Tehran native after] export (late): CA dates are UTC ISO strings
+PASS [Asia/Tehran native after] export (early): exit 0, the five public files, chain verified
+PASS [Asia/Tehran native after] export (early): validity written as the exact UTC instants
+PASS [Asia/Tehran native after] export (early): renew_before is the UTC date 2026-12-19
+PASS [Asia/Tehran native after] export (early): CA dates are UTC ISO strings
+PASS [Asia/Tehran native after] export: an existing public packet is never overwritten
+PASS [Asia/Tehran native after] export: an empty attempt is refused
+PASS [Asia/Tehran native after] export: a leaf with a future NotBefore is refused, nothing exported
+PASS [Asia/Tehran native after] exports changed no attempt
+# lan-pki certificate times [Asia/Tehran native after]: checks=51 failed=0 notrun=0
+PASS [Asia/Tehran ps51 after] time zone in effect: +03:30 (expected +03:30)
+PASS [Asia/Tehran ps51 after] JSON form is ps51 (NotBefore arrives as String)
+PASS [Asia/Tehran ps51 after] Z, +03:30 and -04:00 forms of one instant are equal in UTC
+PASS [Asia/Tehran ps51 after] a DateTime from PowerShell 7 JSON keeps its instant
+PASS [Asia/Tehran ps51 after] a [datetime] cast of the ISO string (Local kind, the 5.1 path) keeps its instant
+PASS [Asia/Tehran ps51 after] a DateTimeOffset keeps its instant
+PASS [Asia/Tehran ps51 after] fractional seconds are accepted
+PASS [Asia/Tehran ps51 after] malformed or unzoned '2026-10-21T14:35:54' is refused
+PASS [Asia/Tehran ps51 after] malformed or unzoned '2026-10-21 14:35:54Z' is refused
+PASS [Asia/Tehran ps51 after] malformed or unzoned '2026-13-01T00:00:00Z' is refused
+PASS [Asia/Tehran ps51 after] malformed or unzoned 'yesterday' is refused
+PASS [Asia/Tehran ps51 after] malformed or unzoned '' is refused
+PASS [Asia/Tehran ps51 after] malformed or unzoned '21/10/2026 14:35:54' is refused
+PASS [Asia/Tehran ps51 after] a DateTime of kind Unspecified is refused (it would be read as local time)
+PASS [Asia/Tehran ps51 after] $null and numbers are refused
+PASS [Asia/Tehran ps51 after] formatting is UTC and invariant
+PASS [Asia/Tehran ps51 after] the test clock is the fixed reference time
+PASS [Asia/Tehran ps51 after] root accepted
+PASS [Asia/Tehran ps51 after] issuing CA accepted (does not outlive the root)
+PASS [Asia/Tehran ps51 after] a valid back-dated leaf (NotBefore now-5m) is accepted
+PASS [Asia/Tehran ps51 after] a leaf whose NotBefore is 2 h in the future is refused
+PASS [Asia/Tehran ps51 after] NotBefore 30 s after now is accepted (inside the unchanged 1-minute allowance)
+PASS [Asia/Tehran ps51 after] NotBefore 2 min after now is refused (outside the allowance)
+PASS [Asia/Tehran ps51 after] leaves ending at 22:45Z and 01:15Z (90 days) are accepted
+PASS [Asia/Tehran ps51 after] a leaf outliving its issuing CA is still refused
+PASS [Asia/Tehran ps51 after] fixture PKI folder created
+PASS [Asia/Tehran ps51 after] recovery: the explicitly named candidate passes (request binding, leaf in UTC, actual chain for the IP)
+PASS [Asia/Tehran ps51 after] recovery: the same attempt named with a trailing separator is accepted
+PASS [Asia/Tehran ps51 after] recovery: an empty attempt is refused (missing server.crt)
+PASS [Asia/Tehran ps51 after] recovery: a partial attempt is refused
+PASS [Asia/Tehran ps51 after] recovery: a folder that is not inside issued is refused
+PASS [Asia/Tehran ps51 after] recovery: an attempt whose server.csr is not the delivered request is refused
+PASS [Asia/Tehran ps51 after] recovery: a leaf for another key is refused
+PASS [Asia/Tehran ps51 after] recovery: a leaf with a future NotBefore is refused (already valid)
+PASS [Asia/Tehran ps51 after] recovery checks wrote and deleted nothing in any attempt
+PASS [Asia/Tehran ps51 after] export (cand): exit 0, the five public files, chain verified
+PASS [Asia/Tehran ps51 after] export (cand): validity written as the exact UTC instants
+PASS [Asia/Tehran ps51 after] export (cand): renew_before is the UTC date 2026-12-20
+PASS [Asia/Tehran ps51 after] export (cand): CA dates are UTC ISO strings
+PASS [Asia/Tehran ps51 after] export (late): exit 0, the five public files, chain verified
+PASS [Asia/Tehran ps51 after] export (late): validity written as the exact UTC instants
+PASS [Asia/Tehran ps51 after] export (late): renew_before is the UTC date 2026-12-19
+PASS [Asia/Tehran ps51 after] export (late): CA dates are UTC ISO strings
+PASS [Asia/Tehran ps51 after] export (early): exit 0, the five public files, chain verified
+PASS [Asia/Tehran ps51 after] export (early): validity written as the exact UTC instants
+PASS [Asia/Tehran ps51 after] export (early): renew_before is the UTC date 2026-12-19
+PASS [Asia/Tehran ps51 after] export (early): CA dates are UTC ISO strings
+PASS [Asia/Tehran ps51 after] export: an existing public packet is never overwritten
+PASS [Asia/Tehran ps51 after] export: an empty attempt is refused
+PASS [Asia/Tehran ps51 after] export: a leaf with a future NotBefore is refused, nothing exported
+PASS [Asia/Tehran ps51 after] exports changed no attempt
+# lan-pki certificate times [Asia/Tehran ps51 after]: checks=51 failed=0 notrun=0
+PASS [America/New_York native after] time zone in effect: -04:00 (expected -04:00)
+PASS [America/New_York native after] JSON form is native (NotBefore arrives as DateTime)
+PASS [America/New_York native after] Z, +03:30 and -04:00 forms of one instant are equal in UTC
+PASS [America/New_York native after] a DateTime from PowerShell 7 JSON keeps its instant
+PASS [America/New_York native after] a [datetime] cast of the ISO string (Local kind, the 5.1 path) keeps its instant
+PASS [America/New_York native after] a DateTimeOffset keeps its instant
+PASS [America/New_York native after] fractional seconds are accepted
+PASS [America/New_York native after] malformed or unzoned '2026-10-21T14:35:54' is refused
+PASS [America/New_York native after] malformed or unzoned '2026-10-21 14:35:54Z' is refused
+PASS [America/New_York native after] malformed or unzoned '2026-13-01T00:00:00Z' is refused
+PASS [America/New_York native after] malformed or unzoned 'yesterday' is refused
+PASS [America/New_York native after] malformed or unzoned '' is refused
+PASS [America/New_York native after] malformed or unzoned '21/10/2026 14:35:54' is refused
+PASS [America/New_York native after] a DateTime of kind Unspecified is refused (it would be read as local time)
+PASS [America/New_York native after] $null and numbers are refused
+PASS [America/New_York native after] formatting is UTC and invariant
+PASS [America/New_York native after] the test clock is the fixed reference time
+PASS [America/New_York native after] root accepted
+PASS [America/New_York native after] issuing CA accepted (does not outlive the root)
+PASS [America/New_York native after] a valid back-dated leaf (NotBefore now-5m) is accepted
+PASS [America/New_York native after] a leaf whose NotBefore is 2 h in the future is refused
+PASS [America/New_York native after] NotBefore 30 s after now is accepted (inside the unchanged 1-minute allowance)
+PASS [America/New_York native after] NotBefore 2 min after now is refused (outside the allowance)
+PASS [America/New_York native after] leaves ending at 22:45Z and 01:15Z (90 days) are accepted
+PASS [America/New_York native after] a leaf outliving its issuing CA is still refused
+PASS [America/New_York native after] fixture PKI folder created
+PASS [America/New_York native after] recovery: the explicitly named candidate passes (request binding, leaf in UTC, actual chain for the IP)
+PASS [America/New_York native after] recovery: the same attempt named with a trailing separator is accepted
+PASS [America/New_York native after] recovery: an empty attempt is refused (missing server.crt)
+PASS [America/New_York native after] recovery: a partial attempt is refused
+PASS [America/New_York native after] recovery: a folder that is not inside issued is refused
+PASS [America/New_York native after] recovery: an attempt whose server.csr is not the delivered request is refused
+PASS [America/New_York native after] recovery: a leaf for another key is refused
+PASS [America/New_York native after] recovery: a leaf with a future NotBefore is refused (already valid)
+PASS [America/New_York native after] recovery checks wrote and deleted nothing in any attempt
+PASS [America/New_York native after] export (cand): exit 0, the five public files, chain verified
+PASS [America/New_York native after] export (cand): validity written as the exact UTC instants
+PASS [America/New_York native after] export (cand): renew_before is the UTC date 2026-12-20
+PASS [America/New_York native after] export (cand): CA dates are UTC ISO strings
+PASS [America/New_York native after] export (late): exit 0, the five public files, chain verified
+PASS [America/New_York native after] export (late): validity written as the exact UTC instants
+PASS [America/New_York native after] export (late): renew_before is the UTC date 2026-12-19
+PASS [America/New_York native after] export (late): CA dates are UTC ISO strings
+PASS [America/New_York native after] export (early): exit 0, the five public files, chain verified
+PASS [America/New_York native after] export (early): validity written as the exact UTC instants
+PASS [America/New_York native after] export (early): renew_before is the UTC date 2026-12-19
+PASS [America/New_York native after] export (early): CA dates are UTC ISO strings
+PASS [America/New_York native after] export: an existing public packet is never overwritten
+PASS [America/New_York native after] export: an empty attempt is refused
+PASS [America/New_York native after] export: a leaf with a future NotBefore is refused, nothing exported
+PASS [America/New_York native after] exports changed no attempt
+# lan-pki certificate times [America/New_York native after]: checks=51 failed=0 notrun=0
+PASS [America/New_York ps51 after] time zone in effect: -04:00 (expected -04:00)
+PASS [America/New_York ps51 after] JSON form is ps51 (NotBefore arrives as String)
+PASS [America/New_York ps51 after] Z, +03:30 and -04:00 forms of one instant are equal in UTC
+PASS [America/New_York ps51 after] a DateTime from PowerShell 7 JSON keeps its instant
+PASS [America/New_York ps51 after] a [datetime] cast of the ISO string (Local kind, the 5.1 path) keeps its instant
+PASS [America/New_York ps51 after] a DateTimeOffset keeps its instant
+PASS [America/New_York ps51 after] fractional seconds are accepted
+PASS [America/New_York ps51 after] malformed or unzoned '2026-10-21T14:35:54' is refused
+PASS [America/New_York ps51 after] malformed or unzoned '2026-10-21 14:35:54Z' is refused
+PASS [America/New_York ps51 after] malformed or unzoned '2026-13-01T00:00:00Z' is refused
+PASS [America/New_York ps51 after] malformed or unzoned 'yesterday' is refused
+PASS [America/New_York ps51 after] malformed or unzoned '' is refused
+PASS [America/New_York ps51 after] malformed or unzoned '21/10/2026 14:35:54' is refused
+PASS [America/New_York ps51 after] a DateTime of kind Unspecified is refused (it would be read as local time)
+PASS [America/New_York ps51 after] $null and numbers are refused
+PASS [America/New_York ps51 after] formatting is UTC and invariant
+PASS [America/New_York ps51 after] the test clock is the fixed reference time
+PASS [America/New_York ps51 after] root accepted
+PASS [America/New_York ps51 after] issuing CA accepted (does not outlive the root)
+PASS [America/New_York ps51 after] a valid back-dated leaf (NotBefore now-5m) is accepted
+PASS [America/New_York ps51 after] a leaf whose NotBefore is 2 h in the future is refused
+PASS [America/New_York ps51 after] NotBefore 30 s after now is accepted (inside the unchanged 1-minute allowance)
+PASS [America/New_York ps51 after] NotBefore 2 min after now is refused (outside the allowance)
+PASS [America/New_York ps51 after] leaves ending at 22:45Z and 01:15Z (90 days) are accepted
+PASS [America/New_York ps51 after] a leaf outliving its issuing CA is still refused
+PASS [America/New_York ps51 after] fixture PKI folder created
+PASS [America/New_York ps51 after] recovery: the explicitly named candidate passes (request binding, leaf in UTC, actual chain for the IP)
+PASS [America/New_York ps51 after] recovery: the same attempt named with a trailing separator is accepted
+PASS [America/New_York ps51 after] recovery: an empty attempt is refused (missing server.crt)
+PASS [America/New_York ps51 after] recovery: a partial attempt is refused
+PASS [America/New_York ps51 after] recovery: a folder that is not inside issued is refused
+PASS [America/New_York ps51 after] recovery: an attempt whose server.csr is not the delivered request is refused
+PASS [America/New_York ps51 after] recovery: a leaf for another key is refused
+PASS [America/New_York ps51 after] recovery: a leaf with a future NotBefore is refused (already valid)
+PASS [America/New_York ps51 after] recovery checks wrote and deleted nothing in any attempt
+PASS [America/New_York ps51 after] export (cand): exit 0, the five public files, chain verified
+PASS [America/New_York ps51 after] export (cand): validity written as the exact UTC instants
+PASS [America/New_York ps51 after] export (cand): renew_before is the UTC date 2026-12-20
+PASS [America/New_York ps51 after] export (cand): CA dates are UTC ISO strings
+PASS [America/New_York ps51 after] export (late): exit 0, the five public files, chain verified
+PASS [America/New_York ps51 after] export (late): validity written as the exact UTC instants
+PASS [America/New_York ps51 after] export (late): renew_before is the UTC date 2026-12-19
+PASS [America/New_York ps51 after] export (late): CA dates are UTC ISO strings
+PASS [America/New_York ps51 after] export (early): exit 0, the five public files, chain verified
+PASS [America/New_York ps51 after] export (early): validity written as the exact UTC instants
+PASS [America/New_York ps51 after] export (early): renew_before is the UTC date 2026-12-19
+PASS [America/New_York ps51 after] export (early): CA dates are UTC ISO strings
+PASS [America/New_York ps51 after] export: an existing public packet is never overwritten
+PASS [America/New_York ps51 after] export: an empty attempt is refused
+PASS [America/New_York ps51 after] export: a leaf with a future NotBefore is refused, nothing exported
+PASS [America/New_York ps51 after] exports changed no attempt
+# lan-pki certificate times [America/New_York ps51 after]: checks=51 failed=0 notrun=0
+BEFORE PASS [UTC native before] time zone in effect: +00:00 (expected +00:00)
+BEFORE PASS [UTC native before] JSON form is native (NotBefore arrives as DateTime)
+BEFORE NOT RUN [UTC native before] pure normalisation (ConvertTo-SeyraUtc, Format-SeyraUtc, test clock) -- not present in this module
+BEFORE PASS [UTC native before] root accepted
+BEFORE PASS [UTC native before] issuing CA accepted (does not outlive the root)
+BEFORE PASS [UTC native before] a valid back-dated leaf (NotBefore now-5m) is accepted
+BEFORE PASS [UTC native before] a leaf whose NotBefore is 2 h in the future is refused
+BEFORE NOT RUN [UTC native before] allowance edges (+30 s / +2 min) -- need the fixed test clock, absent in this module
+BEFORE PASS [UTC native before] leaves ending at 22:45Z and 01:15Z (90 days) are accepted
+BEFORE PASS [UTC native before] a leaf outliving its issuing CA is still refused
+BEFORE PASS [UTC native before] comparator demo: 352bd9a renew_before expression for the late leaf gives the UTC date 2026-12-19
+BEFORE PASS [UTC native before] comparator demo: 352bd9a renew_before expression for the early leaf gives the UTC date 2026-12-19
+BEFORE NOT RUN [UTC native before] actual Sign-ServerCsr -CheckIssuedDir / Export-PublicPacket runs -- not present in / not runnable on Linux for this version
+BEFORE # lan-pki certificate times [UTC native before]: checks=10 failed=0 notrun=18
+BEFORE PASS [UTC ps51 before] time zone in effect: +00:00 (expected +00:00)
+BEFORE PASS [UTC ps51 before] JSON form is ps51 (NotBefore arrives as String)
+BEFORE NOT RUN [UTC ps51 before] pure normalisation (ConvertTo-SeyraUtc, Format-SeyraUtc, test clock) -- not present in this module
+BEFORE PASS [UTC ps51 before] root accepted
+BEFORE PASS [UTC ps51 before] issuing CA accepted (does not outlive the root)
+BEFORE PASS [UTC ps51 before] a valid back-dated leaf (NotBefore now-5m) is accepted
+BEFORE PASS [UTC ps51 before] a leaf whose NotBefore is 2 h in the future is refused
+BEFORE NOT RUN [UTC ps51 before] allowance edges (+30 s / +2 min) -- need the fixed test clock, absent in this module
+BEFORE PASS [UTC ps51 before] leaves ending at 22:45Z and 01:15Z (90 days) are accepted
+BEFORE PASS [UTC ps51 before] a leaf outliving its issuing CA is still refused
+BEFORE PASS [UTC ps51 before] comparator demo: 352bd9a renew_before expression for the late leaf gives the UTC date 2026-12-19
+BEFORE PASS [UTC ps51 before] comparator demo: 352bd9a renew_before expression for the early leaf gives the UTC date 2026-12-19
+BEFORE NOT RUN [UTC ps51 before] actual Sign-ServerCsr -CheckIssuedDir / Export-PublicPacket runs -- not present in / not runnable on Linux for this version
+BEFORE # lan-pki certificate times [UTC ps51 before]: checks=10 failed=0 notrun=18
+BEFORE PASS [Asia/Tehran native before] time zone in effect: +03:30 (expected +03:30)
+BEFORE PASS [Asia/Tehran native before] JSON form is native (NotBefore arrives as DateTime)
+BEFORE NOT RUN [Asia/Tehran native before] pure normalisation (ConvertTo-SeyraUtc, Format-SeyraUtc, test clock) -- not present in this module
+BEFORE PASS [Asia/Tehran native before] root accepted
+BEFORE PASS [Asia/Tehran native before] issuing CA accepted (does not outlive the root)
+BEFORE PASS [Asia/Tehran native before] a valid back-dated leaf (NotBefore now-5m) is accepted
+BEFORE PASS [Asia/Tehran native before] a leaf whose NotBefore is 2 h in the future is refused
+BEFORE NOT RUN [Asia/Tehran native before] allowance edges (+30 s / +2 min) -- need the fixed test clock, absent in this module
+BEFORE PASS [Asia/Tehran native before] leaves ending at 22:45Z and 01:15Z (90 days) are accepted
+BEFORE PASS [Asia/Tehran native before] a leaf outliving its issuing CA is still refused
+BEFORE PASS [Asia/Tehran native before] comparator demo: 352bd9a renew_before expression for the late leaf gives the UTC date 2026-12-19
+BEFORE PASS [Asia/Tehran native before] comparator demo: 352bd9a renew_before expression for the early leaf gives the UTC date 2026-12-19
+BEFORE NOT RUN [Asia/Tehran native before] actual Sign-ServerCsr -CheckIssuedDir / Export-PublicPacket runs -- not present in / not runnable on Linux for this version
+BEFORE # lan-pki certificate times [Asia/Tehran native before]: checks=10 failed=0 notrun=18
+BEFORE PASS [Asia/Tehran ps51 before] time zone in effect: +03:30 (expected +03:30)
+BEFORE PASS [Asia/Tehran ps51 before] JSON form is ps51 (NotBefore arrives as String)
+BEFORE NOT RUN [Asia/Tehran ps51 before] pure normalisation (ConvertTo-SeyraUtc, Format-SeyraUtc, test clock) -- not present in this module
+BEFORE PASS [Asia/Tehran ps51 before] root accepted
+BEFORE PASS [Asia/Tehran ps51 before] issuing CA accepted (does not outlive the root)
+BEFORE FAIL [Asia/Tehran ps51 before] a valid back-dated leaf (NotBefore now-5m) is accepted -- CHECK FAILED: already valid
+BEFORE PASS [Asia/Tehran ps51 before] a leaf whose NotBefore is 2 h in the future is refused
+BEFORE NOT RUN [Asia/Tehran ps51 before] allowance edges (+30 s / +2 min) -- need the fixed test clock, absent in this module
+BEFORE PASS [Asia/Tehran ps51 before] leaves ending at 22:45Z and 01:15Z (90 days) are accepted
+BEFORE PASS [Asia/Tehran ps51 before] a leaf outliving its issuing CA is still refused
+BEFORE FAIL [Asia/Tehran ps51 before] comparator demo: 352bd9a renew_before expression for the late leaf gives the UTC date 2026-12-19 -- it gave 2026-12-20
+BEFORE PASS [Asia/Tehran ps51 before] comparator demo: 352bd9a renew_before expression for the early leaf gives the UTC date 2026-12-19
+BEFORE NOT RUN [Asia/Tehran ps51 before] actual Sign-ServerCsr -CheckIssuedDir / Export-PublicPacket runs -- not present in / not runnable on Linux for this version
+BEFORE # lan-pki certificate times [Asia/Tehran ps51 before]: checks=10 failed=2 notrun=18
+BEFORE PASS [America/New_York native before] time zone in effect: -04:00 (expected -04:00)
+BEFORE PASS [America/New_York native before] JSON form is native (NotBefore arrives as DateTime)
+BEFORE NOT RUN [America/New_York native before] pure normalisation (ConvertTo-SeyraUtc, Format-SeyraUtc, test clock) -- not present in this module
+BEFORE PASS [America/New_York native before] root accepted
+BEFORE PASS [America/New_York native before] issuing CA accepted (does not outlive the root)
+BEFORE PASS [America/New_York native before] a valid back-dated leaf (NotBefore now-5m) is accepted
+BEFORE PASS [America/New_York native before] a leaf whose NotBefore is 2 h in the future is refused
+BEFORE NOT RUN [America/New_York native before] allowance edges (+30 s / +2 min) -- need the fixed test clock, absent in this module
+BEFORE PASS [America/New_York native before] leaves ending at 22:45Z and 01:15Z (90 days) are accepted
+BEFORE PASS [America/New_York native before] a leaf outliving its issuing CA is still refused
+BEFORE PASS [America/New_York native before] comparator demo: 352bd9a renew_before expression for the late leaf gives the UTC date 2026-12-19
+BEFORE PASS [America/New_York native before] comparator demo: 352bd9a renew_before expression for the early leaf gives the UTC date 2026-12-19
+BEFORE NOT RUN [America/New_York native before] actual Sign-ServerCsr -CheckIssuedDir / Export-PublicPacket runs -- not present in / not runnable on Linux for this version
+BEFORE # lan-pki certificate times [America/New_York native before]: checks=10 failed=0 notrun=18
+BEFORE PASS [America/New_York ps51 before] time zone in effect: -04:00 (expected -04:00)
+BEFORE PASS [America/New_York ps51 before] JSON form is ps51 (NotBefore arrives as String)
+BEFORE NOT RUN [America/New_York ps51 before] pure normalisation (ConvertTo-SeyraUtc, Format-SeyraUtc, test clock) -- not present in this module
+BEFORE PASS [America/New_York ps51 before] root accepted
+BEFORE PASS [America/New_York ps51 before] issuing CA accepted (does not outlive the root)
+BEFORE PASS [America/New_York ps51 before] a valid back-dated leaf (NotBefore now-5m) is accepted
+BEFORE FAIL [America/New_York ps51 before] a leaf whose NotBefore is 2 h in the future is refused -- 
+BEFORE NOT RUN [America/New_York ps51 before] allowance edges (+30 s / +2 min) -- need the fixed test clock, absent in this module
+BEFORE PASS [America/New_York ps51 before] leaves ending at 22:45Z and 01:15Z (90 days) are accepted
+BEFORE PASS [America/New_York ps51 before] a leaf outliving its issuing CA is still refused
+BEFORE PASS [America/New_York ps51 before] comparator demo: 352bd9a renew_before expression for the late leaf gives the UTC date 2026-12-19
+BEFORE FAIL [America/New_York ps51 before] comparator demo: 352bd9a renew_before expression for the early leaf gives the UTC date 2026-12-19 -- it gave 2026-12-18
+BEFORE NOT RUN [America/New_York ps51 before] actual Sign-ServerCsr -CheckIssuedDir / Export-PublicPacket runs -- not present in / not runnable on Linux for this version
+BEFORE # lan-pki certificate times [America/New_York ps51 before]: checks=10 failed=2 notrun=18

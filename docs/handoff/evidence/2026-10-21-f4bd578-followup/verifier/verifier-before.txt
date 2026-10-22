@@ -1,0 +1,7 @@
+{"label":"native-openssl-3.0-subject-format","observed":false}
+{"label":"submitted-vm-suite-with-explicit-host-adapters","observed":true,"exit_code":0,"checks":59,"failed":0}
+{"label":"device-fixture-coverage-observation","observed":true}
+{"label":"correct-request-check","observed":true}
+{"label":"R4-jq-failure-not-published","observed":true}
+{"label":"F1-root-import-source-obligation","observed":true}
+{"label":"F2-acceptance-cleanup-source-obligation","observed":true}

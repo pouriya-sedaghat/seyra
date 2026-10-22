@@ -1,0 +1,16 @@
+# 2026-10-18T09:33:57Z iran-offline-host start phases=[install import serve browser] pbf=iran-261017.osm.pbf sha256=7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f size=229845082
+permission denied while trying to connect to the docker API at unix:///home/owner/seyra-lab/run/docker.sock
+== 2026-10-18T09:35:10Z PASS I0 offline host has no images and no outside route (probe to example.com failed)
+== 2026-10-18T09:35:19Z FAIL I1 bootstrap rc=1 verify rc=1
+== 2026-10-18T09:35:19Z FAIL I2 rc=1
+== 2026-10-18T09:35:19Z PASS I3a free space 70984773632 B >= import guard 9193803280 B at the managed home
+== 2026-10-18T09:35:19Z FAIL I3 import rc=1 dataset= (failed-release state preserved on the offline host)
+# Seyra real-Iran offline-host validation — 2026-10-18T09:35:19Z
+# bundle=/home/owner/seyra-prep/bundle-2026-10-18-vm2 pbf=iran-261017.osm.pbf sha256=7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f dataset_id=
+PASS I0 offline host has no images and no outside route (probe to example.com failed)
+FAIL I1 bootstrap rc=1 verify rc=1
+FAIL I2 rc=1
+PASS I3a free space 70984773632 B >= import guard 9193803280 B at the managed home
+FAIL I3 import rc=1 dataset= (failed-release state preserved on the offline host)
+# failures: 3
+harness rc=1

@@ -1,0 +1,41 @@
+BACKUP_ROOT:
+total 20
+drwxr-xr-x 5 root   root   4096 Oct 19 07:51 .
+drwxrwxr-x 7 ubuntu ubuntu 4096 Oct 19 07:51 ..
+drwxr-xr-x 2 root   root   4096 Oct 19 07:51 .seyra-backup-29991231T000000000Z-d0d0d0.partial
+drwxr-x--- 2 root   root   4096 Oct 19 07:51 seyra-backup-20261019T075121720Z-6bf0f5
+drwxr-x--- 3 root   root   4096 Oct 19 07:51 seyra-backup-20261019T075153052Z-40a6ae
+
+BACKUP_ROOT/.seyra-backup-29991231T000000000Z-d0d0d0.partial:
+total 16
+drwxr-xr-x 2 root root 4096 Oct 19 07:51 .
+drwxr-xr-x 5 root root 4096 Oct 19 07:51 ..
+-rw-r--r-- 1 root root 7920 Oct 19 07:51 seyra_app.sql
+
+BACKUP_ROOT/seyra-backup-20261019T075121720Z-6bf0f5:
+total 32
+drwxr-x--- 2 root root 4096 Oct 19 07:51 .
+drwxr-xr-x 5 root root 4096 Oct 19 07:51 ..
+-rw-r----- 1 root root 1156 Oct 19 07:51 backup-manifest.json
+-rw-r--r-- 1 root root 4181 Oct 19 07:51 manifests.tar.gz
+-rw------- 1 root root 7627 Oct 19 07:51 seyra_app.sql
+-rw-r--r-- 1 root root 1262 Oct 19 07:51 state.tar.gz
+
+BACKUP_ROOT/seyra-backup-20261019T075153052Z-40a6ae:
+total 36
+drwxr-x--- 3 root root 4096 Oct 19 07:51 .
+drwxr-xr-x 5 root root 4096 Oct 19 07:51 ..
+-rw-r----- 1 root root 2399 Oct 19 07:51 backup-manifest.json
+-rw-r--r-- 1 root root 4181 Oct 19 07:51 manifests.tar.gz
+-rw------- 1 root root 7844 Oct 19 07:51 seyra_app.sql
+drwxr-x--- 2 root root 4096 Oct 19 07:51 sources
+-rw-r--r-- 1 root root 1294 Oct 19 07:51 state.tar.gz
+
+BACKUP_ROOT/seyra-backup-20261019T075153052Z-40a6ae/sources:
+total 24
+drwxr-x--- 2 root   root   4096 Oct 19 07:51 .
+drwxr-x--- 3 root   root   4096 Oct 19 07:51 ..
+-rw-r--r-- 1 root   root    222 Oct 19 07:51 ds-20261001-9843cf36a06e.json
+-r--r--r-- 1 ubuntu ubuntu 3167 Oct 19 07:51 ds-20261001-9843cf36a06e.osm.pbf
+-rw-r--r-- 1 root   root    222 Oct 19 07:51 ds-20261002-9843cf36a06e.json
+-r--r--r-- 1 ubuntu ubuntu 3167 Oct 19 07:51 ds-20261002-9843cf36a06e.osm.pbf

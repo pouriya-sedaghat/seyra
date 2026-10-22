@@ -1,0 +1,254 @@
+{
+  "schema": "seyra.release-manifest/1",
+  "dataset_id": "ds-20261017-2d2c87f31d11",
+  "status": "failed",
+  "created_at": "2026-10-18T11:13:02.300Z",
+  "updated_at": "2026-10-18T12:12:17.369Z",
+  "source": {
+    "original_path": "/home/owner/iran-261017.osm.pbf",
+    "filename": "iran-261017.osm.pbf",
+    "size_bytes": 229845082,
+    "sha256": "7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f",
+    "managed_copy": "/home/owner/seyra-lab/home/releases/ds-20261017-2d2c87f31d11/source/input.osm.pbf",
+    "snapshot_timestamp": "2026-10-17T20:20:51Z",
+    "snapshot_timestamp_source": "pbf_header",
+    "bbox": [
+      43.315691,
+      24.813511,
+      64.3179533,
+      46.9863421
+    ],
+    "counts": {
+      "changesets": 0,
+      "nodes": 27001241,
+      "ways": 3396283,
+      "relations": 99075
+    }
+  },
+  "pipeline": {
+    "pipeline_version": "seyra-pipeline-1.0.1",
+    "fingerprint_sha256": "217f94a9c5e25192510d2d054914511ddc10f1cfc0581a632382324e8801b8e8",
+    "files": {
+      "infra/catalog/seyra-flex.lua": "44a7911075d9ebb8877f4f68134f5279c103247ea1afe3eb15dfcc4ccd4a5954",
+      "infra/catalog/pre-import.sql": "434ceab4a968cd63141429e58bd97f0a57c21897f1362b5b1faf38bee625617c",
+      "infra/catalog/post-import.sql": "d35e9008583697fbad55a40d447e99235eaa285a6813f9e2e6a2d59305e698a4",
+      "infra/catalog/catalog-report.sql": "3130f0636e5b6deafd80067fd71eb2a036d36ca70d94fbbde1bcd5bc15d8a699",
+      "infra/catalog/tegola.toml.tmpl": "a4088362a9eb3ad0fc554f733dcd8a3cd399bdbbd1d2a6d6880a09ac099218a5",
+      "infra/catalog/catalog.json": "737fc60c42416ff686f636723d9427c0c4c1f399a99140fe48099c1e047214f5",
+      "infra/valhalla/valhalla.json": "1f846f9f031d904e0b2a03ba8a7d55551066f558acf8c6e676b8ab2acd53871b",
+      "infra/compose/jobs.yml": "84ec52ab1f87090a4ed02a0bf537bff95aa44539b478a3eb2caf0e406f1ce6aa"
+    },
+    "catalog_version": "seyra-catalog-1.0.0",
+    "search_normalization_version": "fa-search-norm-1",
+    "style_version": "seyra-style-1.0.1"
+  },
+  "components": {
+    "DB": {
+      "ref": "postgis/postgis:17-3.5",
+      "image_id": "sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6"
+    },
+    "TEGOLA": {
+      "ref": "seyra/tegola:0.21.2-seyra1",
+      "image_id": "sha256:4379ed15b436599a68b7908c8b35767c586801273eeca725ca144926e5e0757f"
+    },
+    "VALHALLA": {
+      "ref": "seyra/valhalla:3.9.1-seyra1",
+      "image_id": "sha256:df4afb12dd7e4d5a110178d3a931facc206239470dc043c38dd117af331defc3"
+    },
+    "PHOTON": {
+      "ref": "seyra/photon:1.3.0-seyra1",
+      "image_id": "sha256:46112b0677bb6866b8c7c5c55d883d5c302264f7c855a5bc4a5fefac745f97b2"
+    },
+    "OVERPASS": {
+      "ref": "seyra/overpass:0.7.62.4-seyra1",
+      "image_id": "sha256:44d8f7a9837f953d34122189a716c663263a7e6a531104548f37c5604c4b85fa"
+    },
+    "API": {
+      "ref": "seyra/api:1.0.0-seyra1",
+      "image_id": "sha256:ad11e92b08790044a31c23bf16a61bd6689fdeda1f7241f2c41dce4d59d36b00"
+    },
+    "PROXY": {
+      "ref": "seyra/proxy:1.0.0-seyra1",
+      "image_id": "sha256:07e3eca26da70c86cf69cb4538dbcac9eb163ad507a574eb411d561d005e233c"
+    },
+    "OSMTOOLS": {
+      "ref": "seyra/osmtools:2.3.1-1.19.1-seyra1",
+      "image_id": "sha256:a6803a35f3a1ed2d059bb170e7e2efdabd31567412c33b94ccd518b6678acfc0"
+    },
+    "GEOCODER_BUILD": {
+      "ref": "seyra/geocoder-build:5.3.2-1.3.0-seyra1",
+      "image_id": "sha256:ee886ca3890b697b2117919c1dcff389988ee782fb5c1bf20a61c90be8f80057"
+    },
+    "OPS": {
+      "ref": "seyra/ops:1.0.0-seyra1",
+      "image_id": "sha256:5e3f8cd9a0d551f7238cec2c079b8e5b7eb575eff9038e20853016ca0d9a7718"
+    }
+  },
+  "assets": {
+    "assets_sha256": "8f7bcaf8f8dfe98cd89f12d1a2db440aa246e52d3434a93ca8de98091ec5fb31",
+    "source": "proxy image /usr/share/seyra/assets/asset-manifest.json"
+  },
+  "artifacts": {
+    "render": {
+      "database": "render_ds_20261017_2d2c87f31d11",
+      "frozen": true,
+      "catalog_report": "validation/catalog-report.json",
+      "tegola_config_sha256": "612db5372016f26e316a54922c05a07298523e16026a5f0117b0dcab3768252d"
+    },
+    "routing": {
+      "dir": "valhalla",
+      "sha256": "532581c88968a188045cd645ecf8882414ea7489767ae17d8e5f831911cf2602",
+      "files": 2796,
+      "bytes": 870415744,
+      "timezone_db": "not packaged (date_time rejected in phase 1)",
+      "speed_config": "not packaged (built-in class defaults)"
+    },
+    "geocoder": {
+      "nominatim": "Nominatim version 5.3.2-0",
+      "export_sha256": "1aa21cb5b161f11fd6b3d9bfa89f1adb9ec4272bf7d4c4964120d8bcfe654635",
+      "import_file": "geocoder/photon-import.jsonl",
+      "import_sha256": "abdff086c6bc0ed00a9fa2e522f32086b7cb1b30da75374e43a83bddf2838502",
+      "synonyms_sha256": "dbf476e89a1951d9aa7968fe66b7fc45aab6a2ca79a44456e680f9e4cbbca429",
+      "preprocess": {
+        "places": 1199311,
+        "names_with_variants": 376601,
+        "variants_added": 382551,
+        "variants_without_free_slot": 24,
+        "synonym_entries": 22564,
+        "synonym_entries_dropped": 0,
+        "marker_name": "seyra-release-ds-20261017-2d2c87f31d11",
+        "normalization_version": "fa-search-norm-1"
+      },
+      "photon_dir": "photon",
+      "photon_extra_tags": "seyra_name,seyra_name_fa,seyra_name_en,seyra_housenumber",
+      "note": "The Photon index directory receives OpenSearch working-state writes while served; the import JSON is the immutable rebuild input."
+    },
+    "overpass": {
+      "dir": "overpass/db",
+      "version_label": "seyra:ds-20261017-2d2c87f31d11",
+      "sha256": "47b83d52b4724f87f03cb2139305d1535e78e07a0f959f877ed0d493d6a1e219",
+      "files": 39,
+      "bytes": 5742642300,
+      "meta": false,
+      "attic": false,
+      "areas": false
+    },
+    "maps": {
+      "dir": "maps",
+      "sha256": "ff7724b3a255e00c088f7715eb2769b17aa0e01abffabe88b45af7d355ef4b61",
+      "files": 5,
+      "bytes": 61398
+    }
+  },
+  "identities": null,
+  "measurements": {
+    "steps": [
+      {
+        "step": "source-checksum",
+        "seconds": 0.348,
+        "bytes": null
+      },
+      {
+        "step": "source-validate",
+        "seconds": 3.851,
+        "bytes": null
+      },
+      {
+        "step": "source-copy",
+        "seconds": 0.591,
+        "bytes": null
+      },
+      {
+        "step": "render-import",
+        "seconds": 219.917,
+        "bytes": null
+      },
+      {
+        "step": "routing-build",
+        "seconds": 215.696,
+        "bytes": 870415744
+      },
+      {
+        "step": "geocoder-build",
+        "seconds": 2254.985,
+        "bytes": 574252193
+      },
+      {
+        "step": "overpass-build",
+        "seconds": 552.814,
+        "bytes": 5742642300
+      },
+      {
+        "step": "map-styles",
+        "seconds": 0.133,
+        "bytes": null
+      },
+      {
+        "step": "staging-validation",
+        "seconds": 309.728,
+        "bytes": null
+      }
+    ],
+    "free_bytes_before": 59757993984,
+    "free_bytes_min_observed": 53391822848
+  },
+  "validation": {
+    "status": "failed",
+    "checks": [
+      {
+        "name": "providers-started",
+        "ok": false,
+        "detail": {
+          "valhalla": true,
+          "photon": false,
+          "overpass": true,
+          "tegola": true
+        }
+      },
+      {
+        "name": "tiles",
+        "ok": true,
+        "detail": {
+          "map": "seyra_ds_20261017_2d2c87f31d11",
+          "capabilities": 200,
+          "tile": {
+            "z": 14,
+            "x": 10657,
+            "y": 6613,
+            "status": 200,
+            "bytes": 343
+          }
+        }
+      },
+      {
+        "name": "routing",
+        "ok": true,
+        "detail": {
+          "version": "3.9.1",
+          "tileset_last_modified": 1792322414,
+          "sampled_routes": 5,
+          "routed": 5
+        }
+      },
+      {
+        "name": "geocoder",
+        "ok": false,
+        "detail": {
+          "error": "fetch failed"
+        }
+      },
+      {
+        "name": "overpass",
+        "ok": true,
+        "detail": {
+          "identity": "seyra:ds-20261017-2d2c87f31d11",
+          "status": 200
+        }
+      }
+    ]
+  },
+  "failure": {
+    "step": "staging-validation",
+    "message": "staging validation failed: providers-started, geocoder"
+  }
+}

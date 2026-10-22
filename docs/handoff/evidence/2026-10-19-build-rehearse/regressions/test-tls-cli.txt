@@ -1,0 +1,21 @@
+PASS H2a: tls csr --replace-pending is refused while tls import holds the lifecycle lock
+PASS H2a: the import completes
+PASS H2a: served certificate and key match after the import
+PASS H2a: the served key is the validated pending key
+PASS H2a: no replacement journal is left
+PASS H2a: the served set changed exactly once (to the new pair)
+PASS H2b: tls recover is refused while tls import holds the lifecycle lock
+PASS H2b: the import completes with a matching pair
+PASS H2c: the import installs the validated snapshot, not the replaced path
+PASS H2d: recover restores the verified previous pair instead of the journal-matching incompatible set
+PASS H2e: with no valid candidate, recover refuses and keeps the journal and files
+PASS H2e: a new CSR is refused while the replacement is unfinished
+PASS H4: the served certificate is leaf + intermediate
+PASS H4: renewal import succeeds
+PASS H4: the renewal kept the first served set as a backup
+PASS H4: documented rollback (tls restore --from <backup>) succeeds on the full-chain backup
+PASS H4: served chain, key and trust anchor are byte-identical to the first served set
+PASS H4: no journal left after the rollback
+PASS H4: the backup's split leaf.crt/chain.pem import cleanly as well
+PASS H4: a backup whose key does not match is refused and the served set is kept
+# checkout=<REPO> checks=20 failed=0

@@ -1,0 +1,11 @@
+offline-host-r9 start=2026-10-20T04:25:32Z seconds=320 rc=0 min_available_MiB=4729 disk_free=36944740352
+synth-start start=2026-10-20T04:31:11Z seconds=10 rc=0 min_available_MiB=5962 disk_free=40588832768
+swagger-normal start=2026-10-20T04:31:31Z seconds=9 rc=0 min_available_MiB=5268 disk_free=40588394496
+swagger-provider-down start=2026-10-20T04:31:40Z seconds=4 rc=0 min_available_MiB=5733 disk_free=40588308480
+synth-stop start=2026-10-20T04:31:54Z seconds=41 rc=0 min_available_MiB=5904 disk_free=40579502080
+rehearsal-r9 start=2026-10-20T04:32:50Z seconds=333 rc=1 min_available_MiB=4935 disk_free=35420385280
+rehearsal-cleanup-planted-failure start=2026-10-20T04:39:38Z seconds=0 rc=127 min_available_MiB=? disk_free=35419246592
+rehearsal-cleanup-retry start=2026-10-20T04:39:38Z seconds=0 rc=127 min_available_MiB=? disk_free=35419226112
+rehearsal-cleanup-planted-failure start=2026-10-20T04:39:49Z seconds=24 rc=1 min_available_MiB=5947 disk_free=40576446464
+rehearsal-cleanup-retry start=2026-10-20T04:40:14Z seconds=0 rc=0 min_available_MiB=? disk_free=40575791104
+rehearsal-r9-attempt2 start=2026-10-20T04:40:24Z seconds=357 rc=0 min_available_MiB=5067 disk_free=40573542400

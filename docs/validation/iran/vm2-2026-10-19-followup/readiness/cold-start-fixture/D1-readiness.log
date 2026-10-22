@@ -1,0 +1,1 @@
+{"label":"cold start trial 1 (ds-20251020-9843cf36a06e)","polls":587,"ready_codes":{"200":556,"502":1,"ERR":30},"first_ready_at":"2026-10-19T05:25:26.257Z","not_ready_after_first_ready":0,"tiles_requested":480720,"tiles_cancelled":0,"tile_status":{"200":480720}}

@@ -1,0 +1,7 @@
+# checkout=<repo>
+# credit used by importer.ts: reclaimableBytes(setupDir, dev) (allocated blocks, lstat, same device, link-aware)
+PASS sparse 8 GiB file with no allocated blocks: credited 0 B, free 3758096384 B, required 8053063680 B -> refused (expected refused)
+PASS symlink to a 64 MiB file outside the release: credited 0 B, free 8019509248 B, required 8053063680 B -> refused (expected refused)
+PASS hard-linked 64 MiB file whose other link survives outside: credited 0 B, free 8019509248 B, required 8053063680 B -> refused (expected refused)
+PASS ordinary allocated 96 MiB file: credited 100663296 B, free 7985954816 B, required 8053063680 B -> admitted (expected admitted)
+# failures: 0

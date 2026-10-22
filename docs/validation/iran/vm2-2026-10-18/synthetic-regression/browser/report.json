@@ -1,0 +1,53 @@
+{
+  "recorded_at": "2026-10-18T10:35:26.851Z",
+  "base": "https://127.0.0.1:8443",
+  "title": "سیرا — آزمون سرویس‌های نقشه",
+  "total_requests": 62,
+  "external_requests": [],
+  "rtl_plugin_requests": [],
+  "font_resources": [
+    "/maps/ds-20261001-9843cf36a06e/fonts/files/Vazirmatn-Bold.woff2",
+    "/maps/ds-20261001-9843cf36a06e/fonts/files/Vazirmatn-Regular.woff2",
+    "/maps/ds-20261001-9843cf36a06e/fonts/Vazirmatn Bold/0-255.pbf",
+    "/maps/ds-20261001-9843cf36a06e/fonts/Vazirmatn Regular/0-255.pbf"
+  ],
+  "failed_requests": [],
+  "client_aborted_requests": 0,
+  "tile_requests": 31,
+  "console_errors": [],
+  "search_panel_text": "جستجو\nمکان‌یابی معکوس\nمسیریابی\nنزدیکی\nمکان‌ها\nعیب‌یابی\n تکمیل خودکار\n اولویت با محدوده نقشه\nجستجو\nautocomplete · photon · normalized: خیابان اصلی ازمایشی\nخيابان اصلي آزمايشي\nhighway=primary · osm:w5004\nمحله آزمایشی، شهر آزمایشی، استان آزمایشی\nکلانتری آزمایشی\namenity=police · osm:n1111\nخيابان اصلي آزمايشي، محله آزمایشی، شهر آزمایشی، استان آزمایشی\nداروخانه كوثر آزمايشي\namenity=pharmacy · osm:n1110\nخ",
+  "views": [
+    {
+      "theme": "light",
+      "lang": "fa",
+      "html_lang": "fa",
+      "dir": "rtl"
+    },
+    {
+      "theme": "light",
+      "lang": "en",
+      "html_lang": "en",
+      "dir": "ltr"
+    },
+    {
+      "theme": "dark",
+      "lang": "fa",
+      "html_lang": "fa",
+      "dir": "rtl"
+    },
+    {
+      "theme": "dark",
+      "lang": "en",
+      "html_lang": "en",
+      "dir": "ltr"
+    }
+  ],
+  "screenshots": [
+    "search-light-fa.jpg",
+    "lam-alef-light-fa.jpg",
+    "light-fa.jpg",
+    "light-en.jpg",
+    "dark-fa.jpg",
+    "dark-en.jpg"
+  ]
+}

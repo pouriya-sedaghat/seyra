@@ -1,0 +1,354 @@
+{
+  "schema": "seyra.search-seeds/2",
+  "status": "PROPOSED_ENGINEERING_FIXTURES",
+  "owner_delegated_query_selection": true,
+  "source": "docs/planning/MAP_CLIENT_HANDOFF_SEARCH_SEEDS.json at ad24173 (planning branch, not merged), revised per brief v0.3 §7.1: independent yeh/diacritic variants, isolated kaf and ZWNJ cases, Persian Shiraz kept unvalidated until measured by identity.",
+  "scope": "Reusable regression seeds for the stated datasets only; not an address-completeness guarantee or a relevance SLA. Reference coordinates are public OSM landmarks or synthetic fixture objects, never user positions.",
+  "binding": "Operational dataset_id and owner-input checksum are passed at run time in an operator-local binding file (--binding); they are never committed. A run whose active dataset differs from the binding fails as SNAPSHOT_CHANGED; reference identities are never rewritten automatically.",
+  "defaults": {
+    "lang": "fa",
+    "limit": 10,
+    "top_k": 5,
+    "location_tolerance_m": 5000,
+    "navigation_tolerance_m": 250
+  },
+  "cases": [
+    {
+      "id": "tehran_azadi",
+      "dataset": "iran",
+      "query": "برج آزادی",
+      "kind": "base",
+      "navigate": true,
+      "expected": {
+        "feature_id": "osm:r7814369",
+        "lon": 51.3380605,
+        "lat": 35.6997384,
+        "region": "تهران",
+        "location_tolerance_m": 1000
+      },
+      "reference": {
+        "measurement": "identity",
+        "observed": "browser audit vm2-2026-10-19-boundary run 2: rank 1, viewport reached at 0 m",
+        "evidence": "docs/validation/iran/vm2-2026-10-19-boundary/f3-navigation/iran-readonly-run2/report.json"
+      }
+    },
+    {
+      "id": "tehran_azadi_arabic_yeh",
+      "dataset": "iran",
+      "query": "برج آزادي",
+      "kind": "variant",
+      "variant_of": "tehran_azadi",
+      "change": "arabic_yeh",
+      "expected": {
+        "feature_id": "osm:r7814369",
+        "lon": 51.3380605,
+        "lat": 35.6997384,
+        "region": "تهران",
+        "location_tolerance_m": 1000
+      },
+      "reference": {
+        "measurement": "pending",
+        "observed": "not executed"
+      }
+    },
+    {
+      "id": "isfahan_naqshejahan",
+      "dataset": "iran",
+      "query": "میدان نقش جهان",
+      "kind": "base",
+      "navigate": true,
+      "expected": {
+        "feature_id": "osm:r15540548",
+        "lon": 51.6773624,
+        "lat": 32.6581024,
+        "region": "اصفهان",
+        "location_tolerance_m": 1000
+      },
+      "reference": {
+        "measurement": "identity",
+        "observed": "browser audit vm2-2026-10-19-boundary run 2: rank 1, viewport reached at 0 m",
+        "evidence": "docs/validation/iran/vm2-2026-10-19-boundary/f3-navigation/iran-readonly-run2/report.json"
+      }
+    },
+    {
+      "id": "isfahan_naqshejahan_arabic_yeh",
+      "dataset": "iran",
+      "query": "ميدان نقش جهان",
+      "kind": "variant",
+      "variant_of": "isfahan_naqshejahan",
+      "change": "arabic_yeh",
+      "expected": {
+        "feature_id": "osm:r15540548",
+        "lon": 51.6773624,
+        "lat": 32.6581024,
+        "region": "اصفهان",
+        "location_tolerance_m": 1000
+      },
+      "reference": {
+        "measurement": "pending",
+        "observed": "not executed"
+      }
+    },
+    {
+      "id": "shiraz_city_fa",
+      "dataset": "iran",
+      "query": "شیراز",
+      "kind": "base",
+      "navigate": true,
+      "expected": {
+        "feature_id": "osm:r8167754",
+        "lon": 52.5378041,
+        "lat": 29.6060218,
+        "region": "فارس",
+        "location_tolerance_m": 5000
+      },
+      "reference": {
+        "measurement": "location_only",
+        "observed": "API smoke vm2-2026-10-18 attempt 4: Shiraz area at rank 2 (nearest 4.7 km; rank 1 was a village of the same name in East Azerbaijan); feature ids were not recorded. The feature id was observed only for the English query in the browser audit.",
+        "evidence": "docs/validation/iran/vm2-2026-10-18/iran-run-attempt4/I6-iran-smoke.json"
+      }
+    },
+    {
+      "id": "shiraz_city_arabic_yeh",
+      "dataset": "iran",
+      "query": "شيراز",
+      "kind": "variant",
+      "variant_of": "shiraz_city_fa",
+      "change": "arabic_yeh",
+      "expected": {
+        "feature_id": "osm:r8167754",
+        "lon": 52.5378041,
+        "lat": 29.6060218,
+        "region": "فارس",
+        "location_tolerance_m": 5000
+      },
+      "reference": {
+        "measurement": "location_only",
+        "observed": "API smoke vm2-2026-10-18 attempt 4: normalized to شیراز, Shiraz area at rank 2 (nearest 4.7 km); feature ids not recorded",
+        "evidence": "docs/validation/iran/vm2-2026-10-18/iran-run-attempt4/I6-iran-smoke.json"
+      }
+    },
+    {
+      "id": "bazargan_border",
+      "dataset": "iran",
+      "query": "بازرگان",
+      "kind": "base",
+      "navigate": true,
+      "expected": {
+        "feature_id": "osm:n244176127",
+        "lon": 44.3876859,
+        "lat": 39.3886668,
+        "region": "آذربایجان غربی",
+        "location_tolerance_m": 2000
+      },
+      "reference": {
+        "measurement": "identity",
+        "observed": "browser audit vm2-2026-10-19-boundary run 2: rank 1, viewport reached at 0 m",
+        "evidence": "docs/validation/iran/vm2-2026-10-19-boundary/f3-navigation/iran-readonly-run2/report.json"
+      }
+    },
+    {
+      "id": "abyaneh_village",
+      "dataset": "iran",
+      "query": "ابیانه",
+      "kind": "base",
+      "navigate": true,
+      "expected": {
+        "feature_id": "osm:n27369333",
+        "lon": 51.5908576,
+        "lat": 33.5865097,
+        "region": "اصفهان",
+        "location_tolerance_m": 2000
+      },
+      "reference": {
+        "measurement": "identity",
+        "observed": "browser audit vm2-2026-10-19-boundary run 2: rank 1, viewport reached at 0 m",
+        "evidence": "docs/validation/iran/vm2-2026-10-19-boundary/f3-navigation/iran-readonly-run2/report.json"
+      }
+    },
+    {
+      "id": "abyaneh_arabic_yeh",
+      "dataset": "iran",
+      "query": "ابيانه",
+      "kind": "variant",
+      "variant_of": "abyaneh_village",
+      "change": "arabic_yeh",
+      "expected": {
+        "feature_id": "osm:n27369333",
+        "lon": 51.5908576,
+        "lat": 33.5865097,
+        "region": "اصفهان",
+        "location_tolerance_m": 2000
+      },
+      "reference": {
+        "measurement": "pending",
+        "observed": "not executed (split from the planning variant that combined yeh and kasra)"
+      }
+    },
+    {
+      "id": "abyaneh_diacritic",
+      "dataset": "iran",
+      "query": "ابیانِه",
+      "kind": "variant",
+      "variant_of": "abyaneh_village",
+      "change": "diacritic_kasra",
+      "expected": {
+        "feature_id": "osm:n27369333",
+        "lon": 51.5908576,
+        "lat": 33.5865097,
+        "region": "اصفهان",
+        "location_tolerance_m": 2000
+      },
+      "reference": {
+        "measurement": "pending",
+        "observed": "not executed (split from the planning variant that combined yeh and kasra)"
+      }
+    },
+    {
+      "id": "karaj_persian_kaf",
+      "dataset": "iran",
+      "query": "کرج",
+      "kind": "base",
+      "expected": {
+        "feature_id": null,
+        "lon": 50.9904681,
+        "lat": 35.8224892,
+        "region": "البرز",
+        "location_tolerance_m": 5000
+      },
+      "reference": {
+        "measurement": "location_only",
+        "observed": "API smoke vm2-2026-10-18 attempt 4: rank 1 place=county at this position; feature id not recorded",
+        "evidence": "docs/validation/iran/vm2-2026-10-18/iran-run-attempt4/I6-iran-smoke.json"
+      }
+    },
+    {
+      "id": "karaj_arabic_kaf",
+      "dataset": "iran",
+      "query": "كرج",
+      "kind": "variant",
+      "variant_of": "karaj_persian_kaf",
+      "change": "arabic_kaf",
+      "expected": {
+        "feature_id": null,
+        "lon": 50.9904681,
+        "lat": 35.8224892,
+        "region": "البرز",
+        "location_tolerance_m": 5000
+      },
+      "reference": {
+        "measurement": "location_only",
+        "observed": "API smoke vm2-2026-10-18 attempt 4: normalized to کرج, same rank 1 result as the Persian-kaf query; feature id not recorded",
+        "evidence": "docs/validation/iran/vm2-2026-10-18/iran-run-attempt4/I6-iran-smoke.json"
+      }
+    },
+    {
+      "id": "khorramabad_zwnj",
+      "dataset": "iran",
+      "query": "خرم‌آباد",
+      "kind": "base",
+      "change": "zwnj",
+      "expected": {
+        "feature_id": null,
+        "lon": null,
+        "lat": null,
+        "region": "لرستان",
+        "location_tolerance_m": 5000
+      },
+      "reference": {
+        "measurement": "pending",
+        "observed": "no Iran observation exists yet; the first run records candidates for owner review (NOT_EVALUATED until a reference is reviewed)"
+      }
+    },
+    {
+      "id": "khorramabad_space",
+      "dataset": "iran",
+      "query": "خرم آباد",
+      "kind": "variant",
+      "variant_of": "khorramabad_zwnj",
+      "change": "zwnj_as_space",
+      "expected": {
+        "feature_id": null,
+        "lon": null,
+        "lat": null,
+        "region": "لرستان",
+        "location_tolerance_m": 5000
+      },
+      "reference": {
+        "measurement": "pending",
+        "observed": "no Iran observation exists yet"
+      }
+    },
+    {
+      "id": "fixture_zwnj_name_space_query",
+      "dataset": "fixture",
+      "query": "خیابان شمالی آزمایشی",
+      "kind": "base",
+      "change": "zwnj_as_space",
+      "expected": {
+        "feature_id": "osm:w5012",
+        "lon": null,
+        "lat": null,
+        "region": null
+      },
+      "reference": {
+        "measurement": "identity",
+        "observed": "integration geocoder-quality: rank 3 for the OSM name «خیابان‌ شمالی‌ آزمایشی» (ZWNJ in the source name)",
+        "evidence": "docs/evidence/integration/geocoder-quality.json"
+      }
+    },
+    {
+      "id": "fixture_zwnj_exact",
+      "dataset": "fixture",
+      "query": "خیابان‌ شمالی‌ آزمایشی",
+      "kind": "variant",
+      "variant_of": "fixture_zwnj_name_space_query",
+      "change": "zwnj",
+      "expected": {
+        "feature_id": "osm:w5012",
+        "lon": null,
+        "lat": null,
+        "region": null
+      },
+      "reference": {
+        "measurement": "pending",
+        "observed": "not executed"
+      }
+    },
+    {
+      "id": "fixture_pharmacy",
+      "dataset": "fixture",
+      "query": "داروخانه کوثر",
+      "kind": "base",
+      "expected": {
+        "feature_id": "osm:n1110",
+        "lon": null,
+        "lat": null,
+        "region": null
+      },
+      "reference": {
+        "measurement": "identity",
+        "observed": "integration geocoder-quality: rank 1",
+        "evidence": "docs/evidence/integration/geocoder-quality.json"
+      }
+    },
+    {
+      "id": "fixture_arabic_kaf",
+      "dataset": "fixture",
+      "query": "داروخانه كوثر",
+      "kind": "variant",
+      "variant_of": "fixture_pharmacy",
+      "change": "arabic_kaf",
+      "expected": {
+        "feature_id": "osm:n1110",
+        "lon": null,
+        "lat": null,
+        "region": null
+      },
+      "reference": {
+        "measurement": "pending",
+        "observed": "not executed; the Persian-kaf base query «داروخانه کوثر» is rank 1 in integration geocoder-quality"
+      }
+    }
+  ]
+}

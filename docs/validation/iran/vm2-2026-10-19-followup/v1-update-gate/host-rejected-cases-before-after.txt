@@ -1,0 +1,12 @@
+wrong-digest: harness rc=1
+  before: dff3c18f0aec31ab e936e72cf31d91b5 sha256:489d2a4003f20cce6f044867630cf9b2053b425b72c716987b938ebe14faf2c9 
+  after:  dff3c18f0aec31ab e936e72cf31d91b5 sha256:489d2a4003f20cce6f044867630cf9b2053b425b72c716987b938ebe14faf2c9 
+  install tree, image set and OPS image unchanged
+  == 2026-10-19T04:46:45Z FAIL U1 update refused before any install change: SHA256SUMS digest f977ab1c94f7ab613955e3445eb0848edcae5500fb0e10ed806248ad90a075ac does not match the out-of-band value 9c4e87daf2c97cbf1b69b12a4bf0b821a3ad
+  import-phase files: 0
+corrupt-payload: harness rc=1
+  before: dff3c18f0aec31ab e936e72cf31d91b5 sha256:489d2a4003f20cce6f044867630cf9b2053b425b72c716987b938ebe14faf2c9 
+  after:  dff3c18f0aec31ab e936e72cf31d91b5 sha256:489d2a4003f20cce6f044867630cf9b2053b425b72c716987b938ebe14faf2c9 
+  install tree, image set and OPS image unchanged
+  == 2026-10-19T04:46:49Z FAIL U1 update refused before any install change: listed file checksums do not match: 2 line(s) in U0-sha256sum-check.txt
+  import-phase files: 0

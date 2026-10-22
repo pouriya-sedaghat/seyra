@@ -1,0 +1,30 @@
+# 2026-10-19T15:50:42Z rehearsal start phases=[vm install gate update tls relay egress rollback cleanup] frozen=<RUN>/rehearsal/frozen-20261019T155042Z
+PASS RV1 rehearsal VM on internal no-gateway networks only (no default route; outer VM routing table unchanged); images loaded by identity
+PASS RH1 disposable host seyra-rh-host installed from the old bundle and imported the fixture (ds-20261001-9843cf36a06e)
+PASS RH1b activated ds-20261001-9843cf36a06e; ready through the ordinary loopback listener
+PASS RH2 tampered new bundle refused by the gate before install (bundle holds entries that are neither directories nor regular files (type:path): l:install); install tree and nested images unchanged
+PASS RH3 new bundle verified before install, install tree swapped, images loaded (old stack kept serving)
+PASS RH3b cutover to the new build: t1-update-start rc=0 not_ready_ms=2078 samples=20 final=200 recreated=[api,proxy] identities_equal=yes
+PASS RT1 operator read the CSR directly; external-issuer import installed leaf+intermediate, the root as trust anchor and matching metadata; fixture set backed up
+PASS RT2 renewal imported; backup holds the previous full chain (served file, leaf, intermediate), root and metadata
+PASS RT3 interrupted replacement: journal left, start refused, tls recover completed the validated new set
+PASS RT4 recover refused an incomplete new set with a wrong-root backup; active files and journal unchanged
+PASS RT5 with the backup intact, recover restored the complete previous set (leaf 3) and removed the journal
+PASS RT6 proxy serves the imported certificate after proxy restart; t2-proxy-restart-tls rc=0 not_ready_ms=507 samples=16 final=200 recreated=[proxy] identities_equal=yes
+PASS RR1 edge started from the exact installed proxy image with its egress guard; relay peer 172.18.0.3
+PASS RR2 relay settings validated and applied to runtime.env
+PASS RR3 relay listener published on the host's lab address; t3-relay-on rc=0 not_ready_ms=512 samples=16 final=200 recreated=[proxy] identities_equal=yes
+PASS RR4 approved client 198.18.10.200 via the rehearsal VM's LAN address and the edge: 19 checks (TLS name/fingerprint, web, docs+CSP, spec, API, map assets, 421, spoofed headers, diagnostics, 413, direct bypass)
+PASS RR5 outsider 198.18.10.20 on the same segment, outside the approved /25: no response on 8 path classes, also with spoofed forwarding headers
+PASS RR6 outsider 198.18.20.20 on another segment: nothing is published on the rehearsal VM's address there
+PASS RR7 untrusted lab peer forging the approved client: 403 on 8 path classes; missing/malformed PROXY: no response; ordinary listener unreachable from the lab network
+PASS RR8 ordinary loopback control listener still serves without PROXY
+PASS RE1 namespace egress (host + edge; route lookups, documentation addresses, own-network and outer controlled sinks, guard counter, allowed upstream): 7 checks; sinks from the rehearsal VM itself: rc=0 rc=0
+PASS RB0 edge.sh stop refused while the relay upstream still answered (edge kept running, address still held)
+PASS RB1 relay trust removed and relay port unpublished while the edge still held its address; t4-rollback-relay rc=0 not_ready_ms=0 samples=17 final=200 recreated=[proxy] identities_equal=yes
+PASS RB2 after the relay rollback the relay listener answers nobody on the lab network
+PASS RB3 edge stopped (interlock satisfied) and removed after the relay trust was withdrawn
+PASS RB4 tls restore re-installed the fixture certificate and CA from the root-only backup; the proxy serves it; t5-rollback-tls rc=0 not_ready_ms=507 samples=17 final=200 recreated=[proxy] identities_equal=yes
+PASS RB5 software rollback to the old bundle (images verified, old OPS identity): t6-rollback-software rc=0 not_ready_ms=2532 samples=58 final=200 recreated=[api,proxy] identities_equal=yes
+NOTE RC1 cleanup of this lab's objects; remaining: 0 containers, 0 networks, 0 volumes, lab dir removed; VM routing table unchanged
+# 2026-10-19T15:56:25Z phases=[vm install gate update tls relay egress rollback cleanup] failures=0

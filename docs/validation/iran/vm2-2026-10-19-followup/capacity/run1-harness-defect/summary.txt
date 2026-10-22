@@ -1,0 +1,7 @@
+# capacity-guard 2026-10-19T04:52:22Z host=seyra-gate-host
+PASS C1 adequate capacity admitted (available 44247695360 B (44.25 GB: free 44247695360 + reclaimable 0) >= required 2147483648 B (2.15 GB: max(minFreeBytes 2147483648, minFreeFactor 40 x input 3167))…); manifest records capacity_check, 5 s sampling (34 samples) and per-step minima; warned that the persisted minFreeFactor 40 is below the reference
+PASS C2 a 3 GiB file held for 15 s inside the import appears as the run minimum 40825208832 B at 2026-10-19T04:50:14.537Z (free before the dip 44168826880 B; step 'geocoder-build'); the boundary samples after it were back up
+FAIL C3 rc=1 release_dir=present dbs_equal=y events=2->2
+PASS C4 import of ds-20261006-9843cf36a06e killed mid-build; with insufficient capacity the next import was refused and the failed build (manifest 'failed', render DB) was kept; with adequate capacity it was replaced, counting 16710612 reclaimable bytes
+PASS C5 input file unchanged (e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323); settings restored
+# failures: 1

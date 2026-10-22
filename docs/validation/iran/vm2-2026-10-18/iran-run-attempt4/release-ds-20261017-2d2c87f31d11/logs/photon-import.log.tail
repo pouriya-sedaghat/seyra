@@ -1,0 +1,200 @@
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:808)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:311)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:160)
+	at org.apache.logging.log4j.core.impl.Log4jContextFactory.getContext(Log4jContextFactory.java:48)
+	at org.apache.logging.log4j.LogManager.getContext(LogManager.java:139)
+	at org.apache.logging.log4j.LogManager.getLogger(LogManager.java:557)
+	at org.apache.logging.log4j.LogManager.getLogger(LogManager.java:543)
+	at de.komoot.photon.App.<clinit>(App.java:36)
+Caused by: java.net.UnknownHostException: 490be2c39017: Temporary failure in name resolution
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Inet6AddressImpl.java:52)
+	at java.base/java.net.InetAddress$PlatformResolver.lookupByName(InetAddress.java:1211)
+	at java.base/java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1828)
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(InetAddress.java:1139)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1818)
+	at java.base/java.net.InetAddress.getLocalHost(InetAddress.java:1931)
+	... 14 more
+
+2026-10-18 13:31:08,976 [main] INFO  de.komoot.photon.App - Start up database cluster, this might take some time.
+Cluster Name: photon
+Base Path:    /data/photon/photon_data
+Num Of Node:  1
+Creating /data/photon/photon_data/node_1/logs
+Creating /data/photon/photon_data/node_1/data
+Node Name:      Node 1
+HTTP Port:      9201
+Data Directory: /data/photon/photon_data/node_1/data
+Log Directory:  /data/photon/photon_data/node_1/logs
+2026-10-18T13:31:09.471072568Z main ERROR Could not determine local host name
+java.net.UnknownHostException: 490be2c39017: 490be2c39017: Temporary failure in name resolution
+	at java.base/java.net.InetAddress.getLocalHost(InetAddress.java:1936)
+	at org.apache.logging.log4j.core.util.NetUtils.getHostname(NetUtils.java:71)
+	at org.apache.logging.log4j.core.util.NetUtils.getLocalHostname(NetUtils.java:56)
+	at org.apache.logging.log4j.core.LoggerContext.lambda$setConfiguration$2(LoggerContext.java:691)
+	at java.base/java.util.concurrent.ConcurrentHashMap.computeIfAbsent(ConcurrentHashMap.java:1708)
+	at org.apache.logging.log4j.core.LoggerContext.setConfiguration(LoggerContext.java:691)
+	at org.apache.logging.log4j.core.LoggerContext.reconfigure(LoggerContext.java:812)
+	at org.apache.logging.log4j.core.LoggerContext.start(LoggerContext.java:349)
+	at org.opensearch.common.logging.LogConfigurator.configure(LogConfigurator.java:190)
+	at org.opensearch.common.logging.LogConfigurator.configure(LogConfigurator.java:139)
+	at org.codelibs.opensearch.runner.OpenSearchRunner.execute(OpenSearchRunner.java:568)
+	at org.codelibs.opensearch.runner.OpenSearchRunner.build(OpenSearchRunner.java:415)
+	at org.codelibs.opensearch.runner.OpenSearchRunner.build(OpenSearchRunner.java:346)
+	at de.komoot.photon.Server.startInternal(Server.java:96)
+	at de.komoot.photon.Server.<init>(Server.java:66)
+	at de.komoot.photon.App.runPhoton(App.java:83)
+	at de.komoot.photon.App.main(App.java:49)
+Caused by: java.net.UnknownHostException: 490be2c39017: Temporary failure in name resolution
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Native Method)
+	at java.base/java.net.Inet6AddressImpl.lookupAllHostAddr(Inet6AddressImpl.java:52)
+	at java.base/java.net.InetAddress$PlatformResolver.lookupByName(InetAddress.java:1211)
+	at java.base/java.net.InetAddress.getAddressesFromNameService(InetAddress.java:1828)
+	at java.base/java.net.InetAddress$NameServiceAddresses.get(InetAddress.java:1139)
+	at java.base/java.net.InetAddress.getAllByName0(InetAddress.java:1818)
+	at java.base/java.net.InetAddress.getLocalHost(InetAddress.java:1931)
+	... 16 more
+
+[2026-10-18T13:31:09,514][INFO ][stdout                   ] Creating /data/photon/photon_data/node_1/modules
+[2026-10-18T13:31:09,515][INFO ][stdout                   ] Creating /data/photon/photon_data/node_1/plugins
+[2026-10-18T13:31:09,546][INFO ][o.o.n.Node               ] version[3.8.0], pid[1], build[unknown/unknown/unknown], OS[Linux/7.0.0-38-generic/amd64], JVM[Ubuntu/OpenJDK 64-Bit Server VM/21.0.12.1/21.0.12.1+1-1-24.04.4-Ubuntu]
+[2026-10-18T13:31:09,547][INFO ][o.o.n.Node               ] JVM home [/usr/lib/jvm/java-21-openjdk-amd64]
+[2026-10-18T13:31:09,550][INFO ][o.o.n.Node               ] JVM arguments [-Xmx2g]
+[2026-10-18T13:31:09,559][INFO ][o.o.p.PluginsService     ] no modules loaded
+[2026-10-18T13:31:09,560][INFO ][o.o.p.PluginsService     ] loaded plugin [org.opensearch.analysis.common.CommonAnalysisModulePlugin]
+[2026-10-18T13:31:09,560][INFO ][o.o.p.PluginsService     ] loaded plugin [org.opensearch.geo.GeoModulePlugin]
+[2026-10-18T13:31:09,560][INFO ][o.o.p.PluginsService     ] loaded plugin [org.opensearch.transport.Netty4ModulePlugin]
+[2026-10-18T13:31:09,708][WARN ][stderr                   ] WARNING: A restricted method in java.lang.foreign.Linker has been called
+[2026-10-18T13:31:09,708][WARN ][stderr                   ] WARNING: java.lang.foreign.Linker::downcallHandle has been called by the unnamed module
+[2026-10-18T13:31:09,709][WARN ][stderr                   ] WARNING: Use --enable-native-access=ALL-UNNAMED to avoid a warning for this module
+[2026-10-18T13:31:09,800][INFO ][o.o.e.NodeEnvironment    ] using [1] data paths, mounts [[/data/photon (/dev/mapper/ubuntu--vg-ubuntu--lv)]], net usable_space [53.2gb], net total_space [97.8gb], types [ext4]
+[2026-10-18T13:31:09,802][INFO ][o.o.e.NodeEnvironment    ] heap size [2gb], compressed ordinary object pointers [true]
+[2026-10-18T13:31:09,916][INFO ][o.o.n.Node               ] node name [Node 1], node ID [2PiY7ilPRLSXazekAhvVew], cluster name [photon], roles [data, cluster_manager]
+[2026-10-18T13:31:09,951][INFO ][o.o.e.ExtensionsManager  ] ExtensionsManager initialized
+[2026-10-18T13:31:10,226][INFO ][o.o.i.MergeSchedulerConfig] Updating autoThrottle for index _na_ from [false] to [true]
+[2026-10-18T13:31:10,227][INFO ][o.o.i.MergeSchedulerConfig] Updating maxThreadCount from [0] to [2] and maxMergeCount from [0] to [7] for index _na_.
+[2026-10-18T13:31:10,227][INFO ][o.o.i.MergeSchedulerConfig] Initialized index _na_ with maxMergeCount=7, maxThreadCount=2, autoThrottleEnabled=true
+[2026-10-18T13:31:10,365][INFO ][o.o.i.MergeSchedulerConfig] Updating autoThrottle for index _na_ from [false] to [true]
+[2026-10-18T13:31:10,365][INFO ][o.o.i.MergeSchedulerConfig] Updating maxThreadCount from [0] to [2] and maxMergeCount from [0] to [7] for index _na_.
+[2026-10-18T13:31:10,365][INFO ][o.o.i.MergeSchedulerConfig] Initialized index _na_ with maxMergeCount=7, maxThreadCount=2, autoThrottleEnabled=true
+[2026-10-18T13:31:10,987][WARN ][o.o.b.Natives            ] unable to load JNA native support library, native methods will be disabled.
+java.lang.UnsatisfiedLinkError: /tmp/jna4127084419892192023.tmp: /tmp/jna4127084419892192023.tmp: failed to map segment from shared object
+	at java.base/jdk.internal.loader.NativeLibraries.load(Native Method)
+	at java.base/jdk.internal.loader.NativeLibraries$NativeLibraryImpl.open(NativeLibraries.java:331)
+	at java.base/jdk.internal.loader.NativeLibraries.loadLibrary(NativeLibraries.java:197)
+	at java.base/jdk.internal.loader.NativeLibraries.loadLibrary(NativeLibraries.java:139)
+	at java.base/java.lang.ClassLoader.loadLibrary(ClassLoader.java:2418)
+	at java.base/java.lang.Runtime.load0(Runtime.java:852)
+	at java.base/java.lang.System.load(System.java:2026)
+	at com.sun.jna.Native.loadNativeDispatchLibraryFromClasspath(Native.java:1041)
+	at com.sun.jna.Native.loadNativeDispatchLibrary(Native.java:1011)
+	at com.sun.jna.Native.<clinit>(Native.java:221)
+	at java.base/java.lang.Class.forName0(Native Method)
+	at java.base/java.lang.Class.forName(Class.java:423)
+	at java.base/java.lang.Class.forName(Class.java:414)
+	at org.opensearch.bootstrap.Natives.<clinit>(Natives.java:60)
+	at org.opensearch.bootstrap.BootstrapInfo.isMemoryLocked(BootstrapInfo.java:65)
+	at org.opensearch.monitor.process.ProcessProbe.processInfo(ProcessProbe.java:147)
+	at org.opensearch.monitor.process.ProcessService.<init>(ProcessService.java:68)
+	at org.opensearch.monitor.MonitorService.<init>(MonitorService.java:66)
+	at org.opensearch.node.Node.<init>(Node.java:1139)
+	at org.codelibs.opensearch.runner.node.OpenSearchRunnerNode.<init>(OpenSearchRunnerNode.java:44)
+	at org.codelibs.opensearch.runner.OpenSearchRunner.execute(OpenSearchRunner.java:573)
+	at org.codelibs.opensearch.runner.OpenSearchRunner.build(OpenSearchRunner.java:415)
+	at org.codelibs.opensearch.runner.OpenSearchRunner.build(OpenSearchRunner.java:346)
+	at de.komoot.photon.Server.startInternal(Server.java:96)
+	at de.komoot.photon.Server.<init>(Server.java:66)
+	at de.komoot.photon.App.runPhoton(App.java:83)
+	at de.komoot.photon.App.main(App.java:49)
+[2026-10-18T13:31:11,174][INFO ][o.o.t.NettyAllocator     ] creating NettyAllocator with the following configs: [name=opensearch_configured, chunk_size=256kb, suggested_max_allocation_size=256kb, factors={opensearch.unsafe.use_netty_default_chunk_and_page_size=false, g1gc_enabled=true, g1gc_region_size=1mb}]
+[2026-10-18T13:31:11,226][INFO ][o.o.d.DiscoveryModule    ] using discovery type [single-node] and seed hosts providers [settings]
+[2026-10-18T13:31:11,449][WARN ][o.o.g.DanglingIndicesState] gateway.auto_import_dangling_indices is disabled, dangling indices will not be automatically detected or imported and must be managed manually
+[2026-10-18T13:31:11,598][INFO ][o.o.n.Node               ] initialized
+[2026-10-18T13:31:11,598][INFO ][o.o.n.Node               ] starting ...
+[2026-10-18T13:31:11,668][WARN ][i.n.u.i.MacAddressUtil   ] Failed to find a usable hardware address from the network interfaces; using random bytes: b3:51:bb:20:ad:45:e4:26
+[2026-10-18T13:31:11,708][INFO ][o.o.t.TransportService   ] publish_address {127.0.0.1:9300}, bound_addresses {[::1]:9300}, {127.0.0.1:9300}
+[2026-10-18T13:31:11,739][WARN ][o.a.l.i.v.VectorizationProvider] Java vector incubator module is not readable. For optimal vector performance, pass '--add-modules jdk.incubator.vector' to enable Vector API.
+[2026-10-18T13:31:11,837][INFO ][o.o.c.c.Coordinator      ] setting initial configuration to VotingConfiguration{2PiY7ilPRLSXazekAhvVew}
+[2026-10-18T13:31:11,911][INFO ][o.o.c.s.ClusterManagerService] Tasks batched with key: org.opensearch.cluster.coordination.JoinHelper, count:3 and sample tasks: elected-as-cluster-manager ([1] nodes joined)[{Node 1}{2PiY7ilPRLSXazekAhvVew}{BEbh12zmTrSNKui3orLOyA}{127.0.0.1}{127.0.0.1:9300}{dm}{shard_indexing_pressure_enabled=true} elect leader, _BECOME_CLUSTER_MANAGER_TASK_, _FINISH_ELECTION_], term: 1, version: 1, delta: cluster-manager node changed {previous [], current [{Node 1}{2PiY7ilPRLSXazekAhvVew}{BEbh12zmTrSNKui3orLOyA}{127.0.0.1}{127.0.0.1:9300}{dm}{shard_indexing_pressure_enabled=true}]}
+[2026-10-18T13:31:11,933][INFO ][o.o.c.c.CoordinationState] cluster UUID set to [bffLPF4hSaiHu3Fz9VAw2A]
+[2026-10-18T13:31:11,946][INFO ][o.o.c.s.ClusterApplierService] cluster-manager node changed {previous [], current [{Node 1}{2PiY7ilPRLSXazekAhvVew}{BEbh12zmTrSNKui3orLOyA}{127.0.0.1}{127.0.0.1:9300}{dm}{shard_indexing_pressure_enabled=true}]}, term: 1, version: 1, reason: Publication{term=1, version=1}
+[2026-10-18T13:31:11,957][INFO ][o.o.d.PeerFinder         ] setting findPeersInterval to [1s] as node commission status = [true] for local node [{Node 1}{2PiY7ilPRLSXazekAhvVew}{BEbh12zmTrSNKui3orLOyA}{127.0.0.1}{127.0.0.1:9300}{dm}{shard_indexing_pressure_enabled=true}]
+[2026-10-18T13:31:11,962][INFO ][o.o.h.AbstractHttpServerTransport] publish_address {127.0.0.1:9201}, bound_addresses {[::1]:9201}, {127.0.0.1:9201}
+[2026-10-18T13:31:11,962][INFO ][o.o.n.Node               ] started
+[2026-10-18T13:31:11,974][INFO ][o.o.g.GatewayService     ] recovered [0] indices into cluster_state
+[2026-10-18T13:31:12,484][INFO ][d.k.p.App                ] Database cluster is now ready.
+[2026-10-18T13:31:12,485][INFO ][d.k.p.App                ] Reinitializing database index with languages en,fa.
+[2026-10-18T13:31:12,555][INFO ][o.o.c.s.ClusterManagerTaskThrottler] Starting cluster manager throttling as all nodes are higher than or equal to 2.5.0
+[2026-10-18T13:31:12,566][INFO ][o.o.i.MergeSchedulerConfig] Updating autoThrottle for index photon from [false] to [true]
+[2026-10-18T13:31:12,567][INFO ][o.o.i.MergeSchedulerConfig] Updating maxThreadCount from [0] to [2] and maxMergeCount from [0] to [7] for index photon.
+[2026-10-18T13:31:12,567][INFO ][o.o.i.MergeSchedulerConfig] Initialized index photon with maxMergeCount=7, maxThreadCount=2, autoThrottleEnabled=true
+[2026-10-18T13:31:12,596][INFO ][o.o.p.PluginsService     ] PluginService:onIndexModule index:[photon/KJy5z0ByRumMqXF9cBO6hg]
+[2026-10-18T13:31:12,709][INFO ][o.o.i.MergeSchedulerConfig] Updating autoThrottle for index photon from [true] to [true]
+[2026-10-18T13:31:12,712][INFO ][o.o.c.m.MetadataCreateIndexService] [photon] creating index, cause [api], templates [], shards [5]/[1]
+[2026-10-18T13:31:12,768][INFO ][o.o.i.MergeSchedulerConfig] Updating autoThrottle for index photon from [false] to [true]
+[2026-10-18T13:31:12,768][INFO ][o.o.i.MergeSchedulerConfig] Updating maxThreadCount from [0] to [2] and maxMergeCount from [0] to [7] for index photon.
+[2026-10-18T13:31:12,769][INFO ][o.o.i.MergeSchedulerConfig] Initialized index photon with maxMergeCount=7, maxThreadCount=2, autoThrottleEnabled=true
+[2026-10-18T13:31:12,777][INFO ][o.o.p.PluginsService     ] PluginService:onIndexModule index:[photon/KJy5z0ByRumMqXF9cBO6hg]
+[2026-10-18T13:31:12,790][INFO ][o.o.i.MergeSchedulerConfig] Updating autoThrottle for index photon from [true] to [true]
+[2026-10-18T13:31:13,063][INFO ][o.o.i.MergeSchedulerConfig] Updating autoThrottle for index photon from [false] to [true]
+[2026-10-18T13:31:13,063][INFO ][o.o.i.MergeSchedulerConfig] Updating maxThreadCount from [0] to [2] and maxMergeCount from [0] to [7] for index photon.
+[2026-10-18T13:31:13,063][INFO ][o.o.i.MergeSchedulerConfig] Initialized index photon with maxMergeCount=7, maxThreadCount=2, autoThrottleEnabled=true
+[2026-10-18T13:31:13,066][INFO ][o.o.p.PluginsService     ] PluginService:onIndexModule index:[photon/KJy5z0ByRumMqXF9cBO6hg]
+[2026-10-18T13:31:13,098][INFO ][o.o.c.m.MetadataMappingService] [photon/KJy5z0ByRumMqXF9cBO6hg] create_mapping
+[2026-10-18T13:31:13,159][INFO ][o.o.i.MergeSchedulerConfig] Updating autoThrottle for index photon from [false] to [true]
+[2026-10-18T13:31:13,159][INFO ][o.o.i.MergeSchedulerConfig] Updating maxThreadCount from [0] to [2] and maxMergeCount from [0] to [7] for index photon.
+[2026-10-18T13:31:13,159][INFO ][o.o.i.MergeSchedulerConfig] Initialized index photon with maxMergeCount=7, maxThreadCount=2, autoThrottleEnabled=true
+[2026-10-18T13:31:13,160][INFO ][o.o.p.PluginsService     ] PluginService:onIndexModule index:[photon/KJy5z0ByRumMqXF9cBO6hg]
+[2026-10-18T13:31:13,173][INFO ][o.o.c.m.MetadataMappingService] [photon/KJy5z0ByRumMqXF9cBO6hg] update_mapping [_doc]
+[2026-10-18T13:31:13,336][INFO ][o.o.i.MergeSchedulerConfig] Updating autoThrottle for index photon from [false] to [true]
+[2026-10-18T13:31:13,336][INFO ][o.o.i.MergeSchedulerConfig] Updating maxThreadCount from [0] to [2] and maxMergeCount from [0] to [7] for index photon.
+[2026-10-18T13:31:13,337][INFO ][o.o.i.MergeSchedulerConfig] Initialized index photon with maxMergeCount=7, maxThreadCount=2, autoThrottleEnabled=true
+[2026-10-18T13:31:13,341][INFO ][o.o.p.PluginsService     ] PluginService:onIndexModule index:[photon/KJy5z0ByRumMqXF9cBO6hg]
+[2026-10-18T13:31:13,345][INFO ][o.o.i.MergeSchedulerConfig] Updating autoThrottle for index photon from [true] to [true]
+[2026-10-18T13:31:13,349][INFO ][o.o.c.s.IndexScopedSettings] updating [index.refresh_interval] from [1s] to [-1]
+[2026-10-18T13:31:13,362][INFO ][o.o.c.s.IndexScopedSettings] updating [index.refresh_interval] from [1s] to [-1]
+[2026-10-18T13:31:20,923][INFO ][d.k.p.n.ImportThread     ] Imported 50000 documents [6618.1336863004635/second]
+[2026-10-18T13:31:27,816][INFO ][d.k.p.n.ImportThread     ] Imported 100000 documents [6921.373200442968/second]
+[2026-10-18T13:31:33,432][INFO ][d.k.p.n.ImportThread     ] Imported 150000 documents [7476.076555023923/second]
+[2026-10-18T13:31:38,812][INFO ][d.k.p.n.ImportThread     ] Imported 200000 documents [7860.399308284861/second]
+[2026-10-18T13:31:44,787][INFO ][d.k.p.n.ImportThread     ] Imported 250000 documents [7956.9687131990195/second]
+[2026-10-18T13:31:50,857][INFO ][d.k.p.n.ImportThread     ] Imported 300000 documents [8002.347355224199/second]
+[2026-10-18T13:31:56,978][INFO ][d.k.p.n.ImportThread     ] Imported 350000 documents [8025.6821829855535/second]
+[2026-10-18T13:32:03,084][INFO ][d.k.p.n.ImportThread     ] Imported 400000 documents [8045.699573577923/second]
+[2026-10-18T13:32:09,078][INFO ][d.k.p.n.ImportThread     ] Imported 450000 documents [8077.544426494345/second]
+[2026-10-18T13:32:15,783][INFO ][d.k.p.n.ImportThread     ] Imported 500000 documents [8010.894816951053/second]
+[2026-10-18T13:32:21,763][INFO ][d.k.p.n.ImportThread     ] Imported 550000 documents [8041.523503180057/second]
+[2026-10-18T13:32:27,707][INFO ][d.k.p.n.ImportThread     ] Imported 600000 documents [8071.133590712816/second]
+[2026-10-18T13:32:33,567][INFO ][d.k.p.n.ImportThread     ] Imported 650000 documents [8104.839212459008/second]
+[2026-10-18T13:32:39,159][INFO ][d.k.p.n.ImportThread     ] Imported 700000 documents [8159.364035854577/second]
+[2026-10-18T13:32:44,763][INFO ][d.k.p.n.ImportThread     ] Imported 750000 documents [8206.138191367143/second]
+[2026-10-18T13:32:50,694][INFO ][d.k.p.n.ImportThread     ] Imported 800000 documents [8219.797381994535/second]
+[2026-10-18T13:32:56,399][INFO ][d.k.p.n.ImportThread     ] Imported 850000 documents [8249.944191554/second]
+[2026-10-18T13:33:02,021][INFO ][d.k.p.n.ImportThread     ] Imported 900000 documents [8283.250347436335/second]
+[2026-10-18T13:33:08,164][INFO ][d.k.p.n.ImportThread     ] Imported 950000 documents [8275.549670720235/second]
+[2026-10-18T13:33:15,472][INFO ][d.k.p.n.ImportThread     ] Imported 1000000 documents [8189.739893860971/second]
+[2026-10-18T13:33:22,848][INFO ][d.k.p.n.ImportThread     ] Imported 1050000 documents [8109.360518999073/second]
+[2026-10-18T13:33:30,569][INFO ][d.k.p.n.ImportThread     ] Imported 1100000 documents [8017.434275260384/second]
+[2026-10-18T13:33:38,051][INFO ][d.k.p.n.ImportThread     ] Imported 1150000 documents [7948.411354478411/second]
+[2026-10-18T13:33:47,385][INFO ][o.o.i.MergeSchedulerConfig] Updating autoThrottle for index photon from [false] to [true]
+[2026-10-18T13:33:47,385][INFO ][o.o.i.MergeSchedulerConfig] Updating maxThreadCount from [0] to [2] and maxMergeCount from [0] to [7] for index photon.
+[2026-10-18T13:33:47,385][INFO ][o.o.i.MergeSchedulerConfig] Initialized index photon with maxMergeCount=7, maxThreadCount=2, autoThrottleEnabled=true
+[2026-10-18T13:33:47,388][INFO ][o.o.p.PluginsService     ] PluginService:onIndexModule index:[photon/KJy5z0ByRumMqXF9cBO6hg]
+[2026-10-18T13:33:47,392][INFO ][o.o.i.MergeSchedulerConfig] Updating autoThrottle for index photon from [true] to [true]
+[2026-10-18T13:33:47,396][INFO ][o.o.c.s.IndexScopedSettings] updating [index.refresh_interval] from [-1] to [1s]
+[2026-10-18T13:33:47,407][INFO ][o.o.c.s.IndexScopedSettings] updating [index.refresh_interval] from [-1] to [1s]
+[2026-10-18T13:33:49,100][INFO ][d.k.p.n.ImportThread     ] Finished import of 1199260 photon documents. (Total processing time: 155s)
+[2026-10-18T13:33:49,104][INFO ][o.o.i.MergeSchedulerConfig] Updating autoThrottle for index photon from [false] to [true]
+[2026-10-18T13:33:49,104][INFO ][o.o.i.MergeSchedulerConfig] Updating maxThreadCount from [0] to [2] and maxMergeCount from [0] to [7] for index photon.
+[2026-10-18T13:33:49,105][INFO ][o.o.i.MergeSchedulerConfig] Initialized index photon with maxMergeCount=7, maxThreadCount=2, autoThrottleEnabled=true
+[2026-10-18T13:33:49,105][INFO ][o.o.p.PluginsService     ] PluginService:onIndexModule index:[photon/KJy5z0ByRumMqXF9cBO6hg]
+[2026-10-18T13:33:49,113][INFO ][o.o.c.m.MetadataMappingService] [photon/KJy5z0ByRumMqXF9cBO6hg] update_mapping [_doc]
+[2026-10-18T13:33:49,127][INFO ][d.k.p.App                ] Database has been successfully set up with the following properties:
+DatabaseProperties{languages=[en, fa], importDate=Sat Oct 17 20:14:22 GMT 2026, supportStructuredQueries=true, supportGeometries=false, synonymsInstalled=false, extraTags=[seyra_name, seyra_name_fa, seyra_name_en, seyra_housenumber]}
+[2026-10-18T13:33:49,134][INFO ][d.k.p.App                ] Shutting down the service.
+[2026-10-18T13:33:49,134][INFO ][d.k.p.Server             ] Shutting down OpenSearch runner
+[2026-10-18T13:33:49,135][INFO ][o.o.n.Node               ] stopping ...
+[2026-10-18T13:33:49,819][INFO ][o.o.n.Node               ] stopped
+[2026-10-18T13:33:49,819][INFO ][o.o.n.Node               ] closing ...
+[2026-10-18T13:33:49,822][INFO ][o.o.n.Node               ] closed
+[2026-10-18T13:33:49,824][INFO ][stdout                   ] Closed all nodes.

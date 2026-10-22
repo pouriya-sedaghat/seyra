@@ -1,0 +1,59 @@
+{
+  "node": "v24.21.0",
+  "scope": "Actual shell scripts with recording Docker/ip stand-ins; no real Docker, VM or LAN execution.",
+  "results": [
+    {
+      "name": "R1 existing foreign volume is mounted before any ownership check",
+      "exit_code": 1,
+      "reproduced": false,
+      "detail": {
+        "volume_create_called": false,
+        "volume_inspect_called": true,
+        "foreign_volume_mount_attempted": false
+      },
+      "stdout": "FAIL RV0 rehearsal VM volume refused before any mount: volume seyra-rh-vm-docker (existing) is not this lab's: foreign-owner\n# 2026-10-20T04:21:01Z phases=[vm] failures=1\n",
+      "stderr": ""
+    },
+    {
+      "name": "R2 control: probe 0",
+      "exit_code": 2,
+      "reproduced": true,
+      "detail": {
+        "edge_stopped": false,
+        "persisted_trust_unchanged": true,
+        "listener_probe": "0"
+      },
+      "stdout": "",
+      "stderr": "edge: cannot establish whether review-edge is running ('test-owner'); nothing changed\n"
+    },
+    {
+      "name": "R2 control: probe error",
+      "exit_code": 2,
+      "reproduced": true,
+      "detail": {
+        "edge_stopped": false,
+        "persisted_trust_unchanged": true,
+        "listener_probe": "error"
+      },
+      "stdout": "",
+      "stderr": "edge: cannot establish whether review-edge is running ('test-owner'); nothing changed\n"
+    },
+    {
+      "name": "R2 closed TCP listener releases edge while persisted trust remains",
+      "exit_code": 2,
+      "reproduced": false,
+      "detail": {
+        "edge_stopped": false,
+        "persisted_trust_unchanged": true,
+        "listener_probe": "1"
+      },
+      "stdout": "",
+      "stderr": "edge: cannot establish whether review-edge is running ('test-owner'); nothing changed\n"
+    },
+    {
+      "name": "HARNESS_ERROR",
+      "reproduced": false,
+      "error": "Error: ping stub changed; review adapter needs inspection\n    at file://<VERIFIER>/verify.mjs:68:39\n    at ModuleJob.run (node:internal/modules/esm/module_job:561:25)\n    at async node:internal/modules/esm/loader:647:26\n    at async asyncRunEntryPointWithESMLoader (node:internal/modules/run_main:101:5)"
+    }
+  ]
+}

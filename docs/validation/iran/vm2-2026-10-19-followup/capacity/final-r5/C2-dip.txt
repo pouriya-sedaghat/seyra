@@ -1,0 +1,58 @@
+dip window 2026-10-19T05:01:29.975809228Z .. 2026-10-19T05:01:44.999054207Z (import still running at dip end: yes); free before the dip 41401028608; free after the import 41400180736
+{
+  "free_bytes_before": 41426714624,
+  "free_bytes_min_observed": 38179172352,
+  "free_bytes_min_observed_at": "2026-10-19T05:01:44.728Z",
+  "free_space_sampling": {
+    "interval_s": 5,
+    "samples": 32,
+    "filesystem_path": "/home/owner/seyra-gate-lab/home"
+  },
+  "steps": [
+    {
+      "step": "source-checksum",
+      "seconds": 0.001,
+      "free_bytes_min": 41426706432
+    },
+    {
+      "step": "source-validate",
+      "seconds": 0.264,
+      "free_bytes_min": 41426685952
+    },
+    {
+      "step": "source-copy",
+      "seconds": 0.001,
+      "free_bytes_min": 41426640896
+    },
+    {
+      "step": "render-import",
+      "seconds": 1.429,
+      "free_bytes_min": 41414828032
+    },
+    {
+      "step": "routing-build",
+      "seconds": 1.054,
+      "free_bytes_min": 41406816256
+    },
+    {
+      "step": "geocoder-build",
+      "seconds": 13.897,
+      "free_bytes_min": 41228263424
+    },
+    {
+      "step": "overpass-build",
+      "seconds": 0.33,
+      "free_bytes_min": 41402007552
+    },
+    {
+      "step": "map-styles",
+      "seconds": 0.009,
+      "free_bytes_min": 41401937920
+    },
+    {
+      "step": "staging-validation",
+      "seconds": 47.093,
+      "free_bytes_min": 38179172352
+    }
+  ]
+}

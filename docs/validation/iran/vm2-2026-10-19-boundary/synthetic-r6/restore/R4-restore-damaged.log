@@ -1,0 +1,2 @@
+[restore] selected backup generation seyra-backup-20261019T075153052Z-40a6ae (the only complete generation in /home/owner/seyra-synth/restore-lab6/backup-damaged)
+seyra-maps: backup generation seyra-backup-20261019T075153052Z-40a6ae is not usable: seyra_app.sql does not match its recorded SHA-256 (corrupted or modified)

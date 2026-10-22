@@ -1,0 +1,1056 @@
+2026-10-18T14:02:55Z free_bytes=62999662592 free_inodes=6012838 mem_avail=6341300224 swap_used=142340096 load1=2.02 host_ctr=seyra-iran-restore cpu=110.95% mem=471.7MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=90.01MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.02% mem=49.15MiB / 7.204GiB
+ctr seyra-jobs-source-info-run-92b1bd7e37f0 cpu=197.10% mem=15.19MiB / 7.204GiB
+2026-10-18T14:03:09Z free_bytes=62422302720 free_inodes=6012318 mem_avail=5966929920 swap_used=142340096 load1=2.03 host_ctr=seyra-iran-restore cpu=156.51% mem=946.3MiB / 7.204GiB
+ctr seyra-jobs-render-import-run-570cc3d6a825 cpu=48.29% mem=281.6MiB / 7.204GiB
+ctr unruffled_colden cpu=0.04% mem=133.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=104.83% mem=210.8MiB / 7.204GiB
+2026-10-18T14:03:21Z free_bytes=60982812672 free_inodes=6012316 mem_avail=5775507456 swap_used=142331904 load1=2.26 host_ctr=seyra-iran-restore cpu=87.32% mem=1.093GiB / 7.204GiB
+ctr seyra-jobs-render-import-run-570cc3d6a825 cpu=0.51% mem=392.4MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=110.1MiB / 7.204GiB
+ctr seyra-db-1 cpu=87.47% mem=243.4MiB / 7.204GiB
+2026-10-18T14:03:34Z free_bytes=60416978944 free_inodes=6012304 mem_avail=5810880512 swap_used=142336000 load1=2.38 host_ctr=seyra-iran-restore cpu=155.96% mem=1.059GiB / 7.204GiB
+ctr seyra-jobs-render-import-run-570cc3d6a825 cpu=102.75% mem=398.6MiB / 7.204GiB
+ctr unruffled_colden cpu=0.04% mem=110.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=31.74% mem=250.3MiB / 7.204GiB
+2026-10-18T14:03:47Z free_bytes=60132536320 free_inodes=6012302 mem_avail=5770670080 swap_used=142331904 load1=2.59 host_ctr=seyra-iran-restore cpu=159.96% mem=1.063GiB / 7.204GiB
+ctr seyra-jobs-render-import-run-570cc3d6a825 cpu=105.05% mem=399.6MiB / 7.204GiB
+ctr unruffled_colden cpu=0.06% mem=110.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=26.97% mem=254.7MiB / 7.204GiB
+2026-10-18T14:04:00Z free_bytes=59801411584 free_inodes=6012296 mem_avail=5803053056 swap_used=142323712 load1=2.35 host_ctr=seyra-iran-restore cpu=153.04% mem=1.066GiB / 7.204GiB
+ctr seyra-jobs-render-import-run-570cc3d6a825 cpu=105.00% mem=399.4MiB / 7.204GiB
+ctr unruffled_colden cpu=0.03% mem=110.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=68.46% mem=260.9MiB / 7.204GiB
+2026-10-18T14:04:13Z free_bytes=59424563200 free_inodes=6012295 mem_avail=5803704320 swap_used=142327808 load1=2.34 host_ctr=seyra-iran-restore cpu=160.27% mem=1.069GiB / 7.204GiB
+ctr seyra-jobs-render-import-run-570cc3d6a825 cpu=104.75% mem=399.3MiB / 7.204GiB
+ctr unruffled_colden cpu=0.03% mem=110.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=62.64% mem=267.8MiB / 7.204GiB
+2026-10-18T14:04:27Z free_bytes=59079426048 free_inodes=6012282 mem_avail=5820104704 swap_used=142290944 load1=2.18 host_ctr=seyra-iran-restore cpu=157.58% mem=1.073GiB / 7.204GiB
+ctr seyra-jobs-render-import-run-570cc3d6a825 cpu=102.06% mem=399.5MiB / 7.204GiB
+ctr unruffled_colden cpu=0.03% mem=110.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=16.01% mem=275.9MiB / 7.204GiB
+2026-10-18T14:04:40Z free_bytes=58934599680 free_inodes=6012282 mem_avail=5780525056 swap_used=142237696 load1=2.30 host_ctr=seyra-iran-restore cpu=76.14% mem=1.114GiB / 7.204GiB
+ctr seyra-jobs-render-import-run-570cc3d6a825 cpu=36.42% mem=400.1MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=110.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=48.32% mem=324.8MiB / 7.204GiB
+2026-10-18T14:04:54Z free_bytes=58876772352 free_inodes=6012279 mem_avail=5818146816 swap_used=142237696 load1=2.50 host_ctr=seyra-iran-restore cpu=45.79% mem=1.092GiB / 7.204GiB
+ctr seyra-jobs-render-import-run-570cc3d6a825 cpu=15.39% mem=400.6MiB / 7.204GiB
+ctr unruffled_colden cpu=0.03% mem=101.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=21.37% mem=315.5MiB / 7.204GiB
+2026-10-18T14:05:07Z free_bytes=60793085952 free_inodes=6012248 mem_avail=5925732352 swap_used=142237696 load1=2.39 host_ctr=seyra-iran-restore cpu=24.19% mem=937.5MiB / 7.204GiB
+ctr seyra-jobs-render-import-run-570cc3d6a825 cpu=0.00% mem=237.6MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=101.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=39.95% mem=296MiB / 7.204GiB
+2026-10-18T14:05:20Z free_bytes=60197707776 free_inodes=6012241 mem_avail=5923639296 swap_used=142237696 load1=2.71 host_ctr=seyra-iran-restore cpu=21.52% mem=1001MiB / 7.204GiB
+ctr seyra-jobs-render-import-run-570cc3d6a825 cpu=0.00% mem=237.2MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=100.1MiB / 7.204GiB
+ctr seyra-db-1 cpu=23.64% mem=316.6MiB / 7.204GiB
+2026-10-18T14:05:33Z free_bytes=60249464832 free_inodes=6012231 mem_avail=5826740224 swap_used=142176256 load1=2.92 host_ctr=seyra-iran-restore cpu=19.19% mem=982.4MiB / 7.204GiB
+ctr seyra-jobs-render-import-run-570cc3d6a825 cpu=0.00% mem=237.4MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=100.1MiB / 7.204GiB
+ctr seyra-db-1 cpu=23.36% mem=347.7MiB / 7.204GiB
+2026-10-18T14:05:47Z free_bytes=59773394944 free_inodes=6012211 mem_avail=5821390848 swap_used=142176256 load1=2.87 host_ctr=seyra-iran-restore cpu=109.43% mem=984.5MiB / 7.204GiB
+ctr seyra-jobs-render-import-run-570cc3d6a825 cpu=0.00% mem=237.6MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=100.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=34.35% mem=333.2MiB / 7.204GiB
+2026-10-18T14:05:59Z free_bytes=59381702656 free_inodes=6012203 mem_avail=5977726976 swap_used=142176256 load1=2.88 host_ctr=seyra-iran-restore cpu=21.24% mem=952.5MiB / 7.204GiB
+ctr seyra-jobs-render-import-run-570cc3d6a825 cpu=0.00% mem=237.7MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=100.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=59.53% mem=323.4MiB / 7.204GiB
+2026-10-18T14:06:12Z free_bytes=60260945920 free_inodes=6012264 mem_avail=6142091264 swap_used=142176256 load1=2.54 host_ctr=seyra-iran-restore cpu=8.23% mem=625.9MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=99.89MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.13% mem=236.4MiB / 7.204GiB
+2026-10-18T14:06:26Z free_bytes=60087730176 free_inodes=6012286 mem_avail=6191382528 swap_used=141402112 load1=2.33 host_ctr=seyra-iran-restore cpu=104.20% mem=804.8MiB / 7.204GiB
+ctr unruffled_colden cpu=0.46% mem=101.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=121.45% mem=367.2MiB / 7.204GiB
+2026-10-18T14:06:39Z free_bytes=60251033600 free_inodes=6012228 mem_avail=6131052544 swap_used=141402112 load1=2.21 host_ctr=seyra-iran-restore cpu=133.40% mem=933.4MiB / 7.204GiB
+ctr seyra-jobs-valhalla-build-run-d4da1438e56e cpu=128.38% mem=205.6MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=100.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=3.25% mem=367.3MiB / 7.204GiB
+2026-10-18T14:06:52Z free_bytes=59881910272 free_inodes=6012226 mem_avail=6147731456 swap_used=141373440 load1=1.94 host_ctr=seyra-iran-restore cpu=136.03% mem=972.1MiB / 7.204GiB
+ctr seyra-jobs-valhalla-build-run-d4da1438e56e cpu=132.47% mem=235.5MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=100.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=7.51% mem=355.1MiB / 7.204GiB
+2026-10-18T14:07:05Z free_bytes=59512803328 free_inodes=6012225 mem_avail=6150131712 swap_used=141373440 load1=1.79 host_ctr=seyra-iran-restore cpu=132.74% mem=961.6MiB / 7.204GiB
+ctr seyra-jobs-valhalla-build-run-d4da1438e56e cpu=136.86% mem=252.1MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=100.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.13% mem=342.6MiB / 7.204GiB
+2026-10-18T14:07:18Z free_bytes=59076591616 free_inodes=6012225 mem_avail=6122348544 swap_used=141373440 load1=1.62 host_ctr=seyra-iran-restore cpu=140.17% mem=964.2MiB / 7.204GiB
+ctr seyra-jobs-valhalla-build-run-d4da1438e56e cpu=131.95% mem=270.6MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=100.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=1.73% mem=336.3MiB / 7.204GiB
+2026-10-18T14:07:31Z free_bytes=58828701696 free_inodes=6012223 mem_avail=6220013568 swap_used=141373440 load1=1.79 host_ctr=seyra-iran-restore cpu=16.15% mem=1.556GiB / 7.204GiB
+ctr seyra-jobs-valhalla-build-run-d4da1438e56e cpu=11.16% mem=1.082GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=100.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.07% mem=327.8MiB / 7.204GiB
+2026-10-18T14:07:44Z free_bytes=58828701696 free_inodes=6012222 mem_avail=6194888704 swap_used=141373440 load1=1.81 host_ctr=seyra-iran-restore cpu=121.37% mem=1.682GiB / 7.204GiB
+ctr seyra-jobs-valhalla-build-run-d4da1438e56e cpu=111.05% mem=1.029GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=100.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.44% mem=320.5MiB / 7.204GiB
+2026-10-18T14:07:57Z free_bytes=58119573504 free_inodes=6012221 mem_avail=6217367552 swap_used=141373440 load1=1.78 host_ctr=seyra-iran-restore cpu=41.78% mem=1.741GiB / 7.204GiB
+ctr seyra-jobs-valhalla-build-run-d4da1438e56e cpu=52.97% mem=1.313GiB / 7.204GiB
+ctr unruffled_colden cpu=0.08% mem=101.1MiB / 7.204GiB
+ctr seyra-db-1 cpu=5.49% mem=318.8MiB / 7.204GiB
+2026-10-18T14:08:10Z free_bytes=57828208640 free_inodes=6010753 mem_avail=6128574464 swap_used=141373440 load1=1.98 host_ctr=seyra-iran-restore cpu=199.87% mem=2.229GiB / 7.204GiB
+ctr seyra-jobs-valhalla-build-run-d4da1438e56e cpu=199.42% mem=1.737GiB / 7.204GiB
+ctr unruffled_colden cpu=0.02% mem=100.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.01% mem=318MiB / 7.204GiB
+2026-10-18T14:08:24Z free_bytes=57417203712 free_inodes=6009634 mem_avail=4841988096 swap_used=141373440 load1=2.27 host_ctr=seyra-iran-restore cpu=198.51% mem=3.435GiB / 7.204GiB
+ctr seyra-jobs-valhalla-build-run-d4da1438e56e cpu=206.04% mem=1.533GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=100.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.02% mem=172.9MiB / 7.204GiB
+2026-10-18T14:08:37Z free_bytes=57150709760 free_inodes=6009627 mem_avail=5684641792 swap_used=252993536 load1=2.13 host_ctr=seyra-iran-restore cpu=98.02% mem=1.387GiB / 7.204GiB
+ctr seyra-jobs-valhalla-build-run-d4da1438e56e cpu=100.40% mem=937.9MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=99.57MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.01% mem=168.9MiB / 7.204GiB
+2026-10-18T14:08:50Z free_bytes=57117503488 free_inodes=6009452 mem_avail=5465051136 swap_used=253054976 load1=2.04 host_ctr=seyra-iran-restore cpu=77.34% mem=1.435GiB / 7.204GiB
+ctr seyra-jobs-valhalla-build-run-d4da1438e56e cpu=50.18% mem=1.086GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=99.62MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.05% mem=167MiB / 7.204GiB
+2026-10-18T14:09:04Z free_bytes=57095073792 free_inodes=6009452 mem_avail=4774625280 swap_used=253054976 load1=2.08 host_ctr=seyra-iran-restore cpu=59.15% mem=2.198GiB / 7.204GiB
+ctr seyra-jobs-valhalla-build-run-d4da1438e56e cpu=70.69% mem=2.027GiB / 7.204GiB
+ctr unruffled_colden cpu=0.02% mem=99.64MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=164.7MiB / 7.204GiB
+2026-10-18T14:09:18Z free_bytes=57064873984 free_inodes=6009450 mem_avail=3934773248 swap_used=254083072 load1=2.12 host_ctr=seyra-iran-restore cpu=106.68% mem=2.916GiB / 7.204GiB
+ctr seyra-jobs-valhalla-build-run-d4da1438e56e cpu=42.87% mem=2.396GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=100.1MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=162.9MiB / 7.204GiB
+2026-10-18T14:09:32Z free_bytes=59383255040 free_inodes=6009365 mem_avail=5006913536 swap_used=254074880 load1=2.01 host_ctr=seyra-iran-restore cpu=2.45% mem=1.785GiB / 7.204GiB
+ctr seyra-jobs-valhalla-build-run-d4da1438e56e cpu=4.85% mem=1.256GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=100.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.86% mem=162.6MiB / 7.204GiB
+2026-10-18T14:09:45Z free_bytes=59343147008 free_inodes=6008361 mem_avail=6207524864 swap_used=149524480 load1=1.86 host_ctr=seyra-iran-restore cpu=30.20% mem=780.8MiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=46.16% mem=278.1MiB / 7.204GiB
+ctr unruffled_colden cpu=0.02% mem=141.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=162.5MiB / 7.204GiB
+2026-10-18T14:09:58Z free_bytes=57795825664 free_inodes=6007940 mem_avail=5411377152 swap_used=149520384 load1=1.98 host_ctr=seyra-iran-restore cpu=63.23% mem=1.477GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=51.72% mem=909.6MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=141.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.26% mem=162.7MiB / 7.204GiB
+2026-10-18T14:10:12Z free_bytes=56473878528 free_inodes=6007895 mem_avail=5363073024 swap_used=149893120 load1=2.07 host_ctr=seyra-iran-restore cpu=76.17% mem=1.732GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=57.01% mem=1.153GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=141.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.01% mem=161.9MiB / 7.204GiB
+2026-10-18T14:10:25Z free_bytes=55295201280 free_inodes=6007855 mem_avail=5196066816 swap_used=150581248 load1=2.13 host_ctr=seyra-iran-restore cpu=45.31% mem=1.757GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=45.17% mem=1.259GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=141.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.28% mem=155.4MiB / 7.204GiB
+2026-10-18T14:10:38Z free_bytes=54833979392 free_inodes=6007839 mem_avail=5187260416 swap_used=150581248 load1=2.10 host_ctr=seyra-iran-restore cpu=6.92% mem=1.708GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=181.62% mem=1.265GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=141.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:10:52Z free_bytes=53778206720 free_inodes=6007813 mem_avail=5224353792 swap_used=150544384 load1=2.44 host_ctr=seyra-iran-restore cpu=180.87% mem=1.726GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=193.02% mem=1.27GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=141.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:11:05Z free_bytes=53030563840 free_inodes=6007796 mem_avail=5146570752 swap_used=150544384 load1=2.75 host_ctr=seyra-iran-restore cpu=44.92% mem=1.785GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=46.21% mem=1.257GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=141.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:11:18Z free_bytes=52715769856 free_inodes=6007782 mem_avail=5184270336 swap_used=150544384 load1=2.74 host_ctr=seyra-iran-restore cpu=70.38% mem=1.764GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=15.42% mem=1.13GiB / 7.204GiB
+ctr unruffled_colden cpu=0.04% mem=141.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:11:32Z free_bytes=52261212160 free_inodes=6007773 mem_avail=5322649600 swap_used=150470656 load1=3.21 host_ctr=seyra-iran-restore cpu=24.67% mem=1.764GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=18.89% mem=1.327GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=141.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:11:45Z free_bytes=51693228032 free_inodes=6007759 mem_avail=5277454336 swap_used=150470656 load1=3.03 host_ctr=seyra-iran-restore cpu=37.33% mem=1.812GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=26.14% mem=1.353GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=141.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.38% mem=155.7MiB / 7.204GiB
+2026-10-18T14:11:58Z free_bytes=51081973760 free_inodes=6007739 mem_avail=5299544064 swap_used=150470656 load1=3.43 host_ctr=seyra-iran-restore cpu=20.89% mem=1.841GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=11.47% mem=1.388GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=140.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:12:11Z free_bytes=50765811712 free_inodes=6007728 mem_avail=5287182336 swap_used=150470656 load1=3.33 host_ctr=seyra-iran-restore cpu=21.22% mem=1.717GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=197.28% mem=1.359GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=140.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.6MiB / 7.204GiB
+2026-10-18T14:12:24Z free_bytes=51805040640 free_inodes=6007718 mem_avail=5287673856 swap_used=149684224 load1=3.20 host_ctr=seyra-iran-restore cpu=108.21% mem=1.727GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=82.86% mem=1.286GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=140.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.58% mem=155.4MiB / 7.204GiB
+2026-10-18T14:12:37Z free_bytes=51805036544 free_inodes=6007717 mem_avail=5198323712 swap_used=147599360 load1=2.85 host_ctr=seyra-iran-restore cpu=99.45% mem=1.815GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=94.56% mem=1.38GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=140.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:12:51Z free_bytes=53404409856 free_inodes=6001920 mem_avail=5600354304 swap_used=147599360 load1=2.65 host_ctr=seyra-iran-restore cpu=12.17% mem=1.385GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=103.52% mem=957.7MiB / 7.204GiB
+ctr unruffled_colden cpu=0.02% mem=139.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:13:04Z free_bytes=53304561664 free_inodes=6001927 mem_avail=5658742784 swap_used=147578880 load1=2.42 host_ctr=seyra-iran-restore cpu=100.80% mem=1.394GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=104.64% mem=968.1MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=139.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.2MiB / 7.204GiB
+2026-10-18T14:13:17Z free_bytes=53225222144 free_inodes=6001928 mem_avail=5667282944 swap_used=147578880 load1=2.33 host_ctr=seyra-iran-restore cpu=105.23% mem=1.406GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=104.72% mem=974.6MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=139.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:13:30Z free_bytes=53142335488 free_inodes=6001925 mem_avail=5662978048 swap_used=147578880 load1=2.60 host_ctr=seyra-iran-restore cpu=99.56% mem=1.41GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=106.18% mem=982.8MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=139.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.1MiB / 7.204GiB
+2026-10-18T14:13:43Z free_bytes=53054529536 free_inodes=6001925 mem_avail=5660516352 swap_used=147554304 load1=2.25 host_ctr=seyra-iran-restore cpu=106.55% mem=1.412GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=100.57% mem=984.1MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=139.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.35% mem=155.4MiB / 7.204GiB
+2026-10-18T14:13:56Z free_bytes=52973805568 free_inodes=6001924 mem_avail=5669531648 swap_used=147554304 load1=1.97 host_ctr=seyra-iran-restore cpu=100.84% mem=1.417GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=100.95% mem=990.7MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.46% mem=155.9MiB / 7.204GiB
+2026-10-18T14:14:08Z free_bytes=52897738752 free_inodes=6001925 mem_avail=5678305280 swap_used=147218432 load1=1.82 host_ctr=seyra-iran-restore cpu=110.90% mem=1.413GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=100.78% mem=984.2MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.6MiB / 7.204GiB
+2026-10-18T14:14:21Z free_bytes=52816441344 free_inodes=6001925 mem_avail=5687521280 swap_used=147218432 load1=1.71 host_ctr=seyra-iran-restore cpu=101.00% mem=1.406GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=100.87% mem=979MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.2MiB / 7.204GiB
+2026-10-18T14:14:34Z free_bytes=52735135744 free_inodes=6001924 mem_avail=5696651264 swap_used=147218432 load1=1.67 host_ctr=seyra-iran-restore cpu=101.63% mem=1.406GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=101.10% mem=978.1MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.6MiB / 7.204GiB
+2026-10-18T14:14:48Z free_bytes=52652036096 free_inodes=6001924 mem_avail=5695025152 swap_used=147218432 load1=1.52 host_ctr=seyra-iran-restore cpu=100.41% mem=1.402GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=100.86% mem=975.3MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.6MiB / 7.204GiB
+2026-10-18T14:15:01Z free_bytes=52562374656 free_inodes=6001924 mem_avail=5700481024 swap_used=147218432 load1=1.41 host_ctr=seyra-iran-restore cpu=100.65% mem=1.403GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=102.04% mem=976MiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:15:14Z free_bytes=52480774144 free_inodes=6001923 mem_avail=5703409664 swap_used=147218432 load1=1.34 host_ctr=seyra-iran-restore cpu=106.30% mem=1.401GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=100.80% mem=974.1MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.8MiB / 7.204GiB
+2026-10-18T14:15:27Z free_bytes=52404350976 free_inodes=6001923 mem_avail=5672808448 swap_used=147218432 load1=1.27 host_ctr=seyra-iran-restore cpu=56.96% mem=1.415GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=4.13% mem=989MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.2MiB / 7.204GiB
+2026-10-18T14:15:40Z free_bytes=52401082368 free_inodes=6001907 mem_avail=5659398144 swap_used=147218432 load1=1.22 host_ctr=seyra-iran-restore cpu=26.67% mem=1.43GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=9.33% mem=1004MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:15:53Z free_bytes=52341575680 free_inodes=6001897 mem_avail=5588062208 swap_used=147218432 load1=1.32 host_ctr=seyra-iran-restore cpu=243.05% mem=1.484GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=226.65% mem=1.033GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.5MiB / 7.204GiB
+2026-10-18T14:16:06Z free_bytes=52320628736 free_inodes=6001894 mem_avail=5630513152 swap_used=147218432 load1=1.38 host_ctr=seyra-iran-restore cpu=57.77% mem=1.493GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=224.55% mem=1.074GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.1MiB / 7.204GiB
+2026-10-18T14:16:19Z free_bytes=52306739200 free_inodes=6001882 mem_avail=5544120320 swap_used=147218432 load1=1.56 host_ctr=seyra-iran-restore cpu=224.15% mem=1.523GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=215.07% mem=1.073GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.6MiB / 7.204GiB
+2026-10-18T14:16:33Z free_bytes=52293222400 free_inodes=6001882 mem_avail=5530402816 swap_used=147165184 load1=1.82 host_ctr=seyra-iran-restore cpu=218.97% mem=1.528GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=222.89% mem=1.075GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.36% mem=155.3MiB / 7.204GiB
+2026-10-18T14:16:46Z free_bytes=52278603776 free_inodes=6001882 mem_avail=5547151360 swap_used=147165184 load1=2.60 host_ctr=seyra-iran-restore cpu=208.08% mem=1.53GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=218.16% mem=1.084GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.6MiB / 7.204GiB
+2026-10-18T14:16:59Z free_bytes=52263735296 free_inodes=6001882 mem_avail=5539414016 swap_used=147165184 load1=2.42 host_ctr=seyra-iran-restore cpu=216.69% mem=1.539GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=195.44% mem=1.089GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.66% mem=155.5MiB / 7.204GiB
+2026-10-18T14:17:12Z free_bytes=52252835840 free_inodes=6001880 mem_avail=5565624320 swap_used=147165184 load1=2.55 host_ctr=seyra-iran-restore cpu=221.90% mem=1.542GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=228.94% mem=1.092GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:17:25Z free_bytes=52246294528 free_inodes=6001876 mem_avail=5564227584 swap_used=147165184 load1=2.77 host_ctr=seyra-iran-restore cpu=71.07% mem=1.579GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=72.63% mem=1.076GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=1.21% mem=155.4MiB / 7.204GiB
+2026-10-18T14:17:38Z free_bytes=52237488128 free_inodes=6001875 mem_avail=5572280320 swap_used=147165184 load1=2.68 host_ctr=seyra-iran-restore cpu=104.93% mem=1.534GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=96.65% mem=1.082GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:17:51Z free_bytes=52230402048 free_inodes=6004116 mem_avail=5561688064 swap_used=147165184 load1=2.60 host_ctr=seyra-iran-restore cpu=195.22% mem=1.536GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=222.74% mem=1.076GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=139MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.1MiB / 7.204GiB
+2026-10-18T14:18:05Z free_bytes=52222418944 free_inodes=6004106 mem_avail=5593505792 swap_used=147165184 load1=2.57 host_ctr=seyra-iran-restore cpu=232.47% mem=1.521GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=214.03% mem=1.069GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:18:18Z free_bytes=52203110400 free_inodes=6004108 mem_avail=5561466880 swap_used=147165184 load1=2.65 host_ctr=seyra-iran-restore cpu=219.04% mem=1.524GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=237.44% mem=1.075GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:18:31Z free_bytes=52182679552 free_inodes=6004107 mem_avail=5562425344 swap_used=147165184 load1=2.59 host_ctr=seyra-iran-restore cpu=238.99% mem=1.527GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=248.14% mem=1.078GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=5.22% mem=155.3MiB / 7.204GiB
+2026-10-18T14:18:44Z free_bytes=52154834944 free_inodes=6004107 mem_avail=5572313088 swap_used=147079168 load1=2.43 host_ctr=seyra-iran-restore cpu=239.76% mem=1.529GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=231.86% mem=1.079GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.39% mem=155.5MiB / 7.204GiB
+2026-10-18T14:18:57Z free_bytes=52122648576 free_inodes=6004107 mem_avail=5587341312 swap_used=147079168 load1=2.40 host_ctr=seyra-iran-restore cpu=244.61% mem=1.53GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=236.84% mem=1.08GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:19:10Z free_bytes=52092887040 free_inodes=6004105 mem_avail=5573484544 swap_used=147079168 load1=2.50 host_ctr=seyra-iran-restore cpu=232.99% mem=1.531GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=224.16% mem=1.081GiB / 7.204GiB
+ctr unruffled_colden cpu=0.03% mem=138.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=5.29% mem=155.3MiB / 7.204GiB
+2026-10-18T14:19:23Z free_bytes=52061474816 free_inodes=6004105 mem_avail=5579870208 swap_used=147079168 load1=2.46 host_ctr=seyra-iran-restore cpu=228.38% mem=1.535GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=217.16% mem=1.083GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:19:36Z free_bytes=52028256256 free_inodes=6004104 mem_avail=5572157440 swap_used=147079168 load1=2.36 host_ctr=seyra-iran-restore cpu=219.44% mem=1.534GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=234.58% mem=1.084GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=5.51% mem=155.4MiB / 7.204GiB
+2026-10-18T14:19:50Z free_bytes=51997188096 free_inodes=6004104 mem_avail=5585301504 swap_used=147079168 load1=2.38 host_ctr=seyra-iran-restore cpu=219.56% mem=1.534GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=239.40% mem=1.084GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.2MiB / 7.204GiB
+2026-10-18T14:20:03Z free_bytes=51966296064 free_inodes=6004104 mem_avail=5582983168 swap_used=147079168 load1=2.37 host_ctr=seyra-iran-restore cpu=241.09% mem=1.535GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=234.16% mem=1.083GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.6MiB / 7.204GiB
+2026-10-18T14:20:16Z free_bytes=51936096256 free_inodes=6004104 mem_avail=5574180864 swap_used=147079168 load1=2.42 host_ctr=seyra-iran-restore cpu=218.16% mem=1.534GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=223.88% mem=1.082GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.1MiB / 7.204GiB
+2026-10-18T14:20:29Z free_bytes=51905736704 free_inodes=6004104 mem_avail=5565513728 swap_used=147079168 load1=2.52 host_ctr=seyra-iran-restore cpu=218.88% mem=1.535GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=226.83% mem=1.085GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.5MiB / 7.204GiB
+2026-10-18T14:20:42Z free_bytes=51874721792 free_inodes=6004104 mem_avail=5571784704 swap_used=147079168 load1=2.40 host_ctr=seyra-iran-restore cpu=218.41% mem=1.536GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=235.61% mem=1.086GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:20:55Z free_bytes=51845001216 free_inodes=6004104 mem_avail=5563645952 swap_used=147079168 load1=2.26 host_ctr=seyra-iran-restore cpu=231.30% mem=1.536GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=233.12% mem=1.086GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.42% mem=155.2MiB / 7.204GiB
+2026-10-18T14:21:08Z free_bytes=51814309888 free_inodes=6004103 mem_avail=5564256256 swap_used=147079168 load1=2.43 host_ctr=seyra-iran-restore cpu=249.04% mem=1.537GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=217.57% mem=1.086GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.44% mem=155.3MiB / 7.204GiB
+2026-10-18T14:21:22Z free_bytes=51783630848 free_inodes=6004103 mem_avail=5573931008 swap_used=147079168 load1=2.54 host_ctr=seyra-iran-restore cpu=244.99% mem=1.536GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=243.60% mem=1.088GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.1MiB / 7.204GiB
+2026-10-18T14:21:35Z free_bytes=51750842368 free_inodes=6004103 mem_avail=5433544704 swap_used=147079168 load1=2.45 host_ctr=seyra-iran-restore cpu=221.43% mem=1.541GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=223.73% mem=1.091GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.2MiB / 7.204GiB
+2026-10-18T14:21:48Z free_bytes=51722469376 free_inodes=6004103 mem_avail=5570740224 swap_used=147079168 load1=2.35 host_ctr=seyra-iran-restore cpu=221.82% mem=1.544GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=212.43% mem=1.093GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=5.05% mem=155.4MiB / 7.204GiB
+2026-10-18T14:22:01Z free_bytes=51700498432 free_inodes=6004103 mem_avail=5570777088 swap_used=147079168 load1=2.11 host_ctr=seyra-iran-restore cpu=217.23% mem=1.545GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=208.48% mem=1.094GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:22:14Z free_bytes=51685892096 free_inodes=6004103 mem_avail=5563588608 swap_used=147079168 load1=2.24 host_ctr=seyra-iran-restore cpu=223.83% mem=1.552GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=217.59% mem=1.107GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.8MiB / 7.204GiB
+2026-10-18T14:22:27Z free_bytes=51668189184 free_inodes=6004101 mem_avail=5534466048 swap_used=147079168 load1=2.49 host_ctr=seyra-iran-restore cpu=275.55% mem=1.575GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=241.92% mem=1.111GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:22:40Z free_bytes=51652743168 free_inodes=6004101 mem_avail=5547728896 swap_used=147079168 load1=2.56 host_ctr=seyra-iran-restore cpu=215.89% mem=1.551GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=210.64% mem=1.101GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:22:54Z free_bytes=51626569728 free_inodes=6004104 mem_avail=5535113216 swap_used=147079168 load1=2.44 host_ctr=seyra-iran-restore cpu=227.89% mem=1.553GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=220.05% mem=1.103GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.38% mem=155.5MiB / 7.204GiB
+2026-10-18T14:23:07Z free_bytes=51601625088 free_inodes=6004104 mem_avail=5565337600 swap_used=147079168 load1=2.41 host_ctr=seyra-iran-restore cpu=247.74% mem=1.558GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=261.26% mem=1.104GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155MiB / 7.204GiB
+2026-10-18T14:23:20Z free_bytes=51575046144 free_inodes=6004103 mem_avail=5528465408 swap_used=147079168 load1=2.57 host_ctr=seyra-iran-restore cpu=215.74% mem=1.556GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=223.04% mem=1.106GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=5.38% mem=155.4MiB / 7.204GiB
+2026-10-18T14:23:33Z free_bytes=51548708864 free_inodes=6004103 mem_avail=5560762368 swap_used=147058688 load1=2.44 host_ctr=seyra-iran-restore cpu=223.94% mem=1.559GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=228.72% mem=1.108GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.45% mem=155.1MiB / 7.204GiB
+2026-10-18T14:23:46Z free_bytes=51521855488 free_inodes=6004103 mem_avail=5545934848 swap_used=147058688 load1=2.41 host_ctr=seyra-iran-restore cpu=219.24% mem=1.562GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=220.32% mem=1.111GiB / 7.204GiB
+ctr unruffled_colden cpu=0.16% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:23:59Z free_bytes=51497398272 free_inodes=6004103 mem_avail=5516210176 swap_used=147054592 load1=2.35 host_ctr=seyra-iran-restore cpu=229.24% mem=1.563GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=213.33% mem=1.113GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.2MiB / 7.204GiB
+2026-10-18T14:24:12Z free_bytes=51469729792 free_inodes=6004103 mem_avail=5506826240 swap_used=147050496 load1=2.20 host_ctr=seyra-iran-restore cpu=245.21% mem=1.597GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=253.08% mem=1.146GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:24:25Z free_bytes=51441442816 free_inodes=6004103 mem_avail=5527871488 swap_used=147050496 load1=2.25 host_ctr=seyra-iran-restore cpu=229.36% mem=1.565GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=246.35% mem=1.115GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=5.34% mem=155.7MiB / 7.204GiB
+2026-10-18T14:24:39Z free_bytes=51410706432 free_inodes=6004103 mem_avail=5547458560 swap_used=147050496 load1=2.27 host_ctr=seyra-iran-restore cpu=224.58% mem=1.565GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=230.23% mem=1.115GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155MiB / 7.204GiB
+2026-10-18T14:24:52Z free_bytes=51379339264 free_inodes=6004103 mem_avail=5517242368 swap_used=147050496 load1=2.44 host_ctr=seyra-iran-restore cpu=230.99% mem=1.568GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=217.98% mem=1.117GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.8MiB / 7.204GiB
+2026-10-18T14:25:05Z free_bytes=51351785472 free_inodes=6004103 mem_avail=5542473728 swap_used=147050496 load1=2.60 host_ctr=seyra-iran-restore cpu=227.34% mem=1.573GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=243.13% mem=1.122GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:25:18Z free_bytes=51323650048 free_inodes=6004103 mem_avail=5508530176 swap_used=147050496 load1=2.47 host_ctr=seyra-iran-restore cpu=225.35% mem=1.57GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=228.05% mem=1.119GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=139MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:25:31Z free_bytes=51292643328 free_inodes=6004103 mem_avail=5516701696 swap_used=147050496 load1=2.37 host_ctr=seyra-iran-restore cpu=223.02% mem=1.57GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=220.39% mem=1.121GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=5.21% mem=155.4MiB / 7.204GiB
+2026-10-18T14:25:44Z free_bytes=51272613888 free_inodes=6004103 mem_avail=5515051008 swap_used=147050496 load1=2.47 host_ctr=seyra-iran-restore cpu=227.85% mem=1.572GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=241.89% mem=1.124GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.46% mem=155.3MiB / 7.204GiB
+2026-10-18T14:25:57Z free_bytes=51250978816 free_inodes=6004103 mem_avail=5536313344 swap_used=147042304 load1=2.36 host_ctr=seyra-iran-restore cpu=229.76% mem=1.58GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=223.93% mem=1.126GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:26:10Z free_bytes=51229937664 free_inodes=6004105 mem_avail=5530161152 swap_used=147042304 load1=2.39 host_ctr=seyra-iran-restore cpu=245.09% mem=1.587GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=255.45% mem=1.152GiB / 7.204GiB
+ctr unruffled_colden cpu=0.07% mem=138.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:26:24Z free_bytes=51207135232 free_inodes=6004104 mem_avail=5512392704 swap_used=147042304 load1=2.46 host_ctr=seyra-iran-restore cpu=229.85% mem=1.576GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=217.62% mem=1.122GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.6MiB / 7.204GiB
+2026-10-18T14:26:37Z free_bytes=51181199360 free_inodes=6004103 mem_avail=5505273856 swap_used=147042304 load1=2.58 host_ctr=seyra-iran-restore cpu=218.13% mem=1.579GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=220.30% mem=1.13GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:26:50Z free_bytes=51157426176 free_inodes=6004103 mem_avail=5502373888 swap_used=147042304 load1=2.49 host_ctr=seyra-iran-restore cpu=228.37% mem=1.586GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=222.11% mem=1.133GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.5MiB / 7.204GiB
+2026-10-18T14:27:03Z free_bytes=51131236352 free_inodes=6004103 mem_avail=5530234880 swap_used=147042304 load1=2.52 host_ctr=seyra-iran-restore cpu=221.66% mem=1.59GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=233.16% mem=1.137GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=5.23% mem=155.5MiB / 7.204GiB
+2026-10-18T14:27:16Z free_bytes=51102965760 free_inodes=6004102 mem_avail=5500170240 swap_used=147042304 load1=2.64 host_ctr=seyra-iran-restore cpu=220.06% mem=1.592GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=219.76% mem=1.138GiB / 7.204GiB
+ctr unruffled_colden cpu=0.02% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.6MiB / 7.204GiB
+2026-10-18T14:27:29Z free_bytes=51072221184 free_inodes=6004102 mem_avail=5493198848 swap_used=147042304 load1=2.70 host_ctr=seyra-iran-restore cpu=246.24% mem=1.593GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=229.24% mem=1.14GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.6MiB / 7.204GiB
+2026-10-18T14:27:42Z free_bytes=51041804288 free_inodes=6004102 mem_avail=5495898112 swap_used=147042304 load1=2.69 host_ctr=seyra-iran-restore cpu=212.86% mem=1.596GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=203.66% mem=1.141GiB / 7.204GiB
+ctr unruffled_colden cpu=0.02% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.79% mem=155.2MiB / 7.204GiB
+2026-10-18T14:27:55Z free_bytes=51012354048 free_inodes=6004101 mem_avail=5513654272 swap_used=147042304 load1=2.65 host_ctr=seyra-iran-restore cpu=217.44% mem=1.598GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=220.43% mem=1.143GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.37% mem=155.7MiB / 7.204GiB
+2026-10-18T14:28:09Z free_bytes=50980765696 free_inodes=6004102 mem_avail=5515264000 swap_used=147042304 load1=2.74 host_ctr=seyra-iran-restore cpu=239.82% mem=1.607GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=246.20% mem=1.151GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:28:22Z free_bytes=50948902912 free_inodes=6004101 mem_avail=5491814400 swap_used=147042304 load1=3.08 host_ctr=seyra-iran-restore cpu=216.53% mem=1.598GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=225.32% mem=1.144GiB / 7.204GiB
+ctr unruffled_colden cpu=0.02% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:28:35Z free_bytes=50929086464 free_inodes=6004100 mem_avail=5492830208 swap_used=147042304 load1=2.92 host_ctr=seyra-iran-restore cpu=226.63% mem=1.603GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=214.85% mem=1.148GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.1MiB / 7.204GiB
+2026-10-18T14:28:48Z free_bytes=50905174016 free_inodes=6004100 mem_avail=5516349440 swap_used=147042304 load1=2.86 host_ctr=seyra-iran-restore cpu=232.46% mem=1.605GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=219.92% mem=1.15GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:29:01Z free_bytes=50874073088 free_inodes=6004100 mem_avail=5509632000 swap_used=147042304 load1=2.82 host_ctr=seyra-iran-restore cpu=211.25% mem=1.607GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=222.02% mem=1.151GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:29:14Z free_bytes=50844696576 free_inodes=6004101 mem_avail=5511909376 swap_used=147042304 load1=3.08 host_ctr=seyra-iran-restore cpu=217.84% mem=1.608GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=218.16% mem=1.153GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.84% mem=155.4MiB / 7.204GiB
+2026-10-18T14:29:27Z free_bytes=50815664128 free_inodes=6004100 mem_avail=5443256320 swap_used=147042304 load1=2.91 host_ctr=seyra-iran-restore cpu=197.61% mem=1.606GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=230.72% mem=1.152GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155MiB / 7.204GiB
+2026-10-18T14:29:41Z free_bytes=50784026624 free_inodes=6004099 mem_avail=5480181760 swap_used=147042304 load1=2.85 host_ctr=seyra-iran-restore cpu=232.73% mem=1.608GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=208.05% mem=1.153GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:29:53Z free_bytes=50755551232 free_inodes=6004099 mem_avail=5502644224 swap_used=147042304 load1=2.79 host_ctr=seyra-iran-restore cpu=215.26% mem=1.61GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=231.06% mem=1.156GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.5MiB / 7.204GiB
+2026-10-18T14:30:06Z free_bytes=50723430400 free_inodes=6004098 mem_avail=5509685248 swap_used=147042304 load1=2.70 host_ctr=seyra-iran-restore cpu=250.02% mem=1.614GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=219.17% mem=1.159GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.01% mem=155.1MiB / 7.204GiB
+2026-10-18T14:30:19Z free_bytes=50696261632 free_inodes=6004098 mem_avail=5496426496 swap_used=147042304 load1=2.59 host_ctr=seyra-iran-restore cpu=227.46% mem=1.611GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=225.52% mem=1.157GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=5.18% mem=155.4MiB / 7.204GiB
+2026-10-18T14:30:32Z free_bytes=50665099264 free_inodes=6004098 mem_avail=5477031936 swap_used=147042304 load1=2.54 host_ctr=seyra-iran-restore cpu=219.90% mem=1.615GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=219.63% mem=1.158GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.5MiB / 7.204GiB
+2026-10-18T14:30:45Z free_bytes=50633977856 free_inodes=6004098 mem_avail=5501100032 swap_used=147042304 load1=2.62 host_ctr=seyra-iran-restore cpu=221.28% mem=1.618GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=217.91% mem=1.16GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.5MiB / 7.204GiB
+2026-10-18T14:30:58Z free_bytes=50603864064 free_inodes=6004098 mem_avail=5499142144 swap_used=147042304 load1=2.48 host_ctr=seyra-iran-restore cpu=212.46% mem=1.62GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=231.73% mem=1.162GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.5MiB / 7.204GiB
+2026-10-18T14:31:11Z free_bytes=50576814080 free_inodes=6004100 mem_avail=5492965376 swap_used=147042304 load1=2.67 host_ctr=seyra-iran-restore cpu=251.78% mem=1.645GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=233.02% mem=1.172GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=3.11% mem=155.4MiB / 7.204GiB
+2026-10-18T14:31:25Z free_bytes=50547048448 free_inodes=6004100 mem_avail=5466619904 swap_used=147042304 load1=2.65 host_ctr=seyra-iran-restore cpu=223.96% mem=1.628GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=218.69% mem=1.172GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.1MiB / 7.204GiB
+2026-10-18T14:31:38Z free_bytes=50517164032 free_inodes=6004099 mem_avail=5451141120 swap_used=147042304 load1=2.57 host_ctr=seyra-iran-restore cpu=216.52% mem=1.634GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=217.16% mem=1.175GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.2MiB / 7.204GiB
+2026-10-18T14:31:51Z free_bytes=50488516608 free_inodes=6004098 mem_avail=5462532096 swap_used=147042304 load1=2.60 host_ctr=seyra-iran-restore cpu=216.05% mem=1.638GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=227.77% mem=1.178GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.4MiB / 7.204GiB
+2026-10-18T14:32:04Z free_bytes=50457464832 free_inodes=6004098 mem_avail=5465272320 swap_used=147042304 load1=2.59 host_ctr=seyra-iran-restore cpu=216.75% mem=1.64GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=205.66% mem=1.183GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.2MiB / 7.204GiB
+2026-10-18T14:32:17Z free_bytes=50431143936 free_inodes=6004099 mem_avail=5471784960 swap_used=147042304 load1=2.46 host_ctr=seyra-iran-restore cpu=216.32% mem=1.639GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=226.28% mem=1.18GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:32:30Z free_bytes=50406850560 free_inodes=6004098 mem_avail=5483503616 swap_used=147042304 load1=2.46 host_ctr=seyra-iran-restore cpu=214.29% mem=1.641GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=229.53% mem=1.18GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:32:43Z free_bytes=50378924032 free_inodes=6004098 mem_avail=5465763840 swap_used=147042304 load1=2.28 host_ctr=seyra-iran-restore cpu=219.36% mem=1.642GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=227.76% mem=1.182GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.41% mem=155.3MiB / 7.204GiB
+2026-10-18T14:32:57Z free_bytes=50423095296 free_inodes=6004095 mem_avail=5502418944 swap_used=147042304 load1=2.21 host_ctr=seyra-iran-restore cpu=101.96% mem=1.642GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=120.74% mem=1.184GiB / 7.204GiB
+ctr unruffled_colden cpu=0.02% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.81% mem=155.6MiB / 7.204GiB
+2026-10-18T14:33:10Z free_bytes=50411139072 free_inodes=6004097 mem_avail=5482496000 swap_used=147042304 load1=2.18 host_ctr=seyra-iran-restore cpu=164.42% mem=1.653GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=106.66% mem=1.195GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:33:23Z free_bytes=50399494144 free_inodes=6004096 mem_avail=5475319808 swap_used=147042304 load1=2.14 host_ctr=seyra-iran-restore cpu=130.90% mem=1.662GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=73.63% mem=1.205GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.3MiB / 7.204GiB
+2026-10-18T14:33:36Z free_bytes=50389049344 free_inodes=6004095 mem_avail=5453516800 swap_used=146894848 load1=2.11 host_ctr=seyra-iran-restore cpu=188.26% mem=1.688GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=191.46% mem=1.23GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=155.2MiB / 7.204GiB
+2026-10-18T14:33:49Z free_bytes=50381733888 free_inodes=6004095 mem_avail=5443588096 swap_used=180641792 load1=2.33 host_ctr=seyra-iran-restore cpu=154.12% mem=1.362GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=46.12% mem=927.5MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=160.1MiB / 7.204GiB
+2026-10-18T14:34:03Z free_bytes=50368942080 free_inodes=6004094 mem_avail=5462634496 swap_used=180641792 load1=2.74 host_ctr=seyra-iran-restore cpu=146.65% mem=1.39GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=108.37% mem=930MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=160.5MiB / 7.204GiB
+2026-10-18T14:34:16Z free_bytes=50352717824 free_inodes=6004092 mem_avail=5427810304 swap_used=180641792 load1=2.63 host_ctr=seyra-iran-restore cpu=170.49% mem=1.399GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=68.75% mem=921.6MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.1MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=160.3MiB / 7.204GiB
+2026-10-18T14:34:29Z free_bytes=50248122368 free_inodes=6004091 mem_avail=5413724160 swap_used=180641792 load1=2.80 host_ctr=seyra-iran-restore cpu=23.10% mem=1.456GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=9.18% mem=977.9MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=160.1MiB / 7.204GiB
+2026-10-18T14:34:42Z free_bytes=50247901184 free_inodes=6004091 mem_avail=5397078016 swap_used=180641792 load1=2.69 host_ctr=seyra-iran-restore cpu=39.58% mem=1.46GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=54.25% mem=982.9MiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.01% mem=160.7MiB / 7.204GiB
+2026-10-18T14:34:55Z free_bytes=50247196672 free_inodes=6004091 mem_avail=5407920128 swap_used=180641792 load1=2.59 host_ctr=seyra-iran-restore cpu=80.41% mem=1.469GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=68.51% mem=985.7MiB / 7.204GiB
+ctr unruffled_colden cpu=0.04% mem=138.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=160.5MiB / 7.204GiB
+2026-10-18T14:35:08Z free_bytes=50245046272 free_inodes=6004091 mem_avail=5366235136 swap_used=180641792 load1=2.54 host_ctr=seyra-iran-restore cpu=60.35% mem=1.478GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=50.92% mem=989.3MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=160.6MiB / 7.204GiB
+2026-10-18T14:35:21Z free_bytes=50243489792 free_inodes=6004091 mem_avail=5395898368 swap_used=180641792 load1=2.42 host_ctr=seyra-iran-restore cpu=108.10% mem=1.481GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=125.76% mem=993.3MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=160.6MiB / 7.204GiB
+2026-10-18T14:35:35Z free_bytes=50241327104 free_inodes=6004091 mem_avail=5387276288 swap_used=180641792 load1=2.35 host_ctr=seyra-iran-restore cpu=62.49% mem=1.489GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=112.73% mem=998.2MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=160.5MiB / 7.204GiB
+2026-10-18T14:35:48Z free_bytes=50240036864 free_inodes=6004091 mem_avail=5413289984 swap_used=180654080 load1=2.35 host_ctr=seyra-iran-restore cpu=134.87% mem=1.492GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=165.85% mem=1001MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=160.3MiB / 7.204GiB
+2026-10-18T14:36:01Z free_bytes=50237812736 free_inodes=6004091 mem_avail=5400780800 swap_used=180682752 load1=2.35 host_ctr=seyra-iran-restore cpu=194.37% mem=1.499GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=129.71% mem=1003MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=160.5MiB / 7.204GiB
+2026-10-18T14:36:14Z free_bytes=50235469824 free_inodes=6004091 mem_avail=5387153408 swap_used=180711424 load1=2.53 host_ctr=seyra-iran-restore cpu=50.50% mem=1.506GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=88.00% mem=1004MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=160.4MiB / 7.204GiB
+2026-10-18T14:36:27Z free_bytes=50233208832 free_inodes=6004090 mem_avail=5401677824 swap_used=180711424 load1=2.58 host_ctr=seyra-iran-restore cpu=177.74% mem=1.509GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=178.07% mem=1009MiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=160.5MiB / 7.204GiB
+2026-10-18T14:36:40Z free_bytes=50230145024 free_inodes=6004090 mem_avail=5388918784 swap_used=180711424 load1=2.49 host_ctr=seyra-iran-restore cpu=219.16% mem=1.524GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=229.25% mem=1020MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=161.6MiB / 7.204GiB
+2026-10-18T14:36:53Z free_bytes=50227060736 free_inodes=6004090 mem_avail=5369319424 swap_used=180711424 load1=2.53 host_ctr=seyra-iran-restore cpu=121.35% mem=1.535GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=150.45% mem=1023MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=161.6MiB / 7.204GiB
+2026-10-18T14:37:07Z free_bytes=50223710208 free_inodes=6004090 mem_avail=5361315840 swap_used=180711424 load1=2.65 host_ctr=seyra-iran-restore cpu=218.76% mem=1.535GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=210.05% mem=1.004GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=161.4MiB / 7.204GiB
+2026-10-18T14:37:20Z free_bytes=50219757568 free_inodes=6004087 mem_avail=5357527040 swap_used=180711424 load1=2.62 host_ctr=seyra-iran-restore cpu=216.05% mem=1.54GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=240.44% mem=1.009GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.38% mem=161.3MiB / 7.204GiB
+2026-10-18T14:37:33Z free_bytes=50216046592 free_inodes=6004089 mem_avail=5363408896 swap_used=180711424 load1=2.63 host_ctr=seyra-iran-restore cpu=246.15% mem=1.547GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=235.28% mem=1.016GiB / 7.204GiB
+ctr unruffled_colden cpu=0.03% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=5.37% mem=161.5MiB / 7.204GiB
+2026-10-18T14:37:46Z free_bytes=50415689728 free_inodes=6004111 mem_avail=5338759168 swap_used=180703232 load1=2.86 host_ctr=seyra-iran-restore cpu=240.26% mem=1.554GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=240.18% mem=1.023GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=161.6MiB / 7.204GiB
+2026-10-18T14:37:59Z free_bytes=50411687936 free_inodes=6004111 mem_avail=5356507136 swap_used=180703232 load1=2.88 host_ctr=seyra-iran-restore cpu=248.06% mem=1.572GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=243.58% mem=1.028GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.99% mem=161.7MiB / 7.204GiB
+2026-10-18T14:38:12Z free_bytes=50408022016 free_inodes=6004110 mem_avail=5325611008 swap_used=180703232 load1=3.05 host_ctr=seyra-iran-restore cpu=205.71% mem=1.585GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=242.49% mem=1.032GiB / 7.204GiB
+ctr unruffled_colden cpu=0.03% mem=138.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=162MiB / 7.204GiB
+2026-10-18T14:38:26Z free_bytes=50404601856 free_inodes=6004109 mem_avail=5327384576 swap_used=180703232 load1=2.89 host_ctr=seyra-iran-restore cpu=231.01% mem=1.597GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=248.23% mem=1.039GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=161.9MiB / 7.204GiB
+2026-10-18T14:38:39Z free_bytes=50400874496 free_inodes=6004109 mem_avail=5339144192 swap_used=180912128 load1=3.00 host_ctr=seyra-iran-restore cpu=244.05% mem=1.601GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=245.37% mem=1.044GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=161.4MiB / 7.204GiB
+2026-10-18T14:38:52Z free_bytes=50397278208 free_inodes=6004109 mem_avail=5325414400 swap_used=180912128 load1=3.01 host_ctr=seyra-iran-restore cpu=241.30% mem=1.62GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=248.07% mem=1.049GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=161.6MiB / 7.204GiB
+2026-10-18T14:39:05Z free_bytes=50393292800 free_inodes=6004109 mem_avail=5307572224 swap_used=180912128 load1=2.93 host_ctr=seyra-iran-restore cpu=244.59% mem=1.638GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=245.67% mem=1.078GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=5.26% mem=161.6MiB / 7.204GiB
+2026-10-18T14:39:18Z free_bytes=50389155840 free_inodes=6004109 mem_avail=5318426624 swap_used=180932608 load1=3.04 host_ctr=seyra-iran-restore cpu=251.29% mem=1.632GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=228.83% mem=1.062GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=161.1MiB / 7.204GiB
+2026-10-18T14:39:31Z free_bytes=50488840192 free_inodes=6004109 mem_avail=5473517568 swap_used=180965376 load1=2.94 host_ctr=seyra-iran-restore cpu=23.41% mem=1.454GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=27.21% mem=902.8MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.34% mem=161.5MiB / 7.204GiB
+2026-10-18T14:39:45Z free_bytes=50488815616 free_inodes=6004109 mem_avail=5477916672 swap_used=188370944 load1=2.64 host_ctr=seyra-iran-restore cpu=17.65% mem=1.338GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=35.20% mem=921.5MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.48% mem=170.4MiB / 7.204GiB
+2026-10-18T14:39:58Z free_bytes=50485776384 free_inodes=6004109 mem_avail=5404147712 swap_used=188370944 load1=2.36 host_ctr=seyra-iran-restore cpu=138.97% mem=1.432GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=192.78% mem=997.1MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=170.6MiB / 7.204GiB
+2026-10-18T14:40:11Z free_bytes=50479300608 free_inodes=6004111 mem_avail=5408239616 swap_used=188370944 load1=2.35 host_ctr=seyra-iran-restore cpu=180.48% mem=1.44GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=203.75% mem=1004MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=170.2MiB / 7.204GiB
+2026-10-18T14:40:24Z free_bytes=50473762816 free_inodes=6004111 mem_avail=5414912000 swap_used=188641280 load1=2.37 host_ctr=seyra-iran-restore cpu=28.28% mem=1.443GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=16.09% mem=1008MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=170.1MiB / 7.204GiB
+2026-10-18T14:40:42Z free_bytes=50471800832 free_inodes=6004110 mem_avail=5400539136 swap_used=189308928 load1=3.88 host_ctr=seyra-iran-restore cpu=154.80% mem=1.446GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=76.31% mem=1011MiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=170.6MiB / 7.204GiB
+2026-10-18T14:40:55Z free_bytes=50469548032 free_inodes=6004110 mem_avail=5390082048 swap_used=189308928 load1=3.82 host_ctr=seyra-iran-restore cpu=80.32% mem=1.441GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=69.30% mem=1006MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=170.4MiB / 7.204GiB
+2026-10-18T14:41:08Z free_bytes=50466562048 free_inodes=6004108 mem_avail=5388541952 swap_used=189308928 load1=3.50 host_ctr=seyra-iran-restore cpu=105.28% mem=1.445GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=68.17% mem=1007MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.37% mem=170.2MiB / 7.204GiB
+2026-10-18T14:41:22Z free_bytes=50463481856 free_inodes=6004108 mem_avail=5380702208 swap_used=189308928 load1=3.02 host_ctr=seyra-iran-restore cpu=164.66% mem=1.445GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=135.37% mem=1007MiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=170.2MiB / 7.204GiB
+2026-10-18T14:41:35Z free_bytes=50458877952 free_inodes=6004108 mem_avail=5389094912 swap_used=191508480 load1=3.01 host_ctr=seyra-iran-restore cpu=89.01% mem=1.451GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=105.94% mem=1009MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=170.4MiB / 7.204GiB
+2026-10-18T14:41:48Z free_bytes=50455195648 free_inodes=6004108 mem_avail=5402415104 swap_used=191258624 load1=2.72 host_ctr=seyra-iran-restore cpu=84.95% mem=1.463GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=70.71% mem=1023MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=170.4MiB / 7.204GiB
+2026-10-18T14:42:01Z free_bytes=50453229568 free_inodes=6004108 mem_avail=5501579264 swap_used=192405504 load1=2.68 host_ctr=seyra-iran-restore cpu=35.61% mem=1.349GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=11.95% mem=903.9MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.01% mem=170.4MiB / 7.204GiB
+2026-10-18T14:42:14Z free_bytes=50452926464 free_inodes=6004108 mem_avail=5485514752 swap_used=192450560 load1=2.45 host_ctr=seyra-iran-restore cpu=98.82% mem=1.272GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=15.98% mem=807.7MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=171.2MiB / 7.204GiB
+2026-10-18T14:42:27Z free_bytes=50452623360 free_inodes=6004108 mem_avail=5607952384 swap_used=192450560 load1=2.20 host_ctr=seyra-iran-restore cpu=9.56% mem=1.246GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=10.61% mem=798.6MiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=138.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.01% mem=172.7MiB / 7.204GiB
+2026-10-18T14:42:40Z free_bytes=50452525056 free_inodes=6004108 mem_avail=5578199040 swap_used=192450560 load1=2.49 host_ctr=seyra-iran-restore cpu=9.96% mem=1.255GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=59.50% mem=811.2MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=173MiB / 7.204GiB
+2026-10-18T14:42:54Z free_bytes=50754846720 free_inodes=6004125 mem_avail=5216231424 swap_used=196468736 load1=2.56 host_ctr=seyra-iran-restore cpu=48.77% mem=1.715GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=380.67% mem=1.079GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=138.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=171.6MiB / 7.204GiB
+2026-10-18T14:43:07Z free_bytes=52874424320 free_inodes=6004181 mem_avail=5595516928 swap_used=203190272 load1=2.71 host_ctr=seyra-iran-restore cpu=7.80% mem=1.161GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=49.29% mem=791MiB / 7.204GiB
+ctr unruffled_colden cpu=0.03% mem=134.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.59% mem=150.9MiB / 7.204GiB
+2026-10-18T14:43:20Z free_bytes=52243189760 free_inodes=6004172 mem_avail=5195743232 swap_used=179982336 load1=2.53 host_ctr=seyra-iran-restore cpu=197.75% mem=1.715GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=141.20% mem=1.339GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=134.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.43% mem=150.2MiB / 7.204GiB
+2026-10-18T14:43:33Z free_bytes=51927556096 free_inodes=6004172 mem_avail=4965560320 swap_used=180973568 load1=2.70 host_ctr=seyra-iran-restore cpu=117.88% mem=1.892GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=105.55% mem=1.463GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=133.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=5.74% mem=150.5MiB / 7.204GiB
+2026-10-18T14:43:46Z free_bytes=51568005120 free_inodes=6004172 mem_avail=5024337920 swap_used=181583872 load1=2.39 host_ctr=seyra-iran-restore cpu=113.83% mem=1.862GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=126.61% mem=1.439GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=116.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=150.7MiB / 7.204GiB
+2026-10-18T14:43:59Z free_bytes=51858452480 free_inodes=6004172 mem_avail=5094051840 swap_used=181284864 load1=2.18 host_ctr=seyra-iran-restore cpu=51.77% mem=1.811GiB / 7.204GiB
+ctr seyra-jobs-geocoder-export-run-86b974a9ca2e cpu=134.38% mem=1.447GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=116.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=150.7MiB / 7.204GiB
+2026-10-18T14:44:13Z free_bytes=58283261952 free_inodes=6009377 mem_avail=6218768384 swap_used=174747648 load1=2.15 host_ctr=seyra-iran-restore cpu=3.53% mem=591MiB / 7.204GiB
+ctr unruffled_colden cpu=0.10% mem=116.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=150.6MiB / 7.204GiB
+2026-10-18T14:44:25Z free_bytes=58048479232 free_inodes=6009412 mem_avail=6189203456 swap_used=171204608 load1=1.97 host_ctr=seyra-iran-restore cpu=109.82% mem=738.9MiB / 7.204GiB
+ctr unruffled_colden cpu=102.78% mem=261.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=150.3MiB / 7.204GiB
+2026-10-18T14:44:38Z free_bytes=57659486208 free_inodes=6009412 mem_avail=6205698048 swap_used=171155456 load1=1.76 host_ctr=seyra-iran-restore cpu=103.40% mem=752.4MiB / 7.204GiB
+ctr unruffled_colden cpu=103.39% mem=274MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.95% mem=150.7MiB / 7.204GiB
+2026-10-18T14:44:51Z free_bytes=57286213632 free_inodes=6009412 mem_avail=6205722624 swap_used=171155456 load1=1.98 host_ctr=seyra-iran-restore cpu=105.21% mem=765.2MiB / 7.204GiB
+ctr unruffled_colden cpu=104.61% mem=287.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=150.3MiB / 7.204GiB
+2026-10-18T14:45:04Z free_bytes=57138003968 free_inodes=6009254 mem_avail=5600378880 swap_used=171155456 load1=1.91 host_ctr=seyra-iran-restore cpu=396.40% mem=1.68GiB / 7.204GiB
+ctr seyra-jobs-photon-import-run-1090b0f7b8cb cpu=334.92% mem=1.054GiB / 7.204GiB
+ctr unruffled_colden cpu=0.02% mem=316.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=150.1MiB / 7.204GiB
+2026-10-18T14:45:17Z free_bytes=56993800192 free_inodes=6009250 mem_avail=4498972672 swap_used=171155456 load1=2.34 host_ctr=seyra-iran-restore cpu=311.72% mem=2.351GiB / 7.204GiB
+ctr seyra-jobs-photon-import-run-1090b0f7b8cb cpu=330.25% mem=1.57GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=316.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=150.4MiB / 7.204GiB
+2026-10-18T14:45:30Z free_bytes=56800747520 free_inodes=6009250 mem_avail=4078858240 swap_used=171155456 load1=2.60 host_ctr=seyra-iran-restore cpu=287.65% mem=2.719GiB / 7.204GiB
+ctr seyra-jobs-photon-import-run-1090b0f7b8cb cpu=374.69% mem=2.025GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=316.1MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.17% mem=150.4MiB / 7.204GiB
+2026-10-18T14:45:43Z free_bytes=56593833984 free_inodes=6009234 mem_avail=3961921536 swap_used=171155456 load1=2.59 host_ctr=seyra-iran-restore cpu=348.34% mem=2.839GiB / 7.204GiB
+ctr seyra-jobs-photon-import-run-1090b0f7b8cb cpu=356.35% mem=2.064GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=315.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.34% mem=150.5MiB / 7.204GiB
+2026-10-18T14:45:57Z free_bytes=56371466240 free_inodes=6009228 mem_avail=4045561856 swap_used=171155456 load1=2.31 host_ctr=seyra-iran-restore cpu=243.50% mem=2.824GiB / 7.204GiB
+ctr seyra-jobs-photon-import-run-1090b0f7b8cb cpu=257.33% mem=2.05GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=316.1MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.35% mem=150.3MiB / 7.204GiB
+2026-10-18T14:46:10Z free_bytes=56161382400 free_inodes=6009215 mem_avail=3962064896 swap_used=171155456 load1=2.26 host_ctr=seyra-iran-restore cpu=295.45% mem=2.936GiB / 7.204GiB
+ctr seyra-jobs-photon-import-run-1090b0f7b8cb cpu=285.29% mem=2.17GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=315.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=150.4MiB / 7.204GiB
+2026-10-18T14:46:23Z free_bytes=55939420160 free_inodes=6009209 mem_avail=3816079360 swap_used=171155456 load1=2.60 host_ctr=seyra-iran-restore cpu=315.57% mem=3.009GiB / 7.204GiB
+ctr seyra-jobs-photon-import-run-1090b0f7b8cb cpu=305.76% mem=2.05GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=315.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=150.4MiB / 7.204GiB
+2026-10-18T14:46:36Z free_bytes=55728840704 free_inodes=6009196 mem_avail=4018229248 swap_used=171155456 load1=2.63 host_ctr=seyra-iran-restore cpu=280.37% mem=2.776GiB / 7.204GiB
+ctr seyra-jobs-photon-import-run-1090b0f7b8cb cpu=257.62% mem=2.128GiB / 7.204GiB
+ctr unruffled_colden cpu=3.23% mem=184.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.21% mem=150.6MiB / 7.204GiB
+2026-10-18T14:46:49Z free_bytes=55498420224 free_inodes=6009190 mem_avail=4144480256 swap_used=171155456 load1=2.70 host_ctr=seyra-iran-restore cpu=266.03% mem=2.619GiB / 7.204GiB
+ctr seyra-jobs-photon-import-run-1090b0f7b8cb cpu=319.04% mem=2.086GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=184.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=150.5MiB / 7.204GiB
+2026-10-18T14:47:02Z free_bytes=55271768064 free_inodes=6009174 mem_avail=4111753216 swap_used=171155456 load1=2.93 host_ctr=seyra-iran-restore cpu=227.65% mem=2.682GiB / 7.204GiB
+ctr seyra-jobs-photon-import-run-1090b0f7b8cb cpu=321.19% mem=2.122GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=183.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=150.5MiB / 7.204GiB
+2026-10-18T14:47:15Z free_bytes=55062872064 free_inodes=6009168 mem_avail=3977129984 swap_used=171155456 load1=2.95 host_ctr=seyra-iran-restore cpu=390.08% mem=2.818GiB / 7.204GiB
+ctr seyra-jobs-photon-import-run-1090b0f7b8cb cpu=225.60% mem=2.277GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=183.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=150.3MiB / 7.204GiB
+2026-10-18T14:47:28Z free_bytes=54831398912 free_inodes=6009149 mem_avail=4064387072 swap_used=171155456 load1=2.87 host_ctr=seyra-iran-restore cpu=292.20% mem=2.754GiB / 7.204GiB
+ctr seyra-jobs-photon-import-run-1090b0f7b8cb cpu=236.16% mem=2.214GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=183.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=150.3MiB / 7.204GiB
+2026-10-18T14:47:42Z free_bytes=57663254528 free_inodes=6009259 mem_avail=6326673408 swap_used=171155456 load1=2.89 host_ctr=seyra-iran-restore cpu=117.87% mem=708.3MiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=29.04% mem=24.61MiB / 7.204GiB
+ctr unruffled_colden cpu=14.10% mem=213.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=5.11% mem=150.2MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=59.09% mem=143.6MiB / 7.204GiB
+2026-10-18T14:47:55Z free_bytes=56671399936 free_inodes=6009149 mem_avail=5422366720 swap_used=171089920 load1=3.37 host_ctr=seyra-iran-restore cpu=226.80% mem=1.488GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=28.20% mem=27.82MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=59.79% mem=809.9MiB / 7.204GiB
+ctr unruffled_colden cpu=12.08% mem=213.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=150.1MiB / 7.204GiB
+2026-10-18T14:48:08Z free_bytes=56045658112 free_inodes=6009145 mem_avail=4445499392 swap_used=171089920 load1=3.62 host_ctr=seyra-iran-restore cpu=114.15% mem=2.796GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.60% mem=22.27MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=140.34% mem=2.418GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=214.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=125.3MiB / 7.204GiB
+2026-10-18T14:48:25Z free_bytes=54938497024 free_inodes=6009134 mem_avail=3841187840 swap_used=257441792 load1=3.66 host_ctr=seyra-iran-restore cpu=217.22% mem=3.049GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=24.80% mem=23.79MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=29.71% mem=2.391GiB / 7.204GiB
+ctr unruffled_colden cpu=9.28% mem=192.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=3.34% mem=77.27MiB / 7.204GiB
+2026-10-18T14:48:42Z free_bytes=53820469248 free_inodes=6009134 mem_avail=3823271936 swap_used=257441792 load1=5.19 host_ctr=seyra-iran-restore cpu=221.74% mem=3.04GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=26.84% mem=23.67MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=52.90% mem=2.384GiB / 7.204GiB
+ctr unruffled_colden cpu=11.86% mem=190.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=75.98MiB / 7.204GiB
+2026-10-18T14:48:55Z free_bytes=53324664832 free_inodes=6009132 mem_avail=3641417728 swap_used=257392640 load1=4.62 host_ctr=seyra-iran-restore cpu=100.26% mem=3.201GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.25% mem=23.3MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=80.42% mem=2.687GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=136.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.67% mem=76.07MiB / 7.204GiB
+2026-10-18T14:49:09Z free_bytes=52360990720 free_inodes=6009131 mem_avail=3772551168 swap_used=487059456 load1=4.12 host_ctr=seyra-iran-restore cpu=9.82% mem=2.895GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.82% mem=20.8MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=3.60% mem=2.5GiB / 7.204GiB
+ctr unruffled_colden cpu=0.07% mem=137.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.01% mem=69.84MiB / 7.204GiB
+2026-10-18T14:49:22Z free_bytes=51695480832 free_inodes=6009128 mem_avail=3744837632 swap_used=488914944 load1=4.09 host_ctr=seyra-iran-restore cpu=231.54% mem=2.874GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=27.80% mem=23.45MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=56.53% mem=2.445GiB / 7.204GiB
+ctr unruffled_colden cpu=10.37% mem=142.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=7.58% mem=66.78MiB / 7.204GiB
+2026-10-18T14:49:36Z free_bytes=50740461568 free_inodes=6009128 mem_avail=3763712000 swap_used=496979968 load1=3.89 host_ctr=seyra-iran-restore cpu=100.30% mem=2.95GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.15% mem=24.89MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=99.37% mem=2.438GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=142MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=61.86MiB / 7.204GiB
+2026-10-18T14:49:50Z free_bytes=49802117120 free_inodes=6009126 mem_avail=3568615424 swap_used=508612608 load1=3.53 host_ctr=seyra-iran-restore cpu=34.53% mem=3.176GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.39% mem=24.79MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=24.30% mem=2.681GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=127.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.01% mem=49.16MiB / 7.204GiB
+2026-10-18T14:50:04Z free_bytes=48753930240 free_inodes=6009122 mem_avail=3751993344 swap_used=513363968 load1=3.56 host_ctr=seyra-iran-restore cpu=328.65% mem=2.971GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=25.13% mem=23.64MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=55.79% mem=2.455GiB / 7.204GiB
+ctr unruffled_colden cpu=12.06% mem=128.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=46.1MiB / 7.204GiB
+2026-10-18T14:50:18Z free_bytes=47431278592 free_inodes=6009116 mem_avail=3775016960 swap_used=517935104 load1=3.89 host_ctr=seyra-iran-restore cpu=11.08% mem=3.017GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.64% mem=68.54MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=35.70% mem=2.463GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=127.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.01% mem=41.39MiB / 7.204GiB
+2026-10-18T14:50:31Z free_bytes=47360299008 free_inodes=6009134 mem_avail=3703250944 swap_used=518709248 load1=3.53 host_ctr=seyra-iran-restore cpu=148.68% mem=3.022GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=7.99% mem=75.05MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=22.18% mem=2.462GiB / 7.204GiB
+ctr unruffled_colden cpu=5.89% mem=127.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=39.81MiB / 7.204GiB
+2026-10-18T14:50:44Z free_bytes=46471000064 free_inodes=6009134 mem_avail=3747753984 swap_used=522850304 load1=3.31 host_ctr=seyra-iran-restore cpu=168.15% mem=3.033GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.62% mem=87.84MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=14.70% mem=2.505GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=127.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=35.92MiB / 7.204GiB
+2026-10-18T14:50:57Z free_bytes=46383972352 free_inodes=6009130 mem_avail=3767660544 swap_used=534495232 load1=2.88 host_ctr=seyra-iran-restore cpu=10.97% mem=3.11GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.65% mem=87.7MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=7.76% mem=2.578GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=127.1MiB / 7.204GiB
+ctr seyra-db-1 cpu=1.51% mem=24.44MiB / 7.204GiB
+2026-10-18T14:51:12Z free_bytes=46383972352 free_inodes=6009130 mem_avail=3769122816 swap_used=537075712 load1=2.77 host_ctr=seyra-iran-restore cpu=12.23% mem=3.163GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.62% mem=87.51MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=7.50% mem=2.628GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=127.1MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.01% mem=21.98MiB / 7.204GiB
+2026-10-18T14:51:25Z free_bytes=46383972352 free_inodes=6009130 mem_avail=3773083648 swap_used=537632768 load1=2.73 host_ctr=seyra-iran-restore cpu=10.23% mem=3.147GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.49% mem=87.51MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=8.87% mem=2.625GiB / 7.204GiB
+ctr unruffled_colden cpu=0.04% mem=126.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=14.62MiB / 7.204GiB
+2026-10-18T14:51:38Z free_bytes=46132064256 free_inodes=6009122 mem_avail=3765739520 swap_used=533032960 load1=2.42 host_ctr=seyra-iran-restore cpu=158.37% mem=3.152GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=9.07% mem=76.67MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=23.84% mem=2.631GiB / 7.204GiB
+ctr unruffled_colden cpu=6.41% mem=127.1MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.27MiB / 7.204GiB
+2026-10-18T14:51:51Z free_bytes=45231693824 free_inodes=6009122 mem_avail=3743428608 swap_used=532811776 load1=2.71 host_ctr=seyra-iran-restore cpu=153.99% mem=3.156GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.47% mem=68.77MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=20.86% mem=2.631GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=127MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.52MiB / 7.204GiB
+2026-10-18T14:52:04Z free_bytes=45123325952 free_inodes=6009120 mem_avail=3785596928 swap_used=532783104 load1=2.47 host_ctr=seyra-iran-restore cpu=14.79% mem=3.18GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.70% mem=68.55MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=5.43% mem=2.625GiB / 7.204GiB
+ctr unruffled_colden cpu=0.04% mem=127MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.61MiB / 7.204GiB
+2026-10-18T14:52:19Z free_bytes=45123325952 free_inodes=6009120 mem_avail=3797852160 swap_used=532770816 load1=2.48 host_ctr=seyra-iran-restore cpu=12.79% mem=3.129GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.67% mem=68.55MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=7.48% mem=2.626GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=126.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.59MiB / 7.204GiB
+2026-10-18T14:52:32Z free_bytes=45123325952 free_inodes=6009120 mem_avail=3794907136 swap_used=532770816 load1=2.15 host_ctr=seyra-iran-restore cpu=98.95% mem=3.129GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=2.85% mem=68.67MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=23.14% mem=2.629GiB / 7.204GiB
+ctr unruffled_colden cpu=4.33% mem=126.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.89% mem=15.55MiB / 7.204GiB
+2026-10-18T14:52:45Z free_bytes=44210466816 free_inodes=6009116 mem_avail=3753213952 swap_used=532766720 load1=2.13 host_ctr=seyra-iran-restore cpu=152.08% mem=3.158GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=8.81% mem=65.48MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=22.25% mem=2.629GiB / 7.204GiB
+ctr unruffled_colden cpu=6.36% mem=126.1MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.57MiB / 7.204GiB
+2026-10-18T14:52:58Z free_bytes=43956895744 free_inodes=6009114 mem_avail=3789082624 swap_used=532762624 load1=1.95 host_ctr=seyra-iran-restore cpu=10.99% mem=3.148GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.65% mem=65.23MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=12.80% mem=2.626GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=125.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.75% mem=15.55MiB / 7.204GiB
+2026-10-18T14:53:11Z free_bytes=43956895744 free_inodes=6009114 mem_avail=3804057600 swap_used=532623360 load1=1.90 host_ctr=seyra-iran-restore cpu=8.50% mem=3.143GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.66% mem=65.18MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=5.73% mem=2.626GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=125.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.87% mem=17.89MiB / 7.204GiB
+2026-10-18T14:53:27Z free_bytes=43956891648 free_inodes=6009114 mem_avail=3750883328 swap_used=530989056 load1=2.05 host_ctr=seyra-iran-restore cpu=22.81% mem=3.135GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.28% mem=65.11MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=86.85% mem=2.626GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=125.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.39MiB / 7.204GiB
+2026-10-18T14:53:40Z free_bytes=43312087040 free_inodes=6009110 mem_avail=3738300416 swap_used=530984960 load1=2.21 host_ctr=seyra-iran-restore cpu=149.64% mem=3.162GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=7.66% mem=73.68MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=23.01% mem=2.63GiB / 7.204GiB
+ctr unruffled_colden cpu=6.24% mem=125.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.65MiB / 7.204GiB
+2026-10-18T14:53:53Z free_bytes=42779316224 free_inodes=6009108 mem_avail=3754004480 swap_used=530980864 load1=2.01 host_ctr=seyra-iran-restore cpu=6.22% mem=3.161GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.60% mem=64.49MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=8.36% mem=2.626GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=126.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.24MiB / 7.204GiB
+2026-10-18T14:54:06Z free_bytes=42779316224 free_inodes=6009108 mem_avail=3777617920 swap_used=530460672 load1=1.79 host_ctr=seyra-iran-restore cpu=19.51% mem=3.149GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.69% mem=64.49MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=5.98% mem=2.626GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=126.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.75MiB / 7.204GiB
+2026-10-18T14:54:21Z free_bytes=42779316224 free_inodes=6009108 mem_avail=3794919424 swap_used=530456576 load1=1.66 host_ctr=seyra-iran-restore cpu=7.24% mem=3.137GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.37% mem=64.49MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=54.12% mem=2.626GiB / 7.204GiB
+ctr unruffled_colden cpu=0.02% mem=126.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.73MiB / 7.204GiB
+2026-10-18T14:54:34Z free_bytes=42256637952 free_inodes=6009104 mem_avail=3720044544 swap_used=530452480 load1=1.52 host_ctr=seyra-iran-restore cpu=157.98% mem=3.154GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=8.58% mem=62.45MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=24.35% mem=2.632GiB / 7.204GiB
+ctr unruffled_colden cpu=5.81% mem=126.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.23MiB / 7.204GiB
+2026-10-18T14:54:47Z free_bytes=41524695040 free_inodes=6009102 mem_avail=3742679040 swap_used=530452480 load1=1.40 host_ctr=seyra-iran-restore cpu=18.68% mem=3.165GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.44% mem=65.69MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=9.81% mem=2.632GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=126.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.01% mem=15.28MiB / 7.204GiB
+2026-10-18T14:55:00Z free_bytes=41524695040 free_inodes=6009102 mem_avail=3778568192 swap_used=530444288 load1=1.34 host_ctr=seyra-iran-restore cpu=10.58% mem=3.15GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.50% mem=65.69MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=6.11% mem=2.627GiB / 7.204GiB
+ctr unruffled_colden cpu=0.01% mem=126.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=4.46% mem=15.9MiB / 7.204GiB
+2026-10-18T14:55:14Z free_bytes=41524695040 free_inodes=6009102 mem_avail=3785703424 swap_used=530440192 load1=1.33 host_ctr=seyra-iran-restore cpu=11.14% mem=3.142GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.32% mem=65.69MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=9.22% mem=2.626GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=126.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.62MiB / 7.204GiB
+2026-10-18T14:55:27Z free_bytes=41220505600 free_inodes=6009096 mem_avail=3767558144 swap_used=530440192 load1=1.26 host_ctr=seyra-iran-restore cpu=16.46% mem=3.147GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.49% mem=66.44MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=6.65% mem=2.634GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=126.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.01% mem=15.55MiB / 7.204GiB
+2026-10-18T14:55:40Z free_bytes=41209094144 free_inodes=6009096 mem_avail=3761528832 swap_used=530440192 load1=1.22 host_ctr=seyra-iran-restore cpu=31.71% mem=3.149GiB / 7.204GiB
+ctr seyra-jobs-overpass-xml-run-93110313f550 cpu=0.17% mem=66.21MiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=39.55% mem=2.636GiB / 7.204GiB
+ctr unruffled_colden cpu=0.42% mem=127.1MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.35MiB / 7.204GiB
+2026-10-18T14:55:54Z free_bytes=41069465600 free_inodes=6009120 mem_avail=3724808192 swap_used=530030592 load1=1.17 host_ctr=seyra-iran-restore cpu=3.82% mem=3.111GiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=0.00% mem=2.643GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=126.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.18MiB / 7.204GiB
+2026-10-18T14:56:07Z free_bytes=51940675584 free_inodes=6009169 mem_avail=3816116224 swap_used=530022400 load1=1.13 host_ctr=seyra-iran-restore cpu=9.61% mem=3.081GiB / 7.204GiB
+ctr seyra-jobs-overpass-import-run-95cff3391f21 cpu=8.72% mem=2.644GiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=123.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.01% mem=15.6MiB / 7.204GiB
+2026-10-18T14:56:20Z free_bytes=51917770752 free_inodes=6009214 mem_avail=6387515392 swap_used=322035712 load1=1.19 host_ctr=seyra-iran-restore cpu=28.05% mem=530MiB / 7.204GiB
+ctr unruffled_colden cpu=28.93% mem=119.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.62MiB / 7.204GiB
+2026-10-18T14:56:33Z free_bytes=51917770752 free_inodes=6009214 mem_avail=6460014592 swap_used=322035712 load1=1.22 host_ctr=seyra-iran-restore cpu=48.82% mem=530.7MiB / 7.204GiB
+ctr unruffled_colden cpu=29.23% mem=118.8MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.40% mem=15.8MiB / 7.204GiB
+2026-10-18T14:56:46Z free_bytes=51917770752 free_inodes=6009214 mem_avail=6473404416 swap_used=322027520 load1=1.17 host_ctr=seyra-iran-restore cpu=27.09% mem=520.2MiB / 7.204GiB
+ctr unruffled_colden cpu=26.93% mem=122.1MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=15.66MiB / 7.204GiB
+2026-10-18T14:57:00Z free_bytes=51916836864 free_inodes=6008990 mem_avail=6377345024 swap_used=321622016 load1=1.14 host_ctr=seyra-iran-restore cpu=33.07% mem=814.9MiB / 7.204GiB
+ctr seyra-stage-tegola-efad60 cpu=0.13% mem=20.14MiB / 7.204GiB
+ctr seyra-stage-overpass-efad60 cpu=0.05% mem=14.89MiB / 7.204GiB
+ctr seyra-stage-photon-efad60 cpu=98.93% mem=217MiB / 7.204GiB
+ctr seyra-stage-valhalla-efad60 cpu=0.02% mem=62.24MiB / 7.204GiB
+ctr unruffled_colden cpu=0.54% mem=175.9MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.94% mem=21.94MiB / 7.204GiB
+2026-10-18T14:57:13Z free_bytes=51915886592 free_inodes=6008983 mem_avail=5693468672 swap_used=321642496 load1=1.70 host_ctr=seyra-iran-restore cpu=17.35% mem=1.153GiB / 7.204GiB
+ctr seyra-stage-tegola-efad60 cpu=0.00% mem=4.043MiB / 7.204GiB
+ctr seyra-stage-overpass-efad60 cpu=0.07% mem=5.34MiB / 7.204GiB
+ctr seyra-stage-photon-efad60 cpu=3.49% mem=729MiB / 7.204GiB
+ctr seyra-stage-valhalla-efad60 cpu=0.06% mem=30.25MiB / 7.204GiB
+ctr unruffled_colden cpu=0.06% mem=215.4MiB / 7.204GiB
+ctr seyra-db-1 cpu=16.19% mem=43.31MiB / 7.204GiB
+2026-10-18T14:57:26Z free_bytes=51915878400 free_inodes=6008979 mem_avail=5586558976 swap_used=311689216 load1=2.24 host_ctr=seyra-iran-restore cpu=20.60% mem=1.423GiB / 7.204GiB
+ctr seyra-stage-tegola-efad60 cpu=0.00% mem=4.043MiB / 7.204GiB
+ctr seyra-stage-overpass-efad60 cpu=0.10% mem=5.586MiB / 7.204GiB
+ctr seyra-stage-photon-efad60 cpu=2.31% mem=729.6MiB / 7.204GiB
+ctr seyra-stage-valhalla-efad60 cpu=0.07% mem=30.01MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=215.2MiB / 7.204GiB
+ctr seyra-db-1 cpu=10.77% mem=239.4MiB / 7.204GiB
+2026-10-18T14:57:40Z free_bytes=51915878400 free_inodes=6008979 mem_avail=5553106944 swap_used=275296256 load1=2.50 host_ctr=seyra-iran-restore cpu=11.58% mem=1.496GiB / 7.204GiB
+ctr seyra-stage-tegola-efad60 cpu=0.00% mem=4.043MiB / 7.204GiB
+ctr seyra-stage-overpass-efad60 cpu=0.09% mem=5.09MiB / 7.204GiB
+ctr seyra-stage-photon-efad60 cpu=5.26% mem=730.2MiB / 7.204GiB
+ctr seyra-stage-valhalla-efad60 cpu=0.12% mem=30.26MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=215.3MiB / 7.204GiB
+ctr seyra-db-1 cpu=14.19% mem=292.6MiB / 7.204GiB
+2026-10-18T14:57:54Z free_bytes=51915878400 free_inodes=6008983 mem_avail=5721956352 swap_used=236511232 load1=2.30 host_ctr=seyra-iran-restore cpu=3.39% mem=1.358GiB / 7.204GiB
+ctr seyra-stage-tegola-efad60 cpu=0.00% mem=4.84MiB / 7.204GiB
+ctr seyra-stage-overpass-efad60 cpu=0.21% mem=11MiB / 7.204GiB
+ctr seyra-stage-photon-efad60 cpu=1.88% mem=517.2MiB / 7.204GiB
+ctr seyra-stage-valhalla-efad60 cpu=0.09% mem=80.51MiB / 7.204GiB
+ctr unruffled_colden cpu=0.55% mem=209.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.04% mem=281.8MiB / 7.204GiB
+2026-10-18T14:58:07Z free_bytes=51915874304 free_inodes=6008983 mem_avail=5719793664 swap_used=236507136 load1=1.79 host_ctr=seyra-iran-restore cpu=7.93% mem=1.362GiB / 7.204GiB
+ctr seyra-stage-tegola-efad60 cpu=0.00% mem=4.84MiB / 7.204GiB
+ctr seyra-stage-overpass-efad60 cpu=0.13% mem=10.94MiB / 7.204GiB
+ctr seyra-stage-photon-efad60 cpu=2.41% mem=517MiB / 7.204GiB
+ctr seyra-stage-valhalla-efad60 cpu=0.09% mem=80.5MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=209.7MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.00% mem=282.2MiB / 7.204GiB
+2026-10-18T14:58:20Z free_bytes=51916263424 free_inodes=6009089 mem_avail=6327361536 swap_used=236482560 load1=1.52 host_ctr=seyra-iran-restore cpu=0.23% mem=811.8MiB / 7.204GiB
+ctr seyra-stage-tegola-efad60 cpu=0.00% mem=4.84MiB / 7.204GiB
+ctr seyra-stage-overpass-efad60 cpu=0.14% mem=10.03MiB / 7.204GiB
+ctr unruffled_colden cpu=0.00% mem=209.5MiB / 7.204GiB
+ctr seyra-db-1 cpu=3.04% mem=282.5MiB / 7.204GiB
+2026-10-18T14:58:33Z free_bytes=51916263424 free_inodes=6009089 mem_avail=6329757696 swap_used=236478464 load1=1.18 host_ctr=seyra-iran-restore cpu=31.81% mem=724.6MiB / 7.204GiB
+ctr seyra-db-1 cpu=0.65% mem=277.9MiB / 7.204GiB

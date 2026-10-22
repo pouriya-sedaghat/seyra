@@ -1,0 +1,8 @@
+# Preserved serving installation: authorized pause for the corrective rehearsal (sanitized; private record kept outside Git)
+policy: plan/map-client-handoff-shared-vm-3431e7e @ 6bbee984 (owner-authorized, reversible); used only because the real rehearsal needs the RAM
+before the stop: baseline identical to the 2026-10-19 verified post-resume state (except memory/load/disk/uptimes); ready, four provider identities matching; verify-images 10 OK; no transition, lock owner, lease or TLS journal; fresh control/state backup generation verified (3/3 sha256 OK); secrets/TLS copy identical to live (diff rc 0); RESUME-REQUIRED written
+stop (installed CLI): 2026-10-20T04:24:33Z -> 2026-10-20T04:25:14Z rc 0; PostgreSQL clean shutdown ('database system is shut down'); api/proxy/tegola/valhalla/db exit 0; photon 143; overpass 137 (known slow SIGTERM shutdown, tmpfs socket, read-only db)
+resume (installed CLI, unchanged r3 install and images): 2026-10-20T04:46:48Z; start rc 0; ready at 2026-10-20T04:47:14Z
+service intentionally unavailable: 2026-10-20T04:24:34Z -> 2026-10-20T04:47:14Z (about 22.7 min); maintenance record, separate from test outages and from the open 18 October readiness 503
+post-resume: baseline identical to pre-stop except memory/load/disk/uptimes; inner containers same ids and images (restarted, not recreated); ready on <DATASET> with all four provider identities matching; loopback ingress 200; verify-images 10 OK; nested API/proxy/OPS still r3 (sha256:ad11e92b..., 07e3eca2..., 489d2a40...): nothing new deployed; outer host never restarted; no outside route; no TLS journal
+marker cleared (renamed RESUME-COMPLETED) only after that verification

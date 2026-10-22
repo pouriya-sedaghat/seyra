@@ -1,0 +1,63 @@
+{
+  "ok": true,
+  "checks": [
+    {
+      "name": "providers-started",
+      "ok": true,
+      "detail": {
+        "valhalla": true,
+        "photon": true,
+        "overpass": true,
+        "tegola": true
+      }
+    },
+    {
+      "name": "tiles",
+      "ok": true,
+      "detail": {
+        "map": "seyra_ds_20261017_2d2c87f31d11",
+        "capabilities": 200,
+        "tile": {
+          "z": 14,
+          "x": 10657,
+          "y": 6613,
+          "status": 200,
+          "bytes": 343
+        }
+      }
+    },
+    {
+      "name": "routing",
+      "ok": true,
+      "detail": {
+        "version": "3.9.1",
+        "tileset_last_modified": 1792328023,
+        "sampled_routes": 5,
+        "routed": 5
+      }
+    },
+    {
+      "name": "geocoder",
+      "ok": true,
+      "detail": {
+        "marker_found": true,
+        "sample_query_present": true,
+        "sample_hits": 3
+      }
+    },
+    {
+      "name": "overpass",
+      "ok": true,
+      "detail": {
+        "identity": "seyra:ds-20261017-2d2c87f31d11",
+        "status": 200
+      }
+    }
+  ],
+  "identities": {
+    "tiles": "seyra_ds_20261017_2d2c87f31d11",
+    "routing": "1792328023",
+    "geocoder": "seyra-release-ds-20261017-2d2c87f31d11",
+    "overpass": "seyra:ds-20261017-2d2c87f31d11"
+  }
+}

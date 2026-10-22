@@ -1,0 +1,106 @@
+{
+  "schema": "seyra.offline-bundle/1",
+  "created_at": "2026-10-18T09:12:01.473Z",
+  "lock_sha256": "5f0dcfe488708d4b031ad621a689f5e30e3bbd1d6ad2b8cae001616a34014248",
+  "images": [
+    {
+      "role": "DB",
+      "ref": "postgis/postgis:17-3.5",
+      "image_id": "sha256:01a6a70e41e6c4467c8f55f6063555ed72db2d6662cd0d571040d42eadaeb6f6",
+      "archive": "images/db.tar",
+      "archive_sha256": "ffc86962ff2d0edaec05956dbcf5fcd10d0fcf9ff797f9a59ba9fe2763ffb6d7",
+      "platform": "linux/amd64"
+    },
+    {
+      "role": "TEGOLA",
+      "ref": "seyra/tegola:0.21.2-seyra1",
+      "image_id": "sha256:4379ed15b436599a68b7908c8b35767c586801273eeca725ca144926e5e0757f",
+      "archive": "images/tegola.tar",
+      "archive_sha256": "37b7a728041cac4071598f70dc414de4d7e3aa85a9bee8bc06e9652684028d98",
+      "platform": "linux/amd64"
+    },
+    {
+      "role": "VALHALLA",
+      "ref": "seyra/valhalla:3.9.1-seyra1",
+      "image_id": "sha256:df4afb12dd7e4d5a110178d3a931facc206239470dc043c38dd117af331defc3",
+      "archive": "images/valhalla.tar",
+      "archive_sha256": "2cb83b802bb037f05d49ce55eeb36f0a666f4a68a0b5c683248b7177f5600fec",
+      "platform": "linux/amd64"
+    },
+    {
+      "role": "PHOTON",
+      "ref": "seyra/photon:1.3.0-seyra1",
+      "image_id": "sha256:46112b0677bb6866b8c7c5c55d883d5c302264f7c855a5bc4a5fefac745f97b2",
+      "archive": "images/photon.tar",
+      "archive_sha256": "943db579c3a1c0e7bc31982f700a48b6a2f62c21f623130894f6d0b86616a8d6",
+      "platform": "linux/amd64"
+    },
+    {
+      "role": "OVERPASS",
+      "ref": "seyra/overpass:0.7.62.4-seyra1",
+      "image_id": "sha256:44d8f7a9837f953d34122189a716c663263a7e6a531104548f37c5604c4b85fa",
+      "archive": "images/overpass.tar",
+      "archive_sha256": "bd8b85a09f8668f08ba339913ea17f693b3452525330bef22e7eff64447f7d94",
+      "platform": "linux/amd64"
+    },
+    {
+      "role": "API",
+      "ref": "seyra/api:1.0.0-seyra1",
+      "image_id": "sha256:ad11e92b08790044a31c23bf16a61bd6689fdeda1f7241f2c41dce4d59d36b00",
+      "archive": "images/api.tar",
+      "archive_sha256": "ef015d5cb35e634739974e8187daf17b5685e14b77af204d2babb9210ae4534f",
+      "platform": "linux/amd64"
+    },
+    {
+      "role": "PROXY",
+      "ref": "seyra/proxy:1.0.0-seyra1",
+      "image_id": "sha256:07e3eca26da70c86cf69cb4538dbcac9eb163ad507a574eb411d561d005e233c",
+      "archive": "images/proxy.tar",
+      "archive_sha256": "3802a48cb7ac1758aacaae6cb4633bec0bb76c010f8f1eb1e307defe776e005a",
+      "platform": "linux/amd64"
+    },
+    {
+      "role": "OSMTOOLS",
+      "ref": "seyra/osmtools:2.3.1-1.19.1-seyra1",
+      "image_id": "sha256:a6803a35f3a1ed2d059bb170e7e2efdabd31567412c33b94ccd518b6678acfc0",
+      "archive": "images/osmtools.tar",
+      "archive_sha256": "2a91d7c4fd3da9fd3709e453fdfc269fa36a1d2f79407e5b9f1c6cca1b40cd80",
+      "platform": "linux/amd64"
+    },
+    {
+      "role": "GEOCODER_BUILD",
+      "ref": "seyra/geocoder-build:5.3.2-1.3.0-seyra1",
+      "image_id": "sha256:ee886ca3890b697b2117919c1dcff389988ee782fb5c1bf20a61c90be8f80057",
+      "archive": "images/geocoder_build.tar",
+      "archive_sha256": "c5a44429f7c392ad4adf834c3d012fe69d106a70bb39aea966c024758f9f8590",
+      "platform": "linux/amd64"
+    },
+    {
+      "role": "OPS",
+      "ref": "seyra/ops:1.0.0-seyra1",
+      "image_id": "sha256:8a7ee6f7ed8f80f16fe2966ae0c3683718b701d9d0f1488e8476bd09cf196078",
+      "archive": "images/ops.tar",
+      "archive_sha256": "809c6789d155a7e0455a23d566ffa31f082dad351da732948545bb578a2acb56",
+      "platform": "linux/amd64"
+    }
+  ],
+  "files": {
+    "install/apps/ops/migrations/001_control.sql": "a7add6ef6949d81a83546e578421a1f1a3df67b87eb6de67671f40936abfb96d",
+    "install/bin/seyra-maps": "f157a33a876617fbc2e865238f2e585cb6c5556abbba3da69c90166cd531fc98",
+    "install/docs/LICENSES.md": "349c7be0fc947b9a4b2024eeb25894c6f5763c4f0c31e09c8b9ac9b3d0894022",
+    "install/docs/MOBILE_INTEGRATION.md": "7512f0eb35bb362e361393d717da47be81a220b9c5bea042b5070d8ffcb5acfa",
+    "install/docs/RUNBOOK.md": "b15b7102626aecd924cb82a336ef3ab9020d9f25480b8c25e9c140df9a7f2952",
+    "install/docs/openapi/map-services-v1.json": "edc67144474961af5e5096e7849d5ba7477803306e90568816ed3fe9f3a5e1f6",
+    "install/infra/catalog/catalog-report.sql": "3130f0636e5b6deafd80067fd71eb2a036d36ca70d94fbbde1bcd5bc15d8a699",
+    "install/infra/catalog/catalog.json": "737fc60c42416ff686f636723d9427c0c4c1f399a99140fe48099c1e047214f5",
+    "install/infra/catalog/post-import.sql": "d35e9008583697fbad55a40d447e99235eaa285a6813f9e2e6a2d59305e698a4",
+    "install/infra/catalog/pre-import.sql": "434ceab4a968cd63141429e58bd97f0a57c21897f1362b5b1faf38bee625617c",
+    "install/infra/catalog/seyra-flex.lua": "44a7911075d9ebb8877f4f68134f5279c103247ea1afe3eb15dfcc4ccd4a5954",
+    "install/infra/catalog/tegola.toml.tmpl": "a4088362a9eb3ad0fc554f733dcd8a3cd399bdbbd1d2a6d6880a09ac099218a5",
+    "install/infra/compose/jobs.yml": "84ec52ab1f87090a4ed02a0bf537bff95aa44539b478a3eb2caf0e406f1ce6aa",
+    "install/infra/compose/runtime.yml": "8b9bc6c94f8a5250827f6af82f85986c55028b7d3034f3702c4e0ed45c2827c0",
+    "install/infra/dependencies.lock.json": "25a0426bb36b502abc7900a5ff49bb02c25aaa9b251123be4fb2cde986fe809b",
+    "install/infra/prepare/sources.json": "e61868dfd9e00c02808f79a7613abcda0cc5013386b536ccbc3442425b7a1610",
+    "install/infra/valhalla/valhalla.json": "1f846f9f031d904e0b2a03ba8a7d55551066f558acf8c6e676b8ab2acd53871b"
+  }
+}

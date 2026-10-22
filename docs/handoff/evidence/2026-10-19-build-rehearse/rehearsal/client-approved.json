@@ -1,0 +1,97 @@
+[
+  {
+    "name": "approved: readiness 200 through edge and relay, with real TLS for the rehearsal name",
+    "ok": true,
+    "detail": "200 "
+  },
+  {
+    "name": "approved: served certificate is the imported rehearsal certificate",
+    "ok": true,
+    "detail": "17:3E:38:D4:5B:F2:36:B9:33:AE:A7:3D:14:81:3A:95:21:FB:E4:E1:7F:24:0A:88:87:0F:A8:15:53:90:6B:B6 != 17:3E:38:D4:5B:F2:36:B9:33:AE:A7:3D:14:81:3A:95:21:FB:E4:E1:7F:24:0A:88:87:0F:A8:15:53:90:6B:B6"
+  },
+  {
+    "name": "approved: /api/v1/map/capabilities served",
+    "ok": true,
+    "detail": "200 "
+  },
+  {
+    "name": "approved: /api/docs/ served",
+    "ok": true,
+    "detail": "200 "
+  },
+  {
+    "name": "approved: /api/docs/json served",
+    "ok": true,
+    "detail": "200 "
+  },
+  {
+    "name": "approved: /maps/ds-20261001-9843cf36a06e/tiles.json served",
+    "ok": true,
+    "detail": "200 "
+  },
+  {
+    "name": "approved: /maps/ds-20261001-9843cf36a06e/styles/light-fa.json served",
+    "ok": true,
+    "detail": "200 "
+  },
+  {
+    "name": "approved: /maps/ds-20261001-9843cf36a06e/tiles/14/8192/8191.pbf served",
+    "ok": true,
+    "detail": "200 "
+  },
+  {
+    "name": "approved: /maps/ds-20261001-9843cf36a06e/sprites/light.json served",
+    "ok": true,
+    "detail": "200 "
+  },
+  {
+    "name": "approved: /maps/ds-20261001-9843cf36a06e/fonts/Vazirmatn%20Regular/0-255.pbf served",
+    "ok": true,
+    "detail": "200 "
+  },
+  {
+    "name": "approved: /licenses/vazirmatn-ofl.txt served",
+    "ok": true,
+    "detail": "200 "
+  },
+  {
+    "name": "approved: / served",
+    "ok": true,
+    "detail": "200 "
+  },
+  {
+    "name": "approved: unknown Host (valid SNI) gets 421",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "approved: the control-path name localhost gets 421 on the relay",
+    "ok": true,
+    "detail": ""
+  },
+  {
+    "name": "approved: spoofed forwarding headers naming an outsider change nothing",
+    "ok": true,
+    "detail": "200"
+  },
+  {
+    "name": "approved: 12 diagnostics variants (GET/HEAD) are never served",
+    "ok": true,
+    "detail": "0"
+  },
+  {
+    "name": "approved: direct bypass of the edge to 172.18.0.2:8444: no response",
+    "ok": true,
+    "detail": "null ENETUNREACH"
+  },
+  {
+    "name": "approved: direct bypass of the edge to 172.18.0.2:8443: no response",
+    "ok": true,
+    "detail": "null ENETUNREACH"
+  },
+  {
+    "name": "approved: oversized body: typed 413 validating against the exported schema",
+    "ok": true,
+    "detail": "413 {\"error\":{\"code\":\"PAYLOAD_TOO_LARGE\",\"message\":\"request body exceeds 64 KiB\",\"request_id\":\"ff450165756b45279e2682c147262"
+  }
+]

@@ -1,0 +1,60 @@
+PASS separate-directories: SEYRA_HOME stays a writable mount
+PASS separate-directories: no read-only mount at or under SEYRA_HOME
+PASS separate-directories: no mount target repeats
+PASS separate-directories: --cert passed as the absolute path
+PASS separate-directories: --cert visible inside the container
+PASS separate-directories: --ca passed as the absolute path
+FAIL separate-directories: --ca visible inside the container -- <tmp>/trust/root.crt mounts: /var/run/docker.sock:/var/run/docker.sock | <tmp>/home-separate-directories:<tmp>/home-separate-directories | <scratch>/review-6602199/checkout:
+PASS separate-directories: --chain passed as the absolute path
+FAIL separate-directories: --chain visible inside the container -- <tmp>/intermediates/chain.pem mounts: /var/run/docker.sock:/var/run/docker.sock | <tmp>/home-separate-directories:<tmp>/home-separate-directories | <scratch>/review-6602199/
+PASS separate-directories: --key passed as the absolute path
+PASS separate-directories: --key visible inside the container
+PASS same-directory: SEYRA_HOME stays a writable mount
+PASS same-directory: no read-only mount at or under SEYRA_HOME
+FAIL same-directory: no mount target repeats -- /var/run/docker.sock | <tmp>/home-same-directory | /opt/seyra-install | <tmp>/one | <tmp>/one
+PASS same-directory: --cert passed as the absolute path
+PASS same-directory: --cert visible inside the container
+PASS same-directory: --ca passed as the absolute path
+PASS same-directory: --ca visible inside the container
+PASS same-directory: --chain passed as the absolute path
+PASS same-directory: --chain visible inside the container
+PASS same-directory: --key passed as the absolute path
+PASS same-directory: --key visible inside the container
+PASS relative-with-spaces: SEYRA_HOME stays a writable mount
+PASS relative-with-spaces: no read-only mount at or under SEYRA_HOME
+PASS relative-with-spaces: no mount target repeats
+PASS relative-with-spaces: --cert passed as the absolute path
+PASS relative-with-spaces: --cert visible inside the container
+FAIL relative-with-spaces: --ca passed as the absolute path -- ./company root.crt != <tmp>/operator files/company root.crt
+FAIL relative-with-spaces: --ca visible inside the container -- ./company root.crt mounts: /var/run/docker.sock:/var/run/docker.sock | <tmp>/home-relative-with-spaces:<tmp>/home-relative-with-spaces | <scratch>/review-6602199/checkout:/opt/seyra-install:ro 
+PASS service-local: SEYRA_HOME stays a writable mount
+FAIL service-local: no read-only mount at or under SEYRA_HOME -- <tmp>/home-service-local/secrets/tls:<tmp>/home-service-local/secrets/tls:ro | <tmp>/home-service-local/secrets/tls/pending:<tmp>/home-service-local/secrets/tls/pending:ro
+PASS service-local: no mount target repeats
+PASS service-local: --cert passed as the absolute path
+PASS service-local: --cert visible inside the container
+PASS service-local: --key passed as the absolute path
+PASS service-local: --key visible inside the container
+PASS service-local: --ca passed as the absolute path
+FAIL service-local: --ca visible inside the container -- <tmp>/ext/root.crt mounts: /var/run/docker.sock:/var/run/docker.sock | <tmp>/home-service-local:<tmp>/home-service-local | <scratch>/review-6602199/checkout:/opt/seyra-insta
+PASS comma-colon-path: SEYRA_HOME stays a writable mount
+PASS comma-colon-path: no read-only mount at or under SEYRA_HOME
+PASS comma-colon-path: no mount target repeats
+PASS comma-colon-path: --ca passed as the absolute path
+FAIL comma-colon-path: --ca visible inside the container -- <tmp>/odd,dir:x/root.crt mounts: /var/run/docker.sock:/var/run/docker.sock | <tmp>/home-comma-colon-path:<tmp>/home-comma-colon-path | <scratch>/review-6602199/checkout:/opt
+PASS same-file-twice: SEYRA_HOME stays a writable mount
+PASS same-file-twice: no read-only mount at or under SEYRA_HOME
+PASS same-file-twice: no mount target repeats
+PASS same-file-twice: --cert passed as the absolute path
+PASS same-file-twice: --cert visible inside the container
+PASS same-file-twice: --ca passed as the absolute path
+FAIL same-file-twice: --ca visible inside the container -- <tmp>/trust/root.crt mounts: /var/run/docker.sock:/var/run/docker.sock | <tmp>/home-same-file-twice:<tmp>/home-same-file-twice | <scratch>/review-6602199/checkout:/opt/seyra
+PASS pbf-outside-home: SEYRA_HOME stays a writable mount
+PASS pbf-outside-home: no read-only mount at or under SEYRA_HOME
+PASS pbf-outside-home: no mount target repeats
+PASS pbf-outside-home: --pbf passed as the absolute path
+PASS pbf-outside-home: --pbf visible inside the container
+FAIL missing-ca-file: refused before Docker (exit 2, no docker run) -- rc=0 docker=true 
+FAIL missing-ca-directory: refused before Docker (exit 2, no docker run) -- rc=0 docker=true 
+FAIL missing-chain-argument: refused before Docker (exit 2, no docker run) -- rc=0 docker=true 
+FAIL directory-instead-of-file: refused before Docker (exit 2, no docker run) -- rc=0 docker=true 
+# wrapper=<scratch>/review-6602199/checkout/bin/seyra-maps checks=59 failed=13

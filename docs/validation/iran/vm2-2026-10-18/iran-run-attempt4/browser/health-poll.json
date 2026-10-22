@@ -1,0 +1,7 @@
+{
+ "polls": 296,
+ "ready_not_200": 0,
+ "transitions": [
+  "2026-10-18T13:58:09.547Z ready=200 tiles:ok routing:ok geocoder:ok overpass:ok db:?"
+ ]
+}

@@ -1,0 +1,7 @@
+# lock-race.test.ts against FIXED apps/ops/src/lifecycle-lock.ts (kernel flock) — 2026-10-17T09:51:50Z, node v24.21.0; repeated 10x:  10 Tests 5 passed (5)
+ ✓ src/lock-race.test.ts > lifecycle lock between real processes (review R3 follow-up) > two commands recovering from a crashed owner never both enter (reviewed interleaving) 536ms
+ ✓ src/lock-race.test.ts > lifecycle lock between real processes (review R3 follow-up) > a command paused right after seeing the crashed owner keeps exclusion when another one runs 696ms
+ ✓ src/lock-race.test.ts > lifecycle lock between real processes (review R3 follow-up) > ordinary contention: a live holder refuses others, a bounded wait enters after it leaves 905ms
+ ✓ src/lock-race.test.ts > lifecycle lock between real processes (review R3 follow-up) > a holder killed with SIGKILL releases the lock; its record does not block the next command 299ms
+ ✓ src/lock-race.test.ts > lifecycle lock between real processes (review R3 follow-up) > after a crashed owner with an unfinished transition, only recover is admitted 364ms
+      Tests  5 passed (5)

@@ -1,0 +1,139 @@
+Your certificate has been saved in root_ca.crt.
+Your private key has been saved in root_ca.key.
+Your certificate has been saved in intermediate_ca.crt.
+Your private key has been saved in intermediate_ca.key.
+Your certificate has been saved in plain_int.crt.
+Your private key has been saved in plain_int.key.
+Your certificate has been saved in short_int.crt.
+Your private key has been saved in short_int.key.
+Your certificate has been saved in other_root.crt.
+Your private key has been saved in other_root.key.
+Your certificate has been saved in root_ca.cer
+Your certificate has been saved in other_root.cer
+PASS parses: Add-RootTrust.ps1
+PASS parses: Export-PublicPacket.ps1
+PASS parses: Get-StepCli.ps1
+PASS parses: New-IssuingCa.ps1
+PASS parses: New-PkiFolder.ps1
+PASS parses: New-RootCa.ps1
+PASS parses: Remove-RootTrust.ps1
+PASS parses: SeyraPki.psm1
+PASS parses: Sign-ServerCsr.ps1
+PASS parses: Test-SeyraHttps.ps1
+PASS parses: Test-SeyraSource.ps1
+PASS parses: Test-SeyraTls.ps1
+PASS root accepted (pathlen 1, 5 years, self-signed)
+PASS issuing CA accepted (pathlen 0, 1 year, issued by root)
+PASS issuing CA rejected as a root
+PASS root rejected as an issuing CA
+PASS short (30-day) issuing CA rejected
+PASS encrypted issuer key accepted
+PASS unencrypted issuer key rejected
+PASS CSR matching its manifest accepted
+PASS CSR with an extra DNS SAN rejected
+PASS CSR whose file hash differs from the manifest rejected
+PASS CSR whose public key differs from the manifest rejected
+PASS manifest naming a DNS name rejected
+PASS server-only leaf (shipped template) accepted
+PASS leaf with clientAuth (default step profile) rejected
+PASS leaf with an extra DNS SAN rejected
+PASS leaf for another IP rejected
+PASS leaf longer than 90 days rejected
+PASS leaf for another key rejected
+PASS leaf outliving its issuing CA rejected
+PASS leaf against the wrong issuer rejected
+PASS directory with a private key detected
+# lan-pki windows module: checks=33 failed=0
+PASS path: default %LOCALAPPDATA%\SeyraPKI accepted
+PASS path: exact Desktop refused (any case, trailing separator)
+PASS path: exact Documents refused
+PASS path: beneath Documents refused
+PASS path: beneath OneDrive refused
+PASS path: roaming AppData refused
+PASS path: profile itself refused
+PASS path: %LOCALAPPDATA% itself refused
+PASS path: drive root refused (contains everything)
+PASS path: C:\Users refused (contains the profile)
+PASS path: system folder refused
+PASS path: UNC share refused
+PASS path: Dropbox-like name refused
+PASS path: a dedicated folder on another drive accepted
+PASS path: prefix-only match is not "inside" (Desktop2)
+PASS acl: owner-only tree accepted
+PASS acl: owner-only base + foreign explicit ACE on a child key refused with a one-entry remedy
+PASS acl: base inheriting from its parent refused (remedy on that folder only, no /T)
+PASS acl: deny entry for another principal refused
+PASS acl: child owned by someone else refused (never takes ownership)
+PASS acl: junction refused, remedy removes only the link
+PASS R1 fresh safe tree: created (exit 0)
+PASS R1 fresh: the seven managed subfolders exist
+PASS R1 fresh: exactly one permission change, on the new folder (protected, you only)
+PASS R1 fresh: the parent profile permissions are untouched
+PASS R1 safe reuse: accepted
+PASS R1 safe reuse: nothing modified
+PASS R1 foreign explicit ACE on a key: refused
+PASS R1 foreign ACE: names the key and the one-entry remedy
+PASS R1 foreign ACE: nothing changed (permissions, key bytes)
+PASS R1 foreign ACE: New-RootCa also stops before using the folder
+PASS R1 after the targeted remedy: accepted again
+PASS R1 foreign inheritable ACE on issuing\: refused, the key listed as inherited
+PASS R1 subfolder owned by another account: refused, no ownership taken
+PASS R1 deny entry for another principal: refused
+PASS R1 junction-like child (directory link): refused
+PASS R1 directory link: not followed, nothing changed
+PASS R1 file link to a key: refused (remedy deletes only the link)
+PASS R1 existing issuer key stored unencrypted: refused (key untouched)
+PASS R1 tree restored: accepted
+PASS R1 reuse of a folder made by the earlier icacls /T version: accepted unchanged
+PASS R1 unsafe Base refused before any change: exact forbidden root (Desktop itself)
+PASS R1 unsafe Base refused before any change: inside Documents
+PASS R1 unsafe Base refused before any change: inside OneDrive
+PASS R1 unsafe Base refused before any change: roaming AppData
+PASS R1 unsafe Base refused before any change: temporary folder
+PASS R1 unsafe Base refused before any change: %LOCALAPPDATA% itself
+PASS R1 unsafe Base refused before any change: the profile itself
+PASS R1 unsafe Base refused before any change: a folder containing the profile
+PASS R1 unsafe Base refused before any change: filesystem root
+PASS R1 unsafe Base refused before any change: sync-client name
+PASS R1 Base reached through a link: refused, nothing created at the target
+PASS R1 Base that is a dangling link: refused
+PASS R1 existing folder that is not a SeyraPKI folder: refused, untouched
+PASS R1 existing folder inheriting its parent permissions: refused, not repaired
+PASS R1 Base that is a file: refused
+PASS R2 setup: PKI folder created
+PASS R2 no record-write permission (no lock yet): refused before import
+PASS R2 no record-write permission (lock present): refused by the write probe before import
+PASS R2 wrong fingerprint typed: refused, nothing trusted or recorded
+PASS R2 import refused / no effect: non-zero, nothing trusted, pending record withdrawn
+PASS R2 import succeeded, then the run was interrupted: root trusted, record pending, pre_existing false
+PASS R2 retry reconciles: trusted, still NOT pre-existing, original observation kept
+PASS R2 repeated Add: no change, still not pre-existing
+PASS R2 undo removes the root this workflow added; record archived
+PASS R2 import took effect but reported an error: recorded as added (trusted, not pre-existing)
+PASS R2 ... and undo removes it
+PASS R2 import succeeded, final record write failed: non-zero, root trusted, record still pending/not pre-existing
+PASS R2 ... retry completes it as added by this workflow
+PASS R2 ... and undo removes it
+PASS R2 genuinely pre-existing root: recorded pre_existing true, store unchanged
+PASS R2 undo leaves a genuinely pre-existing root in place (record archived)
+PASS R2 setup: trusted by this workflow
+PASS R2 another account: refused (the folder is not theirs), store and record unchanged
+PASS R2 tampered record (other account in the record): refused, store unchanged
+PASS R2 tampered record (other root bytes): refused, store unchanged
+PASS R2 tampered record (pre_existing flipped while pending): refused, store unchanged
+PASS R2 tampered record (unknown state): refused, store unchanged
+PASS R2 tampered record (not JSON): refused, store unchanged
+PASS R2 tampered record (malformed timestamp): refused, store unchanged
+PASS R2 tampered record (other store): refused, store unchanged
+PASS R2 Add for another root while a record exists: refused, record kept
+PASS R2 removal declined: non-zero, root and record kept
+PASS R2 record says trusted but the root was removed outside: Add refuses with the next step
+PASS R2 ... Remove closes that record
+PASS R2 Remove without a record: refused (nothing to undo)
+PASS R2 store entry with the thumbprint but other bytes: refused, untouched
+PASS R2 overlapping Add while another run holds the lock: refused
+PASS R2 overlapping Remove while another run holds the lock: refused
+PASS R2 the first run completed normally
+PASS R2 a left-over lock file does not block a later run (OS lock, not file existence)
+PASS R2 the record folder holds no temporary or probe files
+# lan-pki windows scripts (controlled boundary): checks=92 failed=0

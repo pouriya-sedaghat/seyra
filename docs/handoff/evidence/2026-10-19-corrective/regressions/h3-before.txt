@@ -1,0 +1,14 @@
+PASS host only, isolated: exit 0
+FAIL host only, one destination routable: exit non-zero -- rc=0 FAIL nested host: 1 destinations are routable (<tmp>/out-2/host-route-get.txt)
+PASS host only, docker exec fails (tool error is not isolation): exit non-zero
+PASS host + edge, all checks hold: exit 0
+PASS host + edge valid: only this run's sinks are removed
+PASS host + edge valid: no container other than test sinks is removed
+FAIL host + edge, a forbidden connection succeeds: exit non-zero -- rc=0 FAIL edge: 1 NEW connections succeeded (<tmp>/out-5/edge-connect.txt) | FAIL edge: guard counter 0 -> 4
+FAIL host + edge, guard counter missing: exit non-zero -- rc=0 FAIL edge: guard counter  -> 
+FAIL host + edge, guard counter unchanged: exit non-zero -- rc=0 FAIL edge: guard counter 0 -> 0
+FAIL host + edge, allowed upstream unreachable: exit non-zero -- rc=0 FAIL edge: upstream 198.18.0.2:8444 not reachable (nc: can't connect: Connection refused
+FAIL host + edge, nc missing in the probe image: exit non-zero -- rc=0 FAIL edge: guard counter 0 -> 0
+FAIL host + edge, probe container cannot run: exit non-zero -- rc=0 FAIL edge: guard counter 0 -> 0 | FAIL edge: upstream 198.18.0.2:8444 not reachable ()
+FAIL host + edge, routable host even though the edge is fine: exit non-zero -- rc=0 FAIL nested host: 1 destinations are routable (<tmp>/out-11/host-route-get.txt)
+# script=<scratch>/review-6602199/checkout/tests/offline/namespace-egress.sh checks=13 failed=8

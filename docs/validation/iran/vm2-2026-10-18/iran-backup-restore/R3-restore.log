@@ -1,0 +1,5 @@
+[restore] selected backup generation seyra-backup-20261018T140109746Z-8c35ff (the only complete generation in /home/owner/seyra-lab/backup)
+[restore] generation seyra-backup-20261018T140109746Z-8c35ff (created 2026-10-18T14:01:09.746Z) verified: 3 files match their SHA-256; complete SQL dump; settings valid
+[restore] control database restored from seyra-backup-20261018T140109746Z-8c35ff/seyra_app.sql (5 release events); grants re-applied; migrations applied now: none
+[restore] backed-up active release ds-20261017-2d2c87f31d11: source iran-261017.osm.pbf sha256 7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f; rebuild it from the owner's original input with that sha256: seyra-maps import --pbf /path/to/input.osm.pbf
+[restore] then activate the rebuilt active release (seyra-maps activate DATASET_ID); identical inputs and images reproduce the same dataset id

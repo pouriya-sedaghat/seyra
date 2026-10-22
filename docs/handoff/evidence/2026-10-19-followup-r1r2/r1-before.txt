@@ -1,0 +1,30 @@
+PASS valid completion: recover completes the proposed set
+PASS valid fallback: recover restores the complete previous set
+PASS valid fallback: certificate, key, trust anchor and metadata equal the previous set
+PASS valid fallback: the restored certificate verifies against the restored trust anchor
+PASS valid fallback: journal removed
+FAIL backup with an unrelated root (review R1): recover refuses -- rc=0 [tls] interrupted replacement undone; previous pair restored from <tmp>/wrong-root/secrets/tls/previous-2026-10-19T111653953Z
+[tls] recover: restored
+FAIL backup with an unrelated root (review R1): every active file unchanged -- {"before":{"server.crt":"ab93867fd3cbb24e3e702e4a8740e32ad890f60db0bfedf69228dd3ae7f26d12","server.key":"50ee0d89a54e34e34c83394dd4d1d6b5f0626bad6519bd06e8a44ae2a66bc24e","ca.crt":"b2effaf7a26efcb1244331073f5659e78baf8961e28a548b694adff52233f95a","served.json":"502a86550812e07e7981d84b17bbbaf29547fc
+FAIL backup with an unrelated root (review R1): journal kept unchanged -- 
+FAIL backup without its trust anchor: recover refuses -- rc=0 [tls] interrupted replacement undone; previous pair restored from <tmp>/missing-root/secrets/tls/previous-2026-10-19T111654389Z
+[tls] recover: restored
+FAIL backup without its trust anchor: every active file unchanged -- {"before":{"server.crt":"ab93867fd3cbb24e3e702e4a8740e32ad890f60db0bfedf69228dd3ae7f26d12","server.key":"50ee0d89a54e34e34c83394dd4d1d6b5f0626bad6519bd06e8a44ae2a66bc24e","ca.crt":"b2effaf7a26efcb1244331073f5659e78baf8961e28a548b694adff52233f95a","served.json":"f5a14404218de2f8141b8c3e8cc03db3e4535b
+FAIL backup without its trust anchor: journal kept unchanged -- 
+FAIL backup with a corrupt trust anchor: recover refuses -- rc=0 [tls] interrupted replacement undone; previous pair restored from <tmp>/corrupt-root/secrets/tls/previous-2026-10-19T111654825Z
+[tls] recover: restored
+FAIL backup with a corrupt trust anchor: every active file unchanged -- {"before":{"server.crt":"ab93867fd3cbb24e3e702e4a8740e32ad890f60db0bfedf69228dd3ae7f26d12","server.key":"50ee0d89a54e34e34c83394dd4d1d6b5f0626bad6519bd06e8a44ae2a66bc24e","ca.crt":"b2effaf7a26efcb1244331073f5659e78baf8961e28a548b694adff52233f95a","served.json":"db505746d68cb331cddcccd1172d1fa433268a
+FAIL backup with a corrupt trust anchor: journal kept unchanged -- 
+PASS incomplete backup (no key): recover refuses
+PASS incomplete backup (no key): every active file unchanged
+PASS incomplete backup (no key): journal kept unchanged
+FAIL backup with inconsistent metadata: recover refuses -- rc=0 [tls] interrupted replacement undone; previous pair restored from <tmp>/metadata/secrets/tls/previous-2026-10-19T111655699Z
+[tls] recover: restored
+FAIL backup with inconsistent metadata: every active file unchanged -- {"before":{"server.crt":"ab93867fd3cbb24e3e702e4a8740e32ad890f60db0bfedf69228dd3ae7f26d12","server.key":"50ee0d89a54e34e34c83394dd4d1d6b5f0626bad6519bd06e8a44ae2a66bc24e","ca.crt":"b2effaf7a26efcb1244331073f5659e78baf8961e28a548b694adff52233f95a","served.json":"a3904bbf1b649da0360d425df1346a72d69e1e
+FAIL backup with inconsistent metadata: journal kept unchanged -- 
+PASS older journal, complete chain-valid backup: restored
+FAIL older journal, backup with an unrelated root: recover refuses -- rc=0 [tls] interrupted replacement undone; previous pair restored from <tmp>/legacy-journal-wrong-root/secrets/tls/previous-2026-10-19T111656590Z
+[tls] recover: restored
+FAIL older journal, backup with an unrelated root: every active file unchanged -- {"before":{"server.crt":"ab93867fd3cbb24e3e702e4a8740e32ad890f60db0bfedf69228dd3ae7f26d12","server.key":"50ee0d89a54e34e34c83394dd4d1d6b5f0626bad6519bd06e8a44ae2a66bc24e","ca.crt":"b2effaf7a26efcb1244331073f5659e78baf8961e28a548b694adff52233f95a","served.json":"67ccbb6e4c2bd7d5bbf8dcee20fe4e24a2f0cc
+FAIL older journal, backup with an unrelated root: journal kept unchanged -- 
+# checkout=<scratch>/review-e6a39ab/checkout checks=24 failed=15

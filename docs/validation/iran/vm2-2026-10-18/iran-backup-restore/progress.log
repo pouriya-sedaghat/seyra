@@ -1,0 +1,8 @@
+# 2026-10-18T14:01:08Z iran-offline-host start phases=[backup restore] pbf=iran-261017.osm.pbf sha256=7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f size=229845082
+== 2026-10-18T14:01:12Z PASS I8 backup generation seyra-backup-20261018T140109746Z-8c35ff (without --include-sources) and a separate secrets copy
+== 2026-10-18T14:01:12Z PASS I9 zero packets to non-local destinations from offline host 1 during install/import/activate/smoke/restart/backup (7 link-local IGMP reports counted separately)
+== 2026-10-18T14:02:49Z PASS R2 restore before the secrets are back is refused and starts nothing
+== 2026-10-18T14:02:55Z PASS R3 secrets -> init -> restore: control DB events identical; restore names the original input by SHA-256 (7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f)
+== 2026-10-18T14:58:35Z PASS R4 rebuilt from the owner's original input without included sources; dataset_id reproduced (ds-20261017-2d2c87f31d11)
+== 2026-10-18T15:00:38Z PASS R5 restored host serves ds-20261017-2d2c87f31d11 through the ingress
+== 2026-10-18T15:00:42Z PASS R6 zero packets to non-local destinations from offline host 2 during install/restore/rebuild/activate

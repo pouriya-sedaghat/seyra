@@ -1,0 +1,200 @@
+2026-10-18 11:16:54.741202077 [33;1m[WARN][0m العراق (304934) is degenerate and will be skipped
+2026-10-18 11:16:54.741204504 [33;1m[WARN][0m ایران (304938) is missing way member 305917633
+2026-10-18 11:16:54.741206202 [33;1m[WARN][0m ایران (304938) is degenerate and will be skipped
+2026-10-18 11:16:54.741208275 [33;1m[WARN][0m عمان (305138) is missing way member 283845782
+2026-10-18 11:16:54.741209937 [33;1m[WARN][0m عمان (305138) is degenerate and will be skipped
+2026-10-18 11:16:54.741211789 [33;1m[WARN][0m پاکستان (307573) is missing way member 1276291269
+2026-10-18 11:16:54.741213466 [33;1m[WARN][0m پاکستان (307573) is degenerate and will be skipped
+2026-10-18 11:16:54.741215251 [33;1m[WARN][0m بلوچستان (357968) is missing way member 1221482307
+2026-10-18 11:16:54.741216938 [33;1m[WARN][0m بلوچستان (357968) is degenerate and will be skipped
+2026-10-18 11:16:54.741219054 [33;1m[WARN][0m Հայաստան (364066) is missing way member 108588823
+2026-10-18 11:16:54.741220709 [33;1m[WARN][0m Հայաստան (364066) is degenerate and will be skipped
+2026-10-18 11:16:54.741239654 [33;1m[WARN][0m Սյունիքի մարզ (364082) is missing way member 549687269
+2026-10-18 11:16:54.741242305 [33;1m[WARN][0m Սյունիքի մարզ (364082) is degenerate and will be skipped
+2026-10-18 11:16:54.741244323 [33;1m[WARN][0m Azərbaycan (364110) is missing way member 148072457
+2026-10-18 11:16:54.741246189 [33;1m[WARN][0m Azərbaycan (364110) is degenerate and will be skipped
+2026-10-18 11:16:54.834266286 [33;1m[WARN][0m ولایت نیمروز (1674664) is missing way member 443015250
+2026-10-18 11:16:54.834302645 [33;1m[WARN][0m ولایت نیمروز (1674664) is degenerate and will be skipped
+2026-10-18 11:16:54.834310054 [33;1m[WARN][0m ولایت فراه (1674802) is missing way member 443015250
+2026-10-18 11:16:54.834312147 [33;1m[WARN][0m ولایت فراه (1674802) is degenerate and will be skipped
+2026-10-18 11:16:54.834384267 [33;1m[WARN][0m ولایت هرات (1674803) is missing way member 1075791226
+2026-10-18 11:16:54.834387461 [33;1m[WARN][0m ولایت هرات (1674803) is degenerate and will be skipped
+2026-10-18 11:16:54.839391591 [33;1m[WARN][0m پارێزگای ھەولێر (2969761) is missing way member 801442714
+2026-10-18 11:16:54.839415133 [33;1m[WARN][0m پارێزگای ھەولێر (2969761) is degenerate and will be skipped
+2026-10-18 11:16:54.839419771 [33;1m[WARN][0m پارێزگای سلێمانی (2969790) is missing way member 800046779
+2026-10-18 11:16:54.839422051 [33;1m[WARN][0m پارێزگای سلێمانی (2969790) is degenerate and will be skipped
+2026-10-18 11:16:54.839424517 [33;1m[WARN][0m محافظة ديالى (3242294) is missing way member 799322175
+2026-10-18 11:16:54.839426606 [33;1m[WARN][0m محافظة ديالى (3242294) is degenerate and will be skipped
+2026-10-18 11:16:54.839460155 [33;1m[WARN][0m محافظة البصرة (3244379) is missing way member 1053170210
+2026-10-18 11:16:54.839464088 [33;1m[WARN][0m محافظة البصرة (3244379) is degenerate and will be skipped
+2026-10-18 11:16:54.839520227 [33;1m[WARN][0m محافظة ميسان (3244382) is missing way member 797737978
+2026-10-18 11:16:54.839523970 [33;1m[WARN][0m محافظة ميسان (3244382) is degenerate and will be skipped
+2026-10-18 11:16:54.839526898 [33;1m[WARN][0m محافظة واسط (3244385) is missing way member 798528003
+2026-10-18 11:16:54.839528868 [33;1m[WARN][0m محافظة واسط (3244385) is degenerate and will be skipped
+2026-10-18 11:16:54.853037829 [33;1m[WARN][0m پارێزگای ھەڵەبجە (3826029) is missing way member 800046804
+2026-10-18 11:16:54.853066094 [33;1m[WARN][0m پارێزگای ھەڵەبجە (3826029) is degenerate and will be skipped
+2026-10-18 11:16:54.853118867 [32;1m[INFO][0m Inserted 30 admin areas
+2026-10-18 11:16:54.853912506 [32;1m[INFO][0m Created spatial index
+2026-10-18 11:16:54.853988677 [32;1m[INFO][0m Created Level index
+2026-10-18 11:16:54.854312382 [32;1m[INFO][0m Done updating parent admin
+2026-10-18 11:16:54.854362530 [32;1m[INFO][0m Done updating drive on right column.
+2026-10-18 11:16:54.854402163 [32;1m[INFO][0m Created Drive On Right index
+2026-10-18 11:16:54.854424945 [32;1m[INFO][0m Done updating allow intersection names column.
+2026-10-18 11:16:54.854457322 [32;1m[INFO][0m Created allow intersection names index
+2026-10-18 11:16:54.854510821 [32;1m[INFO][0m Done updating supported languages
+2026-10-18 11:16:54.854537530 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Cymru / Wales
+2026-10-18 11:16:54.854546231 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for United States
+2026-10-18 11:16:54.854553332 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Türkiye
+2026-10-18 11:16:54.854560677 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Greece
+2026-10-18 11:16:54.854567751 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Finland
+2026-10-18 11:16:54.854586837 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Switzerland
+2026-10-18 11:16:54.854596714 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for France
+2026-10-18 11:16:54.854604924 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for England
+2026-10-18 11:16:54.854611988 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Russia
+2026-10-18 11:16:54.854618866 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Belarus
+2026-10-18 11:16:54.854625842 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Hungary
+2026-10-18 11:16:54.854632725 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Belgium
+2026-10-18 11:16:54.854640135 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for United Kingdom
+2026-10-18 11:16:54.854647064 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Iceland
+2026-10-18 11:16:54.854653927 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Austria
+2026-10-18 11:16:54.854660752 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Brazil
+2026-10-18 11:16:54.854667771 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Denmark
+2026-10-18 11:16:54.854674569 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for China
+2026-10-18 11:16:54.854681498 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Spain
+2026-10-18 11:16:54.854688610 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Australia
+2026-10-18 11:16:54.854695583 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Ireland
+2026-10-18 11:16:54.854702468 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Netherlands
+2026-10-18 11:16:54.854709212 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Norway
+2026-10-18 11:16:54.854716203 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Italy
+2026-10-18 11:16:54.854723272 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Alba / Scotland
+2026-10-18 11:16:54.854730176 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Sweden
+2026-10-18 11:16:54.854738874 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Northern Ireland
+2026-10-18 11:16:54.854745684 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Oman
+2026-10-18 11:16:54.854752503 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Slovakia
+2026-10-18 11:16:54.854759200 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Philippines
+2026-10-18 11:16:54.854765893 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Poland
+2026-10-18 11:16:54.854773700 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for ประเทศไทย
+2026-10-18 11:16:54.854780732 [31;1m[ERROR][0m sqlite3_step() error: NOT NULL constraint failed: admin_access.admin_id.  Ignore if not using a planet extract or check if there was a name change for Romania
+2026-10-18 11:16:54.854785389 [32;1m[INFO][0m Writing database to disk.
+2026-10-18 11:16:54.869372875 [32;1m[INFO][0m Finished.
+2026-10-18 11:16:55.053370129 [32;1m[INFO][0m Running valhalla_build_tiles with 2 thread(s).
+2026-10-18 11:16:55.053406409 [32;1m[INFO][0m Start stage = initialize End stage = cleanup
+2026-10-18 11:16:55.054756325 [32;1m[INFO][0m Parsing files for ways: /in/input.osm.pbf
+2026-10-18 11:16:55.054880906 [32;1m[INFO][0m Parsing ways...
+2026-10-18 11:17:41.159501842 [32;1m[INFO][0m Clarifying and fixing cul-de-sacs...
+2026-10-18 11:17:41.884902070 [32;1m[INFO][0m Added 1353 culdesac roundabouts from 4427 candidates.
+2026-10-18 11:17:41.884944400 [TIMING] src/mjolnir/pbfgraphparser.cc::clarify_and_fix took 0s
+2026-10-18 11:17:41.884953948 [32;1m[INFO][0m Finished with 2121715 routable ways containing 17727827 nodes
+2026-10-18 11:17:41.908250006 [32;1m[INFO][0m Sorting osm access tags by way id...
+2026-10-18 11:17:41.940083343 [32;1m[INFO][0m Finished
+2026-10-18 11:17:41.945286797 [TIMING] src/mjolnir/pbfgraphparser.cc::ParseWays took 46s
+2026-10-18 11:17:41.945309406 [33;1m[WARN][0m [parseways] 1 ways with speed clamped to max
+2026-10-18 11:17:41.945312086 [33;1m[WARN][0m [parseways] 1 ways with speed limit clamped to max
+2026-10-18 11:17:41.945314516 [33;1m[WARN][0m [parseways] 6 OSM time range conditions that could not be parsed
+2026-10-18 11:17:41.945316479 [33;1m[WARN][0m [parseways] 48 OSM time range conditions with unsupported features (years, sun events, ...)
+2026-10-18 11:17:41.946489394 [32;1m[INFO][0m Parsing files for relations: /in/input.osm.pbf
+2026-10-18 11:17:41.946616219 [32;1m[INFO][0m Parsing relations...
+2026-10-18 11:17:43.030226953 [32;1m[INFO][0m Finished with 3144 simple turn restrictions
+2026-10-18 11:17:43.030257950 [32;1m[INFO][0m Finished with 0 lane connections
+2026-10-18 11:17:43.030639791 [32;1m[INFO][0m Sorting complex restrictions by from id...
+2026-10-18 11:17:43.031116670 [32;1m[INFO][0m Sorting complex restrictions by to id...
+2026-10-18 11:17:43.031660260 [32;1m[INFO][0m Finished
+2026-10-18 11:17:43.032135935 [TIMING] src/mjolnir/pbfgraphparser.cc::ParseRelations took 1s
+2026-10-18 11:17:43.033313407 [32;1m[INFO][0m Parsing files for nodes: /in/input.osm.pbf
+2026-10-18 11:17:43.033374932 [32;1m[INFO][0m Sorting osm way node references by node id...
+2026-10-18 11:18:05.205278659 [32;1m[INFO][0m Parsing nodes...
+2026-10-18 11:18:21.257072955 [32;1m[INFO][0m Finished with 14562550 nodes contained in routable ways
+2026-10-18 11:18:21.257106814 [32;1m[INFO][0m Sorting osm way node references by way index and node shape index...
+2026-10-18 11:18:27.197506277 [32;1m[INFO][0m Finished: max_osm_id 14293946810
+2026-10-18 11:18:27.197559100 [32;1m[INFO][0m Number of nodes with refs (exits) = 41
+2026-10-18 11:18:27.197565876 [32;1m[INFO][0m Number of nodes with exit_to = 0
+2026-10-18 11:18:27.197570244 [32;1m[INFO][0m Number of nodes with names = 958
+2026-10-18 11:18:27.197574642 [32;1m[INFO][0m Number of nodes with linguistics = 89
+2026-10-18 11:18:27.197579292 [32;1m[INFO][0m Number of way refs = 0
+2026-10-18 11:18:27.197583522 [32;1m[INFO][0m Number of reverse way refs = 0
+2026-10-18 11:18:27.197588357 [32;1m[INFO][0m Unique Node Strings (names, refs, etc.) = 727
+2026-10-18 11:18:27.197603936 [32;1m[INFO][0m Unique Strings (names, refs, etc.) = 273631
+2026-10-18 11:18:27.198433018 [TIMING] src/mjolnir/pbfgraphparser.cc::ParseNodes took 44s
+2026-10-18 11:18:27.198514920 [32;1m[INFO][0m Creating graph edges from ways...
+2026-10-18 11:18:34.030495691 [32;1m[INFO][0m Finished with 4646371 graph edges
+2026-10-18 11:18:34.050402577 [32;1m[INFO][0m Sorting graph...
+2026-10-18 11:18:34.835800732 [32;1m[INFO][0m Nodes processed. Sorting begin and end nodes by edge.
+2026-10-18 11:18:35.315494250 [32;1m[INFO][0m Sorting begin and end nodes done. Populating edges...
+2026-10-18 11:18:35.439582397 [32;1m[INFO][0m Finished with 3602809 graph nodes
+2026-10-18 11:18:35.442156261 [TIMING] src/mjolnir/graphbuilder.cc::BuildEdges took 8s
+2026-10-18 11:18:35.443113363 [32;1m[INFO][0m Writing tile manifest to /data/valhalla/tiles/tile_manifest.json
+2026-10-18 11:18:35.443268321 [32;1m[INFO][0m Building edge shapes from 17727827 way nodes...
+2026-10-18 11:18:35.524796562 [TIMING] src/mjolnir/graphbuilder.cc::BuildEdgeShapes took 0s
+2026-10-18 11:18:35.524839293 [32;1m[INFO][0m Reclassifying_V2 link graph edges...
+2026-10-18 11:18:35.912794551 [32;1m[INFO][0m Class: 0 exit count = 749
+2026-10-18 11:18:35.912830263 [32;1m[INFO][0m Class: 1 exit count = 15538
+2026-10-18 11:18:35.912833946 [32;1m[INFO][0m Class: 2 exit count = 13492
+2026-10-18 11:18:35.912835799 [32;1m[INFO][0m Class: 3 exit count = 27706
+2026-10-18 11:18:35.912837483 [32;1m[INFO][0m Class: 4 exit count = 23417
+2026-10-18 11:18:35.912839205 [32;1m[INFO][0m Class: 5 exit count = 594
+2026-10-18 11:18:35.912840929 [32;1m[INFO][0m Class: 6 exit count = 3273
+2026-10-18 11:18:35.912842860 [32;1m[INFO][0m Class: 7 exit count = 0
+2026-10-18 11:18:36.438492797 [32;1m[INFO][0m Finished with 20440 link edges reclassified.  Turn channel count = 33245
+2026-10-18 11:18:36.445646003 [TIMING] src/mjolnir/linkclassification.cc::ReclassifyLinks took 0s
+2026-10-18 11:18:36.445685468 [32;1m[INFO][0m Reclassifying ferry connection graph edges...
+2026-10-18 11:18:36.852757164 [32;1m[INFO][0m Finished ReclassifyFerryEdges: ferry_endpoint_count = 17, 1143 edges reclassified
+2026-10-18 11:18:36.854864933 [TIMING] src/mjolnir/ferry_connections.cc::ReclassifyFerryConnections took 0s
+2026-10-18 11:18:36.916905108 [TIMING] src/mjolnir/graphbuilder.cc::ComputeFerrySpeeds took 0s
+2026-10-18 11:18:36.916937004 [32;1m[INFO][0m Building 2518 tiles with 2 threads...
+2026-10-18 11:18:38.826688942 [33;1m[WARN][0m Time zone db /data/valhalla/timezones.sqlite not found.  Not saving time zone information.
+2026-10-18 11:18:38.826707500 [33;1m[WARN][0m Time zone db /data/valhalla/timezones.sqlite not found.  Not saving time zone information.
+2026-10-18 11:18:49.325180559 [32;1m[INFO][0m Finished
+2026-10-18 11:18:49.325221710 [TIMING] src/mjolnir/graphbuilder.cc::BuildLocalTiles took 12s
+2026-10-18 11:18:49.325227415 [32;1m[INFO][0m Node Count = 3602809
+2026-10-18 11:18:49.325229532 [32;1m[INFO][0m Directed Edge Count = 9292742
+2026-10-18 11:18:49.325231489 [32;1m[INFO][0m EdgeInfo Count = 4681388
+2026-10-18 11:18:49.325234696 [TIMING] src/mjolnir/graphbuilder.cc::Build took 13s
+2026-10-18 11:18:49.325279259 [33;1m[WARN][0m [build] 2 ferry connections completely failing to reclassify edges to the next level 0 edge
+2026-10-18 11:18:49.325287310 [32;1m[INFO][0m Enhancing local graph...
+2026-10-18 11:18:49.553281815 [32;1m[INFO][0m Disabled default speeds assignment from config
+2026-10-18 11:18:49.555958008 [32;1m[INFO][0m Disabled default speeds assignment from config
+2026-10-18 11:19:05.545006374 [32;1m[INFO][0m Finished with max_density 35.330715
+2026-10-18 11:19:05.545037394 [32;1m[INFO][0m internal intersection = 148764
+2026-10-18 11:19:05.545253428 [TIMING] src/mjolnir/graphenhancer.cc::Enhance took 16s
+2026-10-18 11:19:05.545303183 [32;1m[INFO][0m GraphFilter - nothing to filter. Skipping...
+2026-10-18 11:19:05.545318149 [TIMING] src/mjolnir/graphfilter.cc::Filter took 0s
+2026-10-18 11:19:05.545338747 [32;1m[INFO][0m Transit directory not found. Transit will not be added.
+2026-10-18 11:19:05.545369839 [32;1m[INFO][0m HierarchyBuilder
+2026-10-18 11:19:07.119645168 [TIMING] src/mjolnir/hierarchybuilder.cc::CreateNodeAssociations took 1s
+2026-10-18 11:19:07.948643916 [32;1m[INFO][0m Associated 4310747 new nodes to base nodes
+2026-10-18 11:19:08.329374035 [TIMING] src/mjolnir/hierarchybuilder.cc::SortSequences took 1s
+2026-10-18 11:19:21.428789867 [TIMING] src/mjolnir/hierarchybuilder.cc::FormTilesInNewLevel took 13s
+2026-10-18 11:19:21.471468031 [TIMING] src/mjolnir/hierarchybuilder.cc::RemoveUnusedLocalTiles took 0s
+2026-10-18 11:19:21.471541947 [32;1m[INFO][0m Done HierarchyBuilder
+2026-10-18 11:19:21.472773483 [TIMING] src/mjolnir/hierarchybuilder.cc::Build took 15s
+2026-10-18 11:19:21.473744171 [32;1m[INFO][0m Creating shortcuts on level 1
+2026-10-18 11:19:24.320807857 [32;1m[INFO][0m Finished with 259418 shortcuts superseding 1306250 edges, average ~5 edges per shortcut
+2026-10-18 11:19:24.320833067 [32;1m[INFO][0m Creating shortcuts on level 0
+2026-10-18 11:19:25.179851498 [32;1m[INFO][0m Finished with 68492 shortcuts superseding 408306 edges, average ~5 edges per shortcut
+2026-10-18 11:19:25.179884695 [TIMING] src/mjolnir/shortcutbuilder.cc::Build took 3s
+2026-10-18 11:19:25.179897780 [33;1m[WARN][0m Elevation storage directory does not exist
+2026-10-18 11:19:25.184812575 [32;1m[INFO][0m Adding complex turn restrictions at level 2
+2026-10-18 11:19:30.676901456 [TIMING] src/mjolnir/restrictionbuilder.cc::HandleOnlyRestrictionProperties took 0s
+2026-10-18 11:19:30.676937252 [32;1m[INFO][0m --Forward restrictions added: 13
+2026-10-18 11:19:30.676940316 [32;1m[INFO][0m --Reverse restrictions added: 13
+2026-10-18 11:19:30.677777749 [32;1m[INFO][0m Adding complex turn restrictions at level 1
+2026-10-18 11:19:32.492521664 [TIMING] src/mjolnir/restrictionbuilder.cc::HandleOnlyRestrictionProperties took 0s
+2026-10-18 11:19:32.492557307 [32;1m[INFO][0m --Forward restrictions added: 244
+2026-10-18 11:19:32.492560478 [32;1m[INFO][0m --Reverse restrictions added: 243
+2026-10-18 11:19:32.493031810 [32;1m[INFO][0m Adding complex turn restrictions at level 0
+2026-10-18 11:19:33.410562006 [TIMING] src/mjolnir/restrictionbuilder.cc::HandleOnlyRestrictionProperties took 0s
+2026-10-18 11:19:33.410593152 [32;1m[INFO][0m --Forward restrictions added: 174
+2026-10-18 11:19:33.410596302 [32;1m[INFO][0m --Reverse restrictions added: 176
+2026-10-18 11:19:33.410604862 [32;1m[INFO][0m Finished
+2026-10-18 11:19:33.410622561 [TIMING] src/mjolnir/restrictionbuilder.cc::Build took 8s
+2026-10-18 11:19:33.410630132 [32;1m[INFO][0m Validating, finishing and binning tiles...
+2026-10-18 11:20:02.405240158 [32;1m[INFO][0m Finished
+2026-10-18 11:20:02.405486132 [32;1m[INFO][0m Binning inter-tile edges...
+2026-10-18 11:20:12.657373748 [32;1m[INFO][0m Finished
+2026-10-18 11:20:12.657458295 [33;1m[WARN][0m Possible duplicates at level: 0 = 0
+2026-10-18 11:20:12.657592452 [33;1m[WARN][0m Possible duplicates at level: 1 = 0
+2026-10-18 11:20:12.657660841 [33;1m[WARN][0m Possible duplicates at level: 2 = 0
+2026-10-18 11:20:13.076494768 [TIMING] src/mjolnir/graphvalidator.cc::Validate took 39s
+2026-10-18 11:20:14.551254716 [32;1m[INFO][0m Cleaning up temporary *.bin files within /data/valhalla/tiles/
+2026-10-18 11:20:14.633598859 [TIMING] src/mjolnir/osmdata.cc::cleanup_temp_files took 0s
+2026-10-18 11:20:15.042908540 [TIMING] src/mjolnir/util.cc::build_tile_set took 199s

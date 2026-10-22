@@ -1,0 +1,8 @@
+step                       s     min free B min MemAvail   max swap peak host RAM peak/mean CPU  largest containers (MiB)
+source-checksum            0    59758206976        6.24G       190M         493Mi    120%/ 120%  vigorous_carver 122, seyra-db-1 63
+render-import            220    59355820032        5.80G       175M        1039Mi    165%/  85%  seyra-db-1 419, seyra-jobs-render-import 393
+routing-build            216    58531385344        4.19G       706M        3682Mi    204%/ 102%  seyra-jobs-valhalla-build 3185, seyra-db-1 354
+geocoder-build          2255    51694870528        3.83G       124M        3314Mi    332%/ 173%  seyra-jobs-photon-import 2370, seyra-jobs-geocoder-export 1775
+overpass-build           553    42663292928        3.22G       244M        3387Mi    281%/  95%  seyra-jobs-overpass-import 2758, vigorous_carver 185
+staging-validation       310    53391171584        5.98G       243M        1109Mi    144%/  11%  seyra-stage-photon 343, seyra-db-1 341
+overall samples 269 min free 42663292928 min MemAvailable 3223285760 max swap 706199552

@@ -1,0 +1,6 @@
+active:   (none)
+previous: (none)
+maintenance flag: absent
+releases:
+  ds-20261017-2d2c87f31d11  failed (failed at staging-validation: staging validation failed: providers-started, geocoder)  source=iran-261017.osm.pbf sha256=7060fbb5b6ae…
+live readiness: API not reachable

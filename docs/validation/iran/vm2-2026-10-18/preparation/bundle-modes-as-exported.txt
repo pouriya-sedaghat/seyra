@@ -1,0 +1,24 @@
+-rw------- 1 root root 111040000 Oct 18 09:12 /home/owner/seyra-prep/bundle-2026-10-18-vm2/images/ops.tar
+/home/owner/seyra-prep/bundle-2026-10-18-vm2:
+total 28
+drwxrwxr-x  4 owner owner 4096 Oct 18 09:12 .
+drwxrwxr-x 12 owner owner 4096 Oct 18 09:11 ..
+-rw-r--r--  1 root  root  2646 Oct 18 09:12 SHA256SUMS
+-rw-r--r--  1 root  root  5441 Oct 18 09:12 bundle-manifest.json
+drwxr-xr-x  2 root  root  4096 Oct 18 09:12 images
+drwxr-xr-x  6 root  root  4096 Oct 18 09:12 install
+
+/home/owner/seyra-prep/bundle-2026-10-18-vm2/images:
+total 1267204
+drwxr-xr-x 2 root  root       4096 Oct 18 09:12 .
+drwxrwxr-x 4 owner owner      4096 Oct 18 09:12 ..
+-rw------- 1 root  root   83226112 Oct 18 09:11 api.tar
+-rw------- 1 root  root  218492416 Oct 18 09:11 db.tar
+-rw------- 1 root  root  412421632 Oct 18 09:11 geocoder_build.tar
+-rw------- 1 root  root  111040000 Oct 18 09:12 ops.tar
+-rw------- 1 root  root   48448512 Oct 18 09:11 osmtools.tar
+-rw------- 1 root  root   45327360 Oct 18 09:11 overpass.tar
+-rw------- 1 root  root  194322944 Oct 18 09:11 photon.tar
+-rw------- 1 root  root   27057152 Oct 18 09:11 proxy.tar
+-rw------- 1 root  root   36272640 Oct 18 09:11 tegola.tar
+-rw------- 1 root  root  120983040 Oct 18 09:11 valhalla.tar

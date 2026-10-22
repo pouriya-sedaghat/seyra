@@ -1,0 +1,72 @@
+{
+  "node": "v24.21.0",
+  "openssl": "OpenSSL 3.5.5 27 Jan 2026 (Library: OpenSSL 3.5.5 27 Jan 2026)",
+  "scope": "Actual code, temporary certificates, recording Docker stubs; no Docker workloads or live host access",
+  "ownership_test_adapter": "Module unprivileged-test branch selected by process.getuid; sandbox cannot chown to uid 101",
+  "results": [
+    {
+      "id": "H1-wrapper-input-mounts",
+      "defect_reproduced": false,
+      "observed": {
+        "cert_mounted": false,
+        "key_mounted": false,
+        "ca_mounted": false,
+        "chain_mounted": false,
+        "ca_and_chain_still_passed_to_cli": true
+      }
+    },
+    {
+      "id": "H5-ingress-413-contract",
+      "defect_reproduced": false,
+      "observed": {
+        "configured_ingress_413": {
+          "error": {
+            "code": "PAYLOAD_TOO_LARGE",
+            "message": "request body exceeds 64 KiB",
+            "request_id": "$request_id"
+          }
+        },
+        "openapi_error_required": [
+          "code",
+          "message",
+          "request_id"
+        ],
+        "configured_response_violates_exported_schema": false
+      }
+    },
+    {
+      "id": "H3-egress-failure-exit-status",
+      "defect_reproduced": false,
+      "observed": {
+        "exit_code": 1,
+        "summary": "PASS nested host: route table read\nFAIL nested host: 10 destinations are routable (<TEMP>/namespace-evidence/host-route-get.txt)\n# failures: 1",
+        "stderr": ""
+      }
+    },
+    {
+      "id": "H2-pending-csr-import-race",
+      "defect_reproduced": false,
+      "observed": {
+        "import_held_kernel_lock": true,
+        "csr_dispatch_calls_without_lifecycle_lock": false,
+        "csr_replacement_succeeded_while_import_locked": true,
+        "import_error": "null",
+        "served_pair_refused": null,
+        "tls_recover_error": null,
+        "previous_cert_changed": true,
+        "previous_key_changed": true,
+        "replacement_journal_retained": false,
+        "recover_dispatch_calls_without_lifecycle_lock": false
+      }
+    },
+    {
+      "id": "H4-chain-backup-rollback",
+      "defect_reproduced": true,
+      "observed": {
+        "valid_chain_imports_succeeded": 2,
+        "backed_up_certificate_count": 2,
+        "rollback_error": "certificate (<TEMP>/renew-tls/next/leaf.crt) must hold exactly one certificate (found 2); pass intermediates with --chain"
+      }
+    }
+  ]
+}

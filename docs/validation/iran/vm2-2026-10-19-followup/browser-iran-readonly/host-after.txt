@@ -1,0 +1,11 @@
+after browser: 2026-10-19T05:40:55Z
+seyra-iran-restore Up 16 hours
+seyra-api-1 Up 15 hours (healthy)
+seyra-db-1 Up 16 hours (healthy)
+seyra-overpass-1 Up 15 hours
+seyra-photon-1 Up 15 hours
+seyra-proxy-1 Up 15 hours
+seyra-tegola-1 Up 15 hours
+seyra-valhalla-1 Up 15 hours
+egress COUNT 0
+7060fbb5b6ae23acb20b3a376df8404ebec43c81fbc3b71b78f7cbf9c312198f  /home/owner/iran-261017.osm.pbf

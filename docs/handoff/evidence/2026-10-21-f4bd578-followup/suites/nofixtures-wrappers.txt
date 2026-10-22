@@ -1,0 +1,13 @@
+== nofixtures/docker
+#!/bin/sh
+# Emulates a host where mknod is not permitted: only the mknod fixture container fails.
+for a in "$@"; do [ "$a" = mknod ] && { echo "mknod: Operation not permitted (emulated)" >&2; exit 1; }; done
+exec /usr/bin/docker "$@"
+== nofixtures/mkfifo
+#!/bin/sh
+echo "mkfifo: not permitted (emulated)" >&2
+exit 1
+== nofixtures/python3
+#!/bin/sh
+echo "python3: socket creation denied (emulated)" >&2
+exit 1

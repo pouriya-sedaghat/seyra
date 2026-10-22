@@ -1,0 +1,13 @@
+# 2026-10-19T04:59:55Z host=seyra-gate-host ops=sha256:7367b56f9f337b61a6e9f5259c3373cb46fb2bdfe2fcafe40767b27d7a61c1bb settings: minFreeFactor=40 minFreeBytes=2147483648
+== PASS C1 adequate capacity admitted (available 41451282432 B (41.45 GB: free 41451282432 + reclaimable 0) >= required 2147483648 B (2.15 GB: max(minFreeBytes 2147483648, minFreeFactor 40 x input 3167))…); manifest records capacity_check, 5 s sampling (34 samples) and per-step minima; warned that the persisted minFreeFactor 40 is below the reference
+== PASS C2 a 3 GiB file held for 15 s inside staging-validation is the run minimum 38179172352 B at 2026-10-19T05:01:44.728Z; the previous step's minimum (41401937920 B) and free space after the import (41400180736 B) are >= 2.9 GB higher, so step-boundary sampling alone would have missed it
+== PASS C3 insufficient capacity refused before side effects: no release directory for ds-20251029-9843cf36a06e, render DBs, release events (10) and releases unchanged, lease released
+== PASS C4 import of ds-20251030-9843cf36a06e killed mid-build; with insufficient capacity the next import was refused and the failed build (manifest 'failed', render DB) was kept; with adequate capacity it was replaced, counting 16552271 reclaimable bytes
+== PASS C5 input file unchanged (e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323); settings restored
+# capacity-guard 2026-10-19T05:03:26Z host=seyra-gate-host
+PASS C1 adequate capacity admitted (available 41451282432 B (41.45 GB: free 41451282432 + reclaimable 0) >= required 2147483648 B (2.15 GB: max(minFreeBytes 2147483648, minFreeFactor 40 x input 3167))…); manifest records capacity_check, 5 s sampling (34 samples) and per-step minima; warned that the persisted minFreeFactor 40 is below the reference
+PASS C2 a 3 GiB file held for 15 s inside staging-validation is the run minimum 38179172352 B at 2026-10-19T05:01:44.728Z; the previous step's minimum (41401937920 B) and free space after the import (41400180736 B) are >= 2.9 GB higher, so step-boundary sampling alone would have missed it
+PASS C3 insufficient capacity refused before side effects: no release directory for ds-20251029-9843cf36a06e, render DBs, release events (10) and releases unchanged, lease released
+PASS C4 import of ds-20251030-9843cf36a06e killed mid-build; with insufficient capacity the next import was refused and the failed build (manifest 'failed', render DB) was kept; with adequate capacity it was replaced, counting 16552271 reclaimable bytes
+PASS C5 input file unchanged (e90c33a29619db991e2567b3d090a6dfbe78daf539de641445b09b4e7c792323); settings restored
+# failures: 0

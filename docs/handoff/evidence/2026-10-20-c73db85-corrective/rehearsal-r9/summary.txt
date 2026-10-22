@@ -1,0 +1,34 @@
+# 2026-10-20T04:40:24Z rehearsal start phases=[vm install gate update tls relay egress rollback cleanup] frozen=<RUN>/rehearsal/frozen-20261020T044024Z
+PASS RV1 rehearsal VM on internal no-gateway networks only (no default route; outer VM routing table unchanged); images loaded by identity
+PASS RH1 disposable host seyra-rh-host installed from the old bundle and imported the fixture (ds-20261001-9843cf36a06e)
+PASS RH1b activated ds-20261001-9843cf36a06e; ready through the ordinary loopback listener
+PASS RH2 tampered new bundle refused by the gate before install (bundle holds entries that are neither directories nor regular files (type:path): l:install); install tree and nested images unchanged
+PASS RH3 new bundle verified before install, install tree swapped, images loaded (old stack kept serving)
+PASS RH3b cutover to the new build: t1-update-start rc=0 not_ready_ms=2033 samples=19 final=200 recreated=[api,proxy] identities_equal=yes
+PASS RT1 operator read the CSR directly; external-issuer import installed leaf+intermediate, the root as trust anchor and matching metadata; fixture set backed up
+PASS RT2 renewal imported; backup holds the previous full chain (served file, leaf, intermediate), root and metadata
+PASS RT3 interrupted replacement: journal left, start refused, tls recover completed the validated new set
+PASS RT4 recover refused an incomplete new set with a wrong-root backup; active files and journal unchanged
+PASS RT5 with the backup intact, recover restored the complete previous set (leaf 3) and removed the journal
+PASS RT6 proxy serves the imported certificate after proxy restart; t2-proxy-restart-tls rc=0 not_ready_ms=510 samples=16 final=200 recreated=[proxy] identities_equal=yes
+PASS RR1 edge started from the exact installed proxy image with its egress guard; relay peer 172.18.0.3
+PASS RR2 relay settings validated and applied to runtime.env
+PASS RR3 relay listener published on the host's lab address; t3-relay-on rc=0 not_ready_ms=509 samples=16 final=200 recreated=[proxy] identities_equal=yes
+PASS RR4 approved client 198.18.10.200 via the rehearsal VM's LAN address and the edge: 19 checks (TLS name/fingerprint, web, docs+CSP, spec, API, map assets, 421, spoofed headers, diagnostics, 413, direct bypass)
+PASS RR5 outsider 198.18.10.20 on the same segment, outside the approved /25: no response on 8 path classes, also with spoofed forwarding headers
+PASS RR6 outsider 198.18.20.20 on another segment: nothing is published on the rehearsal VM's address there
+PASS RR7 untrusted lab peer forging the approved client: 403 on 8 path classes; missing/malformed PROXY: no response; ordinary listener unreachable from the lab network
+PASS RR8 ordinary loopback control listener still serves without PROXY
+PASS RE1 namespace egress (host + edge; route lookups, sink evidence, documentation addresses, own-network and outer controlled sinks, guard counter, allowed upstream): 7 checks
+PASS RE2 both controlled sinks were started, reachable from the rehearsal VM itself (rc=0 rc=0) and removed
+PASS RB0 edge.sh stop refused while settings and the running proxy still trusted the edge address (edge kept running, address held)
+PASS RB0a proxy stopped with the trust still configured (relay port closed): edge stop refused (settings.json still names 172.18.0.3 as the relay peer), edge kept; the same proxy started again; t4a-proxy-down-refusal rc=0 not_ready_ms=510 samples=15 final=200 recreated=[] identities_equal=yes
+PASS RB0b trust removed from settings/runtime.env but not applied (proxy not restarted): edge stop refused, edge kept
+PASS RB1 relay trust removed from settings, state/runtime.env and the running proxy, relay port unpublished, all read successfully, while the edge still held its address; t4-rollback-relay rc=0 not_ready_ms=512 samples=16 final=200 recreated=[proxy] identities_equal=yes
+PASS RB2 after the relay rollback the relay listener answers nobody on the lab network
+PASS RB1a trust removed and applied, then the proxy stopped: edge stop refused (proxy not plainly running), edge kept; the same proxy started again; t4b-proxy-down-after-removal rc=0 not_ready_ms=511 samples=15 final=200 recreated=[] identities_equal=yes
+PASS RB3 edge stopped on positive trust-removal evidence (settings relayPeer='', running proxy SEYRA_RELAY_PEER='', relay port unpublished, runtime.env unchanged since the proxy ) and removed
+PASS RB4 tls restore re-installed the fixture certificate and CA from the root-only backup; the proxy serves it; t5-rollback-tls rc=0 not_ready_ms=510 samples=17 final=200 recreated=[proxy] identities_equal=yes
+PASS RB5 software rollback to the old bundle (images verified, old OPS identity): t6-rollback-software rc=0 not_ready_ms=2554 samples=65 final=200 recreated=[api,proxy] identities_equal=yes
+PASS RC1 cleanup: every owned object removed; inventory empty (containers, networks, volumes); lab directory removed; outer routes unchanged; evidence kept in OUT
+# 2026-10-20T04:46:21Z phases=[vm install gate update tls relay egress rollback cleanup] failures=0

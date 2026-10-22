@@ -1,0 +1,9 @@
+# Seyra offline bundle tamper checks (AC18) — 2026-10-18T12:30:56Z
+# bundle=/home/owner/seyra-prep/bundle-2026-10-18-vm2-r3
+PASS T0 untouched bundle verifies
+PASS T1 modified install file is detected — checksum mismatch install/docs/RUNBOOK.md
+PASS T2 corrupted image archive is detected — checksum mismatch images/proxy.tar
+PASS T3 unlisted extra file is detected — unlisted file install/unexpected-file
+PASS T4 consistent manifest+checksum rewrite (checksum verify: accepted) is refused at load: loaded seyra/tegola:0.21.2-seyra1 resolves to sha256:4379ed15b436599a68b7908c8b35767c586801273eeca725ca144926e5e0757f, expected sha256:0000000000000000000000000000000000000000000000000000000000000000
+PASS T5 bundle restored byte-identical (SHA256SUMS digest 9c4e87daf2c97cbf1b69b12a4bf0b821a3adab62d47ef71c0a96fae97aa969f8)
+# failures: 0
